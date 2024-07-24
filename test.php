@@ -1,1 +1,1 @@
-test
+Test for automatic deployment
