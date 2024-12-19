@@ -1,0 +1,38 @@
+*{
+  margin: 0;
+  padding: 0;
+}
+body{
+  font-family: 'Poppins' !important;
+  overflow-x: hidden;
+}
+video {
+  object-fit: cover; 
+  position: absolute;
+  width: 100% !important;
+  top: 0;
+  left: 0;
+}
+.regiter-form{
+  position: absolute;
+  padding: 15px;
+  border-radius: 10px;
+  backdrop-filter: blur(15px);
+}
+.hedings{
+  text-shadow: 2px 2px 8px #ffffff73;
+}
+#cb {
+  padding: 3%;
+  /* margin-right: 2%; */
+  color: #606060;
+  border: 1px solid #e2e2e2;
+  background-color: #0F5B92 !important;
+}
+.login-btn{
+  background: rgb(15,91,146);
+
+}
+.error {
+  color: #db1a17;
+}

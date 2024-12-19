@@ -1,0 +1,534 @@
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+
+
+use App\Models\InclusivePackages;
+use App\Models\City;
+use App\Models\Amenities;
+use App\Models\FoodBeverage;
+use App\Models\Activities;
+use App\Models\Safetyfeatures;
+use App\Models\Geo_feature;
+use App\Models\Themes;
+use App\Models\Themes_category;
+use App\Models\Destination_category;
+use App\Models\Address;
+
+
+
+class All_Inclusive_PackController extends Controller
+{
+
+
+    public function list(Request $request)
+    {
+        $title = 'Programs List';
+        $inclusive_packages = InclusivePackages::where('is_deleted', '0')->paginate(10);
+        foreach ($inclusive_packages as $package) {
+            $package->category = json_decode($package->category, true);
+            // Decode other JSON fields if needed
+        }
+        return view('admin.inclusive_packages.inclusive_packageslist', compact('title', 'inclusive_packages'));
+    }
+
+    public function add_form()
+    {
+        $title = 'Program Add';
+        $cities = City::where('status', "1")->where('is_deleted', "0")->pluck('city_name', 'id');
+        $themes = Themes::where('status', "1")->where('is_deleted', "0")->pluck('themes_name', 'id');
+        $amenities = Amenities::where('status', "1")->where('is_deleted', "0")->get();
+        $address = Address::where('is_deleted', "0")->get();
+        $foodBeverages = FoodBeverage::where('status', "1")->where('is_deleted', "0")->get();
+        $activities = Activities::where('status', "1")->where('is_deleted', "0")->get();
+        $safety_features = Safetyfeatures::where('status', "1")->where('is_deleted', "0")->get();
+        // $geo_feature = Geo_feature::where('status', "1")->where('is_deleted', "0")->pluck('geo_feature', 'id');
+
+        return view('admin.inclusive_packages.inclusive_packagesadd', compact('title', 'cities', 'themes', 'amenities', 'foodBeverages', 'activities', 'safety_features', 'address'));
+    }
+
+
+    public function getThemeCategories($themeId)
+    {
+        // Assuming you have a ThemeCategory model
+        $categories = Themes_category::where('theme_id', $themeId)
+            ->where('status', "1") // Add condition for status
+            ->where('is_deleted', "0") // Add condition for is_deleted
+            ->pluck('theme_cat', 'id');
+
+        return response()->json($categories);
+    }
+
+    public function getDestinationCategories(Request $request)
+    {
+        $cityId = $request->input('city_id');
+
+        // Assuming you have a DestinationCategory model with a city_id foreign key
+        $categories = Destination_category::where('destination_id', $cityId)->where('status', "1")->where('is_deleted', "0")->pluck('destination_cat', 'id');
+
+        return response()->json($categories);
+    }
+
+    public function insert(Request $request)
+    {
+        //         echo"<pre>";
+        // print_r($_POST);die;
+        // Validate request data
+        $validatedData = $request->validate([
+            'themes_name' => 'required',
+            'cities_name' => 'required',
+            'title' => 'required',
+            'program_description' => 'required',
+            // 'prop_cat' => 'required',
+            // 'address' => 'required',
+            // 'destination_cat' => 'required',
+            // 'city' => 'required',
+            // 'state' => 'required',
+            // 'country' => 'required',
+            // 'geo_feature' => 'required',
+            'plan_title' => 'required',
+            'plan_subtitle' => 'required',
+            'plan_description' => 'required',
+            // 'start_date' => 'required',
+            // 'return_date' => 'required',
+            'total_days' => 'required',
+            // 'total_room' => 'required',
+            // 'bath_room' => 'required',
+            // 'bed_room' => 'required',
+            // 'hall' => 'required',
+            'member_capacity' => 'required',
+            'price' => 'required',
+            'actual_price' => 'required',
+            // 'coupon_code' => 'required',
+            'camp_rule' => 'required',
+            'important_info' => 'required',
+            'google_map' => 'required'
+
+        ]);
+
+        //              echo"<pre>";
+        // print_r($validatedData);die;
+
+        // Handle dynamic image uploads
+        $imagePaths = [];
+        $fileInputs = $request->file();
+
+        foreach ($fileInputs as $key => $files) {
+            // Process files if the key matches the pattern
+            if (strpos($key, 'img_') === 0) {
+                if (is_array($files)) {
+                    foreach ($files as $file) {
+                        if ($file->isValid()) {
+                            $fileName = time() . '_' . $file->getClientOriginalName();
+                            $destinationPath = public_path('/uploads/events_package_images');
+
+                            // Ensure the directory exists
+                            if (!file_exists($destinationPath)) {
+                                mkdir($destinationPath, 0755, true);
+                            }
+
+                            // Move the file to the destination path
+                            $file->move($destinationPath, $fileName);
+
+                            // Store the file path
+                            $imagePaths[] = '/uploads/events_package_images/' . $fileName;
+                        }
+                    }
+                } else {
+                    // Handle single file if needed
+                    if ($files->isValid()) {
+                        $fileName = time() . '_' . $files->getClientOriginalName();
+                        $destinationPath = public_path('/uploads/events_package_images');
+
+                        // Ensure the directory exists
+                        if (!file_exists($destinationPath)) {
+                            mkdir($destinationPath, 0755, true);
+                        }
+
+                        // Move the file to the destination path
+                        $files->move($destinationPath, $fileName);
+
+                        // Store the file path
+                        $imagePaths[] = '/uploads/events_package_images/' . $fileName;
+                    }
+                }
+            }
+        }
+
+        $events_package_imagesPath = public_path('/uploads/events_package_images');
+        if ($request->hasFile('cover_img')) {
+            $file1 = $request->file('cover_img');
+            $filename1 = time() . '_1.' . $file1->getClientOriginalExtension();
+            $file1->move($events_package_imagesPath, $filename1);
+            $filePath1 = 'uploads/events_package_images/' . $filename1;
+        } else {
+            $filePath1 = null; // Handle case where cover_img might not be present
+        }
+
+
+        $tourPlanningJson = json_encode([
+            'plan_title' => $validatedData['plan_title'],
+            'plan_subtitle' => $validatedData['plan_subtitle'],
+            'plan_description' => $validatedData['plan_description']
+        ]);
+
+        $amenitiesJson = json_encode($request->input('amenity_services'));
+        $foodBeveragesJson = json_encode($request->input('food_beverages'));
+        $activitiesJson = json_encode($request->input('activities'));
+        $safetyFeaturesJson = json_encode($request->input('safety_features'));
+        $campRulesJson = json_encode($request->input('camp_rule'));
+        $addressJson = json_encode($request->input('address_services'));
+        // Insert into MySQL
+        $inclusive_packages = new InclusivePackages();
+        $inclusive_packages->program_inclusion = $request->input('program_inclusion');
+        $inclusive_packages->break_fast = $request->input('break_fast');
+        $inclusive_packages->lunch = $request->input('lunch');
+        $inclusive_packages->dinner = $request->input('dinner');
+        $inclusive_packages->theme_id = $request->input('themes_name');
+        $inclusive_packages->city_details = $validatedData['cities_name'];
+        $inclusive_packages->title = $validatedData['title'];
+        $inclusive_packages->program_description = $validatedData['program_description'];
+        $inclusive_packages->category = json_encode($request->input('prop_cat'));
+        $inclusive_packages->address = $addressJson;
+        // $inclusive_packages->city = $validatedData['city'];
+        // $inclusive_packages->state = $validatedData['state'];
+        // $inclusive_packages->country = $validatedData['country'];
+        $inclusive_packages->tour_planning = $tourPlanningJson;
+        $inclusive_packages->start_date = $request->input('start_date');
+        $inclusive_packages->return_date = $request->input('return_date');
+        $inclusive_packages->total_days = $validatedData['total_days'];
+        $inclusive_packages->member_capacity = $validatedData['member_capacity'];
+        $inclusive_packages->member_type = $request->input('mem_type');
+        $inclusive_packages->price = $validatedData['price'];
+        $inclusive_packages->actual_price = $validatedData['actual_price'];
+        $inclusive_packages->camp_rule = $campRulesJson;
+        $inclusive_packages->important_info = $validatedData['important_info'];
+        $inclusive_packages->google_map = $validatedData['google_map'];
+        $inclusive_packages->events_package_images = json_encode($imagePaths);
+        $inclusive_packages->cover_img = $filePath1;
+        // $inclusive_packages->theme_cat_id = $request->input('theme_cat');
+        // $inclusive_packages->destination_cat = $validatedData['destination_cat'];
+        // $inclusive_packages->geo_feature = $validatedData['geo_feature'];
+        // $inclusive_packages->total_room = $validatedData['total_room'];
+        // $inclusive_packages->bath_room = $validatedData['bath_room'];
+        // $inclusive_packages->bed_room = $validatedData['bed_room'];
+        // $inclusive_packages->hall = $validatedData['hall'];
+        // $inclusive_packages->coupon_code = $validatedData['coupon_code'];
+        $inclusive_packages->amenity_details = $amenitiesJson;
+        $inclusive_packages->food_beverages = $foodBeveragesJson;
+        $inclusive_packages->activities = $activitiesJson;
+        $inclusive_packages->safety_features = $safetyFeaturesJson;
+        $inclusive_packages->is_deleted = '0';
+        $inclusive_packages->created_date = now();
+        $inclusive_packages->created_by = 'admin';
+        $inclusive_packages->status = $request->has('status') && $request->input('status') === 'on' ? '1' : '0';
+        // $inclusive_packages->is_featured = $request->has('is_featured') && $request->input('is_featured') === 'on' ? 'yes' : 'no';
+        $inclusive_packages->updated_at = null;
+        $inclusive_packages->save();
+
+
+        if ($inclusive_packages) {
+            return redirect()->route('admin.inclusive_package_list')
+                ->with('success', 'Record inserted successfully');
+        } else {
+            return redirect()->route('admin.inclusive_package_list')
+                ->with('error', 'Error inserting record');
+        }
+    }
+
+    public function edit_form(Request $request, $id)
+    {
+        $package_details = InclusivePackages::find($id);
+        $cities_dts = City::where('status', "1")->where('is_deleted', "0")->pluck('city_name', 'id');
+        $amenities_dts = Amenities::where('status', "1")->where('is_deleted', "0")->get();
+        $address_dts = Address::where('is_deleted', "0")->get();
+        $foodBeverages_dts = FoodBeverage::where('status', "1")->where('is_deleted', "0")->get();
+        $activities_dts = Activities::where('status', "1")->where('is_deleted', "0")->get();
+        $safety_features_dts = Safetyfeatures::where('status', "1")->where('is_deleted', "0")->get();
+        $geo_feature_dts = Geo_feature::where('status', "1")->where('is_deleted', "0")->pluck('geo_feature', 'id');
+        $themes = Themes::where('status', "1")->where('is_deleted', "0")->pluck('themes_name', 'id');
+        if (!$package_details) {
+            return redirect()->route('admin.inclusive_package_list')->with('error', 'Package not found');
+        }
+
+        $selectedAmenities = json_decode($package_details->amenity_details, true) ?? [];
+        $selectedAddress = json_decode($package_details->address, true) ?? [];
+        $selectedfood_beverages = json_decode($package_details->food_beverages, true) ?? [];
+        $selectedactivities = json_decode($package_details->activities, true) ?? [];
+        $selectedsafety_features = json_decode($package_details->safety_features, true) ?? [];
+
+        $selectedprogram = json_decode($package_details->category, true) ?? [];
+        // Get the selected city ID
+        $selectedCityId = $package_details->city_details;
+        $selectedgeo_featureId = $package_details->geo_feature;
+        $selectedthemeId = $package_details->theme_id;
+        $selectedCategoryId = $package_details->theme_cat_id;
+        $selecteddesCategoryId = $package_details->destination_cat;
+        $categories = Themes_category::where('theme_id', $selectedthemeId)
+            ->where('status', 1)
+            ->where('is_deleted', 0)
+            ->pluck('theme_cat', 'id');
+
+        $dest_categories =  Destination_category::where('destination_id', $selectedCityId)
+            ->where('status', 1)
+            ->where('is_deleted', 0)
+            ->pluck('destination_cat', 'id');
+
+        $title = 'Program Edit';
+//         echo"<pre>";
+// print_r($package_details);die;
+        return view('admin.inclusive_packages.inclusive_packagesedit', compact('package_details', 'title', 'cities_dts', 'themes', 'amenities_dts', 'foodBeverages_dts', 'activities_dts', 'safety_features_dts', 'selectedCityId', 'selectedAmenities', 'selectedthemeId', 'selectedfood_beverages', 'selectedactivities', 'selectedsafety_features', 'geo_feature_dts', 'selectedgeo_featureId', 'categories', 'dest_categories', 'selecteddesCategoryId', 'selectedCategoryId','selectedprogram','selectedAddress','address_dts'));
+    }
+
+    public function update(Request $request, $id)
+    {
+       
+        //         echo"<pre>";
+        // print_r($_POST);die;
+        // Validate request data
+        $validatedData = $request->validate([
+            'themes_name'=> 'required',
+            'cities_name' => 'required',
+            'title' => 'required',
+            'program_description' => 'required',
+            // 'prop_cat' => 'required',
+            // 'address' => 'required',
+            // 'city' => 'required',
+            // 'state' => 'required',
+            // 'country' => 'required',
+            // 'destination_cat' => 'required',
+            // 'geo_feature' => 'required',
+            'plan_title' => 'required',
+            'plan_subtitle'=> 'required',
+            'plan_description' => 'required',
+            // 'start_date' => 'required',
+            // 'return_date' => 'required',
+            'total_days' => 'required',
+            'member_capacity' => 'required',
+            'price' => 'required',
+            'actual_price' => 'required',
+            // 'coupon_code' => 'required',
+            'camp_rule' => 'required',
+            'important_info' => 'required',
+            'google_map' => 'required'
+
+        ]);
+
+        // Find the record to update
+        $inclusive_packages = InclusivePackages::find($id);
+        if (!$inclusive_packages) {
+            return redirect()->route('admin.inclusive_package_list')
+                ->with('error', 'Record not found');
+        }
+
+        // Handle dynamic image uploads
+        $imagePaths = $inclusive_packages->events_package_images ? json_decode($inclusive_packages->events_package_images, true) : [];
+        $fileInputs = $request->file();
+
+        foreach ($fileInputs as $key => $files) {
+            if (strpos($key, 'img_') === 0) {
+                if (is_array($files)) {
+                    foreach ($files as $file) {
+                        if ($file->isValid()) {
+                            $fileName = time() . '_' . $file->getClientOriginalName();
+                            $destinationPath = public_path('/uploads/events_package_images');
+
+                            // Ensure the directory exists
+                            if (!file_exists($destinationPath)) {
+                                mkdir($destinationPath, 0755, true);
+                            }
+
+                            // Move the file to the destination path
+                            $file->move($destinationPath, $fileName);
+
+                            // Store the file path
+                            $imagePaths[] = '/uploads/events_package_images/' . $fileName;
+                        }
+                    }
+                } else {
+                    if ($files->isValid()) {
+                        $fileName = time() . '_' . $files->getClientOriginalName();
+                        $destinationPath = public_path('/uploads/events_package_images');
+
+                        // Ensure the directory exists
+                        if (!file_exists($destinationPath)) {
+                            mkdir($destinationPath, 0755, true);
+                        }
+
+                        // Move the file to the destination path
+                        $files->move($destinationPath, $fileName);
+
+                        // Store the file path
+                        $imagePaths[] = '/uploads/events_package_images/' . $fileName;
+                    }
+                }
+            }
+        }
+        $events_packagePath = public_path('/uploads/events_package_images');
+        if (!file_exists($events_packagePath)) {
+            mkdir($events_packagePath, 0755, true);
+        }
+
+        if ($request->hasFile('cover_img')) {
+            $file1 = $request->file('cover_img');
+            $filename1 = time() . '_1.' . $file1->getClientOriginalExtension();
+            $file1->move($events_packagePath, $filename1);
+            $filePath1 = 'uploads/events_package_images/' . $filename1;
+            $inclusive_packages->cover_img = $filePath1;
+        }
+
+
+        $tourPlanningJson = json_encode([
+            'plan_title' => $validatedData['plan_title'],
+            'plan_subtitle' => $validatedData['plan_subtitle'],
+            'plan_description' => $validatedData['plan_description']
+        ]);
+
+        $amenitiesJson = json_encode($request->input('amenity_services'));
+        $addressJson = json_encode($request->input('address_services'));
+        $foodBeveragesJson = json_encode($request->input('food_beverages'));
+        $activitiesJson = json_encode($request->input('activities'));
+        $safetyFeaturesJson = json_encode($request->input('safety_features'));
+        $campRulesJson = json_encode($validatedData['camp_rule']);
+
+        // Update the record
+        $inclusive_packages->program_inclusion = $request->input('program_inclusion');
+        $inclusive_packages->break_fast = $request->input('break_fast');
+        $inclusive_packages->lunch = $request->input('lunch');
+        $inclusive_packages->dinner = $request->input('dinner');
+
+
+
+        $inclusive_packages->theme_id = $request->input('themes_name');
+        $inclusive_packages->city_details = $validatedData['cities_name'];
+        $inclusive_packages->title = $validatedData['title'];
+        $inclusive_packages->program_description = $validatedData['program_description'];
+        $inclusive_packages->category = json_encode($request->input('prop_cat'));
+        $inclusive_packages->address = $addressJson;
+        // $inclusive_packages->city = $validatedData['city'];
+        // $inclusive_packages->state = $validatedData['state'];
+        // $inclusive_packages->country = $validatedData['country'];
+        $inclusive_packages->tour_planning = $tourPlanningJson;
+        $inclusive_packages->start_date = $request->input('start_date');
+        $inclusive_packages->return_date = $request->input('return_date');
+        $inclusive_packages->total_days = $validatedData['total_days'];
+        $inclusive_packages->member_capacity = $validatedData['member_capacity'];
+        $inclusive_packages->member_type = $request->input('mem_type');
+        $inclusive_packages->price = $validatedData['price'];
+        $inclusive_packages->actual_price = $validatedData['actual_price'];
+        $inclusive_packages->camp_rule = $campRulesJson;
+        $inclusive_packages->important_info = $validatedData['important_info'];
+        $inclusive_packages->google_map = $validatedData['google_map'];
+        $inclusive_packages->events_package_images = json_encode($imagePaths);
+        // $inclusive_packages->theme_cat_id = $request->input('theme_cat');
+        
+        // $inclusive_packages->destination_cat = $validatedData['destination_cat'];
+        
+        
+        // $inclusive_packages->geo_feature = $validatedData['geo_feature'];
+        
+        
+        
+        
+        // $inclusive_packages->total_room = $validatedData['total_room'];
+        // $inclusive_packages->bath_room = $validatedData['bath_room'];
+        // $inclusive_packages->bed_room = $validatedData['bed_room'];
+        // $inclusive_packages->hall = $validatedData['hall'];
+        
+       
+        // $inclusive_packages->coupon_code = $validatedData['coupon_code'];
+        
+        
+        $inclusive_packages->amenity_details = $amenitiesJson;
+        $inclusive_packages->food_beverages = $foodBeveragesJson;
+        $inclusive_packages->activities = $activitiesJson;
+        $inclusive_packages->safety_features = $safetyFeaturesJson;
+        $inclusive_packages->is_deleted = '0';
+        $inclusive_packages->updated_at = now();
+        $inclusive_packages->created_by = 'admin'; // You might want to adjust this
+        $inclusive_packages->status = $request->has('status') && $request->input('status') === 'on' ? '1' : '0';
+        // $inclusive_packages->is_featured = $request->has('is_featured') && $request->input('is_featured') === 'on' ? 'yes' : 'no';
+
+        $inclusive_packages->save();
+
+        return redirect()->route('admin.inclusive_package_list')
+            ->with('success', 'Record updated successfully');
+    }
+
+    public function change_status(Request $request)
+    {
+
+        // Retrieve the request data
+        $record_id = $request->input('record_id');
+        $mode = $request->input('mode');
+
+        // Find the admin record by ID
+        $inclusive_packages = InclusivePackages::find($record_id);
+
+        if ($inclusive_packages) {
+            // Update the status based on the mode value
+            if ($mode == 0) {
+                $inclusive_packages->status = "0";
+            } else {
+                $inclusive_packages->status = "1";
+            }
+
+            // Update the updated_date field
+            $inclusive_packages->updated_date = date('Y-m-d H:i:s');
+            $inclusive_packages->status_changed_by = 'admin';
+            $inclusive_packages->save();
+
+            // Prepare the response
+            $response = [
+                'status' => '1',
+                'response' => 'status changed successfully.'
+            ];
+        } else {
+            // Record not found
+            $response = [
+                'status' => '0',
+                'response' => 'Record not found.'
+            ];
+        }
+
+        // Return the response as JSON
+        return response()->json($response);
+    }
+
+    public function delete(Request $request)
+    {
+        // Retrieve the request data
+        $record_id = $request->input('record_id');
+
+        // Find the admin record by ID
+        $inclusive_packages = InclusivePackages::find($record_id);
+        if ($inclusive_packages) {
+            // Update the is_deleted field to 1
+            $inclusive_packages->is_deleted = "1";
+
+            // Set the updated_date field
+            $inclusive_packages->updated_date = date('Y-m-d H:i:s');
+            $inclusive_packages->deleted_by = 'admin';
+            // Save the changes
+            $inclusive_packages->save();
+
+            // Prepare the response
+            $response = [
+                'status' => '1',
+                'response' => 'Record marked as deleted successfully.'
+            ];
+        } else {
+            // Record not found
+            $response = [
+                'status' => '0',
+                'response' => 'Record not found.'
+            ];
+        }
+
+        // Return the response as JSON
+        return response()->json($response);
+    }
+}
