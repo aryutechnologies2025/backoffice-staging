@@ -813,4 +813,86 @@ class ProgramApiController extends Controller
             'data' => $amenities
         ], 200);
     }
+
+    public function getAmenitiesFoodBeverageActivitiesSafetyFeaturesById(Request $request)
+    {
+        
+        // Validate the input
+        $request->validate([
+            'id' => 'required|integer',
+        ]);
+    
+        $id = $request->input('id');
+    
+        // Fetch the package with relationships
+        $package = InclusivePackages::with('destination', 'theme', 'clientReviews')->find($id);
+    
+        if (!$package) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Package not found.',
+                'data' => null,
+            ], 404);
+        }
+    
+        // Decode the stored JSON fields
+        $amenityIds = json_decode($package->amenity_details, true) ?? [];
+        $foodBeverageIds = json_decode($package->food_beverages, true) ?? [];
+        $activityIds = json_decode($package->activities, true) ?? [];
+        $safetyFeatureIds = json_decode($package->safety_features, true) ?? [];
+    
+        // Fetch related records and format the response
+        $amenities = Amenities::whereIn('id', $amenityIds)
+            ->get(['id', 'amenity_name', 'amenity_pic'])
+            ->map(function ($item) {
+                return [
+                    'id' => $item->id,
+                    'amenity_name' => $item->amenity_name,
+                    'amenity_pic' => $item->amenity_pic,
+                ];
+            });
+    
+        $foodBeverages = FoodBeverage::whereIn('id', $foodBeverageIds)
+            ->get(['id', 'food_beverage', 'food_beverage_pic'])
+            ->map(function ($item) {
+                return [
+                    'id' => $item->id,
+                    'food_beverage' => $item->food_beverage,
+                    'food_beverage_pic' => $item->food_beverage_pic,
+                ];
+            });
+    
+        $activities = Activities::whereIn('id', $activityIds)
+            ->get(['id', 'activities', 'activities_pic'])
+            ->map(function ($item) {
+                return [
+                    'id' => $item->id,
+                    'activities' => $item->activities,
+                    'activities_pic' => $item->activities_pic,
+                ];
+            });
+    
+        $safetyFeatures = Safetyfeatures::whereIn('id', $safetyFeatureIds)
+            ->get(['id', 'safety_features', 'safety_features_pic'])
+            ->map(function ($item) {
+                return [
+                    'id' => $item->id,
+                    'safety_features' => $item->safety_features,
+                    'safety_features_pic' => $item->safety_features_pic,
+                ];
+            });
+    
+        // Return the response
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Amenities, Food & Beverages, Activities, and Safety Features retrieved successfully.',
+            'data' => [
+                'amenities' => $amenities,
+                'foodBeverages' => $foodBeverages,
+                'activities' => $activities,
+                'safetyFeatures' => $safetyFeatures,
+            ],
+        ], 200);
+    }
+
 }

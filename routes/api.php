@@ -56,6 +56,7 @@ Route::post('/home-filter',[HomeApiController::class, 'home_filter']);
 Route::post('/get-program-details', [ProgramApiController::class, 'get_program_details']);
 Route::post('/enquiry-form', [ProgramApiController::class, 'enquiry_form_insert']);
 Route::get('/get-amenities', [ProgramApiController::class, 'getAmenities']);
+Route::post('/getActivitiesbyId', [ProgramApiController::class, 'getAmenitiesFoodBeverageActivitiesSafetyFeaturesById']);
 // Route for filtering programs by start date
 // Route for filtering programs by start date
 Route::post('/filter-program-by-date', [HomeApiController::class, 'filter_program_by_date']);
