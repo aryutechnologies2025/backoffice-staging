@@ -37,7 +37,7 @@ class All_Inclusive_PackController extends Controller
 
     public function add_form()
     {
-        $title = 'Program Add';
+        $title = 'ADD PROGRAM';
         $cities = City::where('status', "1")->where('is_deleted', "0")->pluck('city_name', 'id');
         $themes = Themes::where('status', "1")->where('is_deleted', "0")->pluck('themes_name', 'id');
         $amenities = Amenities::where('status', "1")->where('is_deleted', "0")->get();
@@ -161,8 +161,9 @@ class All_Inclusive_PackController extends Controller
         $events_package_imagesPath = public_path('/uploads/events_package_images');
         if ($request->hasFile('cover_img')) {
             $file1 = $request->file('cover_img');
-            $filename1 = time() . '_1.' . $file1->getClientOriginalExtension();
-            $file1->move($events_package_imagesPath, $filename1);
+            $customFileName = preg_replace('/[^A-Za-z0-9_\-]/', '_', $request->input('upload_image_name'));
+            $filename1 = $customFileName . '.' . $file1->getClientOriginalExtension();
+            $file1->move(  $events_package_imagesPath, $filename1);
             $filePath1 = 'uploads/events_package_images/' . $filename1;
         } else {
             $filePath1 = null; // Handle case where cover_img might not be present
@@ -174,7 +175,7 @@ class All_Inclusive_PackController extends Controller
             'plan_subtitle' => $validatedData['plan_subtitle'],
             'plan_description' => $validatedData['plan_description']
         ]);
-
+                                       
         $amenitiesJson = json_encode($request->input('amenity_services'));
         $foodBeveragesJson = json_encode($request->input('food_beverages'));
         $activitiesJson = json_encode($request->input('activities'));
@@ -187,6 +188,8 @@ class All_Inclusive_PackController extends Controller
         $inclusive_packages->break_fast = $request->input('break_fast');
         $inclusive_packages->lunch = $request->input('lunch');
         $inclusive_packages->dinner = $request->input('dinner');
+        $inclusive_packages->upload_image_name = $request->input('upload_image_name');
+        $inclusive_packages->alternate_name = $request->input('alternate_image_name'); 
         $inclusive_packages->theme_id = $request->input('themes_name');
         $inclusive_packages->city_details = $validatedData['cities_name'];
         $inclusive_packages->title = $validatedData['title'];
@@ -277,7 +280,7 @@ class All_Inclusive_PackController extends Controller
             ->where('is_deleted', 0)
             ->pluck('destination_cat', 'id');
 
-        $title = 'Program Edit';
+        $title = ' Edit Program';
 //         echo"<pre>";
 // print_r($package_details);die;
         return view('admin.inclusive_packages.inclusive_packagesedit', compact('package_details', 'title', 'cities_dts', 'themes', 'amenities_dts', 'foodBeverages_dts', 'activities_dts', 'safety_features_dts', 'selectedCityId', 'selectedAmenities', 'selectedthemeId', 'selectedfood_beverages', 'selectedactivities', 'selectedsafety_features', 'geo_feature_dts', 'selectedgeo_featureId', 'categories', 'dest_categories', 'selecteddesCategoryId', 'selectedCategoryId','selectedprogram','selectedAddress','address_dts'));
@@ -372,14 +375,21 @@ class All_Inclusive_PackController extends Controller
             mkdir($events_packagePath, 0755, true);
         }
 
+        // if ($request->hasFile('cover_img')) {
+        //     $file1 = $request->file('cover_img');
+        //     $filename1 = time() . '_1.' . $file1->getClientOriginalExtension();
+        //     $file1->move($events_packagePath, $filename1);
+        //     $filePath1 = 'uploads/events_package_images/' . $filename1;
+        //     $inclusive_packages->cover_img = $filePath1;
+        // }
         if ($request->hasFile('cover_img')) {
             $file1 = $request->file('cover_img');
-            $filename1 = time() . '_1.' . $file1->getClientOriginalExtension();
-            $file1->move($events_packagePath, $filename1);
+            $customFileName = preg_replace('/[^A-Za-z0-9_\-]/', '_', $request->input('upload_image_name'));
+            $filename1 = $customFileName . '.' . $file1->getClientOriginalExtension();
+            $file1->move( $events_packagePath, $filename1);
             $filePath1 = 'uploads/events_package_images/' . $filename1;
             $inclusive_packages->cover_img = $filePath1;
         }
-
 
         $tourPlanningJson = json_encode([
             'plan_title' => $validatedData['plan_title'],
@@ -399,7 +409,8 @@ class All_Inclusive_PackController extends Controller
         $inclusive_packages->break_fast = $request->input('break_fast');
         $inclusive_packages->lunch = $request->input('lunch');
         $inclusive_packages->dinner = $request->input('dinner');
-
+        $inclusive_packages->upload_image_name = $request->input('upload_image_name');
+        $inclusive_packages->alternate_name = $request->input('alternate_image_name');
 
 
         $inclusive_packages->theme_id = $request->input('themes_name');

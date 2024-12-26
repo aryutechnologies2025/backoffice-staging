@@ -34,7 +34,8 @@ class Safety_featuresController extends Controller
         }
         if ($request->hasFile('image_1')) {
             $file1 = $request->file('image_1');
-            $filename1 = time() . '_1.' . $file1->getClientOriginalExtension();
+            $customFileName = preg_replace('/[^A-Za-z0-9_\-]/', '_', $request->input('upload_image_name'));
+            $filename1 = $customFileName . '.' . $file1->getClientOriginalExtension();
             $file1->move($safety_featuresPath, $filename1);
             $filePath1 = 'uploads/safety_features_pic/' . $filename1;
         }
@@ -42,6 +43,9 @@ class Safety_featuresController extends Controller
         $safety_feature = new Safetyfeatures;
         $safety_feature->safety_features = $request->input('safety_features');
         $safety_feature->safety_features_pic = $filePath1;
+        $safety_feature->alternate_name = $request->input('alternate_image_name'); // Save alternate name
+        $safety_feature->upload_image_name = $request->input('upload_image_name');
+
         $safety_feature->status = $request->has('status') && $request->input('status') === 'on' ? '1' : '0';
         $safety_feature->created_date = date('Y-m-d H:i:s');
         $safety_feature->created_by = 'admin';
@@ -77,12 +81,18 @@ class Safety_featuresController extends Controller
         }
         if ($request->hasFile('image_1')) {
             $file1 = $request->file('image_1');
-            $filename1 = time() . '_1.' . $file1->getClientOriginalExtension();
-            $file1->move($safety_featuresPath, $filename1);
+           
+            $customFileName = preg_replace('/[^A-Za-z0-9_\-]/', '_', $request->input('upload_image_name'));
+            $filename1 = $customFileName . '.' . $file1->getClientOriginalExtension();
+            $file1->move($safety_featuresPath , $filename1);
             $filePath1 = 'uploads/safety_features_pic/' . $filename1;
-            $safety_feature->safety_features_pic = $filePath1;
         }
+    
         $safety_feature->safety_features = $request->input('safety_features');
+        $safety_feature->safety_features_pic = $filePath1;
+        $safety_feature->alternate_name = $request->input('alternate_image_name'); // Save alternate name
+        $safety_feature->upload_image_name = $request->input('upload_image_name');
+
         $safety_feature->updated_date = date('Y-m-d H:i:s');
         $safety_feature->status = $request->has('status') && $request->input('status') === 'on' ? '1' : '0';
         $safety_feature->updated_by = 'admin';

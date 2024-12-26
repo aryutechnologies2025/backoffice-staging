@@ -12,19 +12,7 @@
                 <form id="form_valid" action="{{ route('admin.destination_insert') }}" method="POST" autocomplete="off" enctype="multipart/form-data">
                     @csrf
                     <div class="mb-3">
-                        <div class="row g-2 mb-4">
-                            <div class="col">
-                                <label class="fw-bold mb-4 "> Destination <span class="text-danger">*</span></label>
-                                <input type="text" placeholder="Destination" id="destination_name" name="destination_name" class="form-control py-3 rounded-3 shadow-sm" required value="{{old('destination_name')}}">
-                            </div>
-                        </div>
-                        <div class="row g-2 mb-4">
-                            <div class="col">
-                                <label class="fw-bold mb-4 "> Place <span class="text-danger">*</span></label>
-                                <input type="text" placeholder="Place" id="place" name="place" class="form-control py-3 rounded-3 shadow-sm" required value="{{old('place')}}">
-                            </div>
-                        </div>
-                        <div class="g-2 mb-4">
+                    <div class="g-2 mb-4">
                             <div class="col">
                                 <label class="fw-bold mt-4"> Image </label>
                                 <div class="row d-flex mb-4">
@@ -43,6 +31,33 @@
 
                                 </div>
                                 <!-- <h6>*Supported formats: PNG & JPG; File size limit: 2 MB</h6> -->
+                            </div>
+                        </div>
+
+                        <div class="row g-2 mb-4">
+                            <div class="col">
+                                <label class="fw-bold mb-4 "> Destination <span class="text-danger">*</span></label>
+                                <input type="text" placeholder="Destination" id="destination_name" name="destination_name" class="form-control py-3 rounded-3 shadow-sm" required value="{{old('destination_name')}}">
+                            </div>
+                        </div>
+                        <div class="row g-2 mb-4">
+                            <div class="col">
+                                <label class="fw-bold mb-4 "> Place <span class="text-danger">*</span></label>
+                                <input type="text" placeholder="Place" id="place" name="place" class="form-control py-3 rounded-3 shadow-sm" required value="{{old('place')}}">
+                            </div>
+                        </div>
+             
+                        <div class="row g-2 mb-4">
+                            <div class="col">
+                                <label class="fw-bold mb-4">Upload Image Name <span class="text-danger">*</span></label>
+                                <input type="text" placeholder="Rename the Photo" id="upload_image_name" name="upload_image_name" value="{{ old('upload_image_name') }}" class="form-control py-3 rounded-3 shadow-sm" required>
+                            </div>
+                        </div>
+
+                        <div class="row g-2 mb-4">
+                            <div class="col">
+                                <label class="fw-bold mb-4">Alternate Image Name <span class="text-danger">*</span></label>
+                                <input type="text" placeholder="Alternate Name" id="alternate_image_name" name="alternate_image_name" value="{{ old('alternate_image_name') }}" class="form-control py-3 rounded-3 shadow-sm" required>
                             </div>
                         </div>
                         <div class="row g-2">

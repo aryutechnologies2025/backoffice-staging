@@ -40,7 +40,7 @@
                             <!-- <label class="text-white" ><input type="checkbox" id="cb" name="" value="">Keep me signed in</label> -->
                         </div>
                         <div class=" login-btn rounded text-center mb-5">
-                            <button type="submit" class="btn btn-primary  border-0 in-btn">LOGIN</button>
+                            <button type="submit" class="btn btn-primary  border-0 in-btn w-100">LOGIN</button>
                         </div>
                         
                     </form>

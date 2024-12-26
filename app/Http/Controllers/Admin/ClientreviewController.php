@@ -12,11 +12,13 @@ class ClientreviewController extends Controller
 {
     public function list(Request $request)
     {
+        
         $title = 'Client Review List';
         $review_dts = Clientreview::with('program_dts') // Eager load the related theme
             ->where('is_deleted', '0')
             ->paginate(10);
-        return view('admin.client_review.client_reviewlist', compact('title', 'review_dts'));
+       
+            return view('admin.client_review.client_reviewlist', compact('title', 'review_dts'));
     }
 
     public function add_form()
@@ -28,6 +30,7 @@ class ClientreviewController extends Controller
 
     public function insert(Request $request)
     {
+       
     //    print_r($_POST);die;
         $credentials = $request->validate([
             'program_name' => 'required',
@@ -45,15 +48,18 @@ class ClientreviewController extends Controller
 
         if ($request->hasFile('image_1')) {
             $file1 = $request->file('image_1');
-            $filename1 = time() . '_1.' . $file1->getClientOriginalExtension();
-            $file1->move($client_picPath, $filename1);
+            $customFileName = preg_replace('/[^A-Za-z0-9_\-]/', '_', $request->input('upload_image_name'));
+            $filename1 = $customFileName . '.' . $file1->getClientOriginalExtension();
+            $file1->move( $client_picPath, $filename1);
             $filePath1 = 'uploads/client_pic/' . $filename1;
         }
-
         $client_review = new Clientreview;
         $client_review->program_id = $request->input('program_name');
         $client_review->client_name = $request->input('client_name');
         // $client_review->client_role = $request->input('client_role');
+        $client_review->alternate_name = $request->input('alternate_image_name'); // Save alternate name
+        $client_review->upload_image_name = $request->input('upload_image_name');
+
         $client_review->client_review = $request->input('client_review');
         $client_review->review_dt = $request->input('review_dt');
         $client_review->rating = $request->input('rating');
@@ -102,16 +108,21 @@ class ClientreviewController extends Controller
 
         if ($request->hasFile('image_1')) {
             $file1 = $request->file('image_1');
-            $filename1 = time() . '_1.' . $file1->getClientOriginalExtension();
+            $customFileName = preg_replace('/[^A-Za-z0-9_\-]/', '_', $request->input('upload_image_name'));
+            $filename1 = $customFileName . '.' . $file1->getClientOriginalExtension();
             $file1->move($client_picPath, $filename1);
             $filePath1 = 'uploads/client_pic/' . $filename1;
-            $client_review->client_pic = $filePath1;
+            $client_review->client_pic = $filePath1; // Only update if a new file is uploaded
         }
+        
 
 
         $client_review->program_id = $request->input('program_name');
         $client_review->client_name = $request->input('client_name');
         // $client_review->client_role = $request->input('client_role');
+        $client_review->alternate_name = $request->input('alternate_image_name'); // Save alternate name
+        $client_review->upload_image_name = $request->input('upload_image_name');
+    
         $client_review->client_review = $request->input('client_review');
         $client_review->review_dt = $request->input('review_dt');
         $client_review->rating = $request->input('rating');

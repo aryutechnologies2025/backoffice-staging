@@ -13,51 +13,59 @@ class SliderController extends Controller
     {
         $title = 'Slider List';
         $slider_dts = Slider::where('is_deleted', '0')->paginate(10);
+    //   dd($slider_dts);
         return view('admin.slider.sliderlist', compact('title', 'slider_dts'));
     }
 
     public function add_form()
     {
-        $title = 'Slider Add';
+        $title = ' ADD SLIDER ';
 
         return view('admin.slider.slideradd', compact('title'));
     }
 
     public function insert(Request $request)
     {
+        
         $credentials = $request->validate([
-            'image_1' => 'required',
+            'image_1' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
             'sub_title' => 'required',
+            'upload_image_name' => 'required|string',
+            'alternate_image_name' => 'required|string', // Validate alternate image name
         ]);
-
+    
         $sliderPath = public_path('/uploads/slider_img');
         if (!file_exists($sliderPath)) {
             mkdir($sliderPath, 0755, true);
         }
-
+    
         if ($request->hasFile('image_1')) {
             $file1 = $request->file('image_1');
-            $filename1 = time() . '_1.' . $file1->getClientOriginalExtension();
+            $customFileName = preg_replace('/[^A-Za-z0-9_\-]/', '_', $request->input('upload_image_name'));
+            $filename1 = $customFileName . '.' . $file1->getClientOriginalExtension();
             $file1->move($sliderPath, $filename1);
             $filePath1 = 'uploads/slider_img/' . $filename1;
         }
-
+    
         $slider = new Slider;
         $slider->slider_name = $request->input('slider_name');
-        $slider->slider_image = $filePath1;
+        $slider->slider_image = $filePath1 ?? null;
+        $slider->alternate_name = $request->input('alternate_image_name'); // Save alternate name
         $slider->subtitle = $request->input('sub_title');
         $slider->list_order = $request->input('list_order');
+        $slider->upload_image_name = $request->input('upload_image_name');
         $slider->status = $request->has('status') && $request->input('status') === 'on' ? '1' : '0';
-        $slider->created_date = date('Y-m-d H:i:s');
+        $slider->created_date = now();
         $slider->created_by = 'admin';
         $slider->is_deleted = '0';
         $slider->updated_at = null;
         $slider->save();
-
+    
         return redirect()->route('admin.slider_list')
             ->with('success', 'Slider created successfully.');
     }
-
+    
+    
     public function edit_form(Request $request, $id)
     {
         $slider_details = Slider::find($id);
@@ -84,16 +92,21 @@ class SliderController extends Controller
 
         if ($request->hasFile('image_1')) {
             $file1 = $request->file('image_1');
-            $filename1 = time() . '_1.' . $file1->getClientOriginalExtension();
+           
+            $customFileName = preg_replace('/[^A-Za-z0-9_\-]/', '_', $request->input('upload_image_name'));
+            $filename1 = $customFileName . '.' . $file1->getClientOriginalExtension();
             $file1->move($sliderPath, $filename1);
             $filePath1 = 'uploads/slider_img/' . $filename1;
-            $slider->slider_image = $filePath1;
         }
+    
 
 
         $slider->slider_name = $request->input('slider_name');
+        $slider->slider_image = $filePath1 ?? null;
+        $slider->alternate_name = $request->input('alternate_image_name'); // Save alternate name
         $slider->subtitle = $request->input('sub_title');
         $slider->list_order = $request->input('list_order');
+        $slider->upload_image_name = $request->input('upload_image_name');
         $slider->updated_date = date('Y-m-d H:i:s');
         $slider->status = $request->has('status') && $request->input('status') === 'on' ? '1' : '0';
         $slider->updated_by = 'admin';

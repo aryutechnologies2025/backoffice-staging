@@ -636,27 +636,37 @@ class ProgramApiController extends Controller
 
 
 
-    public function enquiry_form_insert(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|max:255',
-            'phone' => 'required|string|max:20',
-            'comments' => 'required|string',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
-        }
-
-        $enquiry = EnquiryDetail::create($request->all());
-
-        return response()->json([
-            'message' => 'Enquiry submitted successfully',
-            'data' => $enquiry
-        ], 201);
+public function enquiry_form_insert(Request $request)
+{
+    $validator = Validator::make($request->all(), [
+        'name' => 'required|string|max:255',
+        'email' => 'required|email|max:255', // Validate email format
+        'phone' => [
+            'required',
+            'regex:/^\+?[0-9]{10,15}$/', 
+        ],
+        'comments' => 'required|string',
+        'location'=> 'required|string',
+        'days' => 'required',
+        'travel_destination' => 'required|string',
+        'budget_per_head' => 'required|string',
+        'cab_need' => 'required|string',
+        'total_count' => 'required',
+        'male_female_count' => 'required|string',
+        'travel_date' => 'required',
+        'rooms_count' => 'required|integer',
+    ]);
+    if ($validator->fails()) {
+        return response()->json(['errors' => $validator->errors()], 422);
     }
 
+    $enquiry = EnquiryDetail::create($request->all());
+
+    return response()->json([
+        'message' => 'Enquiry submitted successfully',
+        'data' => $enquiry
+    ], 201);
+}
     // public function store_wishlist(Request $request)
     // {
 
@@ -795,4 +805,13 @@ class ProgramApiController extends Controller
     //         'data' => $enquiries
     //     ], 200);
     // }
+    public function getAmenities ()
+    {
+        $amenities = Amenities::all();
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Amenities retrieved successfully.',
+            'data' => $amenities
+        ], 200);
+    }
 }

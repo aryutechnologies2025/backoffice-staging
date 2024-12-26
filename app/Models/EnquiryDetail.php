@@ -13,6 +13,15 @@ class EnquiryDetail extends Model
         'email',
         'phone',
         'comments',
+        'location',
+        'days',
+        'travel_destination',
+        'budget_per_head',
+        'cab_need',
+        'total_count',
+        'male_female_count',
+        'travel_date',
+        'rooms_count',
     ];
 }
 

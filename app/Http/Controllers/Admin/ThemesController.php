@@ -18,7 +18,7 @@ class ThemesController extends Controller
 
     public function add_form()
     {
-        $title = 'Theme Add';
+        $title = 'ADD THEME';
         return view('admin.themes.themesadd', compact('title'));
     }
 
@@ -36,16 +36,21 @@ class ThemesController extends Controller
         }
         if ($request->hasFile('image_1')) {
             $file1 = $request->file('image_1');
-            $filename1 = time() . '_1.' . $file1->getClientOriginalExtension();
-            $file1->move($themesPath, $filename1);
+            $customFileName = preg_replace('/[^A-Za-z0-9_\-]/', '_', $request->input('upload_image_name'));
+            $filename1 = $customFileName . '.' . $file1->getClientOriginalExtension();
+            $file1->move( $themesPath, $filename1);
             $filePath1 = 'uploads/themes_pic/' . $filename1;
         }
 
         $themes = new Themes;
         $themes->themes_name = $request->input('theme_name');
+        $themes->theme_pic = $filePath1 ?? null;
         $themes->status = $request->has('status') && $request->input('status') === 'on' ? '1' : '0';
         $themes->created_date = date('Y-m-d H:i:s');
         $themes->list_order = $request->input('list_order');
+        $themes->upload_image_name = $request->input('upload_image_name');
+        $themes->alternate_name = $request->input('alternate_image_name'); // Save alternate name
+
         $themes->created_by = 'admin';
         $themes->is_deleted = '0';
         $themes->theme_pic = $filePath1;
@@ -84,15 +89,18 @@ class ThemesController extends Controller
         }
         if ($request->hasFile('image_1')) {
             $file1 = $request->file('image_1');
-            $filename1 = time() . '_1.' . $file1->getClientOriginalExtension();
-            $file1->move($themesPath, $filename1);
+            $customFileName = preg_replace('/[^A-Za-z0-9_\-]/', '_', $request->input('upload_image_name'));
+            $filename1 = $customFileName . '.' . $file1->getClientOriginalExtension();
+            $file1->move( $themesPath, $filename1);
             $filePath1 = 'uploads/themes_pic/' . $filename1;
-            $themes->theme_pic = $filePath1;
         }
 
         $themes->themes_name = $request->input('theme_name');
+        $themes->theme_pic= $filePath1 ?? null;
         $themes->updated_date = date('Y-m-d H:i:s');
         $themes->list_order = $request->input('list_order');
+        $themes->alternate_name = $request->input('alternate_image_name'); // Save alternate name
+        $themes->upload_image_name = $request->input('upload_image_name');
         $themes->status = $request->has('status') && $request->input('status') === 'on' ? '1' : '0';
         $themes->updated_by = 'admin';
         $themes->save();

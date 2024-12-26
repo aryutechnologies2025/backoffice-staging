@@ -1,8 +1,23 @@
 @extends('layouts.app')
 @Section('content')
+<style>
+    a:hover {
+        color: red;
+    }
+    a{
+        color:rgb(37, 150, 190);
+    }
+    .Food{
+        color:blue;
+    }
+
+</style>
 <div class="row body-sec py-5  px-5 justify-content-around">
     <div class="col-lg-6">
-        <h3 class="fw-bold"><span class="vr"></span>{{$title}}</h3>
+    <b><a href="/dashboard" >Dashboard</a> > <a class="Food" href="/food_beverage" >Food Beverage</a></b>
+        <br>
+        <br>
+        <h3 class="fw-bold">{{$title}}</h3>
     </div>
     <div class="col-lg-6">
         <div class="d-flex justify-content-end">
@@ -16,13 +31,14 @@
 <!-- EVENT LIST -->
 <div class="row body-sec px-5">
     <div class="col-lg-12">
-        <div class="table-sec rounded-bottom-4 shadow-sm mb-5">
-            <table class="table user-list">
-                <thead>
+        <div class="table-sec rounded-bottom-4  mb-5">
+        <table id="cityTable" class="table pt-2">
+        <thead>
                     <tr class="rounded-top-4">
-                    <th class="text-center"><span> Food&Beverage Logo </span></th>
-                        <th class="text-center"><span> Food&Beverage Items </span></th>
-                        <th class="text-center"><span> Status </span></th>
+                        <th class="text-center"><span>S.No</span></th>
+                    <th class="text-center "><span> Food&Beverage Logo </span></th>
+                        <th class="text-center "><span> Food&Beverage Items </span></th>
+                        <th class="text-center "><span> Status </span></th>
                         <th class="text-center"><span> Action </span></th>
                     </tr>
                 </thead>
@@ -35,6 +51,8 @@
                     @else
                     @foreach ($food_beverage as $row)
                     <tr>
+                    <td class="text-center">{{ $loop->iteration }}</td>
+
                     <td class="text-center"><img src="{{ asset($row->food_beverage_pic) }}" alt="Thumbnail" style="max-width: 100px; max-height: 100px; object-fit: cover;"></td>
                     <td class="text-center">{{ $row->food_beverage }}</td>
                         @php
@@ -73,47 +91,27 @@
                 </tbody>
             </table>
             <!-- Pagination -->
-            <div class="pagination-sec">
-                <ul class="pagination justify-content-center">
-                    <!-- Previous Page Link -->
-                    @if ($food_beverage->onFirstPage())
-                    <li class="page-item disabled">
-                        <a class="page-link rounded-circle text-dark fw-bold" href="#" aria-label="Previous">
-                            <span aria-hidden="true">&laquo;</span>
-                        </a>
-                    </li>
-                    @else
-                    <li class="page-item">
-                        <a class="page-link rounded-circle text-dark fw-bold" href="{{ $food_beverage->previousPageUrl() }}" aria-label="Previous">
-                            <span aria-hidden="true">&laquo;</span>
-                        </a>
-                    </li>
-                    @endif
-                    <!-- Page Number Links -->
-                    @foreach ($food_beverage->links()->elements[0] as $page => $url)
-                    <li class="page-item {{ $page == $food_beverage->currentPage() ? 'active' : '' }}">
-                        <a class="page-link rounded-circle text-dark fw-bold px-3 ms-2" href="{{ $url }}">{{ $page }}</a>
-                    </li>
-                    @endforeach
-
-                    <!-- Next Page Link -->
-                    @if ($food_beverage->hasMorePages())
-                    <li class="page-item">
-                        <a class="page-link rounded-circle text-dark fw-bold ms-2" href="{{ $food_beverage->nextPageUrl() }}" aria-label="Next">
-                            <span aria-hidden="true">&raquo;</span>
-                        </a>
-                    </li>
-                    @else
-                    <li class="page-item disabled">
-                        <a class="page-link rounded-circle text-dark fw-bold ms-2" href="#" aria-label="Next">
-                            <span aria-hidden="true">&raquo;</span>
-                        </a>
-                    </li>
-                    @endif
-                </ul>
-            </div>
+            
         </div>
     </div>
 </div>
 
+@endsection
+@section('scripts')
+<script>
+    $(document).ready(function() {
+        $('#cityTable').DataTable({
+            "pageLength": 10,
+            "lengthChange": true,
+            "ordering": true,
+            "searching": true,
+            "language": {
+                "emptyTable": "No records found",
+            },
+            "columnDefs": [
+                { "orderable": false, "targets": [0, 3] } // Disable ordering on Icon and Action columns
+            ]
+        });
+    });
+</script>
 @endsection

@@ -18,7 +18,7 @@ class AddressController extends Controller
 
     public function add_form()
     {
-        $title = 'Address Add';
+        $title = 'Add Address';
 
         return view('admin.address.addressadd', compact('title'));
     }
@@ -56,7 +56,7 @@ class AddressController extends Controller
     public function edit_form(Request $request, $id)
     {
         $user_details = Address::find($id);
-        $title = 'Address Edit';
+        $title = 'Edit Address';
         return view('admin.address.addressedit', compact('user_details', 'title'));
     }
 

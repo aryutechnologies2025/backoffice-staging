@@ -25,6 +25,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
                 // Toggle the logo visibility while keeping its space
                 logo.classList.toggle('invisible');
             });
+
+         
         }
     };
 

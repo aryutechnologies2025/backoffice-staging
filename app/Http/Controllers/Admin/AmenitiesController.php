@@ -12,13 +12,13 @@ class AmenitiesController extends Controller
     public function list(Request $request)
     {
         $title = 'Amenities List';
-        $amenities = Amenities::where('is_deleted', '0')->paginate(10);
+        $amenities = Amenities::where('is_deleted', '0')->paginate(100);
         return view('admin.amenities.amenitieslist', compact('title', 'amenities'));
     }
 
     public function add_form()
     {
-        $title = 'Amenities Add';
+        $title = 'Add Amenities';
         return view('admin.amenities.amenitiesadd', compact('title'));
     }
 
@@ -33,10 +33,10 @@ class AmenitiesController extends Controller
         if (!file_exists($amenityPath)) {
             mkdir($amenityPath, 0755, true);
         }
-
         if ($request->hasFile('image_1')) {
             $file1 = $request->file('image_1');
-            $filename1 = time() . '_1.' . $file1->getClientOriginalExtension();
+            $customFileName = preg_replace('/[^A-Za-z0-9_\-]/', '_', $request->input('upload_image_name'));
+            $filename1 = $customFileName . '.' . $file1->getClientOriginalExtension();
             $file1->move($amenityPath, $filename1);
             $filePath1 = 'uploads/amenity_pic/' . $filename1;
         }
@@ -45,7 +45,9 @@ class AmenitiesController extends Controller
         $amenities = new Amenities;
         $amenities->amenity_name = $request->input('amenity_name');
         $amenities->amenity_pic = $filePath1;
-        $amenities->status = $request->has('status') && $request->input('status') === 'on' ? '1' : '0';
+        $amenities->alternate_name = $request->input('alternate_image_name'); // Save alternate name
+        $amenities->upload_image_name = $request->input('upload_image_name');
+ $amenities->status = $request->has('status') && $request->input('status') === 'on' ? '1' : '0';
         $amenities->created_date = date('Y-m-d H:i:s');
         $amenities->created_by = 'admin';
         $amenities->is_deleted = '0';
@@ -78,13 +80,18 @@ class AmenitiesController extends Controller
             return redirect()->route('admin.amenitieslist')
                 ->with('error', 'Amenities not found.');
         }
+     
         if ($request->hasFile('image_1')) {
             $file1 = $request->file('image_1');
-            $filename1 = time() . '_1.' . $file1->getClientOriginalExtension();
-            $file1->move($amenityPath, $filename1);
+           
+            $customFileName = preg_replace('/[^A-Za-z0-9_\-]/', '_', $request->input('upload_image_name'));
+            $filename1 = $customFileName . '.' . $file1->getClientOriginalExtension();
+            $file1->move(  $amenityPath, $filename1);
             $filePath1 = 'uploads/amenity_pic/' . $filename1;
-            $amenities->amenity_pic = $filePath1;
         }
+        $amenities->amenity_pic = $filePath1 ?? null;
+        $amenities->alternate_name = $request->input('alternate_image_name'); // Save alternate name
+        $amenities->upload_image_name = $request->input('upload_image_name');
 
         $amenities->amenity_name = $request->input('amenity_name');
         $amenities->updated_date = date('Y-m-d H:i:s');

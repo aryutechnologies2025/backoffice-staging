@@ -34,13 +34,17 @@ class ActivitiesController extends Controller
 
         if ($request->hasFile('image_1')) {
             $file1 = $request->file('image_1');
-            $filename1 = time() . '_1.' . $file1->getClientOriginalExtension();
-            $file1->move($activitiesPath, $filename1);
+            $customFileName = preg_replace('/[^A-Za-z0-9_\-]/', '_', $request->input('upload_image_name'));
+            $filename1 = $customFileName . '.' . $file1->getClientOriginalExtension();
+            $file1->move( $activitiesPath, $filename1);
             $filePath1 = 'uploads/activities_pic/' . $filename1;
         }
 
         $activities = new Activities;
         $activities->activities = $request->input('activities');
+        $activities->alternate_name = $request->input('alternate_image_name'); // Save alternate name
+        $activities->upload_image_name = $request->input('upload_image_name');
+
         $activities->activities_pic = $filePath1;
         $activities->status = $request->has('status') && $request->input('status') === 'on' ? '1' : '0';
         $activities->created_date = date('Y-m-d H:i:s');
@@ -78,13 +82,18 @@ class ActivitiesController extends Controller
         }
         if ($request->hasFile('image_1')) {
             $file1 = $request->file('image_1');
-            $filename1 = time() . '_1.' . $file1->getClientOriginalExtension();
+           
+            $customFileName = preg_replace('/[^A-Za-z0-9_\-]/', '_', $request->input('upload_image_name'));
+            $filename1 = $customFileName . '.' . $file1->getClientOriginalExtension();
             $file1->move($activitiesPath, $filename1);
             $filePath1 = 'uploads/activities_pic/' . $filename1;
-            $activities->activities_pic = $filePath1;
         }
 
         $activities->activities = $request->input('activities');
+        $activities->alternate_name = $request->input('alternate_image_name'); // Save alternate name
+        $activities->upload_image_name = $request->input('upload_image_name');
+
+        $activities->activities_pic = $filePath1;
         $activities->updated_date = date('Y-m-d H:i:s');
         $activities->status = $request->has('status') && $request->input('status') === 'on' ? '1' : '0';
         $activities->updated_by = 'admin';

@@ -79,9 +79,6 @@ use Illuminate\Support\Facades\Http;
 // });
 // Route::middleware('web')->get('/csrf-token', [AuthController::class, 'getToken']);
 
-//  Route::get('/welcome', function () {
-//     echo bcrypt('nzLPyw~]G?L2');
-// });
 
 Route::prefix('/')->group(function () {
     Route::get('/', [AdminController::class, 'index'])->name('admin.login');

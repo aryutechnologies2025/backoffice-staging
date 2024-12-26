@@ -20,6 +20,7 @@
             <table class="table user-list">
                 <thead>
                     <tr class="rounded-top-4">
+                        <th class="text-center"><span>S.No</span></th>
                         <th class="text-center"><span> Property Title </span></th>
                         <th class="text-center"><span> Property Type </span></th>
                         <th class="text-center"><span> City </span></th>
@@ -35,6 +36,8 @@
                     @else
                     @foreach ($property_dts as $row)
                     <tr>
+                    <td class="text-center">{{ $loop->iteration }}</td>
+
                     <td class="text-center"></td>
                     <td class="text-center"></td>
                     <td class="text-center"></td>

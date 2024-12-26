@@ -33,7 +33,8 @@ class Food_beverageController extends Controller
         }
         if ($request->hasFile('image_1')) {
             $file1 = $request->file('image_1');
-            $filename1 = time() . '_1.' . $file1->getClientOriginalExtension();
+            $customFileName = preg_replace('/[^A-Za-z0-9_\-]/', '_', $request->input('upload_image_name'));
+            $filename1 = $customFileName . '.' . $file1->getClientOriginalExtension();
             $file1->move($food_beveragePath, $filename1);
             $filePath1 = 'uploads/food_beverage_pic/' . $filename1;
         }
@@ -41,6 +42,8 @@ class Food_beverageController extends Controller
         $food_beverage = new FoodBeverage;
         $food_beverage->food_beverage = $request->input('food_beverage');
         $food_beverage->food_beverage_pic = $filePath1;
+        $food_beverage->alternate_name = $request->input('alternate_image_name'); // Save alternate name
+        $food_beverage->upload_image_name = $request->input('upload_image_name');
         $food_beverage->status = $request->has('status') && $request->input('status') === 'on' ? '1' : '0';
         $food_beverage->created_date = date('Y-m-d H:i:s');
         $food_beverage->created_by = 'admin';
@@ -79,14 +82,18 @@ class Food_beverageController extends Controller
 
         if ($request->hasFile('image_1')) {
             $file1 = $request->file('image_1');
-            $filename1 = time() . '_1.' . $file1->getClientOriginalExtension();
+           
+            $customFileName = preg_replace('/[^A-Za-z0-9_\-]/', '_', $request->input('upload_image_name'));
+            $filename1 = $customFileName . '.' . $file1->getClientOriginalExtension();
             $file1->move($food_beverage_picPath, $filename1);
             $filePath1 = 'uploads/food_beverage_pic/' . $filename1;
-            $food_beverage->food_beverage_pic = $filePath1;
         }
 
         $food_beverage->food_beverage = $request->input('food_beverage');
-        $food_beverage->updated_date = date('Y-m-d H:i:s');
+        $food_beverage->food_beverage_pic = $filePath1;
+        $food_beverage->alternate_name = $request->input('alternate_image_name'); // Save alternate name
+        $food_beverage->upload_image_name = $request->input('upload_image_name');
+  $food_beverage->updated_date = date('Y-m-d H:i:s');
         $food_beverage->status = $request->has('status') && $request->input('status') === 'on' ? '1' : '0';
         $food_beverage->updated_by = 'admin';
         $food_beverage->save();
