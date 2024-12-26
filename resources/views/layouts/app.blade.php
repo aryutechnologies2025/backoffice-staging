@@ -24,7 +24,13 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
     <link href="https://cdn.jsdelivr.net/npm/summernote/dist/summernote-lite.min.css" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <!-- Include DataTables CSS and JS -->
 
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+   
+    @yield('scripts')
     @yield('style')
     @stack('js')
 </head>
@@ -380,13 +386,7 @@
         filterTable('Inactive');
     });
 
-    <!-- Include DataTables CSS and JS -->
-
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-
-   
-    @yield('scripts')
+  
 
 
 
