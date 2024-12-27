@@ -32,6 +32,7 @@
    
     @yield('scripts')
     @yield('style')
+
     @stack('js')
 </head>
 
@@ -79,14 +80,26 @@
         </header>
     </div>
     <div class="l-navbar" id="nav-bar">
-        
-        <nav class="nav">
+   
+        <nav class="navbar">
             <div>
                 <div class="nav_list ">
                     <img class="pt-4 px-2 mb-5" style="width:80%;" src="{{ $settings->footer_logo ? asset($settings->footer_logo) : '/assets/image/login/inner_pece_logo.png' }}" alt="">
                     <a href="{{ route('admin.dashboard') }}" class="nav_link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }} mb-3 text-white">
                         <img src="/assets/image/dashboard/Dashboard.svg" alt="">
                         <span class="nav_name">Dashboard</span>
+                    </a>
+                    <a href="{{ route('admin.user_list') }}" class="nav_link {{ request()->routeIs(['admin.user_list', 'admin.user_add_form', 'admin.user_edit_form']) ? 'active' : ''}} mb-3 text-white">
+                        <img src="/assets/image/dashboard/user.svg" alt="">
+                        <span class="nav_name"> User Registration </span>
+                    </a>
+                    <a href="{{ route('admin.contact_list') }}" class="nav_link {{ request()->routeIs(['admin.contact_list']) ? 'active' : '' }} mb-3 text-white">
+                        <img src="/assets/image/dashboard/contact-us.svg" alt="">
+                        <span class="nav_name">contact-Us</span>
+                    </a>
+                    <a href="{{ route('admin.enquiry_list') }}" class="nav_link {{ request()->routeIs(['admin.enquiry_list']) ? 'active' : '' }} mb-3 text-white">
+                        <img src="/assets/image/dashboard/enquiry.svg" alt="">
+                        <span class="nav_name"> Enquiries </span>
                     </a>
                     <a href="{{ route('admin.slider_list') }}" class="nav_link {{ request()->routeIs(['admin.slider_list', 'admin.slider_add_form', 'admin.slider_edit_form']) ? 'active' : '' }} mb-3 text-white">
                         <img src="/assets/image/dashboard/slider.svg" alt="">
@@ -212,18 +225,7 @@
                     </a>
                     --}}
 
-                    <a href="{{ route('admin.user_list') }}" class="nav_link {{ request()->routeIs(['admin.user_list', 'admin.user_add_form', 'admin.user_edit_form']) ? 'active' : ''}} mb-3 text-white">
-                        <img src="/assets/image/dashboard/user.svg" alt="">
-                        <span class="nav_name"> User Registration </span>
-                    </a>
-                    <a href="{{ route('admin.contact_list') }}" class="nav_link {{ request()->routeIs(['admin.contact_list']) ? 'active' : '' }} mb-3 text-white">
-                        <img src="/assets/image/dashboard/contact-us.svg" alt="">
-                        <span class="nav_name">contact-Us</span>
-                    </a>
-                    <a href="{{ route('admin.enquiry_list') }}" class="nav_link {{ request()->routeIs(['admin.enquiry_list']) ? 'active' : '' }} mb-3 text-white">
-                        <img src="/assets/image/dashboard/enquiry.svg" alt="">
-                        <span class="nav_name"> Enquiries </span>
-                    </a>
+                  
                     <!-- <a href="{{ route('admin.profile_list') }}" class="nav_link {{ request()->routeIs(['admin.profile_list', 'admin.profile_add_form', 'admin.profile_edit_form']) ? 'active' : '' }} mb-3 text-white">
                         <img src="/assets/image/dashboard/myprofile.svg" alt="">
                         <span class="nav_name">My Profile</span>
@@ -231,8 +233,14 @@
 
                     <a href="{{ route('admin.settings_list') }}" class="nav_link {{ request()->routeIs(['admin.settings_list']) ? 'active' : '' }} mb-3">
                         <img src="/assets/image/dashboard/settings.svg" alt="">
-                        <span class="nav_name"> General Setting </span>
+                        <span class="nav_name" style="color: #fff;"> General Setting </span>
                     </a>
+                    <div class="profile-content">
+                    <a href="{{ route('admin.logout') }}" class="nav_link mb-3 text-white">
+                        <img src="/assets/image/dashboard/turn-off.svg" alt="">
+                        <span class="nav_name logout-menu"   >Logout</span>
+                    </a>
+                </div>
                     
 
                     {{-- <a class="nav_link {{ request()->routeIs(['admin.faqlist', 'admin.faq_add_form', 'admin.faq_edit_form']) ? 'active' : '' }} mb-3">
@@ -241,14 +249,14 @@
                 </div>
             </div>
             <hr>
-            <div class="profile-details">
+            <!-- <div class="profile-details">
                 <div class="profile-content">
                     <a href="{{ route('admin.logout') }}" class="nav_link mb-3">
                         <img src="/assets/image/dashboard/turn-off.svg" alt="">
                         <span class="nav_name logout-menu">Logout</span>
                     </a>
                 </div>
-            </div>
+            </div> -->
         </nav>
     </div>
     <!-- SIDE BAR END -->
