@@ -6,7 +6,8 @@
     <h3>{{$title}}</h3>
     <br>
     <br>
-    <p>Welcome To Dashboard More Travel, More Peace </p>
+    <h5>Welcome  <b>{{ Session::get('admin_name') }}</b>,</h5>
+    <p>More Travel, More Peace</p>
 
     <!-- <div class="col-lg-2  d-flex bg-white  py-3 rounded dash-detail">
         <div class="mt-2 px-3">
