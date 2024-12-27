@@ -247,7 +247,7 @@
                         <span class="nav_name" style="color: #fff;"> General Setting </span>
                     </a>
                     <div class="profile-content">
-                    <a href="{{ route('admin.logout') }}" class="nav_link mb-3 text-white">
+                    <a href="{{ route('admin.logout') }}" class="nav_link mb-3 ">
                         <img src="/assets/image/dashboard/turn-off.svg" alt="">
                         <span class="nav_name logout-menu"   >Logout</span>
                     </a>
