@@ -25,14 +25,13 @@
     <link href="https://cdn.jsdelivr.net/npm/summernote/dist/summernote-lite.min.css" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
   <!-- Include DataTables CSS and JS -->
-<!--testing-->
+
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 
    
     @yield('scripts')
     @yield('style')
-
     @stack('js')
 </head>
 
@@ -80,8 +79,8 @@
         </header>
     </div>
     <div class="l-navbar" id="nav-bar">
-   
-        <nav class="navbar">
+        
+        <nav class="nav w-100">
             <div>
                 <div class="nav_list ">
                     <img class="pt-4 px-2 mb-5" style="width:80%;" src="{{ $settings->footer_logo ? asset($settings->footer_logo) : '/assets/image/login/inner_pece_logo.png' }}" alt="">
@@ -89,6 +88,7 @@
                         <img src="/assets/image/dashboard/Dashboard.svg" alt="">
                         <span class="nav_name">Dashboard</span>
                     </a>
+                    
                     <a href="{{ route('admin.user_list') }}" class="nav_link {{ request()->routeIs(['admin.user_list', 'admin.user_add_form', 'admin.user_edit_form']) ? 'active' : ''}} mb-3 text-white">
                         <img src="/assets/image/dashboard/user.svg" alt="">
                         <span class="nav_name"> User Registration </span>
@@ -225,7 +225,18 @@
                     </a>
                     --}}
 
-                  
+                    <!-- <a href="{{ route('admin.user_list') }}" class="nav_link {{ request()->routeIs(['admin.user_list', 'admin.user_add_form', 'admin.user_edit_form']) ? 'active' : ''}} mb-3 text-white">
+                        <img src="/assets/image/dashboard/user.svg" alt="">
+                        <span class="nav_name"> User Registration </span>
+                    </a>
+                    <a href="{{ route('admin.contact_list') }}" class="nav_link {{ request()->routeIs(['admin.contact_list']) ? 'active' : '' }} mb-3 text-white">
+                        <img src="/assets/image/dashboard/contact-us.svg" alt="">
+                        <span class="nav_name">contact-Us</span>
+                    </a>
+                    <a href="{{ route('admin.enquiry_list') }}" class="nav_link {{ request()->routeIs(['admin.enquiry_list']) ? 'active' : '' }} mb-3 text-white">
+                        <img src="/assets/image/dashboard/enquiry.svg" alt="">
+                        <span class="nav_name"> Enquiries </span>
+                    </a> -->
                     <!-- <a href="{{ route('admin.profile_list') }}" class="nav_link {{ request()->routeIs(['admin.profile_list', 'admin.profile_add_form', 'admin.profile_edit_form']) ? 'active' : '' }} mb-3 text-white">
                         <img src="/assets/image/dashboard/myprofile.svg" alt="">
                         <span class="nav_name">My Profile</span>
@@ -304,6 +315,7 @@
     @push('scripts')
     <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script> -->
     <script src="/assets/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script> -->
     <script src="/assets/js/toastr.min.js"></script>
     <!-- <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.3/dist/jquery.validate.min.js"></script> -->
