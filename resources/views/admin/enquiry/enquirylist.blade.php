@@ -63,7 +63,8 @@
                                         data-budget_per_head="{{ $row->budget_per_head }}"
                                         data-cab_need="{{ $row->cab_need }}"
                                         data-total_count="{{ $row->total_count }}"
-                                        data-male_female_count="{{$row->male_female_count}}"
+                                        data-male_count="{{$row->male_count}}"
+                                        data-female_count="{{$row->female_count}}"
                                         data-travel_date="{{ $row->travel_date }}"
                                         data-rooms_count="{{ $row->rooms_count }}"
                                         data-date="{{ $row->created_at->format('d/m/Y h:i:s') }}"
@@ -99,7 +100,8 @@
                 <p><strong>Budget Per Head:</strong> <span id="modalBudgetPerHead"></span></p>
                 <p><strong>Cab Need:</strong> <span id="modalCabNeed"></span></p>
                 <p><strong>Total Count:</strong> <span id="modalTotalCount"></span></p>
-                <p><strong>Male & Female Count:</strong> <span id="modalGenderCount"></span></p>
+                <p><strong>Male Count:</strong> <span id="modalMaleCount"></span></p>
+                <p><strong>Female Count:</strong> <span id="modalFemaleCount"></span></p>
                 <p><strong>Travel Date:</strong> <span id="modalTravelDate"></span></p>
                 <p><strong>Rooms Count:</strong> <span id="modalRoomsCount"></span></p>
                 <p><strong>Comments:</strong> <span id="modalComments"></span></p>
@@ -144,7 +146,8 @@
             $('#modalBudgetPerHead').text($(this).data('budget_per_head'));
             $('#modalCabNeed').text($(this).data('cab_need'));
             $('#modalTotalCount').text($(this).data('total_count'));
-            $('#modalGenderCount').text($(this).data('male_female_count'));
+            $('#modalMaleCount').text($(this).data('male_count'));
+            $('#modalFemaleCount').text($(this).data('female_count'));
             $('#modalTravelDate').text($(this).data('travel_date'));
             $('#modalRoomsCount').text($(this).data('rooms_count'));
             $('#modalDate').text(date);

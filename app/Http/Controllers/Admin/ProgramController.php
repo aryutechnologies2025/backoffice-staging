@@ -12,7 +12,7 @@ class ProgramController extends Controller
     public function list(Request $request)
     {
         $title = 'Program List';
-        $program_dts = Program::where('is_deleted', '0')->paginate(10);
+        $program_dts = Program::where('is_deleted', '0')->latest()->paginate(10);
         return view('admin.program.programlist', compact('title', 'program_dts'));
     }
 
