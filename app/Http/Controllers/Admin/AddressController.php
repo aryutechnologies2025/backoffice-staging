@@ -101,16 +101,16 @@ class AddressController extends Controller
         if ($user) {
             $user->is_deleted = "1";
 
-            $user->updated_date = date('Y-m-d H:i:s');
-            $user->deleted_by = 'admin';
+            // $user->updated_date = date('Y-m-d H:i:s');
+            // $user->deleted_by = 'admin';
             $user->save();
             $response = [
-                'status' => '1',
+             
                 'response' => 'Record marked as deleted successfully.'
             ];
         } else {
             $response = [
-                'status' => '0',
+               
                 'response' => 'Record not found.'
             ];
         }
