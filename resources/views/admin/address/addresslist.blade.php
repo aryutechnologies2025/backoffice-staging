@@ -55,7 +55,7 @@
                         <td class="text-center">{!! $row->address !!}</td>
                         <td class="text-center">{{ $row->city }}</td>
                         <td class="text-center">{{ $row->state }}</td>
-                        <td class="text-center">{{ $row->county }}</td>
+                        <td class="text-center">{{ $row->country }}</td>
                         <td class="text-center">{{ $row->pincode }}</td>
                         <td class="text-center" style="width: 20%;">
                             <a href="{{ route('admin.address_edit_form',$row->id) }}" class="table-edit-link">
