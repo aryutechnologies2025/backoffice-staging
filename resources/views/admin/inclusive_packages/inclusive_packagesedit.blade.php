@@ -22,11 +22,17 @@
     }
 
     .form-body {
-
-       
-        border-radius: 10px;
-
-    }
+   
+   padding-top: 1% !important;
+   padding-bottom: 1% !important;
+}
+.mb-1 {
+   margin-bottom: .5rem !important;
+}
+.px-5 {
+  
+    padding-left: 1rem !important; 
+}
 </style>
 <div class="container-wrapper pt-5">
     <div class="row">
@@ -41,15 +47,15 @@
         <form id="form_valid" action="{{ route('admin.inclusive_package_update', $package_details->id) }}" method="POST" autocomplete="off" enctype="multipart/form-data">
             @csrf
             <!-- 1.INFORMATION -->
-            <div class="row mb-5">
+            <div class="row mb-2">
                 <div class="col-lg-12">
                     <div class="form-body px-4 mb-5  rounded-4">
-                        <h4 class="fw-bold mb-5">1.Information</h4>
+                        <h4 class="fw-bold mb-4">1.Information</h4>
                         <div class="mb-3">
                             <div class="row g-2 mb-4">
                                 <div class="col">
-                                    <label class="fw-bold mb-2">Themes</label>
-                                    <select id="themes_name" name="themes_name" class="form-select py-3 rounded-3 shadow-sm">
+                                    <label class="fw-bold mb-3">Themes</label>
+                                    <select id="themes_name" name="themes_name" class="form-select py-2 rounded-3 shadow-sm">
                                         <option value="">Select Theme</option>
                                         @foreach($themes as $id => $name)
                                         <option value="{{ $id }}" {{ $id == $selectedthemeId ? 'selected' : '' }}>{{ $name }}</option>
@@ -57,8 +63,8 @@
                                     </select>
                                 </div>
                                 <div class="col">
-                                    <label class="fw-bold mb-2">Destination <span class="text-danger">*</span></label>
-                                    <select id="cities_name" name="cities_name" class="form-select py-3 rounded-3 shadow-sm" required>
+                                    <label class="fw-bold mb-3">Destination <span class="text-danger">*</span></label>
+                                    <select id="cities_name" name="cities_name" class="form-select py-2 rounded-3 shadow-sm" required>
                                         <option value="">Select Destination</option>
                                         @foreach($cities_dts as $id => $name)
                                         <option value="{{ $id }}" {{ $id == $selectedCityId ? 'selected' : '' }}>
@@ -68,20 +74,20 @@
                                     </select>
                                 </div>
 
-                                <div class="mt-5">
+                                <div class="mt-3">
                                     <div class="col">
-                                        <label class="fw-bold mb-2 "> Title <span class="text-danger">*</span></label>
-                                        <input type="text" placeholder="Title" id="title" name="title" class="form-control py-3 rounded-3 shadow-sm" required value="{{$package_details->title}}">
+                                        <label class="fw-bold mb-3 "> Title <span class="text-danger">*</span></label>
+                                        <input type="text" placeholder="Title" id="title" name="title" class="form-control py-2 rounded-3 shadow-sm mb-3" required value="{{$package_details->title}}">
                                     </div>
                                     <div class="row">
                                         <div class="col-lg-12">
                                             <input type="hidden" id="program_description" name="program_description">
-                                            <label class="form-label form-label-top form-label-auto fw-bold mb-4">Program Description <span class="text-danger">*</span></label>
+                                            <label class="form-label form-label-top form-label-auto fw-bold mb-2">Program Description <span class="text-danger">*</span></label>
                                             <!-- <textarea id="program_description" class="container__textarea p-5 textarea-feild" name="program_description" required>{{$package_details->program_description}}</textarea> -->
                                             <!-- <div class="mb-3">
                                             <div id="commentEditor1" class="form-control " style="height: 200px;"></div>
                                         </div> -->
-                                            <div class=" mt-5">
+                                            <div class=" mt-2">
                                                 <div class="row">
                                                     <div class="col-lg-12 ">
                                                         @php
@@ -96,27 +102,27 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row g-2 mb-5">
+                        <div class="row g-2 mb-3">
                             <div class="col">
 
                                 <div class="row mt-5">
                                     <label class="fw-bold mb-2">Flag </label>
                                     <!-- Display each amenity as a column -->
-                                    <div class="col-lg-3 col-md-3 col-sm-4 mb-2">
+                                    <div class="col-lg-3 col-md-2 col-sm-4 mb-2">
                                         <div class="form-check d-flex  align-items-center">
                                             <input type="checkbox" class="me-1" id="popular_program" name="prop_cat[]" value="popular_program"
                                                 {{ in_array('popular_program', $selectedprogram) ? 'checked' : '' }}>
                                             <label class="" for="popular_program">Popular Program</label>
                                         </div>
                                     </div>
-                                    <div class="col-lg-3 col-md-3 col-sm-4 mb-2">
+                                    <div class="col-lg-3 col-md-2 col-sm-4 mb-2">
                                         <div class="form-check">
                                             <input type="checkbox" class="me-1" id="upcoming_program" name="prop_cat[]" value="upcoming_program"
                                                 {{ in_array('upcoming_program', $selectedprogram) ? 'checked' : '' }}>
                                             <label class="" for="upcoming_program">Upcoming Program</label>
                                         </div>
                                     </div>
-                                    <div class="col-lg-3 col-md-3 col-sm-4 mb-2">
+                                    <div class="col-lg-3 col-md-2 col-sm-4 mb-2">
                                         <div class="form-check">
                                             <input type="checkbox" class="me-1" id="featured" name="prop_cat[]" value="featured"
                                                 {{ in_array('featured', $selectedprogram) ? 'checked' : '' }}>
@@ -212,14 +218,14 @@
             </div>
 
             <!-- 2.LOCATION -->
-            {{-- <div class="row mb-5">
+            {{-- <div class="row mb-3">
             <div class="col">
                 <div class="form-body px-5  rounded-4">
-                    <h4 class="fw-bold mb-5">2.Location</h4>
+                    <h4 class="fw-bold mb-3">2.Location</h4>
                     <div class="mb-3">
-                        <div class="row mb-4">
+                        <div class="row mb-2">
                             <input type="hidden" id="address" name="address">
-                            <label class="fw-bold mb-4 ">Address Details <span class="text-danger">*</span></label>
+                            <label class="fw-bold mb-2 ">Address Details <span class="text-danger">*</span></label>
                             <div class="col-lg-12  ">
                                 <!-- <input type="text" id="address" name="address" class="form-control py-3 rounded-3 shadow-sm" placeholder="Address" required value=""> -->
                                 <!-- <textarea id="program_descriptions" class="container__textarea p-5 textarea-feild" name="address" required>{{$package_details->address}}</textarea> -->
@@ -229,7 +235,7 @@
             @php
             $plain_text_address = strip_tags($package_details->address);
             @endphp
-            <div class=" mt-5">
+            <div class=" mt-2">
                 <div class="row">
                     <div class="col-lg-12 ">
                         <div id="summernote2">{{$plain_text_address}}</div>
@@ -238,20 +244,20 @@
             </div>
     </div>
 </div>
-<div class="row g-2 mb-4 d-flex justify-content-around">
+<div class="row g-2 mb-2 d-flex justify-content-around">
     <div class="col">
         <label class="fw-bold  mb-4">City <span class="text-danger">*</span></label>
-        <input type="text" placeholder="City" id="city" name="city" class="form-control py-3 rounded-3 shadow-sm" required value="{{$package_details->city}}">
+        <input type="text" placeholder="City" id="city" name="city" class="form-control py-2 rounded-3 shadow-sm" required value="{{$package_details->city}}">
     </div>
     <div class="col">
         <label class="fw-bold mb-4 ">State <span class="text-danger">*</span></label>
-        <input type="text" placeholder="State" id="state" name="state" class="form-control py-3 rounded-3 shadow-sm" required value="{{$package_details->state}}">
+        <input type="text" placeholder="State" id="state" name="state" class="form-control py-2 rounded-3 shadow-sm" required value="{{$package_details->state}}">
     </div>
 </div>
 <div class="row mb-4">
     <div class="col-lg-12">
         <label class="fw-bold mb-4 ">Country <span class="text-danger">*</span></label>
-        <input type="text" id="country" name="country" class="form-control py-3 rounded-3 shadow-sm" placeholder="Country" required value="{{$package_details->country}}">
+        <input type="text" id="country" name="country" class="form-control py-2 rounded-3 shadow-sm" placeholder="Country" required value="{{$package_details->country}}">
     </div>
 </div>
 </div>
@@ -260,13 +266,13 @@
 </div> --}}
 
 
-<div class="row mb-5">
+<div class="row mb-1">
     <div class="col">
         <div class="form-body px-5 rounded-4">
-            <h4 class="fw-bold mb-5">2. Location </h4>
+            <h4 class="fw-bold mb-3">2. Location </h4>
             <div class="row mb-4">
                 @foreach($address_dts->chunk(4) as $chunk)
-                <div class="row mb-3">
+                <div class="row mb-2">
                     @foreach($chunk as $address)
                     <div class="col-lg-3 col-md-3 col-sm-4 mb-2">
                         <div class="form-check d-flex  align-items-center">
@@ -284,40 +290,40 @@
 
 
 <!-- 3.TOUR PLANNING  -->
-<div class="row mb-5">
+<div class="row mb-1">
     <div class="col">
         <div class="form-body px-5 rounded-4">
-            <h4 class="fw-bold mb-5">3. Tour Planning <span class="text-danger">*</span></h4>
+            <h4 class="fw-bold mb-3">3. Tour Planning <span class="text-danger">*</span></h4>
             <div id="plan-container">
                 @php
                 // Decode JSON if needed
                 $tourPlanning = json_decode($package_details->tour_planning, true);
                 @endphp
                 @foreach($tourPlanning['plan_subtitle'] as $index => $title)
-                <div class="row g-2 mt-5 d-flex justify-content-around">
+                <div class="row g-2 mt-3 d-flex justify-content-around">
                     <div class="col-lg-12">
                         <input type="text" name="plan_title[]" class="form-control py-2 rounded-3 shadow-sm" placeholder="Plan Title" required value="{{ isset($tourPlanning['plan_title'][$index]) ? $tourPlanning['plan_title'][$index] : '' }}">
                     </div>
                 </div>
                 <div class="plan-item mb-3">
-                    <div class="mt-5">
+                    <div class="mt-4">
                         <div class="row">
                             <div class="col-lg-11">
-                                <label class="form-label form-label-top form-label-auto fw-bold mb-2">Plan Subtitle</label>
-                                <input type="text" name="plan_subtitle[]" class="form-control py-2 rounded-3 shadow-sm" placeholder="Plan Subtitle" required value="{{ $tourPlanning['plan_subtitle'][$index] }}">
+                                <label class="form-label form-label-top form-label-auto fw-bold mb-3">Plan Subtitle</label>
+                                <input type="text" name="plan_subtitle[]" class="form-control py-2 rounded-3 shadow-sm mb-2" placeholder="Plan Subtitle" required value="{{ $tourPlanning['plan_subtitle'][$index] }}">
                             </div>
-                            <div class="col-lg-1 mt-3 text-end">
+                            <!-- <div class="col-lg-1 mt-3 text-end">
                                 <a href="#" class="table-link danger remove-plan">
                                     <span class="fa-stack">
                                         <i class="fa fa-square fa-stack-2x"></i>
                                         <i class="fa fa-trash-o fa-stack-1x fa-inverse"></i>
                                     </span>
                                 </a>
-                            </div>
+                            </div> -->
                         </div>
 
                     </div>
-                    <div class="mt-5">
+                    <div class="mt-2">
                         <div class="row">
                             <div class="col-lg-11">
                                 <input type="hidden" id="plan_description" name="plan_description[]">
@@ -326,7 +332,7 @@
                                 @php
                                 $plain_text_plan_description = strip_tags($tourPlanning['plan_description'][$index]);
                                 @endphp
-                                <div class=" mt-5">
+                                <div class=" mt-3">
                                     <div class="row">
                                         <div class="col-lg-12 ">
                                             <div id="summernote3">{{$plain_text_plan_description}}</div>
@@ -339,11 +345,11 @@
                 </div>
                 @endforeach
             </div>
-            <div class="text-end p-5">
+            <!-- <div class="text-end p-5">
                 <button type="button" id="add-plan-btn" class="btn-add rounded border-0 px-5 py-3 text-end text-white">
                     <i class="fa fa-plus" aria-hidden="true"></i> Add
                 </button>
-            </div>
+            </div> -->
         </div>
     </div>
 </div>
@@ -352,28 +358,28 @@
 
 
 <!-- 4.TOUR DATE & TIME -->
-<div class="row mb-5">
+<div class="row mb-2">
     <div class="col">
         <div class="form-body px-5 rounded-4">
-            <h4 class="fw-bold mb-5">4.Tour date & Time</h4>
-            <div class="mb-3">
-                <div class="row mb-4">
-                    <div class="row g-2 mb-4">
+            <h4 class="fw-bold mb-2">4.Tour date & Time</h4>
+            <div class="mb-2">
+                <div class="row mb-2">
+                    <div class="row g-2 mb-2">
                         <div class="col">
-                            <label class="fw-bold mb-4 ">Start date <span class="text-danger">*</span></label>
-                            <input type="date" class="form-control py-3 rounded-3 shadow-sm " name="start_date" id="start_date" value="{{$package_details->start_date}}" required>
+                            <label class="fw-bold mb-3 ">Start date <span class="text-danger">*</span></label>
+                            <input type="date" class="form-control py-2 rounded-3 shadow-sm " name="start_date" id="start_date" value="{{$package_details->start_date}}" required>
                         </div>
                         <div class="col">
-                            <label class="fw-bold mb-4 ">Return Date <span class="text-danger">*</span></label>
-                            <input type="date" class="form-control py-3 rounded-3 shadow-sm " name="return_date" value="{{$package_details->return_date}}" id="return_date" required>
+                            <label class="fw-bold mb-3 ">Return Date <span class="text-danger">*</span></label>
+                            <input type="date" class="form-control py-2 rounded-3 shadow-sm " name="return_date" value="{{$package_details->return_date}}" id="return_date" required>
                         </div>
                     </div>
                 </div>
 
-                <div class="row mb-5">
+                <div class="row mb-3">
                     <div class="col">
-                        <label class="fw-bold  mb-4">Total No.of Days </label>
-                        <input type="text" class="form-control py-3 rounded-3 shadow-sm " id="total_days" name="total_days" value="{{$package_details->total_days}}" readonly>
+                        <label class="fw-bold  mb-2">Total No.of Days </label>
+                        <input type="text" class="form-control py-2 rounded-3 shadow-sm " id="total_days" name="total_days" value="{{$package_details->total_days}}" readonly>
                     </div>
                 </div>
             </div>
@@ -384,31 +390,31 @@
 
 
 <!-- 5.PRICING -->
-<div class="row mb-5">
+<div class="row mb-3">
     <div class="col">
         <div class="form-body px-5  rounded-4 ">
-            <h4 class="fw-bold mb-5">5. Pricing</h4>
-            <div class="mb-3">
-                <div class="row mb-4">
+            <h4 class="fw-bold mb-3">5. Pricing</h4>
+            <div class="mb-2">
+                <div class="row mb-2">
                     <div class="col-lg-6">
-                        <label class="fw-bold mb-4 ">Member Capacity <span class="text-danger">*</span></label>
-                        <input type="text" id="member_capacity" name="member_capacity" class="form-control py-3 rounded-3 shadow-sm" placeholder="Member Capacity" required value="{{$package_details->member_capacity}}">
+                        <label class="fw-bold mb-2 ">Member Capacity <span class="text-danger">*</span></label>
+                        <input type="text" id="member_capacity" name="member_capacity" class="form-control py-2 rounded-3 shadow-sm mb-2" placeholder="Member Capacity" required value="{{$package_details->member_capacity}}">
                     </div>
-                    <div class="col-lg-6 mt-4">
+                    <div class="col-lg-6 mt-2">
                         <label class="fw-bold "></label>
-                        <select id="mem_type" name="mem_type" class="form-select py-3 rounded-3 shadow-sm" required>
+                        <select id="mem_type" name="mem_type" class="form-select py-2 rounded-3 shadow-sm mb-2" required>
                             <option value="">Select</option>
                             <option value="perhead" {{ $package_details->member_type == 'perhead' ? 'selected' : '' }}>Perhead</option>
                             <option value="full" {{ $package_details->member_type == 'full' ? 'selected' : '' }}>Full</option>
                         </select>
                     </div>
                     <div class="col-lg-6">
-                        <label class="fw-bold mb-4 ">Actual Amount <span class="text-danger">*</span></label>
-                        <input type="text" id="price" name="price" class="form-control py-3 rounded-3 shadow-sm" placeholder="Actual Amount" value="{{$package_details->price}}" required>
+                        <label class="fw-bold mb-2 ">Actual Amount <span class="text-danger">*</span></label>
+                        <input type="text" id="price" name="price" class="form-control py-2 rounded-3 shadow-sm" placeholder="Actual Amount" value="{{$package_details->price}}" required>
                     </div>
                     <div class="col-lg-6">
-                        <label class="fw-bold mb-4 ">Discount Amount <span class="text-danger">*</span></label>
-                        <input type="text" id="actual_price" name="actual_price" class="form-control py-3 rounded-3 shadow-sm" placeholder="Discount Amount" value="{{$package_details->actual_price}}" required>
+                        <label class="fw-bold mb-2">Discount Amount <span class="text-danger">*</span></label>
+                        <input type="text" id="actual_price" name="actual_price" class="form-control py-2 rounded-3 shadow-sm" placeholder="Discount Amount" value="{{$package_details->actual_price}}" required>
                     </div>
 
                 </div>
@@ -418,10 +424,10 @@
 </div>
 
 <!-- 6.Rule And Regulations -->
-<div class="row mb-5">
+<div class="row mb-3">
     <div class="col">
         <div class="form-body px-5 rounded-4">
-            <h4 class="fw-bold mb-5">6. Payment Policy <span class="text-danger">*</span></h4>
+            <h4 class="fw-bold mb-3">6. Payment Policy <span class="text-danger">*</span></h4>
             <div class="mb-3">
                 <div id="camp-rule-container">
                     @php
@@ -435,11 +441,11 @@
                     @endphp
                     @if(is_array($package_details->camp_rule))
                     @foreach($package_details->camp_rule as $rule)
-                    <div class="row g-2 mb-4 camp-rule-field">
+                    <div class="row g-2 mb-2 camp-rule-field">
                         <div class="col">
-                            <input type="text" name="camp_rule[]" class="form-control py-3 rounded-3 shadow-sm" placeholder="Rule And Regulations" value="{{ $rule }}" required>
+                            <input type="text" name="camp_rule[]" class="form-control py-2 rounded-3 shadow-sm" placeholder="Rule And Regulations" value="{{ $rule }}" required>
                         </div>
-                        <div class="col-lg-1 mt-5 text-end">
+                        <div class="col-lg-1 mt-2 text-end">
                             <a class="table-link danger remove-plan" onclick="removeField(this)">
                                 <span class="fa-stack">
                                     <i class="fa fa-square fa-stack-2x"></i>
@@ -454,7 +460,7 @@
                     @endif
                 </div>
                 <div class="text-end">
-                    <button type="button" class="btn-add rounded border-0 px-5 py-3 text-white" onclick="addCampRuleField()">
+                    <button type="button" class="btn-add rounded border-0 px-5 py-2 text-white" onclick="addCampRuleField()">
                         <i class="fa fa-plus" aria-hidden="true"></i> Add
                     </button>
                 </div>
@@ -468,19 +474,19 @@
 
 
 <!-- 7.Important info -->
-<div class="row mb-5">
+<div class="row mb-3">
     <div class="col">
         <div class="form-body px-5  rounded-4">
-            <h4 class="fw-bold mb-5">7.Important info <span class="text-danger">*</span></h4>
+            <h4 class="fw-bold mb-3">7.Important info <span class="text-danger">*</span></h4>
             <div class="mb-3">
-                <div class="row g-2 mb-4">
+                <div class="row g-2 mb-3">
                     <div class="col">
                         <input type="hidden" id="important_info" name="important_info">
                         <!-- <textarea id="important_info" class="container__textarea p-5 textarea-feild" name="important_info" value="" required>{{$package_details->important_info}}</textarea> -->
                         @php
                         $plain_text_important_info = strip_tags($package_details->important_info);
                         @endphp
-                        <div class=" mt-5">
+                        <div class=" mt-2">
                             <div class="row">
                                 <div class="col-lg-12 ">
                                     <div id="summernote4">{{$plain_text_important_info}}</div>
@@ -493,10 +499,10 @@
         </div>
     </div>
 
-    <div class="row mb-5">
+    <div class="row mb-3">
         <div class="col">
             <div class="form-body px-5  rounded-4">
-                <h4 class="fw-bold mb-5">8.Program Inclusion </h4>
+                <h4 class="fw-bold mb-2">8.Program Inclusion </h4>
                 <div class="mb-3">
                     <div class="row g-2 mb-4">
                         <div class="col">
@@ -505,7 +511,7 @@
                             @php
                             $plain_text_program_inclusion = strip_tags($package_details->program_inclusion);
                             @endphp
-                            <div class=" mt-5">
+                            <div class=" mt-2">
                                 <div class="row">
                                     <div class="col-lg-12 ">
                                         <div id="summernote5">{{$plain_text_program_inclusion}}</div>
@@ -520,14 +526,14 @@
         </div>
     </div>
 
-    <div class="row mb-5">
+    <div class="row mb-3">
         <div class="col">
             <div class="form-body px-5  rounded-4">
-                <h4 class="fw-bold mb-5">9. Location</h4>
+                <h4 class="fw-bold mb-2">9. Location</h4>
                 <div class="mb-3">
-                    <div class="row mb-4">
+                    <div class="row mb-2">
                         <div class="col-lg-6">
-                            <label class="fw-bold mb-4 ">Google Map<span class="text-danger">*</span></label>
+                            <label class="fw-bold mb-3 ">Google Map<span class="text-danger">*</span></label>
                             <input type="text" id="google_map" name="google_map" class="form-control py-3 rounded-3 shadow-sm" placeholder="Google Map" required value="{{$package_details->google_map}}">
                         </div>
 
@@ -539,20 +545,20 @@
         </div>
     </div>
 
-    <div class="row mb-5">
+    <div class="row mb-3">
         <div class="col">
             <div class="form-body px-5  rounded-4">
-                <h4 class="fw-bold mb-5">7.Food Menu </h4>
+                <h4 class="fw-bold mb-3">7.Food Menu </h4>
                 <div class="mb-3">
                     <div class="row g-2 mb-4">
                         <div class="col">
-                            <label class="form-label form-label-top form-label-auto fw-bold mb-4">Breakfast</label>
+                            <label class="form-label form-label-top form-label-auto fw-bold mb-2">Breakfast</label>
                             <input type="hidden" id="break_fast" name="break_fast">
 
                             @php
                             $plain_text_break_fast = strip_tags($package_details->break_fast);
                             @endphp
-                            <div class=" mt-5">
+                            <div class=" mt-3">
                                 <div class="row">
                                     <div class="col-lg-12 ">
                                         <div id="summernote6">{{$plain_text_break_fast}}</div>
@@ -561,14 +567,14 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row g-2 mb-4">
+                    <div class="row g-2 mb-3">
                         <div class="col">
-                            <label class="form-label form-label-top form-label-auto fw-bold mb-4">Lunch</label>
+                            <label class="form-label form-label-top form-label-auto fw-bold mb-2">Lunch</label>
                             <input type="hidden" id="lunch" name="lunch">
                             @php
                             $plain_text_lunch = strip_tags($package_details->lunch);
                             @endphp
-                            <div class=" mt-5">
+                            <div class=" mt-3">
                                 <div class="row">
                                     <div class="col-lg-12 ">
                                         <div id="summernote7">{{$plain_text_lunch}}</div>
@@ -577,9 +583,9 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row g-2 mb-4">
+                    <div class="row g-2 mb-3">
                         <div class="col">
-                            <label class="form-label form-label-top form-label-auto fw-bold mb-4">Dinner</label>
+                            <label class="form-label form-label-top form-label-auto fw-bold mb-2">Dinner</label>
                             <input type="hidden" id="dinner" name="dinner">
                             <!-- <div class="mb-3">
                                     <div id="commentEditor8" class="form-control" style="height: 200px;">{{$package_details->dinner}}</div>
@@ -587,7 +593,7 @@
                             @php
                             $plain_text_dinner = strip_tags($package_details->dinner);
                             @endphp
-                            <div class=" mt-5">
+                            <div class=" mt-3">
                                 <div class="row">
                                     <div class="col-lg-12 ">
                                         <div id="summernote8">{{$plain_text_dinner}}</div>
@@ -602,13 +608,13 @@
     </div>
 
     <!-- 8.AMENITIES -->
-    <div class="row mb-5">
+    <div class="row mb-3">
         <div class="col">
             <div class="form-body px-5 rounded-4">
-                <h4 class="fw-bold mb-5">8. Amenities </h4>
-                <div class="row mb-4">
+                <h4 class="fw-bold mb-3">8. Amenities </h4>
+                <div class="row mb-2">
                     @foreach($amenities_dts->chunk(4) as $chunk)
-                    <div class="row mb-3">
+                    <div class="row mb-2">
                         @foreach($chunk as $amenity)
                         <div class="col-lg-3 col-md-3 col-sm-4 mb-2">
                             <div class="form-check">
@@ -628,11 +634,11 @@
 
 
     <!-- 9.FOOD & BEVERAGES -->
-    <div class="row mb-5">
+    <div class="row mb-3">
         <div class="col">
             <div class="form-body px-5 rounded-4">
-                <h4 class="fw-bold mb-5">9. Food and Beverages</h4>
-                <div class="row mb-4">
+                <h4 class="fw-bold mb-3">9. Food and Beverages</h4>
+                <div class="row mb-2">
                     @foreach($foodBeverages_dts->chunk(6) as $chunk)
                     <div class="row mb-3">
                         @foreach($chunk as $item)
@@ -652,10 +658,10 @@
     </div>
 
     <!--10. ACTIVITIES -->
-    <div class="row mb-5">
+    <div class="row mb-3">
         <div class="col">
             <div class="form-body px-5  rounded-4">
-                <h4 class="fw-bold mb-5">10.Activities</h4>
+                <h4 class="fw-bold mb-3">10.Activities</h4>
                 <div class="row mb-4">
                     @foreach($activities_dts->chunk(6) as $chunk)
                     <div class="row mb-3">
@@ -676,10 +682,10 @@
 
 
     <!-- 11.SAFETY FEATURES  -->
-    <div class="row mb-5">
+    <div class="row mb-3">
         <div class="col">
             <div class="form-body px-5  rounded-4">
-                <h4 class="fw-bold mb-5">11.Safety Features</h4>
+                <h4 class="fw-bold mb-3 ">11.Safety Features</h4>
                 <div class="row mb-4">
                     @foreach($safety_features_dts->chunk(6) as $chunk)
                     <div class="row mb-3">

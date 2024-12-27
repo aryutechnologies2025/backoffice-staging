@@ -20,8 +20,18 @@
         padding-right: 30px;
         /* Consistent padding for both sides */
     }
-
+    .form-body {
    
+    padding-top: 1% !important;
+    padding-bottom: 1% !important;
+}
+.mb-1 {
+    margin-bottom: .5rem !important;
+}
+.px-5 {
+   
+     padding-left: 0rem !important; 
+}
 </style>
 <div class="container-wrapper py-5">
     <div class="row">
@@ -36,7 +46,7 @@
         <form id="form_valid" action="{{ route('admin.inclusive_package_insert') }}" method="POST" autocomplete="off" enctype="multipart/form-data">
             @csrf
             <!-- 1.INFORMATION -->
-            <div class="row mb-5">
+            <div class="row mb-3">
                 <div class="col">
                     <div class="form-body px-5  rounded-4">
                         <h4 class="fw-bold mb-5">01.Information</h4>
@@ -60,15 +70,15 @@
                                         @endforeach
                                     </select>
                                 </div>
-                                <div class="mt-5">
+                                <div class="mt-4">
                                     <div class="col">
                                         <label class="fw-bold mb-2 "> Title <span class="text-danger">*</span></label>
                                         <input type="text" placeholder="Title" id="title" name="title" class="form-control py-2 rounded-3 shadow-sm" required value="{{old('title')}}">
                                     </div>
-                                    <div class="row mt-5">
+                                    <div class="row mt-4">
                                         <div class="col-lg-12">
                                             <input type="hidden" id="program_description" name="program_description">
-                                            <label class="form-label form-label-top form-label-auto fw-bold mb-4">Program Description <span class="text-danger">*</span></label>
+                                            <label class="form-label form-label-top form-label-auto fw-bold mb-2">Program Description <span class="text-danger">*</span></label>
                                             <!-- <textarea id="program_description" class="container__textarea p-5 textarea-feild" name="program_description" required></textarea> -->
                                             <!-- <div class="mb-3">
                                             <div id="commentEditor1" class="form-control " style="height: 200px;"></div>
@@ -85,9 +95,9 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row g-2 mb-5">
+                        <div class="row g-2 mb-4">
                             <div class="col">
-                                <div class="row mt-5">
+                                <div class="row mt-4">
                                     <label class="fw-bold mb-2 "> Flag </label>
                                     <div class="col-lg-3 col-md-3 col-sm-4 mb-2">
                                         <div class="form-check d-flex  align-items-center">
@@ -215,7 +225,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <button id="add-photo-btn" type="button" class="btn btn-primary mt-3">Add More Photos</button>
+                                        <button id="add-photo-btn" type="button" class="btn btn-primary mt-1">Add More Photos</button>
                                     </div>
                                 </div>
                             </div>
@@ -225,17 +235,17 @@
                 </div>
 
                 <!-- 2.LOCATION -->
-                <div class="row mb-5">
-                    <div class="col">
+                <div class="row mb-1">
+                    <div class="col pt-1">
                         <div class="form-body px-5  rounded-4">
                             <h4 class="fw-bold mb-3">02.Location</h4>
                             <div class="mb-3">
                                 @foreach($address->chunk(4) as $chunk)
                                 <!-- For each chunk, create a row -->
-                                <div class="row mb-3">
+                                <div class="row ">
                                     @foreach($chunk as $address)
                                     <!-- Display each amenity as a column -->
-                                    <div class="col-lg-3 col-md-3 col-sm-4 mb-2">
+                                    <div class="col-lg-3 col-md-3 col-sm-4 b">
                                         <div class="form-check d-flex  align-items-center">
                                             <input type="checkbox" class="me-1" id="address-{{ $address->id }}" name="address_services[]" value="{{ $address->id }}">
                                             <label class="" for="address-{{ $address->id }}">{{ $address->title }}</label>
@@ -251,13 +261,13 @@
 
 
                 <!-- 3.TOUR PLANNING  -->
-                <div class="row mb-5">
-                    <div class="col">
-                        <div class="form-body px-5 rounded-4">
-                            <h4 class="fw-bold mb-5">03. Tour Planning <span class="text-danger">*</span></h4>
+                <div class="row mb-1 ">
+                    <div class="col pt-1">
+                        <div class="form-body px-5   rounded-4">
+                            <h4 class="fw-bold mb-2">03. Tour Planning <span class="text-danger">*</span></h4>
                             <div id="plan-container">
                                 <!-- Initial Plan Item -->
-                                <div class="row g-2 mt-5 d-flex justify-content-around">
+                                <div class="row g-2 mt-3 d-flex justify-content-around">
                                     <div class="col-lg-12">
                                         <label class="form-label form-label-top form-label-auto fw-bold mb-2">Plan Title</label>
 
@@ -265,23 +275,23 @@
                                     </div>
                                 </div>
                                 <div class="plan-item mb-3">
-                                    <div class="mt-5">
+                                    <div class="mt-3">
                                         <div class="row">
                                             <div class="col-lg-11">
                                                 <label class="form-label form-label-top form-label-auto fw-bold mb-2">Plan Subtitle</label>
                                                 <input type="text" name="plan_subtitle[]" class="form-control py-2 rounded-3 shadow-sm" placeholder="Plan Subtitle" required>
                                             </div>
-                                            <div class="col-lg-1 mt-3 text-end">
+                                            <!-- <div class="col-lg-1 mt-3 text-end">
                                                 <a href="#" class="table-link danger remove-plan">
                                                     <span class="fa-stack">
                                                         <i class="fa fa-square fa-stack-2x"></i>
                                                         <i class="fa fa-trash-o fa-stack-1x fa-inverse"></i>
                                                     </span>
                                                 </a>
-                                            </div>
+                                            </div> -->
                                         </div>
                                     </div>
-                                    <div class="mt-5">
+                                    <div class="mt-3">
                                         <div class="row">
                                             <div class="col-lg-11">
                                                 <input type="hidden" id="plan_description" name="plan_description[]">
@@ -290,7 +300,7 @@
                                                 <!-- <div class="mb-3">
                                             <div id="commentEditor3" class="form-control" style="height: 200px;"></div>
                                         </div> -->
-                                                <div class=" mt-5">
+                                                <div class=" mt-2">
                                                     <div class="row">
                                                         <div class="col-lg-12 ">
                                                             <div id="summernote3" style="height: 200px;"></div>
@@ -303,11 +313,11 @@
                                     <!-- Added Subtitle Field -->
                                 </div>
                             </div>
-                            <div class="text-end p-5">
+                            <!-- <div class="text-end p-5">
                                 <button type="button" id="add-plan-btn" class="btn-add rounded border-0 px-5 py-3 text-end text-white">
                                     <i class="fa fa-plus" aria-hidden="true"></i> Add
                                 </button>
-                            </div>
+                            </div> -->
                         </div>
                     </div>
                 </div>
@@ -316,13 +326,13 @@
 
 
                 <!-- 4.TOUR DATE & TIME -->
-                <div class="row mb-5">
-                    <div class="col">
-                        <div class="form-body px-5 rounded-4">
-                            <h4 class="fw-bold mb-5">04.Tour date & Time</h4>
+                <div class="row mb-2 ">
+                    <div class="col ">
+                        <div class="form-body px-5 rounded-4 ">
+                            <h4 class="fw-bold mb-2">04.Tour date & Time</h4>
                             <div class="mb-3">
                                 <div class="row mb-4">
-                                    <div class="row g-2 mb-4">
+                                    <div class="row g-2 mb-2">
                                         <div class="col">
                                             <label class="fw-bold mb-2 ">Start date <span class="text-danger"></span></label>
                                             <input type="date" class="form-control py-2 rounded-3 shadow-sm " name="start_date" id="start_date" value="{{old('start_date')}}" required>
@@ -348,10 +358,10 @@
 
 
                 <!-- 5.PRICING -->
-                <div class="row mb-5">
+                <div class="row mb-3 ">
                     <div class="col">
                         <div class="form-body px-5  rounded-4">
-                            <h4 class="fw-bold mb-5">05. Pricing</h4>
+                            <h4 class="fw-bold mb-3">05. Pricing</h4>
                             <div class="mb-3">
                                 <div class="row mb-4">
                                     <div class="col-lg-6 mt-4">
@@ -381,7 +391,7 @@
                 </div>
 
                <!-- 6.rule & Regulation -->
-                <div class="row mb-5">
+                <div class="row mb-3">
                 <div class="col">
                     <div class="form-body px-5 rounded-4">
                         <h4 class="fw-bold mb-5">6. Payment Policy</h4>
@@ -389,7 +399,7 @@
                             <div id="camp-rule-container">
                                 <div class="row g-2 mb-4 camp-rule-field">
                                     <div class="col">
-                                        <label class="fw-bold mb-4">Payment Policy <span class="text-danger">*</span></label>
+                                        <label class="fw-bold mb-3">Payment Policy <span class="text-danger">*</span></label>
                                         <input type="text" name="camp_rule[]" id="camp_rule" class="form-control py-3 rounded-3 shadow-sm" placeholder="Payment Policy" required>
                                     </div>
                                 </div>
@@ -405,19 +415,19 @@
             </div>
 
                 <!-- 7.Important info -->
-                <div class="row mb-5">
+                <div class="row mb-2">
                     <div class="col">
                         <div class="form-body px-5  rounded-4">
-                            <h4 class="fw-bold mb-5">06.Important info <span class="text-danger">*</span></h4>
-                            <div class="mb-3">
-                                <div class="row g-2 mb-4">
+                            <h4 class="fw-bold mb-3">06.Important info <span class="text-danger">*</span></h4>
+                            <div class="mb-1">
+                                <div class="row g-2 mb-1">
                                     <div class="col">
                                         <input type="hidden" id="important_info" name="important_info">
                                         <!-- <textarea id="important_info" class="container__textarea p-5 textarea-feild" name="important_info" value="{{old('important_info')}}" required></textarea> -->
                                         <!-- <div class="mb-3">
                                     <div id="commentEditor4" class="form-control" style="height: 200px;"></div>
                                 </div> -->
-                                        <div class=" mt-5">
+                                        <div class=" mt-1">
                                             <div class="row">
                                                 <div class="col-lg-12 ">
                                                     <div id="summernote4" style="height: 200px;"></div>
@@ -431,19 +441,19 @@
                     </div>
                 </div>
 
-                <div class="row mb-5">
+                <div class="row mb-1">
                     <div class="col">
                         <div class="form-body px-5  rounded-4">
-                            <h4 class="fw-bold mb-5">07.Program Inclusion </h4>
-                            <div class="mb-3">
-                                <div class="row g-2 mb-4">
+                            <h4 class="fw-bold mb-2">07.Program Inclusion </h4>
+                            <div class="mb-2">
+                                <div class="row g-2 mb-2">
                                     <div class="col">
                                         <input type="hidden" id="program_inclusion" name="program_inclusion">
                                         <!-- <textarea id="important_info" class="container__textarea p-5 textarea-feild" name="important_info" value="{{old('important_info')}}" required></textarea> -->
                                         <!-- <div class="mb-3">
                                     <div id="commentEditor5" class="form-control" style="height: 200px;"></div>
                                 </div> -->
-                                        <div class=" mt-5">
+                                        <div class=" mt-2">
                                             <div class="row">
                                                 <div class="col-lg-12 ">
                                                     <div id="summernote5" style="height: 200px;"></div>
@@ -457,15 +467,15 @@
                     </div>
                 </div>
 
-                <div class="row mb-5">
+                <div class="row mb-2">
             <div class="col">
                 <div class="form-body px-5 rounded-4">
-                    <h4 class="fw-bold mb-5">9. Location</h4>
-                    <div class="mb-3">
+                    <h4 class="fw-bold mb-3">9. Location</h4>
+                    <div class="mb-1">
                         <div id="camp-rule-container">
-                            <div class="row g-2 mb-4 camp-rule-field">
+                            <div class="row g-2 mb-2 camp-rule-field">
                                 <div class="col">
-                                    <label class="fw-bold mb-4">Google Map<span class="text-danger">*</span></label>
+                                    <label class="fw-bold mb-2">Google Map<span class="text-danger">*</span></label>
                                     <input type="text" name="google_map" id="google_map" class="form-control py-3 rounded-3 shadow-sm" placeholder="Google Map" required value="{{old('google_map')}}">
                                 </div>
                             </div>
@@ -475,19 +485,19 @@
             </div>
         </div>
 
-                <div class="row mb-5">
+                <div class="row mb-2">
                     <div class="col">
                         <div class="form-body px-5  rounded-4">
-                            <h4 class="fw-bold mb-5">09.Food Menu </h4>
-                            <div class="mb-3">
-                                <div class="row g-2 mb-4">
+                            <h4 class="fw-bold mb-3">09.Food Menu </h4>
+                            <div class="mb-1">
+                                <div class="row g-2 mb-2">
                                     <div class="col">
-                                        <label class="form-label form-label-top form-label-auto fw-bold mb-4">Breakfast</label>
+                                        <label class="form-label form-label-top form-label-auto fw-bold mb-2">Breakfast</label>
                                         <input type="hidden" id="break_fast" name="break_fast">
                                         <!-- <div class="mb-3">
                                     <div id="commentEditor6" class="form-control" style="height: 200px;"></div>
                                 </div> -->
-                                        <div class=" mt-5">
+                                        <div class=" mt-2">
                                             <div class="row">
                                                 <div class="col-lg-12 ">
                                                     <div id="summernote6" style="height: 200px;"></div>
@@ -496,14 +506,14 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="row g-2 mb-4">
+                                <div class="row g-2 mb-2">
                                     <div class="col">
-                                        <label class="form-label form-label-top form-label-auto fw-bold mb-4">Lunch</label>
+                                        <label class="form-label form-label-top form-label-auto fw-bold mb-2">Lunch</label>
                                         <input type="hidden" id="lunch" name="lunch">
                                         <!-- <div class="mb-3">
                                     <div id="commentEditor7" class="form-control" style="height: 200px;"></div>
                                 </div> -->
-                                        <div class=" mt-5">
+                                        <div class=" mt-2">
                                             <div class="row">
                                                 <div class="col-lg-12 ">
                                                     <div id="summernote7" style="height: 200px;"></div>
@@ -512,14 +522,14 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="row g-2 mb-4">
+                                <div class="row g-2 mb-2">
                                     <div class="col">
-                                        <label class="form-label form-label-top form-label-auto fw-bold mb-4">Dinner</label>
+                                        <label class="form-label form-label-top form-label-auto fw-bold mb-2">Dinner</label>
                                         <input type="hidden" id="dinner" name="dinner">
                                         <!-- <div class="mb-3">
                                     <div id="commentEditor8" class="form-control" style="height: 200px;"></div>
                                 </div> -->
-                                        <div class=" mt-5">
+                                        <div class=" mt-2">
                                             <div class="row">
                                                 <div class="col-lg-12 ">
                                                     <div id="summernote8" style="height: 200px;"></div>
@@ -534,14 +544,14 @@
                 </div>
 
                 <!-- 8.AMENITIES -->
-                <div class="row mb-5">
+                <div class="row mb-2">
                     <div class="col">
                         <div class="form-body px-5  rounded-4">
-                            <h4 class="fw-bold mb-5">10. Amenities</h4>
-                            <div class="row mb-4">
+                            <h4 class="fw-bold mb-3">10. Amenities</h4>
+                            <div class="row mb-2">
                                 @foreach($amenities->chunk(4) as $chunk)
                                 <!-- For each chunk, create a row -->
-                                <div class="row mb-3">
+                                <div class="row mb-2">
                                     @foreach($chunk as $amenity)
                                     <!-- Display each amenity as a column -->
                                     <div class="col-lg-3 col-md-3 col-sm-4 mb-2">
@@ -559,11 +569,11 @@
                 </div>
 
                 <!-- 9.FOOD & BEVERAGES -->
-                <div class="row mb-5">
+                <div class="row mb-2">
                     <div class="col">
                         <div class="form-body px-5 rounded-4">
-                            <h4 class="fw-bold mb-5">11. Food and Beverages</h4>
-                            <div class="row mb-4">
+                            <h4 class="fw-bold mb-3">11. Food and Beverages</h4>
+                            <div class="row mb-2">
                                 @foreach($foodBeverages->chunk(6) as $chunk)
                                 <div class="row ">
                                     @foreach($chunk as $item)
@@ -582,11 +592,11 @@
                 </div>
 
                 <!--10. ACTIVITIES -->
-                <div class="row mb-5">
+                <div class="row mb-2">
                     <div class="col">
                         <div class="form-body px-5  rounded-4">
-                            <h4 class="fw-bold mb-5">12.Activities</h4>
-                            <div class="row mb-4">
+                            <h4 class="fw-bold mb-3">12.Activities</h4>
+                            <div class="row mb-2">
                                 @foreach($activities->chunk(6) as $chunk)
                                 <div class="row mb-3">
                                     @foreach($chunk as $item)
@@ -605,11 +615,11 @@
                 </div>
 
                 <!-- 11.SAFETY FEATURES  -->
-                <div class="row mb-5">
+                <div class="row mb-2">
                     <div class="col">
                         <div class="form-body px-5  rounded-4">
-                            <h4 class="fw-bold mb-5">13.Safety Features</h4>
-                            <div class="row mb-4">
+                            <h4 class="fw-bold mb-3">13.Safety Features</h4>
+                            <div class="row mb-2">
                                 @foreach($safety_features->chunk(6) as $chunk)
                                 <div class="row">
                                     @foreach($chunk as $item)
