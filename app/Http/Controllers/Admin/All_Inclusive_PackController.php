@@ -95,10 +95,10 @@ class All_Inclusive_PackController extends Controller
             // 'start_date' => 'required',
             // 'return_date' => 'required',
             'total_days' => 'required',
-            // 'total_room' => 'required',
-            // 'bath_room' => 'required',
-            // 'bed_room' => 'required',
-            // 'hall' => 'required',
+            'total_room' => 'required',
+            'bath_room' => 'required',
+            'bed_room' => 'required',
+            'hall' => 'required',
             'member_capacity' => 'required',
             'price' => 'required',
             'actual_price' => 'required',
@@ -316,7 +316,11 @@ class All_Inclusive_PackController extends Controller
             // 'coupon_code' => 'required',
             'camp_rule' => 'required',
             'important_info' => 'required',
-            'google_map' => 'required'
+            'google_map' => 'required',
+            'total_room' => 'required',
+            'bath_room' => 'required',
+            'bed_room' => 'required',
+            'hall' => 'required',
 
         ]);
 

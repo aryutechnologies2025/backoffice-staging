@@ -93,6 +93,7 @@ class HomeApiController extends Controller
 
     public function get_program(Request $request)
     {
+      
         try {
             $requestData = $request->all(); 
     
@@ -193,6 +194,12 @@ class HomeApiController extends Controller
                     'destination' => $package->city ? $package->destination->city_name : null,
                     'average_rating' => number_format($averageRating, 1),
                     'totalReviews' => $totalReviews,
+
+                    'total_room' => $package->total_room,
+                    'bath_room' => $package->bath_room,
+                    'bed_room' => $package->bed_room,
+                    'hall'=> $package->hall,
+
                     // Adding the fetched details
                     'amenities' => $details['amenities'] ?? [],
                     'foodBeverages' => $details['foodBeverages'] ?? [],
