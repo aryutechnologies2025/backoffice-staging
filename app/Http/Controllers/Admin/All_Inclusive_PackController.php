@@ -27,7 +27,7 @@ class All_Inclusive_PackController extends Controller
     public function list(Request $request)
     {
         $title = 'Programs List';
-        $inclusive_packages = InclusivePackages::where('is_deleted', '0')->paginate(10);
+        $inclusive_packages = InclusivePackages::where('is_deleted', '0')->orderBy('created_at', 'desc')->paginate(10);
         foreach ($inclusive_packages as $package) {
             $package->category = json_decode($package->category, true);
             // Decode other JSON fields if needed
@@ -215,10 +215,10 @@ class All_Inclusive_PackController extends Controller
         // $inclusive_packages->theme_cat_id = $request->input('theme_cat');
         // $inclusive_packages->destination_cat = $validatedData['destination_cat'];
         // $inclusive_packages->geo_feature = $validatedData['geo_feature'];
-        // $inclusive_packages->total_room = $validatedData['total_room'];
-        // $inclusive_packages->bath_room = $validatedData['bath_room'];
-        // $inclusive_packages->bed_room = $validatedData['bed_room'];
-        // $inclusive_packages->hall = $validatedData['hall'];
+        $inclusive_packages->total_room = $validatedData['total_room'];
+        $inclusive_packages->bath_room = $validatedData['bath_room'];
+        $inclusive_packages->bed_room = $validatedData['bed_room'];
+        $inclusive_packages->hall = $validatedData['hall'];
         // $inclusive_packages->coupon_code = $validatedData['coupon_code'];
         $inclusive_packages->amenity_details = $amenitiesJson;
         $inclusive_packages->food_beverages = $foodBeveragesJson;
@@ -444,10 +444,10 @@ class All_Inclusive_PackController extends Controller
         
         
         
-        // $inclusive_packages->total_room = $validatedData['total_room'];
-        // $inclusive_packages->bath_room = $validatedData['bath_room'];
-        // $inclusive_packages->bed_room = $validatedData['bed_room'];
-        // $inclusive_packages->hall = $validatedData['hall'];
+        $inclusive_packages->total_room = $validatedData['total_room'];
+        $inclusive_packages->bath_room = $validatedData['bath_room'];
+        $inclusive_packages->bed_room = $validatedData['bed_room'];
+        $inclusive_packages->hall = $validatedData['hall'];
         
        
         // $inclusive_packages->coupon_code = $validatedData['coupon_code'];
