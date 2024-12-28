@@ -381,34 +381,34 @@
 
 
         
-    const tableBody = document.getElementById('tableBody');
+   
+        const tableBody = document.getElementById('tableBody');
 
-    // Function to filter rows by status
-    function filterTable(status) {
-        const rows = Array.from(tableBody.querySelectorAll('tr'));
+        // Function to filter rows by status
+        function filterTable(status) {
+            const rows = Array.from(tableBody.querySelectorAll('tr'));
 
-        // Show/hide rows based on status
-        rows.forEach(row => {
-            if (row.getAttribute('status') === status || status === 'All') {
-                row.style.display = ''; // Show row
-            } else {
-                row.style.display = 'none'; // Hide row
-            }
+            // Show/hide rows based on status
+            rows.forEach(row => {
+                if (row.getAttribute('status') === status || status === 'All') {
+                    row.style.display = ''; // Show row
+                } else {
+                    row.style.display = 'none'; // Hide row
+                }
+            });
+        }
+
+        // Add event listeners for the filter arrows
+        document.getElementById('filterActive').addEventListener('click', () => {
+            filterTable('Active');
         });
-    }
 
-    // Add event listeners for the filter arrows
-    document.getElementById('filterActive').addEventListener('click', () => {
-        filterTable('Active');
-    });
+        document.getElementById('filterInactive').addEventListener('click', () => {
+            filterTable('Inactive');
+        });
+    </script>
+      <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 
-    document.getElementById('filterInactive').addEventListener('click', () => {
-        filterTable('Inactive');
-    });
-
-</script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 
     @endpush
     @stack('scripts')

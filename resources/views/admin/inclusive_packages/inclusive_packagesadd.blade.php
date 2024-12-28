@@ -32,6 +32,7 @@
    
      padding-left: 0rem !important; 
 }
+
 </style>
 <div class="container-wrapper py-5">
     <div class="row">
@@ -46,314 +47,268 @@
         <form id="form_valid" action="{{ route('admin.inclusive_package_insert') }}" method="POST" autocomplete="off" enctype="multipart/form-data">
             @csrf
             <!-- 1.INFORMATION -->
-            <div class="row mb-3">
+<div class="row mb-3">
+    <div class="col">
+        <div class="form-body px-5 rounded-4">
+            <h4 class="fw-bold mb-5">01. Information</h4>
+            <!-- Theme and Destination -->
+            <div class="mb-3">
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <label class="fw-bold mb-2">Theme <span class="text-danger">*</span></label>
+                        <select id="themes_name" name="themes_name" class="form-select py-2 rounded-3 shadow-sm" required>
+                            <option value="">Select Theme</option>
+                            @foreach($themes as $id => $name)
+                            <option value="{{ $id }}" @if(old('themes_name')=='{{ $id }}') selected @endif>{{ $name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="fw-bold mb-2">Destination <span class="text-danger">*</span></label>
+                        <select id="cities_name" name="cities_name" class="form-select py-2 rounded-3 shadow-sm" required>
+                            <option value="">Select Destination</option>
+                            @foreach($cities as $id => $name)
+                            <option value="{{ $id }}" @if(old('cities_name')=='{{ $id }}') selected @endif>{{ $name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Title -->
+            <div class="row mt-4">
                 <div class="col">
-                    <div class="form-body px-5  rounded-4">
-                        <h4 class="fw-bold mb-5">01.Information</h4>
-                        <div class="mb-3">
-                            <div class="row g-2 mb-4">
-                                <div class="col">
-                                    <label class="fw-bold  mb-2"> Theme <span class="text-danger">*</span></label>
-                                    <select id="themes_name" name="themes_name" class="form-select py-2 rounded-3 shadow-sm" required>
-                                        <option value="">Select Theme</option>
-                                        @foreach($themes as $id => $name)
-                                        <option value="{{ $id }}" @if(old('themes_name')=='{{ $id }}' ) selected @endif>{{ $name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="col">
-                                    <label class="fw-bold  mb-2"> Destination <span class="text-danger">*</span></label>
-                                    <select id="cities_name" name="cities_name" class="form-select py-2 rounded-3 shadow-sm" required>
-                                        <option value="">Select Destination</option>
-                                        @foreach($cities as $id => $name)
-                                        <option value="{{ $id }}" @if(old('cities_name')=='{{ $id }}' ) selected @endif>{{ $name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="mt-4">
-                                    <div class="col">
-                                        <label class="fw-bold mb-2 "> Title <span class="text-danger">*</span></label>
-                                        <input type="text" placeholder="Title" id="title" name="title" class="form-control py-2 rounded-3 shadow-sm" required value="{{old('title')}}">
-                                    </div>
-                                    <div class="row mt-4">
-                                        <div class="col-lg-12">
-                                            <input type="hidden" id="program_description" name="program_description">
-                                            <label class="form-label form-label-top form-label-auto fw-bold mb-2">Program Description <span class="text-danger">*</span></label>
-                                            <!-- <textarea id="program_description" class="container__textarea p-5 textarea-feild" name="program_description" required></textarea> -->
-                                            <!-- <div class="mb-3">
-                                            <div id="commentEditor1" class="form-control " style="height: 200px;"></div>
-                                        </div> -->
-                                            <div class=" mt-2">
-                                                <div class="row">
-                                                    <div class="col-lg-12 ">
-                                                        <div id="summernote1" style="height: 200px;"></div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                    <label class="fw-bold mb-2">Title <span class="text-danger">*</span></label>
+                    <input type="text" placeholder="Title" id="title" name="title" class="form-control py-2 rounded-3 shadow-sm" required value="{{ old('title') }}">
+                </div>
+            </div>
+
+            <!-- Program Description -->
+            <div class="row mt-4">
+                <div class="col">
+                    <label class="fw-bold mb-2">Program Description <span class="text-danger">*</span></label>
+                    <textarea id="program_description" name="program_description" style="display:none;"></textarea>
+                    <div id="summernote1" style="height: 200px;"></div>
+                </div>
+            </div>
+
+<!-- Flags -->
+
+<div class="row g-2 mt-4">
+<label class="fw-bold mb-1">Flags <span class="text-danger">*</span></label>
+
+<div class="col-md-3">
+        
+        <div class="form-check d-flex align-items-center">
+            <input type="checkbox" class="form-check-input me-3" id="popular_program" name="prop_cat[]" value="popular_program">
+            <label class="form-check-label" for="popular_program">Popular Program</label>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="form-check d-flex align-items-center">
+            <input type="checkbox" class="form-check-input me-3" id="upcoming_program" name="prop_cat[]" value="upcoming_program">
+            <label class="form-check-label" for="upcoming_program">Upcoming Program</label>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="form-check d-flex align-items-center">
+            <input type="checkbox" class="form-check-input me-3" id="featured" name="prop_cat[]" value="featured">
+            <label class="form-check-label" for="featured">Featured</label>
+        </div>
+    </div>
+</div>
+
+
+            <!-- Cover Image -->
+            <div class="row mt-4">
+                <div class="col-md-3">
+                    <label for="file-ip-1" class="form-label fw-bold">Cover Image</label>
+                    <div class="form-input text-center">
+                        <label for="file-ip-1" class="d-block">
+                            <img id="file-ip-1-preview" src="/assets/image/dashboard/innerpece_addpic_icon.svg" class="img-thumbnail">
+                            <p class="mt-2">Add Pic</p>
+                        </label>
+                        <input type="file" id="file-ip-1" name="cover_img" class="form-control" accept="image/png, image/jpeg, image/svg+xml">
+                        <small class="text-danger d-block mt-2">* Upload size [640x120]</small>
+                    </div>
+                </div>
+                <div class="col-md-9">
+                    <div class="row g-3 py-5">
+                        <div class="col-12">
+                            <label class="fw-bold">Upload Image Name <span class="text-danger">*</span></label>
+                            <input type="text" id="upload_image_name" name="upload_image_name" placeholder="Rename the Photo" value="{{ old('upload_image_name') }}" class="form-control py-2 rounded-3 shadow-sm" required>
                         </div>
-                        <div class="row g-2 mb-4">
-                            <div class="col">
-                                <div class="row mt-4">
-                                    <label class="fw-bold mb-2 "> Flag </label>
-                                    <div class="col-lg-3 col-md-3 col-sm-4 mb-2">
-                                        <div class="form-check d-flex  align-items-center">
-                                            <input type="checkbox" class="me-1" id="popular_program" name="prop_cat[]" value="popular_program">
-                                            <label class="" for="popular_program">Popular Program</label>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-3 col-md-3 col-sm-4 mb-2">
-                                        <div class="form-check">
-                                            <input type="checkbox" class="me-1" id="upcoming_program" name="prop_cat[]" value="upcoming_program">
-                                            <label class="" for="upcoming_program">Upcoming Program</label>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-3 col-md-3 col-sm-4 mb-2">
-                                        <div class="form-check">
-                                            <input type="checkbox" class="me-1" id="featured" name="prop_cat[]" value="featured">
-                                            <label class="" for="featured">Featured</label>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="g-2">
-                            <div class="col">
-                                <label class="fw-bold mt-2">Cover Image</label>
-                                <div class="row d-flex align-items-center mb-4">
-                                    <!-- Image Upload Section -->
-                                    <div class="col-lg-2 photo-upload-field">
-                                        <div class="form-input">
-                                            <label for="file-ip-1" class="px-4 py-3 text-center">
-                                                <img class="text-center mt-3 img-thumbnail"
-                                                    id="file-ip-1-preview"
-                                                    src="/assets/image/dashboard/innerpece_addpic_icon.svg">
-                                                <p class="text-center fw-light mt-3">Add Pic</p>
-                                            </label>
-                                            <input type="file" id="file-ip-1" name="cover_img" accept="image/png, image/jpeg, image/svg+xml">
-                                            <div id="file-ip-100-error" class="text-danger"></div>
-                                            <label class="fw-bold mb-4 text-danger d-block w-100 text-center">
-                                                * Upload size [640*120] *
-                                            </label>
-
-                                        </div>
-                                    </div>
-
-                                    <!-- Input Boxes Section -->
-                                    <div class="col-lg-8">
-                                        <div class="row g-2">
-                                            <!-- Upload Image Name -->
-                                            <div class="col-12 mb-3">
-                                                <label class="fw-bold">Upload Image Name <span class="text-danger">*</span></label>
-                                                <input type="text"
-                                                    placeholder="Rename the Photo"
-                                                    id="upload_image_name"
-                                                    name="upload_image_name"
-                                                    value="{{ old('upload_image_name') }}"
-                                                    class="form-control py-2 rounded-3 shadow-sm"
-                                                    required>
-                                            </div>
-
-                                            <!-- Alternate Image Name -->
-                                            <div class="col-12">
-                                                <label class="fw-bold">Alternate Image Name <span class="text-danger">*</span></label>
-                                                <input type="text"
-                                                    placeholder="Alternate Name"
-                                                    id="alternate_image_name"
-                                                    name="alternate_image_name"
-                                                    value="{{ old('alternate_image_name') }}"
-                                                    class="form-control py-2 rounded-3 shadow-sm"
-                                                    required>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row g-2">
-                            <div class="col">
-                                <label class="fw-bold mt-2"> Gallery Image </label>
-                                <div class="row d-flex align-items-center mb-4">
-
-                                    <div id="photo-upload-container" class="row">
-                                        <div class="col-lg-2 photo-upload-field">
-                                            <div class="form-input">
-                                                <label for="file-ip-1" class="px-4 py-2 text-center">
-                                                    <img class="text-center mt-3" id="file-ip-1-preview" src="/assets/image/dashboard/innerpece_addpic_icon.svg">
-                                                    <p class="text-center fw-light mt-3"> Add Pic</p>
-                                                </label>
-                                                <input type="file" name="img_1" id="file-ip-1" data-number="1" accept="image/png, image/jpeg, image/svg+xml">
-                                                <label class="fw-bold mb-4 text-danger d-block w-100 text-center">
-                                                    * Upload size [640*120] *
-                                                </label>
-
-                                            </div>
-
-
-                                        </div>
-
-                                        <!-- Input Boxes Section -->
-                                        <div class="col-lg-8">
-                                            <div class="row g-2">
-
-                                                <!-- Upload Image Name -->
-                                                <div class="col-12 mb-3">
-                                                    <label class="fw-bold">Upload Image Name <span class="text-danger">*</span></label>
-                                                    <input type="text"
-                                                        placeholder="Rename the Photo"
-                                                        id="upload_image_name"
-                                                        name="upload_image_name"
-                                                        value="{{ old('upload_image_name') }}"
-                                                        class="form-control py-2 rounded-3 shadow-sm"
-                                                        required>
-                                                </div>
-
-                                                <!-- Alternate Image Name -->
-                                                <div class="col-12">
-                                                    <label class="fw-bold">Alternate Image Name <span class="text-danger">*</span></label>
-                                                    <input type="text"
-                                                        placeholder="Alternate Name"
-                                                        id="alternate_image_name"
-                                                        name="alternate_image_name"
-                                                        value="{{ old('alternate_image_name') }}"
-                                                        class="form-control py-2 rounded-3 shadow-sm"
-                                                        required>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <button id="add-photo-btn" type="button" class="btn btn-primary mt-1">Add More Photos</button>
-                                    </div>
-                                </div>
-                            </div>
-
+                        <div class="col-12">
+                            <label class="fw-bold">Alternate Image Name <span class="text-danger">*</span></label>
+                            <input type="text" id="alternate_image_name" name="alternate_image_name" placeholder="Alternate Name" value="{{ old('alternate_image_name') }}" class="form-control py-2 rounded-3 shadow-sm" required>
                         </div>
                     </div>
                 </div>
+            </div>
+            <!-- Gallery Images -->
+            <div class="row mt-4">
+                <div class="col">
+                    <label class="fw-bold">Gallery Image</label>
+                    <div id="photo-upload-container" class="row g-4">
+                        <!-- Dynamically added photo containers will go here -->
+                    </div>
+                    <div class="text-end mt-3">
+                        <button type="button" class="btn-add rounded border-0 px-5 py-3 text-white" onclick="addPhotoField()">
+                            <i class="fa fa-plus" aria-hidden="true"></i> Add Photo
+                        </button>
+                    </div>
+                </div>
+            </div>
 
-                <!-- 2.LOCATION -->
-                <div class="row mb-1">
-                    <div class="col pt-1">
-                        <div class="form-body px-5  rounded-4">
-                            <h4 class="fw-bold mb-3">02.Location</h4>
-                            <div class="mb-3">
-                                @foreach($address->chunk(4) as $chunk)
-                                <!-- For each chunk, create a row -->
-                                <div class="row ">
-                                    @foreach($chunk as $address)
-                                    <!-- Display each amenity as a column -->
-                                    <div class="col-lg-3 col-md-3 col-sm-4 b">
-                                        <div class="form-check d-flex  align-items-center">
-                                            <input type="checkbox" class="me-1" id="address-{{ $address->id }}" name="address_services[]" value="{{ $address->id }}">
-                                            <label class="" for="address-{{ $address->id }}">{{ $address->title }}</label>
-                                        </div>
-                                    </div>
-                                    @endforeach
-                                </div>
-                                @endforeach
-                            </div>
+            <script>
+                // Function to add a new photo field dynamically
+                let photoCount = 1; // Initialize photo count
+
+                function addPhotoField() {
+                    const container = document.getElementById('photo-upload-container');
+                    photoCount++; // Increment photo count
+                    
+                    // Create a new photo upload field with delete button
+                    const photoField = document.createElement('div');
+                    photoField.classList.add('col-lg-2', 'photo-upload-field');
+                    
+                    photoField.innerHTML = `
+                        <div class="form-input">
+                            <label for="file-ip-${photoCount}" class="px-4 py-2 text-center">
+                                <img class="text-center mt-3" id="file-ip-${photoCount}-preview" src="/assets/image/dashboard/innerpece_addpic_icon.svg">
+                                <p class="text-center fw-light mt-3"> Add Pic</p>
+                            </label>
+                            <input type="file" name="img_${photoCount}" id="file-ip-${photoCount}" data-number="${photoCount}" accept="image/png, image/jpeg, image/svg+xml" onchange="previewImage(event, this)">
+                            <label class="fw-bold mb-4 text-danger d-block w-100 text-center">
+                                * Upload size [640*120] *
+                            </label>
+                            <button type="button" class="btn btn-danger mt-2" onclick="deletePhoto(this)">Delete</button>
+                        </div>
+                    `;
+                    
+                    // Append the new photo field to the container
+                    container.appendChild(photoField);
+                }
+
+                // Function to preview the image after selection
+                function previewImage(event, inputElement) {
+                    const file = event.target.files[0];
+                    const reader = new FileReader();
+                    
+                    reader.onload = function() {
+                        const preview = inputElement.previousElementSibling.querySelector('img');
+                        preview.src = reader.result;
+                    };
+                    
+                    if (file) {
+                        reader.readAsDataURL(file);
+                    }
+                }
+
+                // Function to delete the image container
+                function deletePhoto(button) {
+                    const photoField = button.closest('.photo-upload-field');
+                    photoField.remove();
+                }
+            </script>
+
+
+
+<!-- 2.LOCATION -->
+<div class="row mb-1">
+    <div class="col pt-1">
+        <div class="form-body px-5 rounded-4">
+            <h4 class="fw-bold mb-3">02. Location</h4>
+            <div class="mb-3">
+                @foreach($address->chunk(4) as $chunk)
+                <!-- For each chunk, create a row -->
+                <div class="row g-3">
+                    @foreach($chunk as $address)
+                    <!-- Display each address as a column -->
+                    <div class="col-lg-3 col-md-4 col-sm-6">
+                        <div class="form-check d-flex align-items-center">
+                            <input 
+                                type="checkbox" 
+                                class="form-check-input me-2" 
+                                id="address-{{ $address->id }}" 
+                                name="address_services[]" 
+                                value="{{ $address->id }}">
+                            <label 
+                                class="form-check-label mb-0" 
+                                for="address-{{ $address->id }}" 
+                                style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                {{ $address->title }}
+                            </label>
+                        </div>
+                    </div>
+                    @endforeach
+                </div>
+                @endforeach
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- 3.TOUR PLANNING -->
+<div class="row mb-1">
+    <div class="col pt-1">
+        <div class="form-body px-5 rounded-4">
+            <h4 class="fw-bold mb-2">03. Tour Planning <span class="text-danger">*</span></h4>
+            <div id="plan-container">
+                <!-- Initial Plan Item -->
+                <div class="plan-item mb-3">
+                    <!-- Plan Title and Subtitle in One Row -->
+                    <div class="row g-2 mt-3 d-flex align-items-end">
+                        <div class="col-lg-6">
+                            <label class="form-label fw-bold mb-2">Plan Title</label>
+                            <input type="text" name="plan_title[]" id="plan_title" class="form-control py-2 rounded-3 shadow-sm" placeholder="Plan Title" required>
+                        </div>
+                        <div class="col-lg-6">
+                            <label class="form-label fw-bold mb-2">Plan Subtitle</label>
+                            <input type="text" name="plan_subtitle[]" class="form-control py-2 rounded-3 shadow-sm" placeholder="Plan Subtitle" required>
+                        </div>
+                    </div>
+
+                    <!-- Plan Description in the Next Row -->
+                    <div class="row mt-3">
+                        <div class="col-lg-12">
+                            <input type="hidden" id="plan_description" name="plan_description[]">
+                            <label class="form-label fw-bold mb-2">Plan Description <span class="text-danger">*</span></label>
+                            <div id="summernote3" style="height: 200px;"></div>
                         </div>
                     </div>
                 </div>
-
-
-                <!-- 3.TOUR PLANNING  -->
-                <div class="row mb-1 ">
-                    <div class="col pt-1">
-                        <div class="form-body px-5   rounded-4">
-                            <h4 class="fw-bold mb-2">03. Tour Planning <span class="text-danger">*</span></h4>
-                            <div id="plan-container">
-                                <!-- Initial Plan Item -->
-                                <div class="row g-2 mt-3 d-flex justify-content-around">
-                                    <div class="col-lg-12">
-                                        <label class="form-label form-label-top form-label-auto fw-bold mb-2">Plan Title</label>
-
-                                        <input type="text" name="plan_title[]" id="plan_title" class="form-control py-2 rounded-3 shadow-sm" placeholder="Plan Title" required>
-                                    </div>
-                                </div>
-                                <div class="plan-item mb-3">
-                                    <div class="mt-3">
-                                        <div class="row">
-                                            <div class="col-lg-11">
-                                                <label class="form-label form-label-top form-label-auto fw-bold mb-2">Plan Subtitle</label>
-                                                <input type="text" name="plan_subtitle[]" class="form-control py-2 rounded-3 shadow-sm" placeholder="Plan Subtitle" required>
-                                            </div>
-                                            <!-- <div class="col-lg-1 mt-3 text-end">
-                                                <a href="#" class="table-link danger remove-plan">
-                                                    <span class="fa-stack">
-                                                        <i class="fa fa-square fa-stack-2x"></i>
-                                                        <i class="fa fa-trash-o fa-stack-1x fa-inverse"></i>
-                                                    </span>
-                                                </a>
-                                            </div> -->
-                                        </div>
-                                    </div>
-                                    <div class="mt-3">
-                                        <div class="row">
-                                            <div class="col-lg-11">
-                                                <input type="hidden" id="plan_description" name="plan_description[]">
-                                                <label class="form-label form-label-top form-label-auto fw-bold mb-2">Plan Description <span class="text-danger">*</span></label>
-                                                <!-- <textarea id="plan_description" class="container__textarea p-5 textarea-feild" name="plan_description[]" required></textarea> -->
-                                                <!-- <div class="mb-3">
-                                            <div id="commentEditor3" class="form-control" style="height: 200px;"></div>
-                                        </div> -->
-                                                <div class=" mt-2">
-                                                    <div class="row">
-                                                        <div class="col-lg-12 ">
-                                                            <div id="summernote3" style="height: 200px;"></div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!-- Added Subtitle Field -->
-                                </div>
-                            </div>
-                            <!-- <div class="text-end p-5">
-                                <button type="button" id="add-plan-btn" class="btn-add rounded border-0 px-5 py-3 text-end text-white">
-                                    <i class="fa fa-plus" aria-hidden="true"></i> Add
-                                </button>
-                            </div> -->
-                        </div>
-                    </div>
-                </div>
-
-
+            </div>
+        </div>
+    </div>
+</div>
 
 
                 <!-- 4.TOUR DATE & TIME -->
-                <div class="row mb-2 ">
-                    <div class="col ">
-                        <div class="form-body px-5 rounded-4 ">
-                            <h4 class="fw-bold mb-2">04.Tour date & Time</h4>
-                            <div class="mb-3">
-                                <div class="row mb-4">
-                                    <div class="row g-2 mb-2">
-                                        <div class="col">
-                                            <label class="fw-bold mb-2 ">Start date <span class="text-danger"></span></label>
-                                            <input type="date" class="form-control py-2 rounded-3 shadow-sm " name="start_date" id="start_date" value="{{old('start_date')}}" required>
-                                        </div>
-                                        <div class="col">
-                                            <label class="fw-bold mb-2 ">Return Date <span class="text-danger"></span></label>
-                                            <input type="date" class="form-control py-2 rounded-3 shadow-sm " name="return_date" value="{{old('return_date')}}" id="return_date" required>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="row mb-5">
-                                    <div class="col">
-                                        <label class="fw-bold  mb-2">Total No.of Days</label>
-                                        <input type="text" class="form-control py-2 rounded-3 shadow-sm " id="total_days" name="total_days" value="{{old('total_days')}}" readonly>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+<div class="row mb-2">
+    <div class="col">
+        <div class="form-body px-5 rounded-4">
+            <h4 class="fw-bold mb-2">04.Tour Date & Time</h4>
+            <div class="mb-3">
+                <div class="row g-2 align-items-end">
+                    <div class="col-md-4">
+                        <label class="fw-bold mb-2">Start Date <span class="text-danger"></span></label>
+                        <input type="date" class="form-control py-2 rounded-3 shadow-sm" name="start_date" id="start_date" value="{{old('start_date')}}" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="fw-bold mb-2">Return Date <span class="text-danger"></span></label>
+                        <input type="date" class="form-control py-2 rounded-3 shadow-sm" name="return_date" id="return_date" value="{{old('return_date')}}" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="fw-bold mb-2">Total No. of Days</label>
+                        <input type="text" class="form-control py-2 rounded-3 shadow-sm" id="total_days" name="total_days" value="{{old('total_days')}}" readonly>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 
@@ -361,14 +316,14 @@
                 <div class="row mb-3 ">
                     <div class="col">
                         <div class="form-body px-5  rounded-4">
-                            <h4 class="fw-bold mb-3">05. Pricing</h4>
-                            <div class="mb-3">
-                                <div class="row mb-4">
-                                    <div class="col-lg-6 mt-4">
+                            <h4 class="fw-bold mb-1">05. Pricing</h4>
+                            <div class="mb-1">
+                                <div class="row mb-2">
+                                    <div class="col-lg-6 mt-2">
                                         <label class="fw-bold ">Member Capacity <span class="text-danger">*</span></label>
                                         <input type="text" id="member_capacity" name="member_capacity" class="form-control py-2 rounded-3 shadow-sm" placeholder="Member Capacity" required value="{{old('member_capacity')}}">
                                     </div>
-                                    <div class="col-lg-6 mt-4">
+                                    <div class="col-lg-6 mt-2">
                                         <label class="fw-bold ">Payment</label>
                                         <select id="mem_type" name="mem_type" class="form-select py-2 rounded-3 shadow-sm" required>
                                             <option value="">Select</option>
@@ -394,8 +349,8 @@
                 <div class="row mb-3">
                 <div class="col">
                     <div class="form-body px-5 rounded-4">
-                        <h4 class="fw-bold mb-5">6. Payment Policy</h4>
-                        <div class="mb-3">
+                        <h4 class="fw-bold mb-3">6. Payment Policy</h4>
+                        <div class="mb-1">
                             <div id="camp-rule-container">
                                 <div class="row g-2 mb-4 camp-rule-field">
                                     <div class="col">
@@ -485,155 +440,139 @@
             </div>
         </div>
 
-                <div class="row mb-2">
-                    <div class="col">
-                        <div class="form-body px-5  rounded-4">
-                            <h4 class="fw-bold mb-3">09.Food Menu </h4>
-                            <div class="mb-1">
-                                <div class="row g-2 mb-2">
-                                    <div class="col">
-                                        <label class="form-label form-label-top form-label-auto fw-bold mb-2">Breakfast</label>
-                                        <input type="hidden" id="break_fast" name="break_fast">
-                                        <!-- <div class="mb-3">
-                                    <div id="commentEditor6" class="form-control" style="height: 200px;"></div>
-                                </div> -->
-                                        <div class=" mt-2">
-                                            <div class="row">
-                                                <div class="col-lg-12 ">
-                                                    <div id="summernote6" style="height: 200px;"></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+        <div class="row mb-2">
+    <div class="col">
+        <div class="form-body px-5 rounded-4">
+            <h4 class="fw-bold mb-3">09. Food Menu</h4>
+            <div class="mb-1">
+                <!-- Food Menu Inputs in One Row -->
+                <div class="row g-2">
+                    <!-- Breakfast -->
+                    <div class="col-lg-4">
+                        <label class="form-label form-label-top form-label-auto fw-bold mb-2">Breakfast</label>
+                        <input type="hidden" id="break_fast" name="break_fast">
+                        <div class="mt-2">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div id="summernote6" style="height: 200px;"></div>
                                 </div>
-                                <div class="row g-2 mb-2">
-                                    <div class="col">
-                                        <label class="form-label form-label-top form-label-auto fw-bold mb-2">Lunch</label>
-                                        <input type="hidden" id="lunch" name="lunch">
-                                        <!-- <div class="mb-3">
-                                    <div id="commentEditor7" class="form-control" style="height: 200px;"></div>
-                                </div> -->
-                                        <div class=" mt-2">
-                                            <div class="row">
-                                                <div class="col-lg-12 ">
-                                                    <div id="summernote7" style="height: 200px;"></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Lunch -->
+                    <div class="col-lg-4">
+                        <label class="form-label form-label-top form-label-auto fw-bold mb-2">Lunch</label>
+                        <input type="hidden" id="lunch" name="lunch">
+                        <div class="mt-2">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div id="summernote7" style="height: 200px;"></div>
                                 </div>
-                                <div class="row g-2 mb-2">
-                                    <div class="col">
-                                        <label class="form-label form-label-top form-label-auto fw-bold mb-2">Dinner</label>
-                                        <input type="hidden" id="dinner" name="dinner">
-                                        <!-- <div class="mb-3">
-                                    <div id="commentEditor8" class="form-control" style="height: 200px;"></div>
-                                </div> -->
-                                        <div class=" mt-2">
-                                            <div class="row">
-                                                <div class="col-lg-12 ">
-                                                    <div id="summernote8" style="height: 200px;"></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Dinner -->
+                    <div class="col-lg-4">
+                        <label class="form-label form-label-top form-label-auto fw-bold mb-2">Dinner</label>
+                        <input type="hidden" id="dinner" name="dinner">
+                        <div class="mt-2">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div id="summernote8" style="height: 200px;"></div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-
-                <!-- 8.AMENITIES -->
-                <div class="row mb-2">
-                    <div class="col">
-                        <div class="form-body px-5  rounded-4">
-                            <h4 class="fw-bold mb-3">10. Amenities</h4>
-                            <div class="row mb-2">
-                                @foreach($amenities->chunk(4) as $chunk)
-                                <!-- For each chunk, create a row -->
-                                <div class="row mb-2">
-                                    @foreach($chunk as $amenity)
-                                    <!-- Display each amenity as a column -->
-                                    <div class="col-lg-3 col-md-3 col-sm-4 mb-2">
-                                        <div class="form-check d-flex  align-items-center">
-                                            <input type="checkbox" class="me-1" id="amenity-{{ $amenity->id }}" name="amenity_services[]" value="{{ $amenity->id }}">
-                                            <label class="" for="amenity-{{ $amenity->id }}">{{ $amenity->amenity_name }}</label>
-                                        </div>
-                                    </div>
-                                    @endforeach
-                                </div>
-                                @endforeach
-                            </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 8. AMENITIES -->
+<div class="row mb-2">
+    <div class="col">
+        <div class="form-body px-5 py-3 rounded-4">
+            <h4 class="fw-bold mb-3">10. Amenities</h4>
+            <div class="d-flex flex-wrap justify-content-between">
+                @foreach($amenities as $index => $amenity)
+                    <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                        <div class="form-check d-flex align-items-center">
+                            <input type="checkbox" class="me-2" id="amenity-{{ $amenity->id }}" name="amenity_services[]" value="{{ $amenity->id }}">
+                            <label for="amenity-{{ $amenity->id }}" class="mb-0">{{ $amenity->amenity_name }}</label>
                         </div>
                     </div>
-                </div>
+                    @if(($index + 1) % 4 == 0)
+                        <div class="w-100"></div> <!-- Forces a line break after every 4 items -->
+                    @endif
+                @endforeach
+            </div>
+        </div>
+    </div>
+</div>
 
-                <!-- 9.FOOD & BEVERAGES -->
-                <div class="row mb-2">
-                    <div class="col">
-                        <div class="form-body px-5 rounded-4">
-                            <h4 class="fw-bold mb-3">11. Food and Beverages</h4>
-                            <div class="row mb-2">
-                                @foreach($foodBeverages->chunk(6) as $chunk)
-                                <div class="row ">
-                                    @foreach($chunk as $item)
-                                    <div class="col-lg-3 col-md-3 col-sm-4 mb-4">
-                                        <div class="form-check d-flex  align-items-center">
-                                            <input type="checkbox" class="me-1" id="food-beverage-{{ $item->id }}" name="food_beverages[]" value="{{ $item->id }}">
-                                            <label class="" for="food-beverage-{{ $item->id }}">{{ $item->food_beverage }}</label>
-                                        </div>
-                                    </div>
-                                    @endforeach
-                                </div>
-                                @endforeach
-                            </div>
+<!-- 9. FOOD & BEVERAGES -->
+<div class="row mb-2">
+    <div class="col">
+        <div class="form-body px-5 py-3 rounded-4">
+            <h4 class="fw-bold mb-3">11. Food and Beverages</h4>
+            <div class="d-flex flex-wrap justify-content-between">
+                @foreach($foodBeverages as $index => $item)
+                    <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                        <div class="form-check d-flex align-items-center">
+                            <input type="checkbox" class="me-2" id="food-beverage-{{ $item->id }}" name="food_beverages[]" value="{{ $item->id }}">
+                            <label for="food-beverage-{{ $item->id }}" class="mb-0">{{ $item->food_beverage }}</label>
                         </div>
                     </div>
-                </div>
+                    @if(($index + 1) % 4 == 0)
+                        <div class="w-100"></div> <!-- Forces a line break after every 4 items -->
+                    @endif
+                @endforeach
+            </div>
+        </div>
+    </div>
+</div>
 
-                <!--10. ACTIVITIES -->
-                <div class="row mb-2">
-                    <div class="col">
-                        <div class="form-body px-5  rounded-4">
-                            <h4 class="fw-bold mb-3">12.Activities</h4>
-                            <div class="row mb-2">
-                                @foreach($activities->chunk(6) as $chunk)
-                                <div class="row mb-3">
-                                    @foreach($chunk as $item)
-                                    <div class="col-lg-3 col-md-3 col-sm-4 mb-4">
-                                        <div class="form-check d-flex  align-items-center">
-                                            <input type="checkbox" class=" me-1" id="activities-{{ $item->id }}" name="activities[]" value="{{ $item->id }}">
-                                            <label class="" for="activities-{{ $item->id }}">{{ $item->activities }}</label>
-                                        </div>
-                                    </div>
-                                    @endforeach
-                                </div>
-                                @endforeach
-                            </div>
+<!-- 10. ACTIVITIES -->
+<div class="row mb-2">
+    <div class="col">
+        <div class="form-body px-5 py-3 rounded-4">
+            <h4 class="fw-bold mb-3">12. Activities</h4>
+            <div class="d-flex flex-wrap justify-content-between">
+                @foreach($activities as $index => $item)
+                    <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                        <div class="form-check d-flex align-items-center">
+                            <input type="checkbox" class="me-2" id="activities-{{ $item->id }}" name="activities[]" value="{{ $item->id }}">
+                            <label for="activities-{{ $item->id }}" class="mb-0">{{ $item->activities }}</label>
                         </div>
                     </div>
-                </div>
+                    @if(($index + 1) % 4 == 0)
+                        <div class="w-100"></div> <!-- Forces a line break after every 4 items -->
+                    @endif
+                @endforeach
+            </div>
+        </div>
+    </div>
+</div>
 
-                <!-- 11.SAFETY FEATURES  -->
-                <div class="row mb-2">
-                    <div class="col">
-                        <div class="form-body px-5  rounded-4">
-                            <h4 class="fw-bold mb-3">13.Safety Features</h4>
-                            <div class="row mb-2">
-                                @foreach($safety_features->chunk(6) as $chunk)
-                                <div class="row">
-                                    @foreach($chunk as $item)
-                                    <div class="col-lg-3 col-md-3 col-sm-4 mb-4">
-                                    <div class="form-check">
-                                    <input type="checkbox" class="me-1" id="safety_features-{{ $item->id }}" name="safety_features[]" value="{{ $item->id }}">
-                                            <label class="" for="safety_features-{{ $item->id }}">{{ $item->safety_features }}</label>
-                                        </div>
-                                    </div>
-                                    @endforeach
-                                </div>
-                                @endforeach
-                            </div>
-                       
+<!-- 11. SAFETY FEATURES -->
+<div class="row mb-2">
+    <div class="col">
+        <div class="form-body px-5 py-3 rounded-4">
+            <h4 class="fw-bold mb-3">13. Safety Features</h4>
+            <div class="d-flex flex-wrap">
+                @foreach($safety_features as $index => $item)
+                    <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                        <div class="form-check d-flex align-items-center mb-1">
+                            <input type="checkbox" class="me-2" id="safety_features-{{ $item->id }}" name="safety_features[]" value="{{ $item->id }}">
+                            <label for="safety_features-{{ $item->id }}" class="mb-0">{{ $item->safety_features }}</label>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+    </div>
+</div>
+
 
 
                 <!-- 6.rule & Regulation
@@ -659,19 +598,26 @@
 
 <br>
 
-                            <div class="row g-2">
-                                <div class="col">
-                                    <label class="fw-bold ">Status</label>
-                                    <div class="form-check form-switch">
-                                        <input class="form-check-input check_bx" type="checkbox" id="status" name="status">
-                                    </div>
-                                </div>
-                            </div>
+<div class="row g-2">
+    <div class="col">
+       <h4> <label class="fw-bold">Status</label></h4>
+        <div class="form-check form-switch d-flex align-items-center">
+            <input class="form-check-input check_bx" type="checkbox" id="status" name="status">
+        </div>
+    </div>
+</div>
+
+<style>
+    .form-check-input {
+        transform: scale(1.5); /* Increase the size of the checkbox */
+    }
+</style>
+
                             <div class="col-lg-12 text-end mt-5">
                                 <a href="{{ route('admin.inclusive_package_list') }}">
                                     <button type="button" class="cancel-btn"> Cancel </button>
                                 </a>
-                                <button class="submit-btn sbmtBtn ms-4"> Submit </button>
+                                <button class="submit-btn sbmtBtn ms-4 mb-5"> Submit </button>
                             </div>
                         </div>
                     </div>
@@ -883,7 +829,7 @@
         //         // Update IDs and Names for new plan items
         //         newPlan.querySelectorAll('input, textarea').forEach((field) => {
         //             // Ensure name is array-style and IDs are unique
-        //             field.name = field.name.replace(/\[\]$/, `[]`);
+        //             field.name = field.name.replace(/\[\]$/, []);
         //             field.id = field.id + '-' + planCount;
         //         });
 
@@ -920,7 +866,7 @@
                 // Update IDs and Names for new plan items
                 newPlan.querySelectorAll('input, textarea').forEach((field) => {
                     // Ensure name is array-style and IDs are unique
-                    field.name = field.name.replace(/\[\]$/, `[]`);
+                    field.name = field.name.replace(/\[\]$/, []);
                     field.id = field.id + '-' + planCount;
                 });
 
