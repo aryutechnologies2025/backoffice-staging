@@ -425,11 +425,11 @@ a {
                     </div>
                     <div class="col-md-4">
                         <label class="fw-bold mb-2">Bed Rooms</label>
-                        <input type="text" class="form-control py-2 rounded-3 shadow-sm" id="bed_room" name="bed_room"  value="{{$package_details->bed_room}}" readonly>
+                        <input type="text" class="form-control py-2 rounded-3 shadow-sm" id="bed_room" name="bed_room"  value="{{$package_details->bed_room}}" required>
                     </div>
                     <div class="col-md-4">
                         <label class="fw-bold mb-2">Hall</label>
-                        <input type="text" class="form-control py-2 rounded-3 shadow-sm" id="hall" name="hall"  value="{{$package_details->hall}}" readonly>
+                        <input type="text" class="form-control py-2 rounded-3 shadow-sm" id="hall" name="hall"  value="{{$package_details->hall}}" required>
                     </div>
                 </div>
             </div>
