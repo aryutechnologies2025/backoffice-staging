@@ -229,26 +229,128 @@ class ProgramApiController extends Controller
     
             // Process the programs for the response
             $responseData = $programs->map(function ($package) use ($userId) {
-                return [
+                $amenityIds = json_decode($package->amenity_details, true) ?? [];
+                $foodBeverageIds = json_decode($package->food_beverages, true) ?? [];
+                $activityIds = json_decode($package->activities, true) ?? [];
+                $safetyFeatureIds = json_decode($package->safety_features, true) ?? [];
+                $eventsPackageImages = json_decode($package->events_package_images, true) ?? [];
+                $tourPlanning = json_decode($package->tour_planning, true) ?? [];
+                $campRule = json_decode($package->camp_rule, true) ?? [];
+
+                $amenities = Amenities::whereIn('id', $amenityIds)
+                    ->get(['id', 'amenity_name', 'amenity_pic'])
+                    ->keyBy('id')
+                    ->map(function ($item) {
+                        return [
+                            'amenity_name' => $item->amenity_name,
+                            'amenity_pic' => $item->amenity_pic,
+                        ];
+                    });
+
+                $foodBeverages = FoodBeverage::whereIn('id', $foodBeverageIds)
+                    ->get(['id', 'food_beverage', 'food_beverage_pic'])
+                    ->keyBy('id')
+                    ->map(function ($item) {
+                        return [
+                            'food_beverage' => $item->food_beverage,
+                            'food_beverage_pic' => $item->food_beverage_pic,
+                        ];
+                    });
+
+                $activities = Activities::whereIn('id', $activityIds)
+                    ->get(['id', 'activities', 'activities_pic'])
+                    ->keyBy('id')
+                    ->map(function ($item) {
+                        return [
+                            'activities' => $item->activities,
+                            'activities_pic' => $item->activities_pic,
+                        ];
+                    });
+
+                $safetyFeatures = Safetyfeatures::whereIn('id', $safetyFeatureIds)
+                    ->get(['id', 'safety_features', 'safety_features_pic'])
+                    ->keyBy('id')
+                    ->map(function ($item) {
+                        return [
+                            'safety_features' => $item->safety_features,
+                            'safety_features_pic' => $item->safety_features_pic,
+                        ];
+                    });
+
+                $formattedStartDate = \Carbon\Carbon::parse($package->start_date)->format('M d, Y');
+                $formattedEndDate = \Carbon\Carbon::parse($package->return_date)->format('M d, Y');
+                $category = json_decode($package->category, true) ?? [];
+
+                $clientReviews = $package->clientReviews->map(function ($review) {
+                    $reviewDate = \Carbon\Carbon::parse($review->review_dt);
+                    return [
+                        'client_name' => $review->client_name,
+                        'client_pic' => $review->client_pic,
+                        'client_review' => $review->client_review,
+                        'review_dt' => $reviewDate->format('d M Y'),
+                        'rating' => $review->rating,
+                    ];
+                });
+
+                $totalReviews = $package->clientReviews->count();
+                $averageRating = $package->clientReviews->avg('rating');
+
+                $importantInfoPlainText = strip_tags(html_entity_decode($package->important_info, ENT_QUOTES, 'UTF-8'));
+                $importantInfoPlainText = str_replace(["<br>", "<br/>", "<br />"], "\n", $importantInfoPlainText);
+
+                $programInclusionPlainText = strip_tags(html_entity_decode($package->program_inclusion, ENT_QUOTES, 'UTF-8'));
+                $programInclusionPlainText = str_replace(["<br>", "<br/>", "<br />"], "\n", $programInclusionPlainText);
+
+                $breakFastPlainText = strip_tags(html_entity_decode($package->break_fast, ENT_QUOTES, 'UTF-8'));
+                $breakFastPlainText = str_replace(["<br>", "<br/>", "<br />"], "\n", $breakFastPlainText);
+
+                $data = [
                     'id' => $package->id,
                     'title' => $package->title,
-                    'category' => $package->category,
-                    'location' => $package->location,
+                    'program_desc' => $package->program_description,
+                    'flag' => $category,
+                    'destination' => $package->destination->city_name,
+                    'theme' => $package->theme->themes_name,
+                    'state' => $package->state,
+                    'city' => $package->city,
+                    'address' => $package->address,
+                    'country' => $package->country,
+                    'tour_planning' => $tourPlanning,
+                    'cover_img' => $package->cover_img,
+                    'gallery_img' => $eventsPackageImages,
+                    'start_date' => $formattedStartDate,
+                    'end_date' => $formattedEndDate,
                     'total_days' => $package->total_days,
                     'member_capacity' => $package->member_capacity,
-                    'price' => $package->price,
-                    'actual_price' => $package->actual_price,
-                    'cover_img' => $package->cover_img,
-                    'start_date' => \Carbon\Carbon::parse($package->start_date)->format('M d, Y'),
-                    'theme_id' => $package->theme_id,
-                    'theme' => $package->theme,
-                    'destination_id' => $package->destination_id,
-                    'destination' => $package->destination,
-                    'average_rating' => $package->average_rating,
-                    'totalReviews' => $package->totalReviews,
+                    'member_type' => $package->member_type,
+                    'actual_price' => $package->price,
+                    'discount_price' => $package->actual_price,
+                    'payment_policy' => $campRule,
+                    'important_info' => $importantInfoPlainText,
+                    'program_inclusion' => $programInclusionPlainText,
+                    'break_fast' => $breakFastPlainText,
+                    'lunch' => $package->lunch,
+                    'dinner' => $package->dinner,
+                    'amenity_details' => $amenities,
+                    'foodBeverages' => $foodBeverages,
+                    'activities' => $activities,
+                    'safety_features' => $safetyFeatures,
+                    'client_reviews' => $clientReviews,
+                    'total_reviews' => $totalReviews,
+                    'average_rating' => number_format($averageRating, 1),
+                    'created_date' => $package->created_date,
                 ];
+
+                if ($userId) {
+                    $wishlist = Program_wishlist::where('user_id', $userId)
+                        ->where('program_id', $package->id)
+                        ->exists();
+
+                    $data['wishlists'] = $wishlist;
+                }
+
+                return $data;
             });
-    
             return response()->json([
                 'status' => 'success',
                 'message' => 'Programs filtered and sorted by price retrieved successfully.',
