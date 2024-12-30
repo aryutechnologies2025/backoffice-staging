@@ -195,6 +195,74 @@ class ProgramApiController extends Controller
         }
     }
 
+    public function filter_program_by_price_sort(Request $request)
+    {
+        try {
+            // Validate the request
+            $request->validate([
+                'sort_order' => 'required|string|in:low,high', // Allow 'low' or 'high' for sorting
+                'user_id' => 'nullable|integer', // Optional user_id
+            ]);
+    
+            // Retrieve the sort order and user_id (if provided)
+            $sortOrder = $request->input('sort_order');
+            $userId = $request->input('user_id');
+    
+            // Determine the sort direction based on the 'sort_order' value
+            $sortDirection = ($sortOrder === 'low') ? 'asc' : 'desc';
+    
+            // Query the programs and sort prices based on the order
+            $programs = InclusivePackages::query()
+                ->orderByRaw("CAST(price AS SIGNED) $sortDirection") // Sort based on price, treating it as a number
+                ->with('destination', 'theme', 'clientReviews')
+                ->get();
+    
+            // Check if any programs were found
+            if ($programs->isEmpty()) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'No programs found.',
+                    'data' => null
+                ], 404);
+            }
+    
+            // Process the programs for the response
+            $responseData = $programs->map(function ($package) use ($userId) {
+                return [
+                    'id' => $package->id,
+                    'title' => $package->title,
+                    'price' => $package->price,
+                    // Add additional fields as needed
+                ];
+            });
+    
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Programs filtered and sorted by price retrieved successfully.',
+                'data' => $responseData
+            ], 200);
+    
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // Return validation error response
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Validation error.',
+                'errors' => $e->errors()
+            ], 422);
+        } catch (\Exception $e) {
+            // Log the exception
+            \Log::error('Error filtering programs by price: ' . $e->getMessage());
+    
+            // Return error response
+            return response()->json([
+                'status' => 'error',
+                'message' => 'An error occurred while filtering programs by price.',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+    
+
     public function filter_program_by_price(Request $request)
     {
         try {

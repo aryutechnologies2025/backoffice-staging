@@ -230,43 +230,48 @@ class HomeApiController extends Controller
     public function home_filter(Request $request)
     {
         try {
+            $destination = $request->input('destination', '');
+            $start_date = $request->input('start_date');
     
-            $destination = $request->input('destination');
-            $start_date = $request->input('start_date'); 
-           
-            $packages = InclusivePackages::where('is_deleted', "0")
-    ->whereDate('start_date', '<=', $start_date)
-    ->whereDate('return_date', '>=', $start_date) // Check if the input date is between start and return date
-    ->whereHas('destination', function ($query) use ($destination) {
-        // Use LIKE query, normalize city_name by removing spaces and converting to lowercase
-        $query->whereRaw('LOWER(REPLACE(city_name, " ", "")) LIKE ?', ['%' . $destination . '%']);  
-    })
-    ->with(['destination', 'theme', 'clientReviews'])
-    ->get();
-
-           
-           
+            // Modify the query dynamically based on provided inputs
+            $packagesQuery = InclusivePackages::where('is_deleted', "0");
+    
+            if ($start_date) {
+                $packagesQuery->whereDate('start_date', '<=', $start_date)
+                              ->whereDate('return_date', '>=', $start_date); // Filter by date range
+            }
+    
+            if ($destination) {
+                $packagesQuery->whereHas('destination', function ($query) use ($destination) {
+                    $query->whereRaw('LOWER(REPLACE(city_name, " ", "")) LIKE ?', ['%' . strtolower(str_replace(' ', '', $destination)) . '%']);
+                });
+            }
+    
+            // Fetch the results
+            $packages = $packagesQuery->with(['destination', 'theme', 'clientReviews'])->get();
+    
+            // Check if any packages are found
             if ($packages->isEmpty()) {
                 return response()->json([
                     'status' => 'success',
-                    'message' => 'No ' . str_replace('_', ' ', $destination) . ' found.',
+                    'message' => 'No packages found for the given filters.',
                     'data' => []
                 ], 200);
             }
     
+            // Format the package data
             $formattedPackages = $packages->map(function ($package) {
-    
                 $formattedStartDate = \Carbon\Carbon::parse($package->start_date)->format('M d, Y');
                 $formattedLocation = ucfirst($package->city) . ', ' . ucfirst($package->state);
                 $totalReviews = $package->clientReviews->count();
-                $averageRating = $package->clientReviews->avg('rating');
+                $averageRating = $package->clientReviews->avg('rating') ?: 0; // Default average to 0 if no reviews
                 $category = json_decode($package->category, true) ?? [];
-                $formattedcategory = is_array($category) ? implode(', ', $category) : $category;
+                $formattedCategory = is_array($category) ? implode(', ', $category) : $category;
     
                 return [
                     'id' => $package->id,
                     'title' => ucfirst($package->title),
-                    'category' => ucfirst($formattedcategory),
+                    'category' => ucfirst($formattedCategory),
                     'location' => $formattedLocation,
                     'total_days' => $package->total_days,
                     'member_capacity' => $package->member_capacity,
@@ -274,10 +279,10 @@ class HomeApiController extends Controller
                     'actual_price' => $package->actual_price,
                     'cover_img' => $package->cover_img,
                     'start_date' => $formattedStartDate,
-                    'theme_id' => $package->theme ? $package->theme->id : null, 
+                    'theme_id' => $package->theme ? $package->theme->id : null,
                     'theme' => $package->theme ? $package->theme->themes_name : null,
-                    'destination_id' => $package->city ? $package->destination->id : null,
-                    'destination' => $package->city ? $package->destination->city_name : null,
+                    'destination_id' => $package->destination ? $package->destination->id : null,
+                    'destination' => $package->destination ? $package->destination->city_name : null,
                     'average_rating' => number_format($averageRating, 1),
                     'totalReviews' => $totalReviews,
                 ];
@@ -285,20 +290,22 @@ class HomeApiController extends Controller
     
             return response()->json([
                 'status' => 'success',
-                'message' => '' . str_replace('_', ' ', $destination) . ' retrieved successfully.',
+                'message' => 'Packages retrieved successfully.',
                 'data' => $formattedPackages
             ], 200);
-        }catch (\Exception $e) {
-            \Log::error('Error fetching ' . str_replace('_', ' ', $destination) . ': ' . $e->getMessage());
+    
+        } catch (\Exception $e) {
+            // Log the error for debugging purposes
+            \Log::error('Error fetching packages: ' . $e->getMessage());
     
             return response()->json([
                 'status' => 'error',
-                'message' => 'An error occurred while fetching ' . str_replace('_', ' ', $destination) . '.',
+                'message' => 'An error occurred while fetching packages.',
                 'error' => $e->getMessage()
             ], 500);
         }
     }
-
+    
     public function filter_program_by_date(Request $request)
     {
         try {
@@ -306,45 +313,41 @@ class HomeApiController extends Controller
             $request->validate([
                 'start_date' => 'required|date',
                 'to_date' => 'required|date',
-                'theme' => 'required|string',  // Validate theme as a string
+                'theme' => 'required|string',
             ]);
     
-            // Get the start_date and theme from the request
+            // Get the inputs
             $startDate = $request->input('start_date');
             $toDate = $request->input('to_date');
             $themeName = $request->input('theme');
     
-            // Query the InclusivePackages model for packages matching the start_date and theme name
+            // Query the InclusivePackages model
             $packages = InclusivePackages::whereBetween('start_date', [$startDate, $toDate])
+                ->where('is_deleted', "0") // Filter out deleted packages
                 ->whereHas('theme', function ($query) use ($themeName) {
                     $query->where('themes_name', $themeName);
                 })
-                ->with('destination', 'theme', 'clientReviews')
-                ->get()
-                ->where('is_deleted', "0");
+                ->with(['destination', 'theme', 'clientReviews'])
+                ->get();
     
             // Check if packages were found
             if ($packages->isEmpty()) {
                 return response()->json([
                     'status' => 'error',
                     'message' => 'No programs found for the specified date and theme.',
-                    'data' => null
+                    'data' => []
                 ], 404);
             }
     
             // Format the packages for the response
             $formattedPackages = $packages->map(function ($package) {
-               
                 $formattedStartDate = \Carbon\Carbon::parse($package->start_date)->format('M d, Y');
-    
-                // Format the location string
                 $formattedLocation = ucfirst($package->city) . ', ' . ucfirst($package->state);
                 $totalReviews = $package->clientReviews->count();
-                $averageRating = $package->clientReviews->avg('rating');
+                $averageRating = $package->clientReviews->avg('rating') ?: 0; // Default to 0 if no reviews
                 $category = json_decode($package->category, true) ?? [];
                 $formattedCategory = is_array($category) ? implode(', ', $category) : $category;
     
-               
                 return [
                     'id' => $package->id,
                     'title' => ucfirst($package->title),
@@ -368,17 +371,17 @@ class HomeApiController extends Controller
             // Return the formatted data with success status
             return response()->json([
                 'status' => 'success',
-                'message' => ucfirst($startDate) . ' retrieved successfully.',
+                'message' => 'Programs retrieved successfully.',
                 'data' => $formattedPackages
             ], 200);
         } catch (\Exception $e) {
-            // Log the exception
-            \Log::error('Error fetching ' . ucfirst($startDate) . ': ' . $e->getMessage());
+            // Log the exception for debugging
+            \Log::error('Error fetching programs: ' . $e->getMessage());
     
-            // Return error response
+            // Return an error response
             return response()->json([
                 'status' => 'error',
-                'message' => 'An error occurred while fetching ' . ucfirst($startDate) . '.',
+                'message' => 'An error occurred while fetching programs.',
                 'error' => $e->getMessage()
             ], 500);
         }
