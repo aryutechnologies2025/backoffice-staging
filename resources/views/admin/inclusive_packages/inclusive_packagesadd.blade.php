@@ -32,7 +32,18 @@
    
      padding-left: 0rem !important; 
 }
-
+.form-control {
+    width: 80%;
+}
+.btn-add{
+    background-color: #2164c0 !important;
+    border-radius: 30px !important;
+    color: #FFF !important;
+    font-size: 10px !important;
+}
+.form-input img {
+    width: 70%;
+}
 </style>
 <div class="container-wrapper py-5">
     <div class="row">
@@ -74,7 +85,9 @@
                     </div>
                 </div>
             </div>
-
+            <!-- <input type="hidden" id="plan_description" name="plan_description[]">
+                            <label class="form-label fw-bold mb-2">Plan Description <span class="text-danger">*</span></label>
+                            <div id="summernote3" style="height: 200px;"></div> -->
             <!-- Title -->
             <div class="row mt-4">
                 <div class="col">
@@ -148,11 +161,11 @@
             <!-- Gallery Images -->
             <div class="row mt-4">
                 <div class="col">
-                    <label class="fw-bold">Gallery Image</label>
+                    <label class="fw-bold py-3">Gallery Image</label>
                     <div id="photo-upload-container" class="row g-4">
                         <!-- Dynamically added photo containers will go here -->
                     </div>
-                    <div class="text-end mt-3">
+                    <div class="text mt-3">
                         <button type="button" class="btn-add rounded border-0 px-5 py-3 text-white" onclick="addPhotoField()">
                             <i class="fa fa-plus" aria-hidden="true"></i> Add Photo
                         </button>
@@ -250,42 +263,63 @@
 </div>
 
 
-<!-- 3.TOUR PLANNING -->
-<div class="row mb-1">
-    <div class="col pt-1">
-        <div class="form-body px-5 rounded-4">
-            <h4 class="fw-bold mb-2">03. Tour Planning <span class="text-danger">*</span></h4>
-            <div id="plan-container">
+        <!-- 3.TOUR PLANNING  -->
+        <div class="row mb-3">
+            <div class="col">
+            <div class="form-body px-5 rounded-4">
+                <h4 class="fw-bold mb-2">3. Tour Planning <span class="text-danger">*</span></h4>
+                <div id="plan-container">
                 <!-- Initial Plan Item -->
-                <div class="plan-item mb-3">
-                    <!-- Plan Title and Subtitle in One Row -->
-                    <div class="row g-2 mt-3 d-flex align-items-end">
-                        <div class="col-lg-6">
-                            <label class="form-label fw-bold mb-2">Plan Title</label>
-                            <input type="text" name="plan_title[]" id="plan_title" class="form-control py-2 rounded-3 shadow-sm" placeholder="Plan Title" required>
-                        </div>
-                        <div class="col-lg-6">
-                            <label class="form-label fw-bold mb-2">Plan Subtitle</label>
-                            <input type="text" name="plan_subtitle[]" class="form-control py-2 rounded-3 shadow-sm" placeholder="Plan Subtitle" required>
-                        </div>
-                    </div>
+                <div class="row g-2 mt-2 d-flex justify-content-around">
+                    <div class="col-lg-12">
+                    <label class="form-label form-label-top form-label-auto fw-bold mb-2">Plan Title</label>
 
-                    <!-- Plan Description in the Next Row -->
-                    <div class="row mt-3">
-                        <div class="col-lg-12">
-                            <input type="hidden" id="plan_description" name="plan_description[]">
-                            <label class="form-label fw-bold mb-2">Plan Description <span class="text-danger">*</span></label>
-                            <div id="summernote3" style="height: 200px;"></div>
-                        </div>
+                    <input type="text" name="plan_title[]" id="plan_title" class="form-control py-2 rounded-3 shadow-sm" placeholder="Plan Title" required>
                     </div>
                 </div>
+                <div class="plan-item mb-3">
+                    <div class="mt-2">
+                    <div class="row">
+                        <div class="col-lg-11">
+                        <label class="form-label form-label-top form-label-auto fw-bold mb-2">Plan Subtitle</label>
+                        <input type="text" name="plan_subtitle[]" class="form-control py-2 rounded-3 shadow-sm" placeholder="Plan Subtitle" required>
+                        </div>
+                        <div class="col-lg-1 mt-3 text-end">
+                        <a href="#" class="table-link danger remove-plan">
+                            <span class="fa-stack">
+                            <i class="fa fa-square fa-stack-2x"></i>
+                            <i class="fa fa-trash-o fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                        </div>
+                    </div>
+                    </div>
+                    <div class="mt-2">
+                    <div class="row">
+                        <div class="col-lg-11">
+                        <input type="hidden" id="plan_description" name="plan_description[]">
+                        <label class="form-label form-label-top form-label-auto fw-bold mb-2">Plan Description <span class="text-danger">*</span></label>
+                        <div class=" mt-3">
+                            <div class="row">
+                            <div class="col-lg-12 ">
+                                <div id="summernote3" style="height: 200px;"></div>
+                            </div>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                    </div>
+                    <!-- Added Subtitle Field -->
+                </div>
+                </div>
+                <div class="text-end p-5">
+                <button type="button" id="add-plan-btn" class="btn-add rounded border-0 px-5 py-2 text-end text-white">
+                    <i class="fa fa-plus" aria-hidden="true"></i> Add
+                </button>
+                </div>
+            </div>
             </div>
         </div>
-    </div>
-</div>
-
-
-                <!-- 4.TOUR DATE & TIME -->
 <div class="row mb-2">
     <div class="col">
         <div class="form-body px-5 rounded-4">
@@ -303,6 +337,35 @@
                     <div class="col-md-4">
                         <label class="fw-bold mb-2">Total No. of Days</label>
                         <input type="text" class="form-control py-2 rounded-3 shadow-sm" id="total_days" name="total_days" value="{{old('total_days')}}" readonly>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 4. Needed -->
+<div class="row mb-2">
+    <div class="col">
+        <div class="form-body px-5 rounded-4">
+            <h4 class="fw-bold mb-2">04.Rooms and Beds</h4>
+            <div class="mb-3">
+                <div class="row g-2 align-items-end">
+                    <div class="col-md-4">
+                        <label class="fw-bold mb-2">Rooms<span class="text-danger"></span></label>
+                        <input type="text" class="form-control py-2 rounded-3 shadow-sm" name="total_room" id="total_room" value="{{old('total_room')}}" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="fw-bold mb-2">Bath Rooms<span class="text-danger"></span></label>
+                        <input type="text" class="form-control py-2 rounded-3 shadow-sm" name="bath_room" id="bath_room" value="{{old('bath_room')}}" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="fw-bold mb-2">Bed Rooms</label>
+                        <input type="text" class="form-control py-2 rounded-3 shadow-sm" id="bed_room" name="bed_room" value="{{old('bed_room')}}" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="fw-bold mb-2">Hall</label>
+                        <input type="text" class="form-control py-2 rounded-3 shadow-sm" id="hall" name="hall" value="{{old('hall')}}" required>
                     </div>
                 </div>
             </div>

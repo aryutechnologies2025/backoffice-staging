@@ -35,6 +35,18 @@ a {
 
     padding-left: 1rem !important;
 }
+.form-control {
+    width: 80%;
+}
+.btn-add{
+    background-color: #2164c0 !important;
+    border-radius: 30px !important;
+    color: #FFF !important;
+    font-size: 10px !important;
+}
+.form-input img {
+    width: 70%;
+}
 </style>
 <div class="container-wrapper pt-5">
     <div class="row">
@@ -93,10 +105,18 @@ a {
                             <label class="fw-bold mb-2">Program Description <span class="text-danger">*</span></label>
                             <textarea id="program_description" name="program_description" style="display:none;"></textarea>
 
+
+                              
+
+
+
+                            
                             @php
-                            $plain_text_description = htmlspecialchars(is_array($package_details->program_description) ?
-                            json_encode($package_details->program_description) : $package_details->program_description);
+                            $plain_text_description = is_array($package_details->program_description) 
+                                ? json_encode($package_details->program_description) 
+                                : strip_tags($package_details->program_description);
                             @endphp
+
                             <div id="summernote1" class="form-control py-3 shadow-sm"
                                 style="height: 250px; overflow-y: auto;">{{$plain_text_description}}</div>
                         </div>
@@ -284,48 +304,44 @@ a {
 </div>
 
 
-<!-- 3.TOUR PLANNING -->
-<div class="row mb-1">
+<!-- 3. TOUR PLANNING -->
+<div class="row mb-3">
     <div class="col">
         <div class="form-body px-5 rounded-4">
-            <h4 class="fw-bold mb-3">3. Tour Planning <span class="text-danger">*</span></h4>
+            <h4 class="fw-bold mb-2">3. Tour Planning <span class="text-danger">*</span></h4>
             <div id="plan-container">
                 @php
-                // Decode JSON if needed
-                $tourPlanning = json_decode($package_details->tour_planning, true);
+                    // Decode JSON if needed
+                    $tourPlanning = json_decode($package_details->tour_planning, true);
                 @endphp
                 @foreach($tourPlanning['plan_subtitle'] as $index => $title)
-                <div class="row g-2 mt-3 d-flex justify-content-between">
-                    <!-- Plan Title -->
-                    <div class="col-lg-5 col-md-6">
-                        <label for="plan_title_{{ $index }}" class="form-label fw-bold">Plan Title</label>
-                        <input type="text" name="plan_title[]" id="plan_title_{{ $index }}"
-                            class="form-control py-2 rounded-3 shadow-sm" placeholder="Plan Title" required
-                            value="{{ isset($tourPlanning['plan_title'][$index]) ? $tourPlanning['plan_title'][$index] : '' }}">
+                <div class="plan-item">
+                    <!-- Plan Title and Plan Subtitle on the same line -->
+                    <div class="row g-2 mt-2 d-flex justify-content-between">
+                        <div class="col-lg-5">
+                        <label class="form-label form-label-top form-label-auto fw-bold mb-2">Plan Title</label>
+
+                            <input type="text" name="plan_title[]" class="form-control py-2 rounded-3 shadow-sm" placeholder="Plan Title" required value="{{ isset($tourPlanning['plan_title'][$index]) ? $tourPlanning['plan_title'][$index] : '' }}">
+                        </div>
+                        <div class="col-lg-5">
+                        <label class="form-label form-label-top form-label-auto fw-bold mb-2">Plan Subtitle</label>
+
+                            <input type="text" name="plan_subtitle[]" class="form-control py-2 rounded-3 shadow-sm" placeholder="Plan Subtitle" required value="{{ $tourPlanning['plan_subtitle'][$index] }}">
+                        </div>
                     </div>
 
-                    <!-- Plan Subtitle -->
-                    <div class="col-lg-5 col-md-6">
-                        <label for="plan_subtitle_{{ $index }}" class="form-label fw-bold">Plan Subtitle</label>
-                        <input type="text" name="plan_subtitle[]" id="plan_subtitle_{{ $index }}"
-                            class="form-control py-2 rounded-3 shadow-sm" placeholder="Plan Subtitle" required
-                            value="{{ $tourPlanning['plan_subtitle'][$index] }}">
-                    </div>
-                </div>
-
-                <div class="plan-item mb-3">
+                    <!-- Plan Description on the next line -->
                     <div class="mt-2">
                         <div class="row">
-                            <div class="col-lg-12">
+                            <div class="col-lg-11">
                                 <input type="hidden" id="plan_description" name="plan_description[]">
-                                <label class="form-label form-label-top form-label-auto fw-bold mb-2">Plan Description
-                                    <span class="text-danger">*</span></label>
+                                <label class="form-label form-label-top form-label-auto fw-bold mb-2">Plan Description <span class="text-danger">*</span></label>
                                 @php
-                                $plain_text_plan_description = strip_tags($tourPlanning['plan_description'][$index]);
+                                    $plain_text_plan_description = strip_tags($tourPlanning['plan_description'][$index]);
                                 @endphp
-                                <div class="mt-3">
+                                <div class="mt-2">
                                     <div class="row">
-                                        <div class="col-lg-12 ">
+                                        <div class="col-lg-12">
                                             <div id="summernote3">{{$plain_text_plan_description}}</div>
                                         </div>
                                     </div>
@@ -333,8 +349,24 @@ a {
                             </div>
                         </div>
                     </div>
+
+                    <!-- Remove Button for the plan -->
+                    <div class="text-end">
+                        <a href="#" class="table-link danger remove-plan">
+                            <span class="fa-stack">
+                                <i class="fa fa-square fa-stack-2x"></i>
+                                <i class="fa fa-trash-o fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </div>
                 </div>
                 @endforeach
+            </div>
+            <!-- Add New Plan Button -->
+            <div class="text-end p-5">
+                <button type="button" id="add-plan-btn" class="btn-add rounded border-0 px-5 py-2 text-end text-white">
+                    <i class="fa fa-plus" aria-hidden="true"></i> Add
+                </button>
             </div>
         </div>
     </div>
@@ -376,6 +408,34 @@ a {
     </div>
 </div>
 
+<!-- 4. Needed -->
+<div class="row mb-2">
+    <div class="col">
+        <div class="form-body px-5 rounded-4">
+            <h4 class="fw-bold mb-2">04.Rooms and Beds</h4>
+            <div class="mb-3">
+                <div class="row g-2 align-items-end">
+                    <div class="col-md-4">
+                        <label class="fw-bold mb-2">Rooms<span class="text-danger"></span></label>
+                        <input type="text" class="form-control py-2 rounded-3 shadow-sm" name="total_room" id="total_room"  value="{{$package_details->total_room}}" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="fw-bold mb-2">Bath Rooms<span class="text-danger"></span></label>
+                        <input type="text" class="form-control py-2 rounded-3 shadow-sm" name="bath_room" id="bath_room"  value="{{$package_details->bath_room}}" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="fw-bold mb-2">Bed Rooms</label>
+                        <input type="text" class="form-control py-2 rounded-3 shadow-sm" id="bed_room" name="bed_room"  value="{{$package_details->bed_room}}" readonly>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="fw-bold mb-2">Hall</label>
+                        <input type="text" class="form-control py-2 rounded-3 shadow-sm" id="hall" name="hall"  value="{{$package_details->hall}}" readonly>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 <!-- 5.PRICING -->
