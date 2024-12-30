@@ -215,9 +215,9 @@ class ProgramApiController extends Controller
     
             // Build the query
             $query = InclusivePackages::query()
-            ->where('status', '1') // Filter programs where status = 1
+                ->where('status', '1') // Filter programs where status = 1
                 ->where('is_deleted', '0') // Filter programs where is_deleted = 0
-                ->orderByRaw("CAST(actual_price AS SIGNED) $sortDirection") // Sort based on actual_price
+                ->orderByRaw("CAST(actual_price AS DECIMAL(10,2)) $sortDirection") // Sort based on actual_price
                 ->with('destination', 'theme', 'clientReviews');
     
             // Filter by theme if provided
@@ -241,18 +241,7 @@ class ProgramApiController extends Controller
     
             // Process the programs for the response
             $responseData = $programs->map(function ($package) use ($userId) {
-                $amenityIds = json_decode($package->amenity_details, true) ?? [];
-                $foodBeverageIds = json_decode($package->food_beverages, true) ?? [];
-                $activityIds = json_decode($package->activities, true) ?? [];
-                $safetyFeatureIds = json_decode($package->safety_features, true) ?? [];
-                $eventsPackageImages = json_decode($package->events_package_images, true) ?? [];
-                $tourPlanning = json_decode($package->tour_planning, true) ?? [];
-                $campRule = json_decode($package->camp_rule, true) ?? [];
-    
-                $formattedStartDate = \Carbon\Carbon::parse($package->start_date)->format('M d, Y');
-                $formattedEndDate = \Carbon\Carbon::parse($package->return_date)->format('M d, Y');
-                $category = json_decode($package->category, true) ?? [];
-    
+                // Extract and process the necessary fields
                 $clientReviews = $package->clientReviews->map(function ($review) {
                     $reviewDate = \Carbon\Carbon::parse($review->review_dt);
                     return [
@@ -267,6 +256,7 @@ class ProgramApiController extends Controller
                 $totalReviews = $package->clientReviews->count();
                 $averageRating = $package->clientReviews->avg('rating');
     
+                // Clean up the text fields
                 $importantInfoPlainText = strip_tags(html_entity_decode($package->important_info, ENT_QUOTES, 'UTF-8'));
                 $importantInfoPlainText = str_replace(["<br>", "<br/>", "<br />"], "\n", $importantInfoPlainText);
     
@@ -280,34 +270,19 @@ class ProgramApiController extends Controller
                     'id' => $package->id,
                     'title' => $package->title,
                     'program_desc' => $package->program_description,
-                    'flag' => $category,
                     'destination' => $package->destination->city_name,
                     'theme' => $package->theme->themes_name,
-                    'state' => $package->state,
-                    'city' => $package->city,
-                    'address' => $package->address,
-                    'country' => $package->country,
-                    'tour_planning' => json_decode($package->tour_planning, true) ?? [],
-                    'cover_img' => $package->cover_img,
-                    'gallery_img' => json_decode($package->events_package_images, true) ?? [],
-                    'start_date' => $formattedStartDate,
-                    'end_date' => $formattedEndDate,
-                    'total_days' => $package->total_days,
-                    'member_capacity' => $package->member_capacity,
-                    'member_type' => $package->member_type,
-                    'actual_price' => $package->price,
-                    'discount_price' => $package->actual_price,
-                    'important_info' => $importantInfoPlainText,
-                    'program_inclusion' => $programInclusionPlainText,
-                    'break_fast' => $breakFastPlainText,
-                    'lunch' => $package->lunch,
-                    'dinner' => $package->dinner,
+                    'actual_price' => $package->actual_price,
+                    'discount_price' => $package->price,
                     'client_reviews' => $clientReviews,
                     'total_reviews' => $totalReviews,
                     'average_rating' => number_format($averageRating, 1),
-                    'created_date' => $package->created_date,
+                    'important_info' => $importantInfoPlainText,
+                    'program_inclusion' => $programInclusionPlainText,
+                    'break_fast' => $breakFastPlainText,
                 ];
     
+                // If userId is provided, check if the program is in their wishlist
                 if ($userId) {
                     $wishlist = Program_wishlist::where('user_id', $userId)
                         ->where('program_id', $package->id)
@@ -344,7 +319,6 @@ class ProgramApiController extends Controller
             ], 500);
         }
     }
-    
     
     
 
