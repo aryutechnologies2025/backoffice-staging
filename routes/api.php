@@ -52,7 +52,7 @@ Route::get('/get-filter-option', [HomeApiController::class, 'get_filter_options'
 Route::post('/get-program', [HomeApiController::class, 'get_program']);
 
 Route::post('/home-filter',[HomeApiController::class, 'home_filter']);
-Route::post('/filter-program-by-price_sort',[HomeApiController::class, 'filter_program_by_price_sort']);
+Route::post('/filter-program-by-price_sort',[ProgramApiController::class, 'filter_program_by_price_sort']);
 
 Route::post('/get-program-details', [ProgramApiController::class, 'get_program_details']);
 Route::post('/enquiry-form', [ProgramApiController::class, 'enquiry_form_insert']);
