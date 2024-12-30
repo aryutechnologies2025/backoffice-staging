@@ -201,23 +201,34 @@ class ProgramApiController extends Controller
             // Validate the request
             $request->validate([
                 'sort_order' => 'required|string|in:low,high', // Allow 'low' or 'high' for sorting
+                'theme' => 'nullable|string', // Optional theme
                 'user_id' => 'nullable|integer', // Optional user_id
             ]);
     
-            // Retrieve the sort order and user_id (if provided)
+            // Retrieve the sort order, theme, and user_id (if provided)
             $sortOrder = $request->input('sort_order');
+            $theme = $request->input('theme');
             $userId = $request->input('user_id');
     
             // Determine the sort direction based on the 'sort_order' value
             $sortDirection = ($sortOrder === 'low') ? 'asc' : 'desc';
     
-            // Query the programs and sort prices based on the order
-            $programs = InclusivePackages::query()
-                ->orderByRaw("CAST(price AS SIGNED) $sortDirection") // Sort based on price, treating it as a number
+            // Build the query
+            $query = InclusivePackages::query()
                 ->where('is_deleted', '0') // Filter programs where is_deleted = 0
-                ->with('destination', 'theme', 'clientReviews')
-                ->get();
-              
+                ->orderByRaw("CAST(actual_price AS SIGNED) $sortDirection") // Sort based on actual_price
+                ->with('destination', 'theme', 'clientReviews');
+    
+            // Filter by theme if provided
+            if (!empty($theme)) {
+                $query->whereHas('theme', function ($query) use ($theme) {
+                    $query->where('themes_name', $theme);
+                });
+            }
+    
+            // Execute the query
+            $programs = $query->get();
+    
             // Check if any programs were found
             if ($programs->isEmpty()) {
                 return response()->json([
@@ -236,51 +247,11 @@ class ProgramApiController extends Controller
                 $eventsPackageImages = json_decode($package->events_package_images, true) ?? [];
                 $tourPlanning = json_decode($package->tour_planning, true) ?? [];
                 $campRule = json_decode($package->camp_rule, true) ?? [];
-
-                $amenities = Amenities::whereIn('id', $amenityIds)
-                    ->get(['id', 'amenity_name', 'amenity_pic'])
-                    ->keyBy('id')
-                    ->map(function ($item) {
-                        return [
-                            'amenity_name' => $item->amenity_name,
-                            'amenity_pic' => $item->amenity_pic,
-                        ];
-                    });
-
-                $foodBeverages = FoodBeverage::whereIn('id', $foodBeverageIds)
-                    ->get(['id', 'food_beverage', 'food_beverage_pic'])
-                    ->keyBy('id')
-                    ->map(function ($item) {
-                        return [
-                            'food_beverage' => $item->food_beverage,
-                            'food_beverage_pic' => $item->food_beverage_pic,
-                        ];
-                    });
-
-                $activities = Activities::whereIn('id', $activityIds)
-                    ->get(['id', 'activities', 'activities_pic'])
-                    ->keyBy('id')
-                    ->map(function ($item) {
-                        return [
-                            'activities' => $item->activities,
-                            'activities_pic' => $item->activities_pic,
-                        ];
-                    });
-
-                $safetyFeatures = Safetyfeatures::whereIn('id', $safetyFeatureIds)
-                    ->get(['id', 'safety_features', 'safety_features_pic'])
-                    ->keyBy('id')
-                    ->map(function ($item) {
-                        return [
-                            'safety_features' => $item->safety_features,
-                            'safety_features_pic' => $item->safety_features_pic,
-                        ];
-                    });
-
+    
                 $formattedStartDate = \Carbon\Carbon::parse($package->start_date)->format('M d, Y');
                 $formattedEndDate = \Carbon\Carbon::parse($package->return_date)->format('M d, Y');
                 $category = json_decode($package->category, true) ?? [];
-
+    
                 $clientReviews = $package->clientReviews->map(function ($review) {
                     $reviewDate = \Carbon\Carbon::parse($review->review_dt);
                     return [
@@ -291,19 +262,19 @@ class ProgramApiController extends Controller
                         'rating' => $review->rating,
                     ];
                 });
-
+    
                 $totalReviews = $package->clientReviews->count();
                 $averageRating = $package->clientReviews->avg('rating');
-
+    
                 $importantInfoPlainText = strip_tags(html_entity_decode($package->important_info, ENT_QUOTES, 'UTF-8'));
                 $importantInfoPlainText = str_replace(["<br>", "<br/>", "<br />"], "\n", $importantInfoPlainText);
-
+    
                 $programInclusionPlainText = strip_tags(html_entity_decode($package->program_inclusion, ENT_QUOTES, 'UTF-8'));
                 $programInclusionPlainText = str_replace(["<br>", "<br/>", "<br />"], "\n", $programInclusionPlainText);
-
+    
                 $breakFastPlainText = strip_tags(html_entity_decode($package->break_fast, ENT_QUOTES, 'UTF-8'));
                 $breakFastPlainText = str_replace(["<br>", "<br/>", "<br />"], "\n", $breakFastPlainText);
-
+    
                 $data = [
                     'id' => $package->id,
                     'title' => $package->title,
@@ -315,45 +286,41 @@ class ProgramApiController extends Controller
                     'city' => $package->city,
                     'address' => $package->address,
                     'country' => $package->country,
-                    'tour_planning' => $tourPlanning,
+                    'tour_planning' => json_decode($package->tour_planning, true) ?? [],
                     'cover_img' => $package->cover_img,
-                    'gallery_img' => $eventsPackageImages,
+                    'gallery_img' => json_decode($package->events_package_images, true) ?? [],
                     'start_date' => $formattedStartDate,
                     'end_date' => $formattedEndDate,
                     'total_days' => $package->total_days,
                     'member_capacity' => $package->member_capacity,
                     'member_type' => $package->member_type,
-                    'actual_price' => $package->price,
-                    'discount_price' => $package->actual_price,
-                    'payment_policy' => $campRule,
+                    'actual_price' => $package->actual_price,
+                    'discount_price' => $package->price,
                     'important_info' => $importantInfoPlainText,
                     'program_inclusion' => $programInclusionPlainText,
                     'break_fast' => $breakFastPlainText,
                     'lunch' => $package->lunch,
                     'dinner' => $package->dinner,
-                    'amenity_details' => $amenities,
-                    'foodBeverages' => $foodBeverages,
-                    'activities' => $activities,
-                    'safety_features' => $safetyFeatures,
                     'client_reviews' => $clientReviews,
                     'total_reviews' => $totalReviews,
                     'average_rating' => number_format($averageRating, 1),
                     'created_date' => $package->created_date,
                 ];
-
+    
                 if ($userId) {
                     $wishlist = Program_wishlist::where('user_id', $userId)
                         ->where('program_id', $package->id)
                         ->exists();
-
+    
                     $data['wishlists'] = $wishlist;
                 }
-
+    
                 return $data;
             });
+    
             return response()->json([
                 'status' => 'success',
-                'message' => 'Programs filtered and sorted by price retrieved successfully.',
+                'message' => 'Programs filtered and sorted by actual price retrieved successfully.',
                 'data' => $responseData
             ], 200);
     
@@ -366,16 +333,17 @@ class ProgramApiController extends Controller
             ], 422);
         } catch (\Exception $e) {
             // Log the exception
-            \Log::error('Error filtering programs by price: ' . $e->getMessage());
+            \Log::error('Error filtering programs by actual price: ' . $e->getMessage());
     
             // Return error response
             return response()->json([
                 'status' => 'error',
-                'message' => 'An error occurred while filtering programs by price.',
+                'message' => 'An error occurred while filtering programs by actual price.',
                 'error' => $e->getMessage()
             ], 500);
         }
     }
+    
     
     
 
