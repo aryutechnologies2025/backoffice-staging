@@ -215,6 +215,7 @@ class ProgramApiController extends Controller
     
             // Build the query
             $query = InclusivePackages::query()
+            ->where('status', '1') // Filter programs where status = 1
                 ->where('is_deleted', '0') // Filter programs where is_deleted = 0
                 ->orderByRaw("CAST(actual_price AS SIGNED) $sortDirection") // Sort based on actual_price
                 ->with('destination', 'theme', 'clientReviews');
