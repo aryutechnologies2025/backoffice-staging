@@ -217,7 +217,7 @@ class ProgramApiController extends Controller
             $query = InclusivePackages::query()
             ->where('status', '1') // Filter programs where status = 1
             ->where('is_deleted', '0') // Filter programs where is_deleted = 0
-            ->orderByRaw("CAST(REPLACE(actual_price, '₹', '') AS UNSIGNED) $sortDirection") // Sort based on actual_price after removing the ₹ symbol
+            ->orderByRaw("CAST(REPLACE(actual_price,'') AS UNSIGNED) $sortDirection") // Sort based on actual_price after removing the ₹ symbol
             ->with('destination', 'theme', 'clientReviews');
         
     
