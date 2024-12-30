@@ -214,9 +214,10 @@ class ProgramApiController extends Controller
             // Query the programs and sort prices based on the order
             $programs = InclusivePackages::query()
                 ->orderByRaw("CAST(price AS SIGNED) $sortDirection") // Sort based on price, treating it as a number
+                ->where('is_deleted', '0') // Filter programs where is_deleted = 0
                 ->with('destination', 'theme', 'clientReviews')
                 ->get();
-    
+              
             // Check if any programs were found
             if ($programs->isEmpty()) {
                 return response()->json([
@@ -231,8 +232,20 @@ class ProgramApiController extends Controller
                 return [
                     'id' => $package->id,
                     'title' => $package->title,
+                    'category' => $package->category,
+                    'location' => $package->location,
+                    'total_days' => $package->total_days,
+                    'member_capacity' => $package->member_capacity,
                     'price' => $package->price,
-                    // Add additional fields as needed
+                    'actual_price' => $package->actual_price,
+                    'cover_img' => $package->cover_img,
+                    'start_date' => \Carbon\Carbon::parse($package->start_date)->format('M d, Y'),
+                    'theme_id' => $package->theme_id,
+                    'theme' => $package->theme,
+                    'destination_id' => $package->destination_id,
+                    'destination' => $package->destination,
+                    'average_rating' => $package->average_rating,
+                    'totalReviews' => $package->totalReviews,
                 ];
             });
     
@@ -261,6 +274,7 @@ class ProgramApiController extends Controller
             ], 500);
         }
     }
+    
     
 
     public function filter_program_by_price(Request $request)
