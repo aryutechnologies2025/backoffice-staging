@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Api;
 
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 
@@ -191,3 +190,94 @@ class SiteApiController extends Controller
     
 }
 
+// use Illuminate\Support\Facades\Cache;
+
+// class SiteApiController extends Controller
+// {
+//     public function getheader_dts()
+//     {
+//         $settings = Cache::remember('header_settings', 60, function () {
+//             return Settings::first();
+//         });
+
+//         if (!$settings) {
+//             return response()->json([
+//                 'message' => 'Header Settings not found'
+//             ], 404);
+//         }
+
+//         return response()->json([
+//             'app_name' => $settings->app_name,
+//             'site_logo' => $settings->site_logo,
+//             'fav_icon' => $settings->fav_icon,
+//             'meta_title' => $settings->meta_title,
+//             'meta_keywords' => $settings->meta_keywords,
+//             'meta_desc' => $settings->meta_desc,
+//         ], 200);
+//     }
+
+//     public function getfooter_dts()
+//     {
+//         $settings = Cache::remember('footer_settings', 60, function () {
+//             return Settings::first();
+//         });
+
+//         if (!$settings) {
+//             return response()->json([
+//                 'message' => 'Footer Settings not found'
+//             ], 404);
+//         }
+
+//         return response()->json([
+//             'footer_logo' => $settings->footer_logo,
+//             'official_footer_logo' => $settings->official_logo,
+//             'contact_email' => $settings->contact_email,
+//             'contact_number' => $settings->contact_number,
+//             'contact_address' => $settings->contact_address,
+//             'copyright' => $settings->copyright,
+//             'android_link' => $settings->android_link,
+//             'ios_link' => $settings->ios_link,
+//             'facebook' => $settings->facebook,
+//             'instagram' => $settings->instagram,
+//             'twitter_x' => $settings->twitter_x,
+//             'linkedin' => $settings->linkedin,
+//             'youtube_url' => $settings->youtube_url,
+//             'pinterest' => $settings->pinterest,
+//         ], 200);
+//     }
+
+//     public function getSettings()
+//     {
+//         $settings = Cache::remember('all_settings', 60, function () {
+//             return Settings::first();
+//         });
+
+//         if (!$settings) {
+//             return response()->json([
+//                 'message' => 'Settings not found'
+//             ], 404);
+//         }
+
+//         return response()->json([
+//             'app_name' => $settings->app_name,
+//             'site_logo' => $settings->site_logo,
+//             'footer_logo' => $settings->footer_logo,
+//             'fav_icon' => $settings->fav_icon,
+//             'contact_email' => $settings->contact_email,
+//             'contact_number' => $settings->contact_number,
+//             'contact_address' => $settings->contact_address,
+//             'copyright' => $settings->copyright,
+//             'android_link' => $settings->android_link,
+//             'ios_link' => $settings->ios_link,
+//             'facebook' => $settings->facebook,
+//             'instagram' => $settings->instagram,
+//             'twitter_x' => $settings->twitter_x,
+//             'linkedin' => $settings->linkedin,
+//             'youtube_url' => $settings->youtube_url,
+//             'pinterest' => $settings->pinterest,
+//             'meta_title' => $settings->meta_title,
+//             'meta_keywords' => $settings->meta_keywords,
+//             'meta_desc' => $settings->meta_desc,
+//         ], 200);
+//     }
+// }
