@@ -9,7 +9,7 @@ use App\Models\Admin;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Cache;
+
 class AdminController extends Controller
 {
     public function index()
@@ -63,7 +63,30 @@ class AdminController extends Controller
         ]);
         $email = $request->input('email');
         $password = $request->input('password');
-        $admin = Admin::where('email', $email)->first();
+        $admin = null;
+        $retryCount = 0;
+        $maxRetries = 5;
+        $retryDelay = 1000; // in milliseconds
+
+        while ($retryCount < $maxRetries) {
+            try {
+                $admin = Admin::where('email', $email)->first();
+                break; // Exit loop if successful
+            } catch (\Illuminate\Database\QueryException $ex) {
+                if ($ex->getCode() == 1226) { // MySQL error code for max_connections_per_hour exceeded
+                    $retryCount++;
+                    usleep($retryDelay * 1000); // Convert milliseconds to microseconds
+                } else {
+                    throw $ex; // Rethrow if it's a different error
+                }
+            }
+        }
+
+        if (!$admin) {
+            return back()->withErrors([
+                'email' => 'Unable to process your request at the moment. Please try again later.',
+            ])->onlyInput('email');
+        }
 
         if (Auth::guard('admin')->attempt(['email' => $email, 'password' => $password])) {
             $request->session()->regenerate();
@@ -96,15 +119,5 @@ class AdminController extends Controller
         $request->session()->regenerateToken();
 
         return redirect()->route('admin.login');
-    }
-
-
-    public function showAdmin()
-    {
-        $admin = Cache::remember('admin_1', 60, function () {
-            return DB::table('admin')->where('id', 1)->first();
-        });
-
-        return view('admin.show', compact('admin'));
     }
 }
