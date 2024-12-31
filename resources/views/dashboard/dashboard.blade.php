@@ -9,13 +9,13 @@
     <h5>Welcome  <b>{{ Session::get('admin_name') }}</b>,</h5>
     <p>More Travel, More Peace</p>
 
-    <!-- <div class="col-lg-2  d-flex bg-white  py-3 rounded dash-detail">
+    <div class="col-lg-2  d-flex bg-white  py-3 rounded dash-detail">
         <div class="mt-2 px-3">
             <img src="/assets/image/dashboard/innerpece_earning_icon.svg" alt="">
         </div>
         <div>
-            <p>Total Earning </p>
-            <h4>43216$</h4>
+            <p>Total Program</p>
+            
         </div>
     </div>
 
@@ -24,12 +24,12 @@
             <img src="/assets/image/dashboard/innerpece_dashboard_Wishlist_icon.svg" alt="">
         </div>
         <div>
-            <p>My Wishlist</p>
+            <p>Total User Register</p>
             <h4>2351$</h4>
         </div>
     </div>
 
-    <div class="col-lg-2 d-flex bg-white  py-3 rounded">
+  <!--  <div class="col-lg-2 d-flex bg-white  py-3 rounded">
         <div class="mt-2 px-3">
             <img src="/assets/image/dashboard/innerpece_dashboard_listing_icon.svg" alt="">
         </div>

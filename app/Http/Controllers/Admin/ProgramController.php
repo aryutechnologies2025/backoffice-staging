@@ -175,4 +175,11 @@ class ProgramController extends Controller
         // Return the response as JSON
         return response()->json($response);
     }
+
+    public function getProgramCount(Request $request)
+    {
+        
+        $program_dts = Program::where('is_deleted', '0')->count();
+        return view('admin.getProgramCount', compact('program_dts'));
+    }
 }

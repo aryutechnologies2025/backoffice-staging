@@ -50,6 +50,7 @@ Route::get('/group-booking', [HomeApiController::class, 'get_group_booking']);
 
 Route::get('/get-filter-option', [HomeApiController::class, 'get_filter_options']);
 Route::post('/get-program', [HomeApiController::class, 'get_program']);
+Route::get('/get-combined-data', [HomeApiController::class, 'get_combined_data']);
 
 Route::post('/home-filter',[HomeApiController::class, 'home_filter']);
 Route::post('/filter-program-by-price_sort',[ProgramApiController::class, 'filter_program_by_price_sort']);

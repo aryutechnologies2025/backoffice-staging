@@ -227,6 +227,63 @@ class HomeApiController extends Controller
         }
     }
 
+
+//dashboard api 
+public function get_combined_data(Request $request)
+{
+    try {
+        $response = [];
+
+        // Fetch programs if the request includes parameters for programs
+        if ($request->has('program_type') || $request->has('theme') || $request->has('destination') || $request->has('program_destination')) {
+            $response['programs'] = $this->get_program($request)->getData(true);
+        }
+
+        // Fetch themes
+        $themes = Themes::where('status', "1")
+            ->where('is_deleted', "0")
+            ->orderBy('list_order', 'asc')
+            ->get(['id', 'themes_name', 'theme_pic']);
+
+        $response['themes'] = $themes->isEmpty() ? [] : $themes;
+
+        // Fetch sliders
+        $sliders = Slider::where('status', "1")
+            ->where('is_deleted', "0")
+            ->orderBy('list_order', 'asc')
+            ->get(['id', 'slider_name', 'subtitle', 'slider_image']);
+
+        $response['sliders'] = $sliders->isEmpty() ? [] : $sliders;
+
+        // Fetch destinations
+        $destinations = City::where('status', "1")
+            ->where('is_deleted', "0")
+            ->orderBy('list_order', 'asc')
+            ->get(['id', 'city_name', 'cities_pic']);
+
+        $response['destinations'] = $destinations->isEmpty() ? [] : $destinations;
+
+        // Return combined data
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Data retrieved successfully!',
+            'data' => $response
+        ], 200);
+    } catch (\Exception $e) {
+        // Log the exception
+        \Log::error('Error fetching combined data: ' . $e->getMessage());
+
+        // Return error response
+        return response()->json([
+            'status' => 'error',
+            'message' => 'An error occurred while fetching data.',
+            'error' => $e->getMessage()
+        ], 500);
+    }
+}
+
+
+
     public function home_filter(Request $request)
     {
         try {

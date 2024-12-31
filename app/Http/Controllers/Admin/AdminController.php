@@ -9,7 +9,7 @@ use App\Models\Admin;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Support\Facades\Cache;
 class AdminController extends Controller
 {
     public function index()
@@ -96,5 +96,15 @@ class AdminController extends Controller
         $request->session()->regenerateToken();
 
         return redirect()->route('admin.login');
+    }
+
+
+    public function showAdmin()
+    {
+        $admin = Cache::remember('admin_1', 60, function () {
+            return DB::table('admin')->where('id', 1)->first();
+        });
+
+        return view('admin.show', compact('admin'));
     }
 }

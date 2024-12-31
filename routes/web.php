@@ -132,6 +132,7 @@ Route::prefix('/')->group(function () {
                 Route::post('/change-status', 'change_status')->name('admin.inclusive_package_status');
                 Route::get('/theme-categories/{themeId}', 'getThemeCategories')->name('admin.theme_categories');
                 Route::get('/destination-categories',  'getDestinationCategories')->name('admin.destination_categories');
+           Route::get('/getProgramCount','getProgramCount')->name('admin.getProgramCount');
             });
         });
 
