@@ -69,6 +69,48 @@ class SiteApiController extends Controller
         ], 200);
     }
 
+    //geting the header and footer data in one api
+    public function get_header_footer()
+{
+    // Fetch settings from the database
+    $settings = Settings::first(); // Or use a more specific query if needed
+
+    // Check if settings were found
+    if (!$settings) {
+        return response()->json([
+            'message' => 'Settings not found'
+        ], 404); // Not Found
+    }
+
+    // Return both header and footer settings in one response
+    return response()->json([
+        'header' => [
+            'app_name' => $settings->app_name,
+            'site_logo' => $settings->site_logo,
+            'fav_icon' => $settings->fav_icon,
+            'meta_title' => $settings->meta_title,
+            'meta_keywords' => $settings->meta_keywords,
+            'meta_desc' => $settings->meta_desc,
+        ],
+        'footer' => [
+            'footer_logo' => $settings->footer_logo,
+            'official_footer_logo' => $settings->official_logo,
+            'contact_email' => $settings->contact_email,
+            'contact_number' => $settings->contact_number,
+            'contact_address' => $settings->contact_address,
+            'copyright' => $settings->copyright,
+            'android_link' => $settings->android_link,
+            'ios_link' => $settings->ios_link,
+            'facebook' => $settings->facebook,
+            'instagram' => $settings->instagram,
+            'twitter_x' => $settings->twitter_x,
+            'linkedin' => $settings->linkedin,
+            'youtube_url' => $settings->youtube_url,
+            'pinterest' => $settings->pinterest,
+        ]
+    ], 200);
+}
+
 
     public function getSettings()
     {

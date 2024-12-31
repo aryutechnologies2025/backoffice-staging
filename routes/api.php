@@ -39,7 +39,7 @@ Route::get('/header-content', [SiteApiController::class, 'getheader_dts']);
 Route::get('/footer-content', [SiteApiController::class, 'getfooter_dts']);
 Route::get('/faq', [SiteApiController::class, 'getFaq']);
 Route::get('/podcast', [SiteApiController::class, 'getPodcasts']);
-
+Route::get('/get-header-footer', [SiteApiController::class, 'get_header_footer']);
 Route::get('/theme', [HomeApiController::class, 'get_themes']);
 Route::get('/destination', [HomeApiController::class, 'get_destination']);
 Route::get('/slider', [HomeApiController::class, 'get_slider']);
