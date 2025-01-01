@@ -113,42 +113,44 @@ class SiteApiController extends Controller
 }
 
 
-    public function getSettings()
-    {
-        // Retrieve settings from the database
-        $settings = Settings::first(); // Or use where('type', 'header')->first() if you categorize settings
+public function getSettings()
+{
+    // Check if the settings are cached
+    $settings = cache()->remember('settings', 60, function () {
+        return Settings::first(); // Fetch from the database if not cached
+    });
 
-        // Check if settings were found
-        if (!$settings) {
-            return response()->json([
-                'message' => 'Settings not found'
-            ], 404); // Not Found
-        }
-
-        // Return the settings data
+    // Check if settings were found
+    if (!$settings) {
         return response()->json([
-            'app_name' => $settings->app_name,
-            'site_logo' => $settings->site_logo,
-            'footer_logo' => $settings->footer_logo,
-            'fav_icon' => $settings->fav_icon,
-            'contact_email' => $settings->contact_email,
-            'contact_number' => $settings->contact_number,
-            'contact_address' => $settings->contact_address,
-            'copyright' => $settings->copyright,
-            'android_link' => $settings->android_link,
-            'ios_link' => $settings->ios_link,
-            'facebook' => $settings->facebook,
-            'instagram' => $settings->instagram,
-            'twitter_x' => $settings->twitter_x,
-            'linkedin' => $settings->linkedin,
-            'youtube_url' => $settings->youtube_url,
-            'pinterest' => $settings->pinterest,
-            'meta_title' => $settings->meta_title,
-            'meta_keywords' => $settings->meta_keywords,
-            'meta_desc' => $settings->meta_desc,
-            'meta_desc' => $settings->meta_desc,
-        ], 200);
+            'message' => 'Settings not found'
+        ], 404); // Not Found
     }
+
+    // Return the settings data
+    return response()->json([
+        'app_name' => $settings->app_name,
+        'site_logo' => $settings->site_logo,
+        'footer_logo' => $settings->footer_logo,
+        'fav_icon' => $settings->fav_icon,
+        'contact_email' => $settings->contact_email,
+        'contact_number' => $settings->contact_number,
+        'contact_address' => $settings->contact_address,
+        'copyright' => $settings->copyright,
+        'android_link' => $settings->android_link,
+        'ios_link' => $settings->ios_link,
+        'facebook' => $settings->facebook,
+        'instagram' => $settings->instagram,
+        'twitter_x' => $settings->twitter_x,
+        'linkedin' => $settings->linkedin,
+        'youtube_url' => $settings->youtube_url,
+        'pinterest' => $settings->pinterest,
+        'meta_title' => $settings->meta_title,
+        'meta_keywords' => $settings->meta_keywords,
+        'meta_desc' => $settings->meta_desc,
+    ], 200);
+}
+
 
     public function getFaq()
     {

@@ -9,87 +9,76 @@ use App\Http\Controllers\Api\HomeApiController;
 use App\Http\Controllers\Api\ProgramApiController;
 
 /*
-|--------------------------------------------------------------------------
+|----------------------------------------------------------------------
 | API Routes
-|--------------------------------------------------------------------------
+|----------------------------------------------------------------------
 |
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "api" middleware group. Make something great!
+| Here is where you can register API routes for your application.
+| These routes are loaded by the RouteServiceProvider and all of them
+| will be assigned to the "api" middleware group. Make something great!
 |
 */
 
-// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-//     return $request->user();
-// });
-// // Route::middleware('auth:sanctum')->get('/getdata', [ApiController::class, 'getData']);
+// Public Routes (No Authentication)
 
+Route::prefix('v1')->group(function () {
+    // Rate-Limited Public Routes
+    Route::middleware(['throttle:60,1'])->group(function () {
+        // CSRF Token
+        Route::get('/csrf-token', [AuthController::class, 'getToken']);
 
-// /* API_ROUTES */
+        // Auth Routes
+        Route::post('/signup', [AuthController::class, 'signup']);
+        Route::post('/login', [AuthController::class, 'login']);
+        Route::post('/contact', [AuthController::class, 'store_contact']); // Contact Form
 
-Route::get('/csrf-token', [AuthController::class, 'getToken']);
-Route::post('/signup', [AuthController::class, 'signup']);
-Route::post('/login', [AuthController::class, 'login']);
-// Route::post('/contact', [AuthController::class, 'store']);
-Route::post('/contact', [AuthController::class, 'store_contact']);
+        // Site Content Routes
+        Route::get('/settings', [SiteApiController::class, 'getSettings']);
+        Route::get('/header-content', [SiteApiController::class, 'getheader_dts']);
+        Route::get('/footer-content', [SiteApiController::class, 'getfooter_dts']);
+        Route::get('/faq', [SiteApiController::class, 'getFaq']);
+        Route::get('/podcast', [SiteApiController::class, 'getPodcasts']);
+        Route::get('/get-header-footer', [SiteApiController::class, 'get_header_footer']);
+        Route::get('/theme', [HomeApiController::class, 'get_themes']);
+        Route::get('/destination', [HomeApiController::class, 'get_destination']);
+        Route::get('/slider', [HomeApiController::class, 'get_slider']);
+        Route::get('/group-booking', [HomeApiController::class, 'get_group_booking']);
+        Route::get('/get-filter-option', [HomeApiController::class, 'get_filter_options']);
+        Route::get('/get-combined-data', [HomeApiController::class, 'get_combined_data']);
 
-
-Route::get('/settings', [SiteApiController::class, 'getSettings']);
-Route::get('/header-content', [SiteApiController::class, 'getheader_dts']);
-Route::get('/footer-content', [SiteApiController::class, 'getfooter_dts']);
-Route::get('/faq', [SiteApiController::class, 'getFaq']);
-Route::get('/podcast', [SiteApiController::class, 'getPodcasts']);
-Route::get('/get-header-footer', [SiteApiController::class, 'get_header_footer']);
-Route::get('/theme', [HomeApiController::class, 'get_themes']);
-Route::get('/destination', [HomeApiController::class, 'get_destination']);
-Route::get('/slider', [HomeApiController::class, 'get_slider']);
-// Route::get('/upcoming-programs', [HomeApiController::class, 'get_upcoming_programs']);
-// Route::get('/popular-programs', [HomeApiController::class, 'get_popular_programs']);
-
-Route::get('/group-booking', [HomeApiController::class, 'get_group_booking']);
-
-Route::get('/get-filter-option', [HomeApiController::class, 'get_filter_options']);
-Route::post('/get-program', [HomeApiController::class, 'get_program']);
-Route::get('/get-combined-data', [HomeApiController::class, 'get_combined_data']);
-
-Route::post('/home-filter',[HomeApiController::class, 'home_filter']);
-Route::post('/filter-program-by-price_sort',[ProgramApiController::class, 'filter_program_by_price_sort']);
-
-Route::post('/get-program-details', [ProgramApiController::class, 'get_program_details']);
-Route::post('/enquiry-form', [ProgramApiController::class, 'enquiry_form_insert']);
-Route::get('/get-amenities', [ProgramApiController::class, 'getAmenities']);
-Route::post('/getActivitiesbyId', [ProgramApiController::class, 'getAmenitiesFoodBeverageActivitiesSafetyFeaturesById']);
-// Route for filtering programs by start date
-// Route for filtering programs by start date
-Route::post('/filter-program-by-date', [HomeApiController::class, 'filter_program_by_date']);
-Route::post('/filter-destination',[HomeApiController::class, 'filter_destination_by_date']);
-Route::post('/filter-program-by-price',[ProgramApiController::class, 'filter_program_by_price']);
-Route::post('/filter-program',[ProgramApiController::class,'filter_program_by_date_and_price']);
-Route::post('/sort-program',[HomeApiController::class,'sort_program']);
-Route::post('/sort-destination',[HomeApiController::class,'sort_destination']);
-Route::post('/search-program',[HomeApiController::class,'search_program']);
-Route::post('/search-destination',[HomeApiController::class,'search_destination']);
+        // Program Filtering Routes
+        Route::post('/get-program', [HomeApiController::class, 'get_program']);
+        Route::post('/home-filter', [HomeApiController::class, 'home_filter']);
+        Route::post('/filter-program-by-price_sort', [ProgramApiController::class, 'filter_program_by_price_sort']);
+        Route::post('/filter-program-by-date', [HomeApiController::class, 'filter_program_by_date']);
+        Route::post('/filter-destination', [HomeApiController::class, 'filter_destination_by_date']);
+        Route::post('/filter-program-by-price', [ProgramApiController::class, 'filter_program_by_price']);
+        Route::post('/filter-program', [ProgramApiController::class, 'filter_program_by_date_and_price']);
+        Route::post('/sort-program', [HomeApiController::class, 'sort_program']);
+        Route::post('/sort-destination', [HomeApiController::class, 'sort_destination']);
+        Route::post('/search-program', [HomeApiController::class, 'search_program']);
+        Route::post('/search-destination', [HomeApiController::class, 'search_destination']);
+    });
+});
 
 // Protected Routes (Require Authentication)
-Route::middleware('auth:sanctum')->group(function () {
-    // Logout route to revoke all tokens for the authenticated user
-    Route::post('/logout', [AuthController::class, 'logout']);
 
-    // Route to get the authenticated user's information
+Route::middleware('auth:sanctum')->group(function () {
+    // User-related Routes
+    Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/user', function (Request $request) {
         return $request->user();
     });
+
+    // Wishlist Management
     Route::post('/add-remove-wishlist', [ProgramApiController::class, 'manage_wishlist']);
 
-    // Route to get data (replace with actual method if needed)
-    Route::get('/getdata', [ApiController::class, 'getData']);
+    // Program Details
+    Route::post('/get-program-details', [ProgramApiController::class, 'get_program_details']);
+    Route::post('/enquiry-form', [ProgramApiController::class, 'enquiry_form_insert']);
 
-    // Route to store contact us form data
-    // Route::post('/contact', [AuthController::class, 'store']);
+    // Amenities
+    Route::get('/get-amenities', [ProgramApiController::class, 'getAmenities']);
+    Route::post('/getActivitiesbyId', [ProgramApiController::class, 'getAmenitiesFoodBeverageActivitiesSafetyFeaturesById']);
 });
-
-// Route::get('/csrf-token', [AuthController::class, 'getToken']);
-// Route::middleware('web')->get('/csrf-token', [AuthController::class, 'getToken']);
-
-
 
