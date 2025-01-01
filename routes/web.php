@@ -88,8 +88,8 @@ Route::prefix('/')->group(function () {
     Route::post('/do-login', [AdminController::class, 'check_login'])->name('admin.doLogin');
     Route::middleware(['auth:admin'])->group(function () {
         Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
-
         Route::get('/logout', [AdminController::class, 'logout'])->name('admin.logout');
+        // Route::get('/dashboard', [AdminController::class, 'getInclusivePackagesCount'])->name('admin.dashboard');
 
 
         //Events
@@ -132,9 +132,10 @@ Route::prefix('/')->group(function () {
                 Route::post('/change-status', 'change_status')->name('admin.inclusive_package_status');
                 Route::get('/theme-categories/{themeId}', 'getThemeCategories')->name('admin.theme_categories');
                 Route::get('/destination-categories',  'getDestinationCategories')->name('admin.destination_categories');
-           Route::get('/getProgramCount','getProgramCount')->name('admin.getProgramCount');
+
             });
-        });
+          });
+        //   Route::get('/dashboard', [All_Inclusive_PackController::class, 'showDashboard'])->name('dashboard');
 
          //Program
          Route::controller(ProgramController::class)->group(function () {

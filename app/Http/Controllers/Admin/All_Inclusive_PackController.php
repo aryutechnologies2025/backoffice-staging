@@ -27,7 +27,7 @@ class All_Inclusive_PackController extends Controller
     public function list(Request $request)
     {
         $title = 'Programs List';
-        $inclusive_packages = InclusivePackages::where('is_deleted', '0')->orderBy('created_at', 'desc')->paginate(10);
+        $inclusive_packages = InclusivePackages::where('is_deleted', '0')->orderBy('created_at', 'desc')->get();
         foreach ($inclusive_packages as $package) {
             $package->category = json_decode($package->category, true);
             // Decode other JSON fields if needed
@@ -47,7 +47,7 @@ class All_Inclusive_PackController extends Controller
         $safety_features = Safetyfeatures::where('status', "1")->where('is_deleted', "0")->get();
         // $geo_feature = Geo_feature::where('status', "1")->where('is_deleted', "0")->pluck('geo_feature', 'id');
 
-        return view('admin.inclusive_packages.inclusive_packagesadd', compact('title', 'cities', 'themes', 'amenities', 'foodBeverages', 'activities', 'safety_features', 'address'));
+        return view('admin.inclusive_packages.inclusive_packagesadd', compact('title', 'cities', 'themes', 'amenities', 'foodBeverages', 'activities', 'safety_features', 'address' ));
     }
 
 
@@ -546,4 +546,13 @@ class All_Inclusive_PackController extends Controller
         // Return the response as JSON
         return response()->json($response);
     }
+// public function showDashboard()
+// {
+//     // Fetch count of InclusivePackages where 'is_deleted' is '0'
+//     $programCount = InclusivePackages::where('is_deleted', '0')->count();
+
+//     // Pass the count to the view
+//     return view('dashboard.dashboard', ['programCount' => $programCount]);  // Pass using array
+// }
+
 }

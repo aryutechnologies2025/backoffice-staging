@@ -84,8 +84,22 @@ class AdminController extends Controller
     public function dashboard()
     {
         $title = 'Dashboard';
-        return view('dashboard.dashboard', compact('title'));
+        $programCount = DB::table('inclusive_package_details')->where('is_deleted', "0")->count();
+$userRegister = DB::table('users')->where('is_deleted', "0")->count();
+$enquiryCount = DB::table('enquiry_details')->count(); 
+$clientReview = DB::table('client_review')->where('is_deleted', "0")->count();      
+return view('dashboard.dashboard', compact('title', 'programCount' , 'userRegister', 'enquiryCount', 'clientReview'));
     }
+
+    // public function getInclusivePackagesCount()
+    // {
+    //     // Get the count of inclusive packages
+    //     $programCount = DB::table('inclusive_package_details')->where('is_deleted', "0")->count();
+    
+    //     // Return view with the count
+    //     return view('dashboard.dashboard', compact('programCount'));
+    // }
+
     public function logout(Request $request)
     {
 
