@@ -19,55 +19,68 @@ class SiteApiController extends Controller
 
     public function getheader_dts()
     {
-        $settings = Settings::first(); // Or use where('type', 'header')->first() if you categorize settings
-
+        // Fetch the first settings record (or adjust query if necessary)
+        $settings = Settings::first();
+    
         // Check if settings were found
         if (!$settings) {
             return response()->json([
-                'message' => 'Header Settings not found'
-            ], 404); // Not Found
+                'status' => 'error',
+                'message' => 'Header settings not found.',
+            ], 404);
         }
-
+    
         // Return the settings data
         return response()->json([
-            'app_name' => $settings->app_name,
-            'site_logo' => $settings->site_logo,
-            'fav_icon' => $settings->fav_icon,
-            'meta_title' => $settings->meta_title,
-            'meta_keywords' => $settings->meta_keywords,
-            'meta_desc' => $settings->meta_desc,
-            'meta_desc' => $settings->meta_desc,
+            'status' => 'success',
+            'message' => 'Header settings retrieved successfully.',
+            'data' => [
+                'app_name' => $settings->app_name,
+                'site_logo' => $settings->site_logo,
+                'fav_icon' => $settings->fav_icon,
+                'meta_title' => $settings->meta_title,
+                'meta_keywords' => $settings->meta_keywords,
+                'meta_desc' => $settings->meta_desc,
+            ],
         ], 200);
     }
-
-    public function getfooter_dts(){
-        $settings = Settings::first(); // Or use where('type', 'header')->first() if you categorize settings
-
+    
+    public function getfooter_dts()
+    {
+        // Fetch the first settings record (or adjust query if necessary)
+        $settings = Settings::first();
+    
         // Check if settings were found
         if (!$settings) {
             return response()->json([
-                'message' => 'Footer Settings not found'
-            ], 404); // Not Found
+                'status' => 'error',
+                'message' => 'Footer settings not found.',
+            ], 404);
         }
-
-        // Return the settings data
+    
+        // Return the footer settings data
         return response()->json([
-            'footer_logo' => $settings->footer_logo,
-            'official_footer_logo' => $settings->official_logo,
-            'contact_email' => $settings->contact_email,
-            'contact_number' => $settings->contact_number,
-            'contact_address' => $settings->contact_address,
-            'copyright' => $settings->copyright,
-            'android_link' => $settings->android_link,
-            'ios_link' => $settings->ios_link,
-            'facebook' => $settings->facebook,
-            'instagram' => $settings->instagram,
-            'twitter_x' => $settings->twitter_x,
-            'linkedin' => $settings->linkedin,
-            'youtube_url' => $settings->youtube_url,
-            'pinterest' => $settings->pinterest,
+            'status' => 'success',
+            'message' => 'Footer settings retrieved successfully.',
+            'data' => [
+                'footer_logo' => $settings->footer_logo,
+                'official_footer_logo' => $settings->official_logo,
+                'contact_email' => $settings->contact_email,
+                'contact_number' => $settings->contact_number,
+                'contact_address' => $settings->contact_address,
+                'copyright' => $settings->copyright,
+                'android_link' => $settings->android_link,
+                'ios_link' => $settings->ios_link,
+                'facebook' => $settings->facebook,
+                'instagram' => $settings->instagram,
+                'twitter_x' => $settings->twitter_x,
+                'linkedin' => $settings->linkedin,
+                'youtube_url' => $settings->youtube_url,
+                'pinterest' => $settings->pinterest,
+            ],
         ], 200);
     }
+    
 
     //geting the header and footer data in one api
     public function get_header_footer()

@@ -25,89 +25,89 @@ class HomeApiController extends Controller
 
     public function get_slider()
     {
-        $sliders = Slider::where('status', "1") // Adjusted to integer comparison if necessary
-            ->where('is_deleted', "0") // Adjusted to integer comparison if necessary
+        // Fetch active, non-deleted sliders ordered by 'list_order'
+        $sliders = Slider::where('status', 1)
+            ->where('is_deleted', 0)
             ->orderBy('list_order', 'asc')
-            ->get(['id', 'slider_name', 'subtitle', 'slider_image']); // Replace 'slider_name' and 'slider_image' with your actual column names
-
-        // Check if sliders were found
+            ->get(['id', 'slider_name', 'subtitle', 'slider_image']);
+    
+        // Check if any sliders were found
         if ($sliders->isEmpty()) {
             return response()->json([
-                'message' => 'No sliders found',
+                'message' => 'No sliders found.',
                 'sliders' => []
             ], 404);
         }
-
-        // Return sliders data
+    
+        // Return the slider data
         return response()->json([
             'message' => 'Sliders retrieved successfully!',
             'sliders' => $sliders
         ], 200);
     }
-
-
+    
 
     public function get_themes()
     {
-        $themes = Themes::where('status', "1")
-            ->where('is_deleted', "0")
+        // Fetch active, non-deleted themes ordered by 'list_order'
+        $themes = Themes::where('status', 1)
+            ->where('is_deleted', 0)
             ->orderBy('list_order', 'asc')
-            ->get(['id', 'themes_name', 'theme_pic']); // Only select the required fields
-
-        // Check if themes were found
+            ->get(['id', 'themes_name', 'theme_pic']); // Select only the required fields
+    
+        // Check if any themes were found
         if ($themes->isEmpty()) {
             return response()->json([
-                'message' => 'No themes found',
+                'message' => 'No themes found.',
                 'themes' => []
             ], 404);
         }
-
-        // Return themes data
+    
+        // Return the theme data
         return response()->json([
             'message' => 'Themes retrieved successfully!',
             'themes' => $themes
         ], 200);
     }
-
+    
     public function get_destination()
     {
-        $detination_dts = City::where('status', "1")
-            ->where('is_deleted', "0")
+        // Fetch active, non-deleted cities ordered by 'list_order'
+        $destination_dts = City::where('status', 1)
+            ->where('is_deleted', 0)
             ->orderBy('list_order', 'asc')
-            ->get(['id', 'city_name', 'cities_pic']); // Only select the city_name field
-
-        // Check if cities were found
-        if ($detination_dts->isEmpty()) {
+            ->get(['id', 'city_name', 'cities_pic']); // Select only the required fields
+    
+        // Check if any cities were found
+        if ($destination_dts->isEmpty()) {
             return response()->json([
-                'message' => 'No Destination found',
+                'message' => 'No destinations found.',
                 'destination_list' => []
             ], 404);
         }
-
-        // Return cities data
+    
+        // Return the city data
         return response()->json([
-            'message' => 'Destination retrieved successfully!',
-            'destination_list' => $detination_dts
+            'message' => 'Destinations retrieved successfully!',
+            'destination_list' => $destination_dts
         ], 200);
     }
+    
 
     public function get_program(Request $request)
     {
-      
         try {
-            $requestData = $request->all(); 
-    
-            $program_type =  $request->input('program_type');
-            $theme =  $request->input('theme');
+            $program_type = $request->input('program_type');
+            $theme = $request->input('theme');
             $destination = $request->input('destination');
-            $program_destination =  $request->input('program_destination');
-            $view_type =  $request->input('view_type');
+            $program_destination = $request->input('program_destination');
+            $view_type = $request->input('view_type');
     
             // Build the query
-            $query = InclusivePackages::where('status', "1")
-                ->where('is_deleted', "0");
-            
-            // Conditionally apply filters based on input
+            $query = InclusivePackages::where('status', 1)
+                ->where('is_deleted', 0);
+    
+            // Apply filters conditionally
             if ($program_type) {
                 $query->whereJsonContains('category', $program_type);
             }
@@ -117,7 +117,7 @@ class HomeApiController extends Controller
                 $view_type = 'all';
             }
     
-            if($destination) {
+            if ($destination) {
                 $query->where('city_details', $destination);
                 $view_type = 'all';
             }
@@ -127,15 +127,15 @@ class HomeApiController extends Controller
                 $view_type = 'all';
             }
     
-            // Apply the limit conditionally
+            // Apply a limit if view_type is not 'all'
             if ($view_type !== 'all') {
-                $query->take(4); // Limit to 4 packages if view_type is not 'all'
+                $query->take(4);
             }
     
-            // Execute the query
+            // Fetch data with relations and paginate results
             $packages = $query->with(['theme', 'destination', 'clientReviews'])->paginate(10);
-            
-            // Check if any packages were found
+    
+            // Check if data exists
             if ($packages->isEmpty()) {
                 return response()->json([
                     'status' => 'success',
@@ -144,63 +144,38 @@ class HomeApiController extends Controller
                 ], 200);
             }
     
-            // Helper function to get amenities, food & beverage, activities, and safety features
+            // Helper function to fetch amenities, food, activities, and safety features
             $getDetailsById = function ($package) {
                 $id = $package->id;
-                
-                // Call your original method logic here (or modify it to return the required data)
                 $response = (new ProgramApiController)->getAmenitiesFoodBeverageActivitiesSafetyFeaturesById(new Request(['id' => $id]));
                 return json_decode($response->getContent(), true)['data'];
             };
     
-            // Process each package to format the output
+            // Format packages
             $formattedPackages = $packages->map(function ($package) use ($getDetailsById) {
-                // Decode JSON fields
-                $eventsPackageImages = json_decode($package->cover_img, true);
-                $tourPlanning = json_decode($package->tour_planning, true);
-                $campRule = json_decode($package->camp_rule, true);
-                $amenityDetails = json_decode($package->amenity_details, true);
-                $activities = json_decode($package->activities, true);
-                $safetyFeatures = json_decode($package->safety_features, true);
-    
-                // Fetch amenities, food & beverage, activities, safety features
                 $details = $getDetailsById($package);
-                
-                // Format the start date
-                $formattedStartDate = \Carbon\Carbon::parse($package->start_date)->format('M d, Y');
     
-                // Extract the first image URL
-                $formattedLocation = ucfirst($package->city) . ', ' . ucfirst($package->state);
-                $totalReviews = $package->clientReviews->count();
-                $averageRating = $package->clientReviews->avg('rating');
-                $category = json_decode($package->category, true) ?? [];
-                $formattedcategory = is_array($category) ? implode(', ', $category) : $category;
-    
-                // Return the formatted package data, including additional details
                 return [
                     'id' => $package->id,
                     'title' => ucfirst($package->title),
-                    'category' => ucfirst($formattedcategory),
-                    'location' => $formattedLocation,
+                    'category' => implode(', ', json_decode($package->category, true) ?? []),
+                    'location' => ucfirst($package->city) . ', ' . ucfirst($package->state),
                     'total_days' => $package->total_days,
                     'member_capacity' => $package->member_capacity,
                     'price' => $package->price,
                     'actual_price' => $package->actual_price,
                     'cover_img' => $package->cover_img,
-                    'start_date' => $formattedStartDate,
-                    'theme_id' => $package->theme ? $package->theme->id : null, 
-                    'theme' => $package->theme ? $package->theme->themes_name : null,
-                    'destination_id' => $package->city ? $package->destination->id : null,
-                    'destination' => $package->city ? $package->destination->city_name : null,
-                    'average_rating' => number_format($averageRating, 1),
-                    'totalReviews' => $totalReviews,
-
+                    'start_date' => \Carbon\Carbon::parse($package->start_date)->format('M d, Y'),
+                    'theme_id' => optional($package->theme)->id,
+                    'theme' => optional($package->theme)->themes_name,
+                    'destination_id' => optional($package->destination)->id,
+                    'destination' => optional($package->destination)->city_name,
+                    'average_rating' => number_format($package->clientReviews->avg('rating'), 1),
+                    'totalReviews' => $package->clientReviews->count(),
                     'total_room' => $package->total_room,
                     'bath_room' => $package->bath_room,
                     'bed_room' => $package->bed_room,
-                    'hall'=> $package->hall,
-
-                    // Adding the fetched details
+                    'hall' => $package->hall,
                     'amenities' => $details['amenities'] ?? [],
                     'foodBeverages' => $details['foodBeverages'] ?? [],
                     'activities' => $details['activities'] ?? [],
@@ -208,17 +183,15 @@ class HomeApiController extends Controller
                 ];
             });
     
-            // Return the formatted data with success status
+            // Return success response
             return response()->json([
                 'status' => 'success',
-                'message' => '' . str_replace('_', ' ', $program_type) . ' retrieved successfully.',
+                'message' => str_replace('_', ' ', $program_type) . ' retrieved successfully.',
                 'data' => $formattedPackages
             ], 200);
         } catch (\Exception $e) {
-            // Log the exception
             \Log::error('Error fetching ' . str_replace('_', ' ', $program_type) . ': ' . $e->getMessage());
     
-            // Return error response
             return response()->json([
                 'status' => 'error',
                 'message' => 'An error occurred while fetching ' . str_replace('_', ' ', $program_type) . '.',
@@ -226,6 +199,7 @@ class HomeApiController extends Controller
             ], 500);
         }
     }
+    
 
 
 //dashboard api 
