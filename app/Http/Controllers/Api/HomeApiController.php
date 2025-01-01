@@ -104,8 +104,8 @@ class HomeApiController extends Controller
             $view_type = $request->input('view_type');
     
             // Build the query
-            $query = InclusivePackages::where('status', 1)
-                ->where('is_deleted', 0);
+            $query = InclusivePackages::where('status', "1")
+                ->where('is_deleted', "0");
     
             // Apply filters conditionally
             if ($program_type) {
