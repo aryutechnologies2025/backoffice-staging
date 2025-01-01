@@ -26,8 +26,8 @@ class HomeApiController extends Controller
     public function get_slider()
     {
         // Fetch active, non-deleted sliders ordered by 'list_order'
-        $sliders = Slider::where('status', 1)
-            ->where('is_deleted', 0)
+        $sliders = Slider::where('status', "1")
+            ->where('is_deleted', "0")
             ->orderBy('list_order', 'asc')
             ->get(['id', 'slider_name', 'subtitle', 'slider_image']);
     
@@ -50,8 +50,8 @@ class HomeApiController extends Controller
     public function get_themes()
     {
         // Fetch active, non-deleted themes ordered by 'list_order'
-        $themes = Themes::where('status', 1)
-            ->where('is_deleted', 0)
+        $themes = Themes::where('status', "1")
+            ->where('is_deleted', "0")
             ->orderBy('list_order', 'asc')
             ->get(['id', 'themes_name', 'theme_pic']); // Select only the required fields
     
@@ -73,8 +73,8 @@ class HomeApiController extends Controller
     public function get_destination()
     {
         // Fetch active, non-deleted cities ordered by 'list_order'
-        $destination_dts = City::where('status', 1)
-            ->where('is_deleted', 0)
+        $destination_dts = City::where('status', "1")
+            ->where('is_deleted', "0")
             ->orderBy('list_order', 'asc')
             ->get(['id', 'city_name', 'cities_pic']); // Select only the required fields
     
