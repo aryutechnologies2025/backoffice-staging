@@ -15,7 +15,7 @@
 
 <div class="row body-sec py-5  px-5 justify-content-around">
     <div class="col-lg-6">
-    <b><a href="/dashboard" >Dashboard</a> > <a class="city" href="/themes" >Themes</a></b>
+    <b><a href="/dashboard" >Dashboard</a> > <a class="city" href="" >Program</a></b>
         <br>
         <br>
         <h3 class="fw-bold">{{$title}}</h3>

@@ -35,15 +35,18 @@ a {
 
     padding-left: 1rem !important;
 }
+
 .form-control {
     width: 80%;
 }
-.btn-add{
+
+.btn-add {
     background-color: #2164c0 !important;
     border-radius: 30px !important;
     color: #FFF !important;
     font-size: 10px !important;
 }
+
 .form-input img {
     width: 70%;
 }
@@ -103,18 +106,19 @@ a {
                         <!-- Program Description -->
                         <div class="mb-4">
                             <label class="fw-bold mb-2">Program Description <span class="text-danger">*</span></label>
-                            <textarea id="program_description" name="program_description" style="display:none;"></textarea>
+                            <textarea id="program_description" name="program_description"
+                                style="display:none;"></textarea>
 
 
-                              
 
 
 
-                            
+
+
                             @php
-                            $plain_text_description = is_array($package_details->program_description) 
-                                ? json_encode($package_details->program_description) 
-                                : strip_tags($package_details->program_description);
+                            $plain_text_description = is_array($package_details->program_description)
+                            ? json_encode($package_details->program_description)
+                            : strip_tags($package_details->program_description);
                             @endphp
 
                             <div id="summernote1" class="form-control py-3 shadow-sm"
@@ -194,9 +198,9 @@ a {
                             </div>
                         </div>
 
-
+                        <!--gallery image-->
                         <div id="photo-upload-container" class="row">
-                            <label class="fw-bold mt-4"> Gallery Image </label>
+                            <label class="fw-bold mt-4">Gallery Image</label>
                             @php
                             // Decode JSON if needed
                             $images = json_decode($package_details->events_package_images, true);
@@ -213,6 +217,7 @@ a {
                                     </label>
                                     <input type="file" name="img_{{ $key }}" id="file-ip-{{ $key }}"
                                         data-number="{{ $key }}" accept="image/*">
+                                    <button type="button" class="btn btn-danger mt-2 remove-photo-btn">Delete</button>
                                 </div>
                             </div>
                             @endforeach
@@ -222,12 +227,55 @@ a {
                         </div>
                         <button id="add-photo-btn" type="button" class="btn btn-primary mt-3">Add More Photos</button>
 
-                    </div>
-                </div>
-            </div>
+                        <script>
+                        $(document).ready(function() {
+                            let imageCounter = {
+                                {
+                                    $imageCount
+                                }
+                            }; // Start from the count of existing images
 
-            <!-- 2.LOCATION -->
-            {{-- <div class="row mb-1">
+                            // Add More Photos button functionality
+                            $('#add-photo-btn').on('click', function() {
+                                imageCounter++;
+                                const newField = `
+                <div class="col-lg-2 photo-upload-field">
+                    <div class="form-input">
+                        <label for="file-ip-${imageCounter}" class="px-4 py-3 text-center">
+                            <img class="text-center mt-3" id="file-ip-${imageCounter}-preview" src="#" alt="Image Preview" style="display: none;">
+                            <p class="text-center fw-light mt-3">Edit Pic</p>
+                        </label>
+                        <input type="file" name="img_${imageCounter}" id="file-ip-${imageCounter}" data-number="${imageCounter}" accept="image/*">
+                        <button type="button" class="btn btn-danger mt-2 remove-photo-btn">Delete</button>
+                    </div>
+                </div>`;
+                                $('#photo-upload-container').append(newField);
+                            });
+
+                            // Remove Photo button functionality
+                            $('#photo-upload-container').on('click', '.remove-photo-btn', function() {
+                                $(this).closest('.photo-upload-field').remove();
+                            });
+
+                            // Preview uploaded image
+                            $('#photo-upload-container').on('change', 'input[type="file"]', function(event) {
+                                const input = $(this);
+                                const previewId = `#file-ip-${input.data('number')}-preview`;
+                                const reader = new FileReader();
+
+                                reader.onload = function(e) {
+                                    $(previewId).attr('src', e.target.result).show();
+                                };
+
+                                if (input[0].files[0]) {
+                                    reader.readAsDataURL(input[0].files[0]);
+                                }
+                            });
+                        });
+                        </script>
+
+                        <!-- 2.LOCATION -->
+                        {{-- <div class="row mb-1">
             <div class="col">
                 <div class="form-body px-5  rounded-4">
                     <h4 class="fw-bold mb-3">2.Location</h4>
@@ -238,43 +286,43 @@ a {
                             <div class="col-lg-12  ">
                                 <!-- <input type="text" id="address" name="address" class="form-control py-3 rounded-3 shadow-sm" placeholder="Address" required value=""> -->
                                 <!-- <textarea id="program_descriptions" class="container__textarea p-5 textarea-feild" name="address" required>{{$package_details->address}}</textarea>
-            -->
-            <!-- <div class="mb-3">
+                        -->
+                        <!-- <div class="mb-3">
                                     <div id="commentEditor2" class="form-control " style="height: 200px;"></div>
                                 </div> -->
-            @php
-            $plain_text_address = strip_tags($package_details->address);
-            @endphp
-            <div class=" mt-2">
-                <div class="row">
-                    <div class="col-lg-12 ">
-                        <div id="summernote2">{{$plain_text_address}}</div>
+                        @php
+                        $plain_text_address = strip_tags($package_details->address);
+                        @endphp
+                        <div class=" mt-2">
+                            <div class="row">
+                                <div class="col-lg-12 ">
+                                    <div id="summernote2">{{$plain_text_address}}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row g-2 mb-2 d-flex justify-content-around">
+                    <div class="col">
+                        <label class="fw-bold  mb-4">City <span class="text-danger">*</span></label>
+                        <input type="text" placeholder="City" id="city" name="city"
+                            class="form-control py-2 rounded-3 shadow-sm" required value="{{$package_details->city}}">
+                    </div>
+                    <div class="col">
+                        <label class="fw-bold mb-4 ">State <span class="text-danger">*</span></label>
+                        <input type="text" placeholder="State" id="state" name="state"
+                            class="form-control py-2 rounded-3 shadow-sm" required value="{{$package_details->state}}">
+                    </div>
+                </div>
+                <div class="row mb-4">
+                    <div class="col-lg-12">
+                        <label class="fw-bold mb-4 ">Country <span class="text-danger">*</span></label>
+                        <input type="text" id="country" name="country" class="form-control py-2 rounded-3 shadow-sm"
+                            placeholder="Country" required value="{{$package_details->country}}">
                     </div>
                 </div>
             </div>
     </div>
-</div>
-<div class="row g-2 mb-2 d-flex justify-content-around">
-    <div class="col">
-        <label class="fw-bold  mb-4">City <span class="text-danger">*</span></label>
-        <input type="text" placeholder="City" id="city" name="city" class="form-control py-2 rounded-3 shadow-sm"
-            required value="{{$package_details->city}}">
-    </div>
-    <div class="col">
-        <label class="fw-bold mb-4 ">State <span class="text-danger">*</span></label>
-        <input type="text" placeholder="State" id="state" name="state" class="form-control py-2 rounded-3 shadow-sm"
-            required value="{{$package_details->state}}">
-    </div>
-</div>
-<div class="row mb-4">
-    <div class="col-lg-12">
-        <label class="fw-bold mb-4 ">Country <span class="text-danger">*</span></label>
-        <input type="text" id="country" name="country" class="form-control py-2 rounded-3 shadow-sm"
-            placeholder="Country" required value="{{$package_details->country}}">
-    </div>
-</div>
-</div>
-</div>
 </div>
 </div> --}}
 
@@ -311,22 +359,26 @@ a {
             <h4 class="fw-bold mb-2">3. Tour Planning <span class="text-danger">*</span></h4>
             <div id="plan-container">
                 @php
-                    // Decode JSON if needed
-                    $tourPlanning = json_decode($package_details->tour_planning, true);
+                // Decode JSON if needed
+                $tourPlanning = json_decode($package_details->tour_planning, true);
                 @endphp
                 @foreach($tourPlanning['plan_subtitle'] as $index => $title)
                 <div class="plan-item">
                     <!-- Plan Title and Plan Subtitle on the same line -->
                     <div class="row g-2 mt-2 d-flex justify-content-between">
                         <div class="col-lg-5">
-                        <label class="form-label form-label-top form-label-auto fw-bold mb-2">Plan Title</label>
+                            <label class="form-label form-label-top form-label-auto fw-bold mb-2">Plan Title</label>
 
-                            <input type="text" name="plan_title[]" class="form-control py-2 rounded-3 shadow-sm" placeholder="Plan Title" required value="{{ isset($tourPlanning['plan_title'][$index]) ? $tourPlanning['plan_title'][$index] : '' }}">
+                            <input type="text" name="plan_title[]" class="form-control py-2 rounded-3 shadow-sm"
+                                placeholder="Plan Title" required
+                                value="{{ isset($tourPlanning['plan_title'][$index]) ? $tourPlanning['plan_title'][$index] : '' }}">
                         </div>
                         <div class="col-lg-5">
-                        <label class="form-label form-label-top form-label-auto fw-bold mb-2">Plan Subtitle</label>
+                            <label class="form-label form-label-top form-label-auto fw-bold mb-2">Plan Subtitle</label>
 
-                            <input type="text" name="plan_subtitle[]" class="form-control py-2 rounded-3 shadow-sm" placeholder="Plan Subtitle" required value="{{ $tourPlanning['plan_subtitle'][$index] }}">
+                            <input type="text" name="plan_subtitle[]" class="form-control py-2 rounded-3 shadow-sm"
+                                placeholder="Plan Subtitle" required
+                                value="{{ $tourPlanning['plan_subtitle'][$index] }}">
                         </div>
                     </div>
 
@@ -335,9 +387,10 @@ a {
                         <div class="row">
                             <div class="col-lg-11">
                                 <input type="hidden" id="plan_description" name="plan_description[]">
-                                <label class="form-label form-label-top form-label-auto fw-bold mb-2">Plan Description <span class="text-danger">*</span></label>
+                                <label class="form-label form-label-top form-label-auto fw-bold mb-2">Plan Description
+                                    <span class="text-danger">*</span></label>
                                 @php
-                                    $plain_text_plan_description = strip_tags($tourPlanning['plan_description'][$index]);
+                                $plain_text_plan_description = strip_tags($tourPlanning['plan_description'][$index]);
                                 @endphp
                                 <div class="mt-2">
                                     <div class="row">
@@ -417,19 +470,23 @@ a {
                 <div class="row g-2 align-items-end">
                     <div class="col-md-4">
                         <label class="fw-bold mb-2">Rooms<span class="text-danger"></span></label>
-                        <input type="text" class="form-control py-2 rounded-3 shadow-sm" name="total_room" id="total_room"  value="{{$package_details->total_room}}" required>
+                        <input type="text" class="form-control py-2 rounded-3 shadow-sm" name="total_room"
+                            id="total_room" value="{{$package_details->total_room}}" required>
                     </div>
                     <div class="col-md-4">
                         <label class="fw-bold mb-2">Bath Rooms<span class="text-danger"></span></label>
-                        <input type="text" class="form-control py-2 rounded-3 shadow-sm" name="bath_room" id="bath_room"  value="{{$package_details->bath_room}}" required>
+                        <input type="text" class="form-control py-2 rounded-3 shadow-sm" name="bath_room" id="bath_room"
+                            value="{{$package_details->bath_room}}" required>
                     </div>
                     <div class="col-md-4">
                         <label class="fw-bold mb-2">Bed Rooms</label>
-                        <input type="text" class="form-control py-2 rounded-3 shadow-sm" id="bed_room" name="bed_room"  value="{{$package_details->bed_room}}" required>
+                        <input type="text" class="form-control py-2 rounded-3 shadow-sm" id="bed_room" name="bed_room"
+                            value="{{$package_details->bed_room}}" required>
                     </div>
                     <div class="col-md-4">
                         <label class="fw-bold mb-2">Hall</label>
-                        <input type="text" class="form-control py-2 rounded-3 shadow-sm" id="hall" name="hall"  value="{{$package_details->hall}}" required>
+                        <input type="text" class="form-control py-2 rounded-3 shadow-sm" id="hall" name="hall"
+                            value="{{$package_details->hall}}" required>
                     </div>
                 </div>
             </div>
@@ -452,8 +509,8 @@ a {
                             value="{{$package_details->member_capacity}}">
                     </div>
                     <div class="col-lg-6">
-                    <label class="fw-bold mb-2 ">Sprit Amount <span class="text-danger">*</span></label>
-                    <select id="mem_type" name="mem_type" class="form-select py-2 rounded-3 shadow-sm mb-2"
+                        <label class="fw-bold mb-2 ">Sprit Amount <span class="text-danger">*</span></label>
+                        <select id="mem_type" name="mem_type" class="form-select py-2 rounded-3 shadow-sm mb-2"
                             required>
                             <option value="">Select</option>
                             <option value="perhead" {{ $package_details->member_type == 'perhead' ? 'selected' : '' }}>
@@ -728,20 +785,20 @@ a {
                     </div>
                 </div>
             </div>
-       
 
-    <div class="col-lg-12 text-end mt-5 py-5">
-        <a href="{{ route('admin.inclusive_package_list') }}">
-            <button type="button" class="btn btn-outline-secondary px-4 py-3 fw-bold cancel-btn">
-                Cancel
-            </button>
-        </a>
-        <button type="submit" class="btn btn-primary ms-4 px-5 py-3 fw-bold submit-btn sbmtBtn ">
-            Submit
-        </button>
+
+            <div class="col-lg-12 text-end mt-5 py-5">
+                <a href="{{ route('admin.inclusive_package_list') }}">
+                    <button type="button" class="btn btn-outline-secondary px-4 py-3 fw-bold cancel-btn">
+                        Cancel
+                    </button>
+                </a>
+                <button type="submit" class="btn btn-primary ms-4 px-5 py-3 fw-bold submit-btn sbmtBtn ">
+                    Submit
+                </button>
+            </div>
+        </div>
     </div>
-</div>
-</div>
 </div>
 </div>
 </div>
