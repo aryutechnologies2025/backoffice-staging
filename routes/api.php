@@ -50,6 +50,7 @@ Route::prefix('v1')->group(function () {
         Route::post('/get-program', [HomeApiController::class, 'get_program']);
         Route::post('/home-filter', [HomeApiController::class, 'home_filter']);
         Route::post('/filter-program-by-price_sort', [ProgramApiController::class, 'filter_program_by_price_sort']);
+        Route::post('/destination-program-by-price_sort', [ProgramApiController::class, 'destination_program_by_price_sort']);
         Route::post('/filter-program-by-date', [HomeApiController::class, 'filter_program_by_date']);
         Route::post('/filter-destination', [HomeApiController::class, 'filter_destination_by_date']);
         Route::post('/filter-program-by-price', [ProgramApiController::class, 'filter_program_by_price']);
