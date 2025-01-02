@@ -77,9 +77,9 @@ return [
     'prefix_indexes' => true,
     'strict' => true,
     'engine' => null,
-    'options' => array_filter([
+    'options'   => [
         PDO::ATTR_PERSISTENT => true, // Enable persistent connections
-    ]),
+    ],
   
 ],
 

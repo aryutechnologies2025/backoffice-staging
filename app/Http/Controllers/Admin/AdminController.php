@@ -9,6 +9,7 @@ use App\Models\Admin;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 
 class AdminController extends Controller
 {
@@ -84,12 +85,26 @@ class AdminController extends Controller
     public function dashboard()
     {
         $title = 'Dashboard';
-        $programCount = DB::table('inclusive_package_details')->where('is_deleted', "0")->count();
-$userRegister = DB::table('users')->where('is_deleted', "0")->count();
-$enquiryCount = DB::table('enquiry_details')->count(); 
-$clientReview = DB::table('client_review')->where('is_deleted', "0")->count();      
-return view('dashboard.dashboard', compact('title', 'programCount' , 'userRegister', 'enquiryCount', 'clientReview'));
+    
+        $programCount = Cache::remember('program_count', 60, function () {
+            return DB::table('inclusive_package_details')->where('is_deleted', "0")->count();
+        });
+    
+        $userRegister = Cache::remember('user_register_count', 60, function () {
+            return DB::table('users')->where('is_deleted', "0")->count();
+        });
+    
+        $enquiryCount = Cache::remember('enquiry_count', 60, function () {
+            return DB::table('enquiry_details')->count();
+        });
+    
+        $clientReview = Cache::remember('client_review_count', 60, function () {
+            return DB::table('client_review')->where('is_deleted', "0")->count();
+        });
+    
+        return view('dashboard.dashboard', compact('title', 'programCount', 'userRegister', 'enquiryCount', 'clientReview'));
     }
+    
 
     // public function getInclusivePackagesCount()
     // {
