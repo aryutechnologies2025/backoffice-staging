@@ -115,40 +115,63 @@ class SiteApiController extends Controller
 
 public function getSettings()
 {
-    // Check if the settings are cached
-    $settings = cache()->remember('settings', 3600, function () {
-        return Settings::first(); // Fetch from the database if not cached
-    });
+    $retryCount = 3; // Number of retries
+    $waitTime = 5; // Wait time between retries (in seconds)
 
-    // Check if settings were found
-    if (!$settings) {
-        return response()->json([
-            'message' => 'Settings not found'
-        ], 404); // Not Found
+    // Retry logic for fetching settings from the database
+    for ($i = 0; $i < $retryCount; $i++) {
+        try {
+            // Check if the settings are cached
+            $settings = cache()->remember('settings', 3600, function () {
+                return Settings::first(); // Fetch from the database if not cached
+            });
+
+            // Check if settings were found
+            if (!$settings) {
+                return response()->json([
+                    'message' => 'Settings not found'
+                ], 404); // Not Found
+            }
+
+            // Return the settings data
+            return response()->json([
+                'app_name' => $settings->app_name,
+                'site_logo' => $settings->site_logo,
+                'footer_logo' => $settings->footer_logo,
+                'fav_icon' => $settings->fav_icon,
+                'contact_email' => $settings->contact_email,
+                'contact_number' => $settings->contact_number,
+                'contact_address' => $settings->contact_address,
+                'copyright' => $settings->copyright,
+                'android_link' => $settings->android_link,
+                'ios_link' => $settings->ios_link,
+                'facebook' => $settings->facebook,
+                'instagram' => $settings->instagram,
+                'twitter_x' => $settings->twitter_x,
+                'linkedin' => $settings->linkedin,
+                'youtube_url' => $settings->youtube_url,
+                'pinterest' => $settings->pinterest,
+                'meta_title' => $settings->meta_title,
+                'meta_keywords' => $settings->meta_keywords,
+                'meta_desc' => $settings->meta_desc,
+            ], 200);
+
+        } catch (\Illuminate\Database\QueryException $e) {
+            // Check for "max_connections_per_hour" error
+            if (str_contains($e->getMessage(), 'max_connections_per_hour')) {
+                Log::warning('Database connection limit exceeded, retrying...');
+                sleep($waitTime); // Wait before retrying
+            } else {
+                // If the error is not related to connection limits, rethrow the exception
+                throw $e;
+            }
+        }
     }
 
-    // Return the settings data
+    // If all retries failed, return a 503 Service Unavailable error
     return response()->json([
-        'app_name' => $settings->app_name,
-        'site_logo' => $settings->site_logo,
-        'footer_logo' => $settings->footer_logo,
-        'fav_icon' => $settings->fav_icon,
-        'contact_email' => $settings->contact_email,
-        'contact_number' => $settings->contact_number,
-        'contact_address' => $settings->contact_address,
-        'copyright' => $settings->copyright,
-        'android_link' => $settings->android_link,
-        'ios_link' => $settings->ios_link,
-        'facebook' => $settings->facebook,
-        'instagram' => $settings->instagram,
-        'twitter_x' => $settings->twitter_x,
-        'linkedin' => $settings->linkedin,
-        'youtube_url' => $settings->youtube_url,
-        'pinterest' => $settings->pinterest,
-        'meta_title' => $settings->meta_title,
-        'meta_keywords' => $settings->meta_keywords,
-        'meta_desc' => $settings->meta_desc,
-    ], 200);
+        'message' => 'Service unavailable, please try again later.'
+    ], 503);
 }
 
 

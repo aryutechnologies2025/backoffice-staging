@@ -23,7 +23,7 @@ use App\Http\Controllers\Api\ProgramApiController;
 
 Route::prefix('v1')->group(function () {
     // Rate-Limited Public Routes
-    Route::middleware(['throttle:120,1'])->group(function () {
+    Route::middleware(['throttle:60,1'])->group(function () {
         // CSRF Token
         Route::get('/csrf-token', [AuthController::class, 'getToken']);
 
