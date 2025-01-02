@@ -86,19 +86,19 @@ class AdminController extends Controller
     {
         $title = 'Dashboard';
     
-        $programCount = Cache::remember('program_count', 60, function () {
+        $programCount = Cache::remember('program_count', 120, function () {
             return DB::table('inclusive_package_details')->where('is_deleted', "0")->count();
         });
     
-        $userRegister = Cache::remember('user_register_count', 60, function () {
+        $userRegister = Cache::remember('user_register_count', 120, function () {
             return DB::table('users')->where('is_deleted', "0")->count();
         });
     
-        $enquiryCount = Cache::remember('enquiry_count', 60, function () {
+        $enquiryCount = Cache::remember('enquiry_count', 120, function () {
             return DB::table('enquiry_details')->count();
         });
     
-        $clientReview = Cache::remember('client_review_count', 60, function () {
+        $clientReview = Cache::remember('client_review_count', 120, function () {
             return DB::table('client_review')->where('is_deleted', "0")->count();
         });
     
