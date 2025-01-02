@@ -184,7 +184,7 @@ class ProgramApiController extends Controller
             ], 422);
         } catch (\Exception $e) {
             // Log the exception
-            \Log::error('Error fetching Program details: ' . $e->getMessage());
+            
 
             // Return error response
             return response()->json([
@@ -338,7 +338,7 @@ class ProgramApiController extends Controller
             ], 422);
         } catch (\Exception $e) {
             // Log the exception
-            \Log::error('Error filtering programs by actual price: ' . $e->getMessage());
+           
     
             // Return error response
             return response()->json([
@@ -525,7 +525,7 @@ class ProgramApiController extends Controller
             ], 422);
         } catch (\Exception $e) {
             // Log the exception
-            \Log::error('Error filtering programs by price range: ' . $e->getMessage());
+         
 
             // Return error response
             return response()->json([
@@ -698,7 +698,7 @@ class ProgramApiController extends Controller
                 'errors' => $e->errors()
             ], 422);
         } catch (\Exception $e) {
-            \Log::error('Error filtering programs by date and price: ' . $e->getMessage());
+            
 
             return response()->json([
                 'status' => 'error',
