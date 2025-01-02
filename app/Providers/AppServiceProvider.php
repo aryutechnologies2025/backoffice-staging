@@ -24,7 +24,7 @@ class AppServiceProvider extends ServiceProvider
     // }
     public function boot(): void
     {
-        $settings = Cache::remember('settings', 3600, function () {
+        $settings = Cache::remember('settings', 86400, function () {
             return Settings::first();
         });
 
