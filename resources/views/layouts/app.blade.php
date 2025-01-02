@@ -38,7 +38,7 @@
 <body id="body-pd">
     
     <div class="row ">
-        <header class="header py-5" id="header">
+        <header class="header py-5 ps-0 " id="header">
             <div class="col-lg-3 text-start" id="navbarNav">
                 <div class="header_toggle mt-2">
                     <img id="header-toggle" src="/assets/image/dashboard/innerpece_toogle_icon.svg" alt="">
