@@ -291,6 +291,7 @@ class ProgramApiController extends Controller
                     'bath_room' => $package->bath_room,
                     'amerities' => $package->amerities,
                     'food_beverages' => $package->food_beverages,
+                    'location' => $package->location,
                 ];
     
                 // If userId is provided, check if the program is in their wishlist
