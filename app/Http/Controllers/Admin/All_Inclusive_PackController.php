@@ -199,7 +199,7 @@ public function insert(Request $request)
     $inclusive_packages->save();
 
     // Cache the inserted record
-    Cache::put("inclusive_package_{$inclusive_packages->id}", $inclusive_packages, 3600);
+    Cache::put("inclusive_package_{$inclusive_packages->id}", $inclusive_packages, 3700);
 
     if ($inclusive_packages) {
         return redirect()->route('admin.inclusive_package_list')
