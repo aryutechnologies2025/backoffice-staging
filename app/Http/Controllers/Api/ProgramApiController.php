@@ -352,156 +352,189 @@ class ProgramApiController extends Controller
     
 
 
-    public function destination_program_by_price_sort(Request $request)
-    {
-        try {
-            // Validate the request
-            $request->validate([
-                'sort_order' => 'required|string|in:low,high', // Allow 'low' or 'high' for sorting
-                'destination' => 'nullable|string', // Optional destination
-                'user_id' => 'nullable|integer', // Optional user_id
-            ]);
     
-            // Retrieve the sort order, destination, and user_id (if provided)
-            $sortOrder = $request->input('sort_order');
-            $destination = $request->input('destination');
-            $userId = $request->input('user_id');
-    
-            // Determine the sort direction based on 'sort_order' value
-            $sortDirection = ($sortOrder === 'low') ? 'asc' : 'desc';
-    
-            // Build the query
-            $query = InclusivePackages::query()
-                ->where('status', '1') // Filter for active packages
-                ->where('is_deleted', '0') // Exclude deleted packages
-                ->orderByRaw("CAST(REPLACE(REPLACE(REPLACE(actual_price, '₹', ''), '$', ''), ',', '') AS SIGNED) $sortDirection") // Sort by actual_price
-                ->with(['destination', 'theme', 'clientReviews']); // Include relationships
-    
-            // Filter by destination if provided
-            if (!empty($destination)) {
-                $query->whereHas('destination', function ($query) use ($destination) {
-                    $query->where('city_details', $destination);
-                });
-            }
-    
-            // Fetch the results
-            $programs = $query->get();
-    
-            // Return a 404 response if no programs are found
-            if ($programs->isEmpty()) {
-                return response()->json([
-                    'status' => 'error',
-                    'message' => 'No programs found.',
-                    'data' => null
-                ], 404);
-            }
-    
-            // Process the programs for the response
-            $responseData = $programs->map(function ($package) use ($userId) {
-                // Map client reviews
-                $clientReviews = $package->clientReviews->map(function ($review) {
-                    $reviewDate = \Carbon\Carbon::parse($review->review_dt);
-                    return [
-                        'client_name' => $review->client_name,
-                        'client_pic' => $review->client_pic,
-                        'client_review' => $review->client_review,
-                        'review_dt' => $reviewDate->format('d M Y'),
-                        'rating' => $review->rating,
-                    ];
-                });
-    
-                // Calculate total reviews and average rating
-                $totalReviews = $package->clientReviews->count();
-                $averageRating = $package->clientReviews->avg('rating');
-    
-                // Clean and format text fields
-                $importantInfoPlainText = strip_tags(html_entity_decode($package->important_info, ENT_QUOTES, 'UTF-8'));
-                $importantInfoPlainText = str_replace(["<br>", "<br/>", "<br />"], "\n", $importantInfoPlainText);
-    
-                $programInclusionPlainText = strip_tags(html_entity_decode($package->program_inclusion, ENT_QUOTES, 'UTF-8'));
-                $programInclusionPlainText = str_replace(["<br>", "<br/>", "<br />"], "\n", $programInclusionPlainText);
-    
-                $breakFastPlainText = strip_tags(html_entity_decode($package->break_fast, ENT_QUOTES, 'UTF-8'));
-                $breakFastPlainText = str_replace(["<br>", "<br/>", "<br />"], "\n", $breakFastPlainText);
-    
-                // Fetch additional details using a helper function
-                $getDetailsById = function ($package) {
-                    $id = $package->id;
-                    $response = (new ProgramApiController)->getAmenitiesFoodBeverageActivitiesSafetyFeaturesById(
-                        new Request(['id' => $id])
-                    );
-                    return json_decode($response->getContent(), true)['data'];
-                };
-    
-                $details = $getDetailsById($package);
-    
-                // Prepare the package data for the response
-                $data = [
-                    'id' => $package->id,
-                    'title' => $package->title,
-                    'program_desc' => $package->program_description,
-                    'destination' => optional($package->destination)->city_name,
-                    'theme' => optional($package->theme)->themes_name,
-                    'actual_price' => $package->actual_price,
-                    'discount_price' => $package->price,
-                    'client_reviews' => $clientReviews,
-                    'total_reviews' => $totalReviews,
-                    'average_rating' => number_format($averageRating, 1),
-                    'important_info' => $importantInfoPlainText,
-                    'program_inclusion' => $programInclusionPlainText,
-                    'break_fast' => $breakFastPlainText,
-                    'cover_img' => $package->cover_img,
-                    'created_date' => $package->created_date,
-                    'state' => $package->state,
-                    'city' => $package->city,
-                    'address' => $package->address,
-                    'country' => $package->country,
-                    'total_rooms' => $package->total_rooms,
-                    'bed_room' => $package->bed_room,
-                    'bath_room' => $package->bath_room,
-                    'location' => ucfirst($package->city) . ', ' . ucfirst($package->state),
-                    'amenities' => $details['amenities'] ?? [],
-                    'foodBeverages' => $details['foodBeverages'] ?? [],
-                    'activities' => $details['activities'] ?? [],
-                    'safetyFeatures' => $details['safetyFeatures'] ?? [],
-                ];
-    
-                // Check if the program is in the user's wishlist
-                if ($userId) {
-                    $data['wishlists'] = Program_wishlist::where('user_id', $userId)
-                        ->where('program_id', $package->id)
-                        ->exists();
-                }
-    
-                return $data;
+//get by destination with price 
+
+public function destination_program_by_price_sort(Request $request)
+{
+    try {
+        // Validate the request
+        $request->validate([
+            'sort_order' => 'required|string|in:low,high', // Allow 'low' or 'high' for sorting
+            'theme' => 'nullable|string', // Optional theme
+            'user_id' => 'nullable|integer', // Optional user_id
+            'city' => 'nullable|string', // Optional city for destination filter
+            'state' => 'nullable|string', // Optional state for destination filter
+            'country' => 'nullable|string', // Optional country for destination filter
+        ]);
+
+        // Retrieve the sort order, theme, user_id, and destination filter params (if provided)
+        $sortOrder = $request->input('sort_order');
+        $theme = $request->input('theme');
+        $userId = $request->input('user_id');
+        $city = $request->input('city');
+        $state = $request->input('state');
+        $country = $request->input('country');
+
+        // Determine the sort direction based on the 'sort_order' value
+        $sortDirection = ($sortOrder === 'low') ? 'asc' : 'desc';
+
+        // Start building the query
+        $query = InclusivePackages::query()
+            ->where('status', '1') // Filter programs where status = 1
+            ->where('is_deleted', '0') // Filter programs where is_deleted = 0
+            ->orderByRaw("CAST(REPLACE(REPLACE(REPLACE(actual_price, '₹', ''), '$', ''), ',', '') AS SIGNED) $sortDirection") // Sort based on actual_price after removing ₹, $ symbols, and commas
+            ->with('destination', 'theme', 'clientReviews');
+
+        // Filter by theme if provided
+        if (!empty($theme)) {
+            $query->whereHas('theme', function ($query) use ($theme) {
+                $query->where('themes_name', $theme);
             });
-    
-            // Return the response
-            return response()->json([
-                'status' => 'success',
-                'message' => 'Programs filtered and sorted by actual price retrieved successfully.',
-                'data' => $responseData
-            ], 200);
-    
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            // Handle validation errors
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Validation error.',
-                'errors' => $e->errors()
-            ], 422);
-        } catch (\Exception $e) {
-            // Log the exception
-    
-            // Return a generic error response
-            return response()->json([
-                'status' => 'error',
-                'message' => 'An error occurred while filtering programs by actual price.',
-                'error' => $e->getMessage()
-            ], 500);
         }
+
+        // Filter by destination if provided (city, state, or country)
+        if ($city) {
+            $query->whereHas('destination', function ($query) use ($city) {
+                $query->where('city_name', 'LIKE', "%$city%");
+            });
+        }
+
+        if ($state) {
+            $query->whereHas('destination', function ($query) use ($state) {
+                $query->where('state_name', 'LIKE', "%$state%");
+            });
+        }
+
+        if ($country) {
+            $query->whereHas('destination', function ($query) use ($country) {
+                $query->where('country_name', 'LIKE', "%$country%");
+            });
+        }
+
+        // Execute the query
+        $programs = $query->get();
+
+        // Check if any programs were found
+        if ($programs->isEmpty()) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'No programs found.',
+                'data' => null
+            ], 404);
+        }
+
+        // Process the programs for the response
+        $responseData = $programs->map(function ($package) use ($userId) {
+            // Extract and process the necessary fields
+            $clientReviews = $package->clientReviews->map(function ($review) {
+                $reviewDate = \Carbon\Carbon::parse($review->review_dt);
+                return [
+                    'client_name' => $review->client_name,
+                    'client_pic' => $review->client_pic,
+                    'client_review' => $review->client_review,
+                    'review_dt' => $reviewDate->format('d M Y'),
+                    'rating' => $review->rating,
+                ];
+            });
+
+            $totalReviews = $package->clientReviews->count();
+            $averageRating = $package->clientReviews->avg('rating');
+
+            // Clean up the text fields
+            $importantInfoPlainText = strip_tags(html_entity_decode($package->important_info, ENT_QUOTES, 'UTF-8'));
+            $importantInfoPlainText = str_replace(["<br>", "<br/>", "<br />"], "\n", $importantInfoPlainText);
+
+            $programInclusionPlainText = strip_tags(html_entity_decode($package->program_inclusion, ENT_QUOTES, 'UTF-8'));
+            $programInclusionPlainText = str_replace(["<br>", "<br/>", "<br />"], "\n", $programInclusionPlainText);
+
+            $breakFastPlainText = strip_tags(html_entity_decode($package->break_fast, ENT_QUOTES, 'UTF-8'));
+            $breakFastPlainText = str_replace(["<br>", "<br/>", "<br />"], "\n", $breakFastPlainText);
+            
+            // Extract the first image URL
+            $formattedLocation = ucfirst($package->city) . ', ' . ucfirst($package->state);
+            
+            // Helper function to get amenities, food & beverage, activities, and safety features
+            $getDetailsById = function ($package) {
+                $id = $package->id;
+                
+                // Call your original method logic here (or modify it to return the required data)
+                $response = (new ProgramApiController)->getAmenitiesFoodBeverageActivitiesSafetyFeaturesById(new Request(['id' => $id]));
+                return json_decode($response->getContent(), true)['data'];
+            };
+
+            // Fetch amenities, food & beverage, activities, safety features
+            $details = $getDetailsById($package);
+            $data = [
+                'id' => $package->id,
+                'title' => $package->title,
+                'program_desc' => $package->program_description,
+                'destination' => $package->destination->city_name,
+                'theme' => $package->theme->themes_name,
+                'actual_price' => $package->actual_price,
+                'discount_price' => $package->price,
+                'client_reviews' => $clientReviews,
+                'total_reviews' => $totalReviews,
+                'average_rating' => number_format($averageRating, 1),
+                'important_info' => $importantInfoPlainText,
+                'program_inclusion' => $programInclusionPlainText,
+                'break_fast' => $breakFastPlainText,
+                'cover_img' => $package->cover_img,
+                'created_date' => $package->created_date,
+                'state' => $package->state,
+                'city' => $package->city,
+                'address' => $package->address,
+                'country' => $package->country,
+                'total_rooms' => $package->total_rooms,
+                'bed_room' => $package->bed_room,
+                'bath_room' => $package->bath_room,
+                'amerities' => $package->amerities,
+                'food_beverages' => $package->food_beverages,
+                'location' => $formattedLocation,
+                // Adding the fetched details
+                'amenities' => $details['amenities'] ?? [],
+                'foodBeverages' => $details['foodBeverages'] ?? [],
+                'activities' => $details['activities'] ?? [],
+                'safetyFeatures' => $details['safetyFeatures'] ?? [],
+            ];
+
+            // If userId is provided, check if the program is in their wishlist
+            if ($userId) {
+                $wishlist = Program_wishlist::where('user_id', $userId)
+                    ->where('program_id', $package->id)
+                    ->exists();
+
+                $data['wishlists'] = $wishlist;
+            }
+
+            return $data;
+        });
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Programs filtered and sorted by actual price retrieved successfully.',
+            'data' => $responseData
+        ], 200);
+
+    } catch (\Illuminate\Validation\ValidationException $e) {
+        // Return validation error response
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Validation error.',
+            'errors' => $e->errors()
+        ], 422);
+    } catch (\Exception $e) {
+        // Log the exception
+
+        // Return error response
+        return response()->json([
+            'status' => 'error',
+            'message' => 'An error occurred while filtering programs by actual price.',
+            'error' => $e->getMessage()
+        ], 500);
     }
-    
+}
+
 
 
 
