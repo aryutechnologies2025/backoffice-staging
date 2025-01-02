@@ -280,6 +280,7 @@ class ProgramApiController extends Controller
                     'important_info' => $importantInfoPlainText,
                     'program_inclusion' => $programInclusionPlainText,
                     'break_fast' => $breakFastPlainText,
+                    'cover_img' => $package->cover_img,
                 ];
     
                 // If userId is provided, check if the program is in their wishlist
