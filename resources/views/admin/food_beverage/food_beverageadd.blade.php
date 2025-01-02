@@ -47,7 +47,7 @@
                                                 <img class="text-center mt-3" id="file-ip-1-preview" src="/assets/image/dashboard/innerpece_addpic_icon.svg">
                                                 <p class="text-center fw-light mt-3">Add Pic</p>
                                             </label>
-                                            <input type="file" id="file-ip-1" name="image_1" accept="image/png, image/jpeg">
+                                            <input type="file" id="file-ip-1" name="image_1" accept="image/png, image/jpeg, image/svg, image/jpg" required>
                                             <div id="file-ip-1-error" class="text-danger"></div>
                                         </div>
                                     </div>
