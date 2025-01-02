@@ -281,6 +281,16 @@ class ProgramApiController extends Controller
                     'program_inclusion' => $programInclusionPlainText,
                     'break_fast' => $breakFastPlainText,
                     'cover_img' => $package->cover_img,
+                    'created_date' => $package->created_date,
+                    'state' => $package->state,
+                    'city' => $package->city,
+                    'address' => $package->address,
+                    'country' => $package->country,
+                    'total_rooms' => $package->total_rooms,
+                    'bed_room' => $package->bed_room,
+                    'bath_room' => $package->bath_room,
+                    'amerities' => $package->amerities,
+                    'food_beverages' => $package->food_beverages,
                 ];
     
                 // If userId is provided, check if the program is in their wishlist
