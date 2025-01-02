@@ -376,6 +376,7 @@
             toastr.error("{{ $error }}");
             @endforeach
             @endif
+            
         });
 
 

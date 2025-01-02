@@ -96,18 +96,21 @@ class HomeApiController extends Controller
 
     public function get_program(Request $request)
     {
+      
         try {
-            $program_type = $request->input('program_type');
-            $theme = $request->input('theme');
+            $requestData = $request->all(); 
+    
+            $program_type =  $request->input('program_type');
+            $theme =  $request->input('theme');
             $destination = $request->input('destination');
-            $program_destination = $request->input('program_destination');
-            $view_type = $request->input('view_type');
+            $program_destination =  $request->input('program_destination');
+            $view_type =  $request->input('view_type');
     
             // Build the query
             $query = InclusivePackages::where('status', "1")
                 ->where('is_deleted', "0");
-    
-            // Apply filters conditionally
+            
+            // Conditionally apply filters based on input
             if ($program_type) {
                 $query->whereJsonContains('category', $program_type);
             }
@@ -117,7 +120,7 @@ class HomeApiController extends Controller
                 $view_type = 'all';
             }
     
-            if ($destination) {
+            if($destination) {
                 $query->where('city_details', $destination);
                 $view_type = 'all';
             }
@@ -127,15 +130,15 @@ class HomeApiController extends Controller
                 $view_type = 'all';
             }
     
-            // Apply a limit if view_type is not 'all'
+            // Apply the limit conditionally
             if ($view_type !== 'all') {
-                $query->take(4);
+                $query->take(4); // Limit to 4 packages if view_type is not 'all'
             }
     
-            // Fetch data with relations and paginate results
+            // Execute the query
             $packages = $query->with(['theme', 'destination', 'clientReviews'])->paginate(10);
-    
-            // Check if data exists
+            
+            // Check if any packages were found
             if ($packages->isEmpty()) {
                 return response()->json([
                     'status' => 'success',
@@ -144,38 +147,63 @@ class HomeApiController extends Controller
                 ], 200);
             }
     
-            // Helper function to fetch amenities, food, activities, and safety features
+            // Helper function to get amenities, food & beverage, activities, and safety features
             $getDetailsById = function ($package) {
                 $id = $package->id;
+                
+                // Call your original method logic here (or modify it to return the required data)
                 $response = (new ProgramApiController)->getAmenitiesFoodBeverageActivitiesSafetyFeaturesById(new Request(['id' => $id]));
                 return json_decode($response->getContent(), true)['data'];
             };
     
-            // Format packages
+            // Process each package to format the output
             $formattedPackages = $packages->map(function ($package) use ($getDetailsById) {
-                $details = $getDetailsById($package);
+                // Decode JSON fields
+                $eventsPackageImages = json_decode($package->cover_img, true);
+                $tourPlanning = json_decode($package->tour_planning, true);
+                $campRule = json_decode($package->camp_rule, true);
+                $amenityDetails = json_decode($package->amenity_details, true);
+                $activities = json_decode($package->activities, true);
+                $safetyFeatures = json_decode($package->safety_features, true);
     
+                // Fetch amenities, food & beverage, activities, safety features
+                $details = $getDetailsById($package);
+                
+                // Format the start date
+                $formattedStartDate = \Carbon\Carbon::parse($package->start_date)->format('M d, Y');
+    
+                // Extract the first image URL
+                $formattedLocation = ucfirst($package->city) . ', ' . ucfirst($package->state);
+                $totalReviews = $package->clientReviews->count();
+                $averageRating = $package->clientReviews->avg('rating');
+                $category = json_decode($package->category, true) ?? [];
+                $formattedcategory = is_array($category) ? implode(', ', $category) : $category;
+    
+                // Return the formatted package data, including additional details
                 return [
                     'id' => $package->id,
                     'title' => ucfirst($package->title),
-                    'category' => implode(', ', json_decode($package->category, true) ?? []),
-                    'location' => ucfirst($package->city) . ', ' . ucfirst($package->state),
+                    'category' => ucfirst($formattedcategory),
+                    'location' => $formattedLocation,
                     'total_days' => $package->total_days,
                     'member_capacity' => $package->member_capacity,
                     'price' => $package->price,
                     'actual_price' => $package->actual_price,
                     'cover_img' => $package->cover_img,
-                    'start_date' => \Carbon\Carbon::parse($package->start_date)->format('M d, Y'),
-                    'theme_id' => optional($package->theme)->id,
-                    'theme' => optional($package->theme)->themes_name,
-                    'destination_id' => optional($package->destination)->id,
-                    'destination' => optional($package->destination)->city_name,
-                    'average_rating' => number_format($package->clientReviews->avg('rating'), 1),
-                    'totalReviews' => $package->clientReviews->count(),
+                    'start_date' => $formattedStartDate,
+                    'theme_id' => $package->theme ? $package->theme->id : null, 
+                    'theme' => $package->theme ? $package->theme->themes_name : null,
+                    'destination_id' => $package->city ? $package->destination->id : null,
+                    'destination' => $package->city ? $package->destination->city_name : null,
+                    'average_rating' => number_format($averageRating, 1),
+                    'totalReviews' => $totalReviews,
+
                     'total_room' => $package->total_room,
                     'bath_room' => $package->bath_room,
                     'bed_room' => $package->bed_room,
-                    'hall' => $package->hall,
+                    'hall'=> $package->hall,
+
+                    // Adding the fetched details
                     'amenities' => $details['amenities'] ?? [],
                     'foodBeverages' => $details['foodBeverages'] ?? [],
                     'activities' => $details['activities'] ?? [],
@@ -183,22 +211,24 @@ class HomeApiController extends Controller
                 ];
             });
     
-            // Return success response
+            // Return the formatted data with success status
             return response()->json([
                 'status' => 'success',
-                'message' => str_replace('_', ' ', $program_type) . ' retrieved successfully.',
+                'message' => '' . str_replace('_', ' ', $program_type) . ' retrieved successfully.',
                 'data' => $formattedPackages
             ], 200);
         } catch (\Exception $e) {
+            // Log the exception
             \Log::error('Error fetching ' . str_replace('_', ' ', $program_type) . ': ' . $e->getMessage());
     
+            // Return error response
             return response()->json([
                 'status' => 'error',
                 'message' => 'An error occurred while fetching ' . str_replace('_', ' ', $program_type) . '.',
                 'error' => $e->getMessage()
             ], 500);
         }
-    }
+    } 
     
 
 
