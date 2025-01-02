@@ -265,7 +265,8 @@ class ProgramApiController extends Controller
     
                 $breakFastPlainText = strip_tags(html_entity_decode($package->break_fast, ENT_QUOTES, 'UTF-8'));
                 $breakFastPlainText = str_replace(["<br>", "<br/>", "<br />"], "\n", $breakFastPlainText);
-    
+     // Extract the first image URL
+     $formattedLocation = ucfirst($package->city) . ', ' . ucfirst($package->state);
                 $data = [
                     'id' => $package->id,
                     'title' => $package->title,
@@ -291,7 +292,7 @@ class ProgramApiController extends Controller
                     'bath_room' => $package->bath_room,
                     'amerities' => $package->amerities,
                     'food_beverages' => $package->food_beverages,
-                    'location' => $package->location,
+                    'location' => $formattedLocation
                 ];
     
                 // If userId is provided, check if the program is in their wishlist
