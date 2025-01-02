@@ -116,7 +116,7 @@ class SiteApiController extends Controller
 public function getSettings()
 {
     // Check if the settings are cached
-    $settings = cache()->remember('settings', 500, function () {
+    $settings = cache()->remember('settings', 3600, function () {
         return Settings::first(); // Fetch from the database if not cached
     });
 
