@@ -267,6 +267,17 @@ class ProgramApiController extends Controller
                 $breakFastPlainText = str_replace(["<br>", "<br/>", "<br />"], "\n", $breakFastPlainText);
      // Extract the first image URL
      $formattedLocation = ucfirst($package->city) . ', ' . ucfirst($package->state);
+       // Helper function to get amenities, food & beverage, activities, and safety features
+       $getDetailsById = function ($package) {
+        $id = $package->id;
+        
+        // Call your original method logic here (or modify it to return the required data)
+        $response = (new ProgramApiController)->getAmenitiesFoodBeverageActivitiesSafetyFeaturesById(new Request(['id' => $id]));
+        return json_decode($response->getContent(), true)['data'];
+    };
+    
+                // Fetch amenities, food & beverage, activities, safety features
+                $details = $getDetailsById($package);
                 $data = [
                     'id' => $package->id,
                     'title' => $package->title,
@@ -292,7 +303,12 @@ class ProgramApiController extends Controller
                     'bath_room' => $package->bath_room,
                     'amerities' => $package->amerities,
                     'food_beverages' => $package->food_beverages,
-                    'location' => $formattedLocation
+                    'location' => $formattedLocation,
+                    // Adding the fetched details
+                    'amenities' => $details['amenities'] ?? [],
+                    'foodBeverages' => $details['foodBeverages'] ?? [],
+                    'activities' => $details['activities'] ?? [],
+                    'safetyFeatures' => $details['safetyFeatures'] ?? [],
                 ];
     
                 // If userId is provided, check if the program is in their wishlist
