@@ -218,13 +218,12 @@ class HomeApiController extends Controller
                 'data' => $formattedPackages
             ], 200);
         } catch (\Exception $e) {
-            // Log the exception
-            \Log::error('Error fetching ' . str_replace('_', ' ', $program_type) . ': ' . $e->getMessage());
+           
     
             // Return error response
             return response()->json([
                 'status' => 'error',
-                'message' => 'An error occurred while fetching ' . str_replace('_', ' ', $program_type) . '.',
+                'message' => 'An error occurred while fetching ',
                 'error' => $e->getMessage()
             ], 500);
         }
