@@ -58,6 +58,7 @@ Route::prefix('v1')->group(function () {
         Route::post('/sort-destination', [HomeApiController::class, 'sort_destination']);
         Route::post('/search-program', [HomeApiController::class, 'search_program']);
         Route::post('/search-destination', [HomeApiController::class, 'search_destination']);
+        Route::post('/get-program-details', [ProgramApiController::class, 'get_program_details']);
     });
 });
 
@@ -74,7 +75,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/add-remove-wishlist', [ProgramApiController::class, 'manage_wishlist']);
 
     // Program Details
-    Route::post('/get-program-details', [ProgramApiController::class, 'get_program_details']);
+    
     Route::post('/enquiry-form', [ProgramApiController::class, 'enquiry_form_insert']);
 
     // Amenities
