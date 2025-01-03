@@ -472,7 +472,7 @@ public function destination_program_by_price_sort(Request $request)
                 'destination' => $package->destination->city_name,
                 'theme' => $package->theme->themes_name,
                 'actual_price' => $package->actual_price,
-                'discount_price' => $package->price,
+                'price' => $package->price,
                 'client_reviews' => $clientReviews,
                 'total_reviews' => $totalReviews,
                 'average_rating' => number_format($averageRating, 1),
