@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\SiteApiController;
 use App\Http\Controllers\Api\HomeApiController;
 use App\Http\Controllers\Api\ProgramApiController;
+use App\Http\Controllers\Api\ReviewController;
 
 /*
 |----------------------------------------------------------------------
