@@ -12,7 +12,7 @@ class UserController extends Controller
     public function list(Request $request)
     {
         $title = 'User List';
-        $user_dts = User::where('is_deleted', '0')->orderBy('created_at', 'desc')->paginate(10);
+        $user_dts = User::where('is_deleted', '0')->orderBy('created_at', 'desc')->get();
         return view('admin.user.userlist', compact('title', 'user_dts'));
     }
 
