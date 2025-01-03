@@ -25,7 +25,7 @@
 
         padding-top: 1% !important;
         padding-bottom: 1% !important;
-        width: 100% !important;
+        width: 90% !important;
     }
 
     .mb-1 {
@@ -360,7 +360,7 @@
                                             </div>
                                             <!-- Description and Add Button in Second Row -->
                                             <div class="row g-2 mt-3 align-items-center">
-                                                <div class="col-lg-6">
+                                                <div class="col-lg-10">
                                                     <label class="form-label mb-2">Plan Description <span class="text-danger">*</span></label>
                                                     <input type="hidden" id="plan_description" name="plan_description[]">
                                                     <div id="summernote3" style="height: 200px;"></div>
@@ -523,18 +523,18 @@
                         <div class="row mb-3">
                             <div class="col">
                                 <div class="form-body px-5 rounded-4">
-                                    <h4 class="fw-bold mb-3 ps-0">6. Payment Policy</h4>
+                                    <h4 class="fw-bold mb-4 ps-0">6. Payment Policy</h4>
                                     <div id="camp-rule-container">
-                                        <div class="row g-2 mb-4 align-items-center camp-rule-field">
+                                        <div class="row g-2 mb-1 align-items-center camp-rule-field">
                                             <!-- Payment Policy Field -->
-                                            <label class="mb-3">Payment Policy <span class="text-danger">*</span></label>
+                                            <label class="mb-1">Payment Policy <span class="text-danger">*</span></label>
 
-                                            <div class="col-md-4">
+                                            <div class="col-md-11">
                                                 <input type="text" name="camp_rule[]" id="camp_rule"
                                                     class="form-control py-2 rounded-3 shadow-sm" placeholder="Payment Policy" required>
                                             </div>
                                             <!-- Add Button -->
-                                            <div class="col-md-4">
+                                            <div class="col-md-1">
                                                 <button type="button" class="btn-add rounded border-0 px-4 py-2 text-white"
                                                     onclick="addCampRuleField()">
                                                     <i class="fa fa-plus" aria-hidden="true"></i> Add

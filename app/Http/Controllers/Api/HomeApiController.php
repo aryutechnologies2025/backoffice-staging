@@ -165,7 +165,17 @@ class HomeApiController extends Controller
                 $amenityDetails = json_decode($package->amenity_details, true);
                 $activities = json_decode($package->activities, true);
                 $safetyFeatures = json_decode($package->safety_features, true);
-    
+                // Process reviews and attach user data
+            $reviews = $package->reviews->map(function ($review) {
+                $user = $review->user; // Get the related user (reviewer's name and image)
+                return [
+                    'name' => $user->name,            // User's name
+                    'image' => $user->image_1,        // User's image
+                    'comment' => $review->comment,
+                    'rating' => $review->rating,
+                    'date' => $review->created_at->format('M d, Y'),
+                ];
+            });
                 // Fetch amenities, food & beverage, activities, safety features
                 $details = $getDetailsById($package);
                 
@@ -179,6 +189,7 @@ class HomeApiController extends Controller
                 $category = json_decode($package->category, true) ?? [];
                 $formattedcategory = is_array($category) ? implode(', ', $category) : $category;
     
+                
                 // Return the formatted package data, including additional details
                 return [
                     'id' => $package->id,
@@ -202,6 +213,7 @@ class HomeApiController extends Controller
                     'bath_room' => $package->bath_room,
                     'bed_room' => $package->bed_room,
                     'hall'=> $package->hall,
+                    'reviews' => $reviews,
 
                     // Adding the fetched details
                     'amenities' => $details['amenities'] ?? [],

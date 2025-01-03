@@ -56,7 +56,10 @@ class InclusivePackages extends Authenticatable
         return $this->hasMany(Program_wishlist::class, 'program_id', 'id','user_id');
                     
     }
-
+    public function reviews()
+    {
+        return $this->hasMany(Review::class, 'package_id');
+    }
     // public function program_wishlists()
     // {
     //     return $this->hasMany(Program_wishlist::class, 'program_id');

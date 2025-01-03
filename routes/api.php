@@ -60,6 +60,10 @@ Route::prefix('v1')->group(function () {
         Route::post('/search-program', [HomeApiController::class, 'search_program']);
         Route::post('/search-destination', [HomeApiController::class, 'search_destination']);
         Route::post('/get-program-details', [ProgramApiController::class, 'get_program_details']);
+
+
+        Route::post('/add_review', [ReviewController::class, 'addReview']);
+
     });
 });
 

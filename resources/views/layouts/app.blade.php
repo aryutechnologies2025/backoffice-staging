@@ -83,7 +83,7 @@
         <nav class="nav w-100">
             <div>
                 <div class="nav_list ">
-                    <img class="pt-4 px-2 mb-5" style="width:80%;" src="{{ $settings->footer_logo ? asset($settings->footer_logo) : '/assets/image/login/inner_pece_logo.png' }}" alt="">
+                    <img class="pt-4 px-2 mb-5" style="width:90%;" src="{{ $settings->footer_logo ? asset($settings->footer_logo) : '/assets/image/login/inner_pece_logo.png' }}" alt="">
                     <a href="{{ route('admin.dashboard') }}" class="nav_link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }} mb-3 text-white">
                         <img src="/assets/image/dashboard/Dashboard.svg" alt="">
                         <span class="nav_name">Dashboard</span>
