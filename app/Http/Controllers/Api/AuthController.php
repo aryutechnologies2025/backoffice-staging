@@ -58,15 +58,15 @@ class AuthController extends Controller
         //     }
         //     $image->move($destinationPath, $imageName);
         // }
-        $destinationPath = public_path('/uploads/profiles_pic');
-        if (!file_exists($destinationPath)) {
-            mkdir($destinationPath, 0755, true);
+        $profilePath = public_path('/uploads/profiles_pic');
+        if (!file_exists($profilePath)) {
+            mkdir($profilePath, 0755, true);
         }
 
         if ($request->hasFile('image_1')) {
             $file1 = $request->file('image_1');
             $filename1 = time() . '_1.' . $file1->getClientOriginalExtension();
-            $file1->move($destinationPath, $filename1);
+            $file1->move($profilePath, $filename1);
             $filePath1 = 'uploads/profiles_pic/' . $filename1;
         }
         // Create user record
