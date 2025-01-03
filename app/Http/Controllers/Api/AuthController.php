@@ -26,7 +26,7 @@ class AuthController extends Controller
         $validator = Validator::make($request->all(), [
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
-            'image_1' => 'required',
+            'image_1' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
             'email' => 'required|email|unique:users,email|max:255',
             'password' => 'required|min:8|confirmed',
             'dob' => 'required|date',
@@ -37,49 +37,44 @@ class AuthController extends Controller
             'zip_province_code' => 'required|string|max:10',
             'country' => 'required|string|max:255',
             'preferred_lang' => 'required|string|max:255',
-            // 'newsletter_sub' => 'nullable|boolean',
-            // 'terms_condition' => 'nullable|boolean',
         ]);
-    
-       
+
         if ($validator->fails()) {
             return response()->json([
                 'errors' => $validator->errors(),
             ], 422);
         }
-    
-       
+
         $profilePath = public_path('/uploads/profiles_pic');
-    
+
         if (!file_exists($profilePath)) {
             if (!mkdir($profilePath, 0755, true) && !is_dir($profilePath)) {
                 Log::error('Failed to create directory: ' . $profilePath);
                 return response()->json(['error' => 'Failed to create upload directory'], 500);
             }
         }
-    
-        $filePath1 = null;
+
         if ($request->hasFile('image_1')) {
             try {
                 $file1 = $request->file('image_1');
                 $filename1 = time() . '_1.' . $file1->getClientOriginalExtension();
                 $file1->move($profilePath, $filename1);
                 $filePath1 = 'uploads/profiles_pic/' . $filename1;
-    
+
                 // Log success
-                // Log::info('File uploaded successfully: ' . $filePath1);
+                Log::info('File uploaded successfully: ' . $filePath1);
             } catch (\Exception $e) {
                 // Log error and return response
-                // Log::error('File upload error: ' . $e->getMessage());
+                Log::error('File upload error: ' . $e->getMessage());
                 return response()->json(['error' => 'File upload failed'], 500);
             }
         }
-    
-       
+
         try {
             $user = User::create([
                 'first_name' => $request->input('first_name'),
                 'last_name' => $request->input('last_name'),
+                'profile_image' => $filePath1,
                 'email' => $request->input('email'),
                 'password' => Hash::make($request->input('password')),
                 'dob' => $request->input('dob'),
@@ -96,9 +91,9 @@ class AuthController extends Controller
                 'is_deleted' => "0",
                 'created_by' => "user",
                 'created_date' => now(),
-                'image_1' => $filePath1,
+               
             ]);
-    
+
             // Return success response
             return response()->json([
                 'message' => 'User created successfully!',
@@ -110,7 +105,6 @@ class AuthController extends Controller
             return response()->json(['error' => 'User creation failed'], 500);
         }
     }
-      
 
     public function login(Request $request)
     {
