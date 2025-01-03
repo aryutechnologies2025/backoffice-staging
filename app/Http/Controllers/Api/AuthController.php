@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Log;
 
 
 use App\Models\ContactUs;
@@ -40,17 +41,16 @@ class AuthController extends Controller
             // 'terms_condition' => 'nullable|boolean',
         ]);
     
-        // Return validation errors if any
+       
         if ($validator->fails()) {
             return response()->json([
                 'errors' => $validator->errors(),
             ], 422);
         }
     
-        // File upload directory
-        $profilePath = public_path('/uploads/profiles_pic');
+       
+        $profilePath = public_path('uploads/profiles_pic');
     
-        // Check and create the directory if it doesn't exist
         if (!file_exists($profilePath)) {
             if (!mkdir($profilePath, 0755, true) && !is_dir($profilePath)) {
                 Log::error('Failed to create directory: ' . $profilePath);
@@ -58,7 +58,6 @@ class AuthController extends Controller
             }
         }
     
-        // Handle file upload
         $filePath1 = null;
         if ($request->hasFile('image_1')) {
             try {
@@ -76,7 +75,7 @@ class AuthController extends Controller
             }
         }
     
-        // Create user record
+       
         try {
             $user = User::create([
                 'first_name' => $request->input('first_name'),
