@@ -48,11 +48,11 @@ class AuthController extends Controller
         }
     
         // Handle profile image upload
-        $imageName = null;
+      
         if ($request->hasFile('image_1')) {
             $image = $request->file('image_1');
             $imageName = time() . '.' . $image->getClientOriginalExtension();
-            $destinationPath = public_path('uploads/profiles_pic');
+            $destinationPath = public_path('/uploads/profiles_pic');
             if (!file_exists($destinationPath)) {
                 mkdir($destinationPath, 0755, true);
             }
