@@ -13,13 +13,15 @@ class Review extends Model
         'user_id', 'package_id', 'comment', 'rating',
     ];
 
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
+   // Relationship with the User model
+   public function user()
+   {
+       return $this->belongsTo(User::class);
+   }
 
-    public function package()
-    {
-        return $this->belongsTo(InclusivePackage::class);
-    }
+   // Relationship with the InclusivePackageDetail model
+   public function package()
+   {
+       return $this->belongsTo(InclusivePackages::class, 'package_id');
+   }
 }

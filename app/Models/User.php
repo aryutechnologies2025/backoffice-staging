@@ -66,6 +66,6 @@ class User extends Authenticatable
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_id'); // 'user_id' is the foreign key in the reviews table
+        return $this->hasMany(Review::class, 'user_id'); // 'user_id' is the foreign key in the reviews table
     }
 }

@@ -169,8 +169,8 @@ class HomeApiController extends Controller
             $reviews = $package->reviews->map(function ($review) {
                 $user = $review->user; // Get the related user (reviewer's name and image)
                 return [
-                    'name' => $user->name,            // User's name
-                    'image' => $user->image_1,        // User's image
+                    'first_name' => $review->user->first_name ?? null,  // Get user name, if available
+                    'profile_image' => $review->user->profile_image ?? null,        // User's image
                     'comment' => $review->comment,
                     'rating' => $review->rating,
                     'date' => $review->created_at->format('M d, Y'),
