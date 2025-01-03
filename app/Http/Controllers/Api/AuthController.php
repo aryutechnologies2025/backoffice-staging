@@ -21,37 +21,41 @@ class AuthController extends Controller
 
     public function signup(Request $request)
     {
-        // Validation 
+        // Validation rules
         $validator = Validator::make($request->all(), [
-            'first_name' => 'required',
-            'last_name' => 'required',
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
             'image_1' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'email' => 'required|email|unique:users,email', // Adjusted to match your table
+            'email' => 'required|email|unique:users,email|max:255',
             'password' => 'required|min:8|confirmed',
-            'dob' => 'required|date', // Assuming date format
-            'phone' => 'required|max:10', // Adjust validation as needed
-            'street' => 'required',
-            'city' => 'required',
-            'state' => 'required',
-            'zip_province_code' => 'required|max:10',
-            'country' => 'required',
-            'preferred_lang' => 'required',
-            'newsletter_sub' => 'required',
-            'terms_condition' => 'required', // Assuming it’s a boolean flag
+            'dob' => 'required|date',
+            'phone' => 'required|string|max:15', // Adjusted to handle various phone formats
+            'street' => 'required|string|max:255',
+            'city' => 'required|string|max:255',
+            'state' => 'required|string|max:255',
+            'zip_province_code' => 'required|string|max:10',
+            'country' => 'required|string|max:255',
+            'preferred_lang' => 'required|string|max:255',
+            'newsletter_sub' => 'required|boolean',
+            'terms_condition' => 'required|boolean',
         ]);
-
+    
+        // Return validation errors if any
         if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
+            return response()->json([
+                'errors' => $validator->errors(),
+            ], 422);
         }
-
+    
         // Handle profile image upload
+        $imageName = null;
         if ($request->hasFile('image_1')) {
             $image = $request->file('image_1');
             $imageName = time() . '.' . $image->getClientOriginalExtension();
             $image->move(public_path('uploads/profiles'), $imageName);
         }
-
-        // Create user
+    
+        // Create user record
         $user = User::create([
             'first_name' => $request->input('first_name'),
             'last_name' => $request->input('last_name'),
@@ -65,26 +69,22 @@ class AuthController extends Controller
             'zip_province_code' => $request->input('zip_province_code'),
             'country' => $request->input('country'),
             'preferred_lang' => $request->input('preferred_lang'),
-            'newsletter_sub' => $request->input('newsletter_sub'),
-            'terms_condition' => $request->input('terms_condition'),
+            'newsletter_sub' => (bool) $request->input('newsletter_sub'),
+            'terms_condition' => (bool) $request->input('terms_condition'),
             'status' => "1",
             'is_deleted' => "0",
             'created_by' => "user",
-            'created_date' => date('Y-m-d H:i:s'),
-            'profile_image' => $imageName ?? null, // Save the image name if uploaded
+            'created_date' => now(), // Using Laravel's helper
+            'profile_image' => $imageName, // Save the uploaded image name
         ]);
-
-        // Generate token
-        // $token = $user->createToken('authToken')->plainTextToken;
-
-        // Return response with token
+    
+        // Return response
         return response()->json([
             'message' => 'User created successfully!',
-            // 'user' => $user,
-            // 'token' => $token
+            'user' => $user, // Include user data in the response
         ], 201);
     }
-
+    
 
     public function login(Request $request)
     {
