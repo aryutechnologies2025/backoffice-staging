@@ -52,7 +52,7 @@ class AuthController extends Controller
         if ($request->hasFile('image_1')) {
             $image = $request->file('image_1');
             $imageName = time() . '.' . $image->getClientOriginalExtension();
-            $image->move(public_path('uploads/profiles'), $imageName);
+            $image->move(public_path('uploads/profiles_pic'), $imageName);
         }
     
         // Create user record
