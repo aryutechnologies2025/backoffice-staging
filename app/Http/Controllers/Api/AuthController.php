@@ -25,6 +25,7 @@ class AuthController extends Controller
         $validator = Validator::make($request->all(), [
             'first_name' => 'required',
             'last_name' => 'required',
+            'image_1' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
             'email' => 'required|email|unique:users,email', // Adjusted to match your table
             'password' => 'required|min:8|confirmed',
             'dob' => 'required|date', // Assuming date format
@@ -41,6 +42,13 @@ class AuthController extends Controller
 
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        // Handle profile image upload
+        if ($request->hasFile('image_1')) {
+            $image = $request->file('image_1');
+            $imageName = time() . '.' . $image->getClientOriginalExtension();
+            $image->move(public_path('uploads/profiles'), $imageName);
         }
 
         // Create user
@@ -63,6 +71,7 @@ class AuthController extends Controller
             'is_deleted' => "0",
             'created_by' => "user",
             'created_date' => date('Y-m-d H:i:s'),
+            'profile_image' => $imageName ?? null, // Save the image name if uploaded
         ]);
 
         // Generate token

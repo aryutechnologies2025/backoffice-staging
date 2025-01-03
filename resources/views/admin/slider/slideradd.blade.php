@@ -1,47 +1,39 @@
 @extends('layouts.app')
 @section('content')
-
 <style>
 a:hover {
     color: red;
 }
-
 a {
     color: rgb(37, 150, 190);
 }
-
 .add {
     color: blue;
 }
-
 /* Align the form with the title */
 .container-wrapper {
     padding-left: 30px; /* Adjust as per your layout */
     padding-right: 30px; /* Consistent padding for both sides */
 }
-
 </style>
-
 <div class="container-wrapper pt-5">
     <div class="row">
         <!-- <div class="col-lg-12"> -->
             <b>
-                <a href="/dashboard">Dashboard</a> > 
-                <a href="/slider">Slider</a> > 
+                <a href="/dashboard">Dashboard</a> >
+                <a href="/slider">Slider</a> >
                 <a class="add">Add</a>
             </b>
             <br><br>
             <h3 class="fw-bold">{{ $title }}</h3>
         </div>
     </div>
-
     <!-- FORM -->
     <div class="row mb-5">
         <div class="col-lg-12">
             <div class="form-body px-4 mb-5 rounded-4">
                 <form id="form_valid" action="{{ route('admin.slider_insert') }}" method="POST" autocomplete="off" enctype="multipart/form-data">
                     @csrf
-
                     <!-- Image Section -->
                     <div class="mb-3">
                         <div class="row align-items-center">
@@ -53,14 +45,13 @@ a {
                                              alt="{{ old('alternate_image_name', 'Alternate Image Name') }}">
                                         <p class="text-center fw-light mt-3">Add Pic</p>
                                     </label>
-                                    <input type="file" id="file-ip-1" name="image_1" accept="image/png, image/jpeg">
+                                    <input type="file" id="file-ip-1" name="image_1" accept="image/png, image/jpeg" onchange="validateImage(this)" required>
                                     <div id="file-ip-1-error" class="text-danger"></div>
                                     <label class="fw-bold mb-5 text-danger border-0">
-                                        <small>* Upload size [640*120] *</small>
+                                        <small>* Upload size [up to 600*120] *</small>
                                     </label>
                                 </div>
                             </div>
-
                             <!-- Input Section -->
                             <div class="col-lg-8">
                                 <div class="row g-1">
@@ -80,7 +71,6 @@ a {
                             </div>
                         </div>
                     </div>
-
                     <!-- Title and Subtitle -->
                     <div class="row g-2 mb-4">
                         <div class="col">
@@ -96,7 +86,6 @@ a {
                                    value="{{ old('sub_title') }}" class="form-control py-2 rounded-3 shadow-sm">
                         </div>
                     </div>
-
                     <!-- Order and Status -->
                     <div class="row g-2 mb-4">
                         <div class="col">
@@ -113,7 +102,6 @@ a {
                             </div>
                         </div>
                     </div>
-
                     <!-- Buttons -->
                     <div class="text-end mt-5">
                         <a href="{{ route('admin.slider_list') }}">
@@ -127,3 +115,35 @@ a {
     </div>
 </div>
 @endsection
+<script>
+    function validateImage(input) {
+        const file = input.files[0];
+        const errorElement = document.getElementById('file-ip-1-error');
+        const previewElement = document.getElementById('file-ip-1-preview');
+
+        // Clear previous error messages and reset preview
+        errorElement.textContent = '';
+        previewElement.src = '/assets/image/dashboard/innerpece_addpic_icon.svg';
+
+        if (file) {
+            const img = new Image();
+            img.onload = function () {
+                // Check if image dimensions exceed 600x120
+                if (img.width > 600 || img.height > 120) {
+                    errorElement.textContent = 'Image size must not exceed 600x120 pixels.';
+                    input.value = ''; // Clear the input if the size exceeds limits
+                } else {
+                    // Only show the image preview if dimensions are valid
+                    const objectURL = URL.createObjectURL(file);
+                    previewElement.src = objectURL;
+
+                    // Revoke the URL after the preview is displayed
+                    img.onload = () => URL.revokeObjectURL(objectURL);
+                }
+            };
+
+            // Use object URL for the image validation
+            img.src = URL.createObjectURL(file);
+        }
+    }
+</script>
