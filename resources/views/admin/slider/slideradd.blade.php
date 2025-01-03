@@ -54,7 +54,8 @@ a {
                             </div>
                             <!-- Input Section -->
                             <div class="col-lg-8">
-                                
+                            <input type="file" id="file-ip-1" name="image_1" accept="image/png, image/jpeg" onchange="validateImage(this)" required>
+                            <div id="file-ip-1-error" class="text-danger"></div>
                                 <div class="row g-1">
                                     <div class="col-lg-6">
                                         <label class="fw-bold">Upload Image Name <span class="text-danger">*</span></label>
