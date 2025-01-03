@@ -49,16 +49,26 @@ class AuthController extends Controller
     
         // Handle profile image upload
       
-        if ($request->hasFile('image_1')) {
-            $image = $request->file('image_1');
-            $imageName = time() . '.' . $image->getClientOriginalExtension();
-            $destinationPath = public_path('/uploads/profiles_pic');
-            if (!file_exists($destinationPath)) {
-                mkdir($destinationPath, 0755, true);
-            }
-            $image->move($destinationPath, $imageName);
+        // if ($request->hasFile('image_1')) {
+        //     $image = $request->file('image_1');
+        //     $imageName = time() . '.' . $image->getClientOriginalExtension();
+        //     $destinationPath = public_path('/uploads/profiles_pic');
+        //     if (!file_exists($destinationPath)) {
+        //         mkdir($destinationPath, 0755, true);
+        //     }
+        //     $image->move($destinationPath, $imageName);
+        // }
+        $destinationPath = public_path('/uploads/profiles_pic');
+        if (!file_exists($destinationPath)) {
+            mkdir($destinationPath, 0755, true);
         }
-    
+
+        if ($request->hasFile('image_1')) {
+            $file1 = $request->file('image_1');
+            $filename1 = time() . '_1.' . $file1->getClientOriginalExtension();
+            $file1->move($destinationPath, $filename1);
+            $filePath1 = 'uploads/profiles_pic/' . $filename1;
+        }
         // Create user record
         $user = User::create([
             'first_name' => $request->input('first_name'),
@@ -79,7 +89,7 @@ class AuthController extends Controller
             'is_deleted' => "0",
             'created_by' => "user",
             'created_date' => now(), // Using Laravel's helper
-            'profile_image' => $imageName, // Save the uploaded image name
+            'profile_image' => $filePath1, // Save the uploaded image name
         ]);
     
         // Return response
