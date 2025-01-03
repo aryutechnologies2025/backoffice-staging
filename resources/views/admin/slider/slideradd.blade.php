@@ -54,6 +54,7 @@ a {
                             </div>
                             <!-- Input Section -->
                             <div class="col-lg-8">
+                                
                                 <div class="row g-1">
                                     <div class="col-lg-6">
                                         <label class="fw-bold">Upload Image Name <span class="text-danger">*</span></label>

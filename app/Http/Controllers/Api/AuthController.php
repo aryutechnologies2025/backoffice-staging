@@ -36,8 +36,8 @@ class AuthController extends Controller
             'zip_province_code' => 'required|string|max:10',
             'country' => 'required|string|max:255',
             'preferred_lang' => 'required|string|max:255',
-            'newsletter_sub' => 'required|boolean',
-            'terms_condition' => 'required|boolean',
+            // 'newsletter_sub' => 'required|boolean',
+            // 'terms_condition' => 'required|boolean',
         ]);
     
         // Return validation errors if any
