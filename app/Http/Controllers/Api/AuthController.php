@@ -49,7 +49,7 @@ class AuthController extends Controller
         }
     
        
-        $profilePath = public_path('uploads/profiles_pic');
+        $profilePath = public_path('/uploads/profiles_pic');
     
         if (!file_exists($profilePath)) {
             if (!mkdir($profilePath, 0755, true) && !is_dir($profilePath)) {
@@ -96,7 +96,7 @@ class AuthController extends Controller
                 'is_deleted' => "0",
                 'created_by' => "user",
                 'created_date' => now(),
-                'profile_image' => $filePath1,
+                'image_1' => $filePath1,
             ]);
     
             // Return success response
