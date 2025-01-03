@@ -29,15 +29,15 @@ class AuthController extends Controller
             'email' => 'required|email|unique:users,email|max:255',
             'password' => 'required|min:8|confirmed',
             'dob' => 'required|date',
-            'phone' => 'required|string|max:15', // Adjusted to handle various phone formats
+            'phone' => 'required|string|max:15',
             'street' => 'required|string|max:255',
             'city' => 'required|string|max:255',
             'state' => 'required|string|max:255',
             'zip_province_code' => 'required|string|max:10',
             'country' => 'required|string|max:255',
             'preferred_lang' => 'required|string|max:255',
-            // 'newsletter_sub' => 'required|boolean',
-            // 'terms_condition' => 'required|boolean',
+            // 'newsletter_sub' => 'nullable|boolean',
+            // 'terms_condition' => 'nullable|boolean',
         ]);
     
         // Return validation errors if any
@@ -47,58 +47,71 @@ class AuthController extends Controller
             ], 422);
         }
     
-        // Handle profile image upload
-      
-        // if ($request->hasFile('image_1')) {
-        //     $image = $request->file('image_1');
-        //     $imageName = time() . '.' . $image->getClientOriginalExtension();
-        //     $destinationPath = public_path('/uploads/profiles_pic');
-        //     if (!file_exists($destinationPath)) {
-        //         mkdir($destinationPath, 0755, true);
-        //     }
-        //     $image->move($destinationPath, $imageName);
-        // }
+        // File upload directory
         $profilePath = public_path('/uploads/profiles_pic');
+    
+        // Check and create the directory if it doesn't exist
         if (!file_exists($profilePath)) {
-            mkdir($profilePath, 0755, true);
+            if (!mkdir($profilePath, 0755, true) && !is_dir($profilePath)) {
+                Log::error('Failed to create directory: ' . $profilePath);
+                return response()->json(['error' => 'Failed to create upload directory'], 500);
+            }
         }
-
+    
+        // Handle file upload
+        $filePath1 = null;
         if ($request->hasFile('image_1')) {
-            $file1 = $request->file('image_1');
-            $filename1 = time() . '_1.' . $file1->getClientOriginalExtension();
-            $file1->move($profilePath, $filename1);
-            $filePath1 = 'uploads/profiles_pic/' . $filename1;
+            try {
+                $file1 = $request->file('image_1');
+                $filename1 = time() . '_1.' . $file1->getClientOriginalExtension();
+                $file1->move($profilePath, $filename1);
+                $filePath1 = 'uploads/profiles_pic/' . $filename1;
+    
+                // Log success
+                // Log::info('File uploaded successfully: ' . $filePath1);
+            } catch (\Exception $e) {
+                // Log error and return response
+                // Log::error('File upload error: ' . $e->getMessage());
+                return response()->json(['error' => 'File upload failed'], 500);
+            }
         }
+    
         // Create user record
-        $user = User::create([
-            'first_name' => $request->input('first_name'),
-            'last_name' => $request->input('last_name'),
-            'email' => $request->input('email'),
-            'password' => Hash::make($request->input('password')),
-            'dob' => $request->input('dob'),
-            'phone' => $request->input('phone'),
-            'street' => $request->input('street'),
-            'city' => $request->input('city'),
-            'state' => $request->input('state'),
-            'zip_province_code' => $request->input('zip_province_code'),
-            'country' => $request->input('country'),
-            'preferred_lang' => $request->input('preferred_lang'),
-            'newsletter_sub' => (bool) $request->input('newsletter_sub'),
-            'terms_condition' => (bool) $request->input('terms_condition'),
-            'status' => "1",
-            'is_deleted' => "0",
-            'created_by' => "user",
-            'created_date' => now(), // Using Laravel's helper
-            'profile_image' => $filePath1, // Save the uploaded image name
-        ]);
+        try {
+            $user = User::create([
+                'first_name' => $request->input('first_name'),
+                'last_name' => $request->input('last_name'),
+                'email' => $request->input('email'),
+                'password' => Hash::make($request->input('password')),
+                'dob' => $request->input('dob'),
+                'phone' => $request->input('phone'),
+                'street' => $request->input('street'),
+                'city' => $request->input('city'),
+                'state' => $request->input('state'),
+                'zip_province_code' => $request->input('zip_province_code'),
+                'country' => $request->input('country'),
+                'preferred_lang' => $request->input('preferred_lang'),
+                'newsletter_sub' => (bool) $request->input('newsletter_sub'),
+                'terms_condition' => (bool) $request->input('terms_condition'),
+                'status' => "1",
+                'is_deleted' => "0",
+                'created_by' => "user",
+                'created_date' => now(),
+                'profile_image' => $filePath1,
+            ]);
     
-        // Return response
-        return response()->json([
-            'message' => 'User created successfully!',
-            'user' => $user, // Include user data in the response
-        ], 201);
+            // Return success response
+            return response()->json([
+                'message' => 'User created successfully!',
+                'user' => $user,
+            ], 201);
+        } catch (\Exception $e) {
+            // Log error and return response
+            Log::error('User creation error: ' . $e->getMessage());
+            return response()->json(['error' => 'User creation failed'], 500);
+        }
     }
-    
+      
 
     public function login(Request $request)
     {
