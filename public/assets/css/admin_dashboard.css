@@ -84,20 +84,6 @@ ul {
     /* border-radius: 10px; */
 }
 
-.form-body {
-    background-color: #FFF;
-    width: 130% !important;
-    padding-bottom: 4%;
-    padding-top: 4% !important;
-}
-.mb-0{
-    width: 231% !important;
-}
-
-.col-lg-3{
-    width: 45% !important;
-}
-
 @media screen and (min-width: 768px) {
     body {
         margin: calc(var(--header-height) + 1rem) 0 0 0;
@@ -491,14 +477,10 @@ body {
     border-radius: 10px;
     border: 1px solid #D4DCE0;
     cursor: pointer;
-    
-        width: 219% !important;
-        margin-top: -16px!important;
-    
 }
 
 .form-input img {
-    width: 74%;
+    width: 100%;
 
 }
 
@@ -635,10 +617,4 @@ cursor: pointer;
         font-weight: bolder!important;
     }
 
-    .col-lg-6{
-        width: 16%!important;
-    }
-/* 
-    .row{
-        --bs-gutter-x: 5.5rem;
-    } */
+    

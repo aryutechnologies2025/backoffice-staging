@@ -54,7 +54,7 @@
 
 
     .form-input img {
-        width: 70% !important;
+        width: 100%;
     }
 
     .form-check-input {
@@ -186,7 +186,7 @@ width: 150% !important;
                         <div class="row g-2 mt-4">
                             <label class="mb-1">Flags <span class="text-danger">*</span></label>
 
-                            <div class="col-md-3">
+                            <div class="col-md-2">
 
                                 <div class="form-check d-flex justify-content-center align-items-center">
                                     <input type="checkbox" class="form-check-input me-3" id="popular_program"
@@ -195,7 +195,7 @@ width: 150% !important;
                                 </div>
                             </div>
 
-                            <div class="col-md-3">
+                            <div class="col-md-2">
                                 <div class="form-check d-flex align-items-center">
                                     <input type="checkbox" class="form-check-input me-3" id="upcoming_program"
                                         name="prop_cat[]" value="upcoming_program">
@@ -203,7 +203,7 @@ width: 150% !important;
                                 </div>
                             </div>
 
-                            <div class="col-md-3">
+                            <div class="col-md-2">
                                 <div class="form-check d-flex align-items-center">
                                     <input type="checkbox" class="form-check-input me-3" id="featured" name="prop_cat[]"
                                         value="featured">
@@ -215,7 +215,7 @@ width: 150% !important;
 
                         <!-- Cover Image -->
                         <div class="row mt-4">
-                            <div class="col-md-2 h-25">
+                            <div class="col-md-1 h-25">
                                 <label for="file-ip-1" class="form-label ">Cover Image</label>
                                 <div class="form-input text-center pt-2 pb-0 w-50%">
                                     <label for="file-ip-1" class="d-block pt-4">
@@ -226,7 +226,7 @@ width: 150% !important;
                                     </label>
                                     <input type="file" id="file-ip-1" name="cover_img" class="form-control"
                                         accept="image/png, image/jpeg, image/svg+xml">
-                                    <small class="text-danger d-block mt-2 ms-5">* Upload size [640x120]</small>
+                                    <small class="text-danger d-block mt-2">* Upload size [640x120]</small>
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -238,7 +238,7 @@ width: 150% !important;
                                             placeholder="Rename the Photo" value="{{ old('upload_image_name') }}"
                                             class="form-control py-2 rounded-3 shadow-sm w-50" required>
                                     </div>
-                                    <div class="col-12 pt-4 forms">
+                                    <div class="col-12 forms">
                                         <label class="">Alternate Image Name <span
                                                 class="text-danger">*</span></label>
                                         <input type="text" id="alternate_image_name" name="alternate_image_name"
