@@ -54,7 +54,7 @@
 
 
     .form-input img {
-        width: 100%;
+        width: 70% !important;
     }
 
     .form-check-input {
@@ -186,7 +186,7 @@ width: 150% !important;
                         <div class="row g-2 mt-4">
                             <label class="mb-1">Flags <span class="text-danger">*</span></label>
 
-                            <div class="col-md-2">
+                            <div class="col-md-3">
 
                                 <div class="form-check d-flex justify-content-center align-items-center">
                                     <input type="checkbox" class="form-check-input me-3" id="popular_program"
@@ -195,7 +195,7 @@ width: 150% !important;
                                 </div>
                             </div>
 
-                            <div class="col-md-2">
+                            <div class="col-md-3">
                                 <div class="form-check d-flex align-items-center">
                                     <input type="checkbox" class="form-check-input me-3" id="upcoming_program"
                                         name="prop_cat[]" value="upcoming_program">
@@ -203,7 +203,7 @@ width: 150% !important;
                                 </div>
                             </div>
 
-                            <div class="col-md-2">
+                            <div class="col-md-3">
                                 <div class="form-check d-flex align-items-center">
                                     <input type="checkbox" class="form-check-input me-3" id="featured" name="prop_cat[]"
                                         value="featured">
@@ -215,7 +215,7 @@ width: 150% !important;
 
                         <!-- Cover Image -->
                         <div class="row mt-4">
-                            <div class="col-md-1 h-25">
+                            <div class="col-md-2 h-25">
                                 <label for="file-ip-1" class="form-label ">Cover Image</label>
                                 <div class="form-input text-center pt-2 pb-0 w-50%">
                                     <label for="file-ip-1" class="d-block pt-4">
@@ -740,7 +740,7 @@ width: 150% !important;
                         <div class="col">
                             <div class="form-body px-5 py-3 rounded-4">
                                 <h4 class="fw-bold mb-3">12. Activities</h4>
-                                <div class="d-flex flex-wrap justify-content-between">
+                                <div class="d-flex flex-wrap ">
                                     @foreach($activities as $index => $item)
                                     <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
                                         <div class="form-check d-flex align-items-center">
