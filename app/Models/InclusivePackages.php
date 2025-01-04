@@ -60,6 +60,12 @@ class InclusivePackages extends Authenticatable
     {
         return $this->hasMany(Review::class, 'package_id');
     }
+    public function themes()
+{
+    return $this->belongsTo(themes::class, 'theme_id', 'id');
+}
+
+
     // public function program_wishlists()
     // {
     //     return $this->hasMany(Program_wishlist::class, 'program_id');

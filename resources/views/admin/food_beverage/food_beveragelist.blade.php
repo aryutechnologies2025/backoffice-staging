@@ -38,6 +38,8 @@
                         <th class="text-center"><span>S.No</span></th>
                     <th class="text-center "><span> Food&Beverage Logo </span></th>
                         <th class="text-center "><span> Food&Beverage Items </span></th>
+                        <th class="text-center "><span> Date&Time </span></th>
+
                         <th class="text-center "><span> Status </span></th>
                         <th class="text-center"><span> Action </span></th>
                     </tr>
@@ -55,6 +57,7 @@
 
                     <td class="text-center"><img src="{{ asset($row->food_beverage_pic) }}" alt="Thumbnail" style="max-width: 100px; max-height: 100px; object-fit: cover;"></td>
                     <td class="text-center">{{ $row->food_beverage }}</td>
+                        <td class="text-center">{{ $row->created_at }}</td>
                         @php
                         $disp_status = 'In Active';
                         $actTitle = 'Click to activate';

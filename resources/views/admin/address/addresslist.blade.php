@@ -42,6 +42,8 @@
                         <th class="text-center"><span> State </span></th>
                         <th class="text-center"><span> Country </span></th>
                         <th class="text-center"><span>Pincode</span></th>
+                        <th class="text-center"><span>Date&Time</span></th>
+
                         <th class="text-center"><span>Action</span></th>
                     </tr>
                 </thead>
@@ -57,6 +59,7 @@
                         <td class="text-center">{{ $row->state }}</td>
                         <td class="text-center">{{ $row->country }}</td>
                         <td class="text-center">{{ $row->pincode }}</td>
+                        <td class="text-center">{{ $row->created_at }}</td>
                         <td class="text-center" style="width: 20%;">
                             <a href="{{ route('admin.address_edit_form',$row->id) }}" class="table-edit-link">
                                 <span class="fa-stack">

@@ -53,78 +53,50 @@
                     </div>
                 </div>
 
-                <!-- Site Logo -->
-                <div class="g-2">
-                    <div class="col">
+                <!-- Site Logo, Footer Logo, Official Logo, and Favicon -->
+                <div class="row g-2">
+                    <div class="col-lg-3">
                         <label class="fw-bold mt-4"> Site Logo </label>
-                        <div class="row d-flex mb-4">
-                            <div class="col-lg-2">
-                                <div class="form-input">
-                                    <label for="file-ip-1" class="px-4 py-3 text-center">
-                                        <img class="text-center mt-3" id="file-ip-1-preview" src="{{ $settings->site_logo ? asset($settings->site_logo) : '/assets/image/dashboard/innerpece_addpic_icon.svg' }}" alt="Preview" style="width: 100%; height: auto;">
-                                        <p class="text-center fw-light mt-3">Add Pic</p>
-                                    </label>
-                                    <input type="file" id="file-ip-1" name="site_logo" accept="image/png, image/jpeg, image/svg+xml">
-                                    <div id="file-ip-1-error" class="text-danger"></div>
-                                </div>
-                            </div>
+                        <div class="form-input text-center mb-4">
+                            <label for="file-ip-1" class="px-4 py-3">
+                                <img id="file-ip-1-preview" src="{{ $settings->site_logo ? asset($settings->site_logo) : '/assets/image/dashboard/innerpece_addpic_icon.svg' }}" alt="Preview" style="width: 100%; height: auto;">
+                                <p class="fw-light mt-3">Add Pic</p>
+                            </label>
+                            <input type="file" id="file-ip-1" name="site_logo" accept="image/png, image/jpeg, image/svg+xml">
+                            <div id="file-ip-1-error" class="text-danger"></div>
                         </div>
                     </div>
-                </div>
-
-                <!-- Footer Logo -->
-                <div class="g-2">
-                    <div class="col">
+                    <div class="col-lg-3">
                         <label class="fw-bold mt-4"> Footer Logo </label>
-                        <div class="row d-flex mb-4">
-                            <div class="col-lg-2">
-                                <div class="form-input">
-                                    <label for="file-ip-2" class="px-4 py-3 text-center">
-                                        <img class="text-center mt-3" id="file-ip-2-preview" src="{{ $settings->footer_logo ? asset($settings->footer_logo) : '/assets/image/dashboard/innerpece_addpic_icon.svg' }}" alt="Preview" style="width: 100%; height: auto;">
-                                        <p class="text-center fw-light mt-3">Add Pic</p>
-                                    </label>
-                                    <input type="file" id="file-ip-2" name="footer_logo" accept="image/png, image/jpeg, image/svg+xml">
-                                    <div id="file-ip-2-error" class="text-danger"></div>
-                                </div>
-                            </div>
+                        <div class="form-input text-center mb-4">
+                            <label for="file-ip-2" class="px-4 py-3">
+                                <img id="file-ip-2-preview" src="{{ $settings->footer_logo ? asset($settings->footer_logo) : '/assets/image/dashboard/innerpece_addpic_icon.svg' }}" alt="Preview" style="width: 100%; height: auto;">
+                                <p class="fw-light mt-3">Add Pic</p>
+                            </label>
+                            <input type="file" id="file-ip-2" name="footer_logo" accept="image/png, image/jpeg, image/svg+xml">
+                            <div id="file-ip-2-error" class="text-danger"></div>
                         </div>
                     </div>
-                </div>
-
-                <!-- official Logo -->
-                <div class="g-2">
-                    <div class="col">
+                    <div class="col-lg-3">
                         <label class="fw-bold mt-4"> Footer Official Logo </label>
-                        <div class="row d-flex mb-4">
-                            <div class="col-lg-2">
-                                <div class="form-input">
-                                    <label for="file-ip-4" class="px-4 py-3 text-center">
-                                        <img class="text-center mt-3" id="file-ip-4-preview" src="{{ $settings->official_logo ? asset($settings->official_logo) : '/assets/image/dashboard/innerpece_addpic_icon.svg' }}" alt="Preview" style="width: 100%; height: auto;">
-                                        <p class="text-center fw-light mt-3">Add Pic</p>
-                                    </label>
-                                    <input type="file" id="file-ip-4" name="official_logo" accept="image/png, image/jpeg, image/svg+xml">
-                                    <div id="file-ip-4-error" class="text-danger"></div>
-                                </div>
-                            </div>
+                        <div class="form-input text-center mb-4">
+                            <label for="file-ip-4" class="px-4 py-3">
+                                <img id="file-ip-4-preview" src="{{ $settings->official_logo ? asset($settings->official_logo) : '/assets/image/dashboard/innerpece_addpic_icon.svg' }}" alt="Preview" style="width: 100%; height: auto;">
+                                <p class="fw-light mt-3">Add Pic</p>
+                            </label>
+                            <input type="file" id="file-ip-4" name="official_logo" accept="image/png, image/jpeg, image/svg+xml">
+                            <div id="file-ip-4-error" class="text-danger"></div>
                         </div>
                     </div>
-                </div>
-
-                <!-- Favicon -->
-                <div class="g-2">
-                    <div class="col">
+                    <div class="col-lg-3">
                         <label class="fw-bold mt-4"> Favicon </label>
-                        <div class="row d-flex mb-4">
-                            <div class="col-lg-2">
-                                <div class="form-input">
-                                    <label for="file-ip-3" class="px-4 py-3 text-center">
-                                        <img class="text-center mt-3" id="file-ip-3-preview" src="{{ $settings->fav_icon ? asset($settings->fav_icon) : '/assets/image/dashboard/innerpece_addpic_icon.svg' }}" alt="Preview" style="width: 100%; height: auto;">
-                                        <p class="text-center fw-light mt-3">Add Pic</p>
-                                    </label>
-                                    <input type="file" id="file-ip-3" name="fav_icon" accept="image/png, image/jpeg">
-                                    <div id="file-ip-3-error" class="text-danger"></div>
-                                </div>
-                            </div>
+                        <div class="form-input text-center mb-4">
+                            <label for="file-ip-3" class="px-4 py-3">
+                                <img id="file-ip-3-preview" src="{{ $settings->fav_icon ? asset($settings->fav_icon) : '/assets/image/dashboard/innerpece_addpic_icon.svg' }}" alt="Preview" style="width: 100%; height: auto;">
+                                <p class="fw-light mt-3">Add Pic</p>
+                            </label>
+                            <input type="file" id="file-ip-3" name="fav_icon" accept="image/png, image/jpeg">
+                            <div id="file-ip-3-error" class="text-danger"></div>
                         </div>
                     </div>
                 </div>

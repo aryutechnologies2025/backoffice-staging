@@ -38,6 +38,7 @@
                         <th class="text-center"><span>S.No</span></th>
                         <th class="text-center"><span>  Image </span></th>
                         <th class="text-center"><span> Title </span></th>
+                        <th class="text-center"><span>Time&Date </span></th>
                         <th class="text-center"><span> Status </span></th>
                         <th class="text-center"><span> Action </span></th>
                     </tr>
@@ -55,6 +56,7 @@
 
                     <td class="text-center"><img src="{{ asset($row->theme_pic) }}"  alt="{{ $row->alternate_name ?? 'Default Alt Text' }}" style="max-width: 100px; max-height: 100px; object-fit: cover;"></td>
                         <td class="text-center">{{ $row->themes_name }}</td>
+                        <td class="text-center">{{ $row->created_at }}</td>
                         @php
                         $disp_status = 'In Active';
                         $actTitle = 'Click to activate';

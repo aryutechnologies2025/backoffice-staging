@@ -15,7 +15,7 @@
 
 <div class="row body-sec py-5 px-5 justify-content-around">
     <div class="col-lg-6">
-    <b><a href="/dashboard" >Dashboard</a> > <a class="city" href="/themes" >Themes</a></b>
+    <b><a href="/dashboard" >Dashboard</a> > <a class="city" href="" >Destination</a></b>
         <br>
         <br>
         <h3 class="fw-bold">{{$title}}</h3>
@@ -39,6 +39,8 @@
                         <th class="text-center">S.No</th>
                         <th class="text-center">Icon</th>
                         <th class="text-center">Title</th>
+                        <th class="text-center">Date&Time</th>
+
                         <th class="text-center">Status</th>
                         <th class="text-center">Action</th>
                     </tr>
@@ -56,6 +58,7 @@
                             <img src="{{ asset($row->cities_pic) }}" alt="{{ $row->alternate_name ?? 'Default Alt Text' }}" style="max-width: 70px; max-height: 70px; object-fit: cover;">
                         </td>
                         <td class="text-center">{{ $row->city_name }}</td>
+                        <td class="text-center">{{ $row->created_at }}</td>
                         @php
                         $disp_status = 'In Active';
                         $actTitle = 'Click to activate';

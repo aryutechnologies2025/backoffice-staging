@@ -23,10 +23,14 @@
     }
 
     .form-body {
-      
-      
-        border-radius: 10px;
-        
+
+        padding-top: 1% !important;
+        padding-bottom: 1% !important;
+        width: 100% !important;
+    }
+
+    .form-control {
+        width: 80%;
     }
 </style>
 <div class="container-wrapper pt-5">
@@ -65,7 +69,7 @@
                         </div>
                         <!-- Input Section -->
                         <div class="col-lg-8">
-                            <div class="row g-2"> <!-- Adjusted spacing for proper margin -->
+                            <div class="row g-1"> <!-- Adjusted spacing for proper margin -->
                                 <!-- First Input: Upload Image Name -->
                                 <div class="col-lg-6">
                                     <label class="fw-bold mt-4">Upload Image Name <span class="text-danger">*</span></label>
@@ -80,49 +84,47 @@
                     </div>
                 </div>
                 <div class="row g-2 mb-4">
-                    <div class="col">
+                    <div class="col-md-4">
                         <label class="fw-bold mb-2 "> Title </label>
                         <input type="text" placeholder="Title" id="slider_name" name="slider_name" class="form-control py-2 rounded-3 shadow-sm" value="{{ $slider_details->slider_name }}">
                     </div>
-                </div>
-                <div class="row g-2 mb-4">
-                    <div class="col">
+                
+                <div class="col-md-4">
+                   
                         <label class="fw-bold mb-2 ">Subtitle </label>
                         <input type="text" placeholder="Subtitle" id="sub_title" name="sub_title" value="{{ $slider_details->subtitle }}" class="form-control py-2 rounded-3 shadow-sm">
                     </div>
+                
+
+
+                <div class="col-md-4">
+                    <label class="fw-bold mb-2 ">Order <span class="text-danger">*</span></label>
+                    <input type="text" placeholder="Order" id="list_order" name="list_order" value="{{ $slider_details->list_order }}" class="form-control py-2 rounded-3 shadow-sm" required>
                 </div>
-
-
-                <div class="row g-2 mb-4">
-                    <div class="col">
-                        <label class="fw-bold mb-2 ">Order <span class="text-danger">*</span></label>
-                        <input type="text" placeholder="Order" id="list_order" name="list_order" value="{{ $slider_details->list_order }}" class="form-control py-2 rounded-3 shadow-sm" required>
-                    </div>
-
-
-
-                    <div class="row g-2">
-                        <div class="col">
-                            <label class="fw-bold ">Status</label>
-                            <div class="form-check form-switch">
-                                <input class="form-check-input check_bx" type="checkbox" id="status" name="status" {{ $slider_details->status ? 'checked' : '' }}>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-lg-12 text-end mt-5">
-                    <a href="{{ route('admin.slider_list') }}">
-                        <button type="button" class="cancel-btn"> Cancel </button>
-                    </a>
-                    <button class="submit-btn sbmtBtn ms-4"> Submit </button>
-                </div>
-            </form>
         </div>
+
+
+        <div class="row g-2 mb-4">
+            <div class="col">
+                <label class="fw-bold ">Status</label>
+                <div class="form-check form-switch">
+                    <input class="form-check-input check_bx" type="checkbox" id="status" name="status" {{ $slider_details->status ? 'checked' : '' }}>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="text-end mt-4">
+            <a href="{{ route('admin.slider_list') }}">
+                <button type="button" class="cancel-btn"> Cancel </button>
+            </a>
+            <button class="submit-btn sbmtBtn ms-4"> Submit </button>
+        </div>
+        </form>
     </div>
 </div>
-
 </div>
+@endsection
 <script>
     function previewImage(event) {
         const preview = document.getElementById('file-ip-1-preview');
@@ -138,4 +140,3 @@
         }
     }
 </script>
-@endsection

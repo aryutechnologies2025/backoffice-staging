@@ -38,6 +38,8 @@
                         <th class="text-center"><span>S.No</span></th>
                         <th class="text-center "><span> Question </span></th>
                         <th class="text-center "><span> Answer </span></th>
+                        <th class="text-center "><span>Date&Time </span></th>
+
                         <th class="text-center "><span> Status </span></th>
                         <th class="text-center "><span> Action </span></th>
                     </tr>
@@ -55,6 +57,7 @@
 
                         <td class="text-center">{{ $row->question }}</td>
                         <td class="text-center">{{ $row->answer }}</td>
+                        <td class="text-center">{{ $row->created_at }}</td>
                         @php
                         $disp_status = 'In Active';
                         $actTitle = 'Click to activate';

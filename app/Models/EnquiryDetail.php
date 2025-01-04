@@ -24,6 +24,16 @@ class EnquiryDetail extends Model
         'travel_date',
         'rooms_count',
     ];
+    public function package()
+{
+    return $this->belongsTo(InclusivePackages::class, 'package_id', 'id');
+}
+
+public function themes()
+{
+    return $this->package ? $this->package->theme() : null;
+}
+
 }
 
 ?>

@@ -20,13 +20,16 @@
         padding-right: 30px;
         /* Consistent padding for both sides */
     }
-
     .form-body {
 
-       
-        border-radius: 10px;
+padding-top: 1% !important;
+padding-bottom: 1% !important;
+width: 100% !important;
+}
 
-    }
+.form-control {
+width: 80%;
+}
 </style>
 
 <div class="container-wrapper pt-5">
@@ -34,41 +37,20 @@
         <b><a href="/dashboard">Dashboard</a> > <a href="/client_review">Client Review</a> > <a class="edit">Edit</a></b>
         <br>
         <br>
-        <h3 class="fw-bold">{{ $title }}</h3>
+        <h3 class="fw-bold">Client Review Edit</h3>
     </div>
 </div>
 <!-- FORM -->
-<div class="row mb-5">
+<div class="row mb-3">
     <div class="col-lg-12">
 
         <div class="form-body px-4 mb-5 rounded-4">
             <form id="form_valid" action="{{ route('admin.client_review_update', ['id'=>$client_details->id]) }}" method="POST" autocomplete="off" enctype="multipart/form-data">
                 @csrf
                 <div class="mb-3">
-                    <div class="g-2 mb-4">
+                <div class="g-2 mb-4">
                         <div class="col">
-                            <label class="fw-bold mb-4">Program Name <span class="text-danger">*</span></label>
-                            <select id="program_name" name="program_name" class="form-select py-2 rounded-3 shadow-sm" required>
-                                <option value="">Select Program</option>
-                                @foreach($program_dts as $id => $name)
-                                <option value="{{ $id }}" {{ old('program_name', $client_details->program_id) == $id ? 'selected' : '' }}>
-                                    {{ $name }}
-                                </option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="row g-2 mb-4">
-                        <div class="col">
-                            <label class="fw-bold mb-4">Client Name <span class="text-danger">*</span></label>
-                            <input type="text" placeholder="Client Name" id="client_name" name="client_name" value="{{ old('client_name', $client_details->client_name) }}" class="form-control py-2 rounded-3 shadow-sm" required>
-                        </div>
-                    </div>
-
-                    <div class="g-2 mb-4">
-                        <div class="col">
-                            <label class="fw-bold mt-4">Client Photo</label>
+                            <label class="fw-bold mt-2">Client Photo</label>
                             <div class="row d-flex mb-4">
                                 <div class="col-lg-2">
                                     <div class="form-input">
@@ -104,6 +86,27 @@
                             </div>
                         </div>
                     </div>
+                    <div class="row g-2 mb-4">
+                        <div class="col-lg-6">
+                            <label class="fw-bold mb-4">Program Name <span class="text-danger">*</span></label>
+                            <select id="program_name" name="program_name" class="form-control py-2 rounded-3 shadow-sm" required>
+                                <option value="">Select Program</option>
+                                @foreach($program_dts as $id => $name)
+                                <option value="{{ $id }}" {{ old('program_name', $client_details->program_id) == $id ? 'selected' : '' }}>
+                                    {{ $name }}
+                                </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-lg-6">
+                            <label class="fw-bold mb-4">Client Name <span class="text-danger">*</span></label>
+                            <input type="text" placeholder="Client Name" id="client_name" name="client_name" value="{{ old('client_name', $client_details->client_name) }}" class="form-control py-2 rounded-3 shadow-sm" required>
+                        </div>
+                    </div>
+
+                    
+
+                    
 
                     <div class="g-2 mb-4">
                         <div class="col">
@@ -117,15 +120,12 @@
                         </div>
                     </div>
 
-                    <div class="g-2 mb-4">
-                        <div class="col">
+                    <div class="row g-2 mb-4">
+                        <div class="col-lg-6">
                             <label class="fw-bold mb-4">Review Date <span class="text-danger">*</span></label>
                             <input type="date" class="form-control py-2 rounded-3 shadow-sm" name="review_dt" id="review_dt" value="{{ old('review_dt', $client_details->review_dt) }}" required>
                         </div>
-                    </div>
-
-                    <div class="g-2 mb-4">
-                        <div class="col">
+                        <div class="col-lg-6">
                             <label class="fw-bold mb-4">Rating <span class="text-danger">*</span></label>
                             <input type="text" class="form-control py-2 rounded-3 shadow-sm" name="rating" id="rating" value="{{ old('rating', $client_details->rating) }}" required>
                         </div>

@@ -11,64 +11,73 @@
             <p>More Travel, More Peace</p>
         </div>
 
-        <!-- Dashboard Cards -->
-        <div class="col-lg-2 col-md-4 mb-3">
-            <div class="card shadow bg-white py-3 rounded d-flex align-items-center" style="height: 200px;">
-                <div class="card-body d-flex flex-column justify-content-between">
-                    <div class="mr-3">
-                        <img src="/assets/image/dashboard/innerpece_earning_icon.svg" alt="" class="img-fluid" />
-                    </div>
-                    <div>
-                        <p class="mb-0 text-muted">Total Program</p>
-                        <h4 class="font-weight-bold">{{ $programCount }}</h4>
-                    </div>
+    <!-- Dashboard Cards -->
+<!-- Dashboard Cards -->
+<div class="row">
+    <div class="col-lg-2 col-md-4 mb-1">
+        <div class="card shadow bg-white rounded d-flex align-items-center" style="height: 100px;">
+            <div class="card-body d-flex align-items-center w-100">
+                <!-- Icon on the left -->
+                <div class="px-2 ">
+                    <img src="/assets/image/dashboard/innerpece_earning_icon.svg" alt="" class="img-fluid" style="height: 60px;" />
+                </div>
+                <!-- Text on the right -->
+                <div class="text-center ">
+                    <p class="mb-0 text-muted">Total Program</p>
+                    <h4 class="font-weight-bold">{{ $programCount }}</h4>
                 </div>
             </div>
         </div>
+    </div>
 
-        <div class="col-lg-2 col-md-4 mb-3">
-            <div class="card shadow bg-white py-3 rounded d-flex align-items-center" style="height: 200px;">
-                <div class="card-body d-flex flex-column justify-content-between">
-                    <div class="mr-3">
-                        <img src="/assets/image/dashboard/innerpece_dashboard_Wishlist_icon.svg" alt="" class="img-fluid" />
-                    </div>
-                    <div>
-                        <p class="mb-0 text-muted">Total User Register</p>
-                        <h4 class="font-weight-bold">{{ $userRegister }}</h4>
-                    </div>
+    <div class="col-lg-2 col-md-4 mb-1">
+        <div class="card shadow bg-white  rounded d-flex align-items-center" style="height: 100px;">
+            <div class="card-body d-flex  align-items-center w-100">
+                <!-- Icon on the left -->
+                <div class="px-2">
+                    <img src="/assets/image/dashboard/innerpece_dashboard_Wishlist_icon.svg" alt="" class="img-fluid" style="height: 60px;" />
+                </div>
+                <!-- Text on the right -->
+                <div class="text-center">
+                    <p class="mb-0 text-muted">Total User</p>
+                    <h4 class="font-weight-bold">{{ $userRegister }}</h4>
                 </div>
             </div>
         </div>
+    </div>
 
-        <!-- Additional Cards (for reviews, listings, etc.) -->
-        <div class="col-lg-2 col-md-4 mb-3">
-            <div class="card shadow bg-white py-3 rounded d-flex align-items-center" style="height: 200px;">
-                <div class="card-body d-flex flex-column justify-content-between">
-                    <div class="mr-3">
-                        <img src="/assets/image/dashboard/innerpece_dashboard_listing_icon.svg" alt="" class="img-fluid" />
-                    </div>
-                    <div>
-                        <p class="mb-0 text-muted">Total Enquiry</p>
-                        <h4 class="font-weight-bold">{{$enquiryCount}}</h4>
-                    </div>
+    <!-- Additional Cards (for reviews, listings, etc.) -->
+    <div class="col-lg-2 col-md-4 mb-1">
+        <div class="card shadow bg-white rounded d-flex align-items-center" style="height: 100px;">
+            <div class="card-body d-flex  align-items-center w-100">
+                <!-- Icon on the left -->
+                <div class="px-2">
+                    <img src="/assets/image/dashboard/innerpece_dashboard_listing_icon.svg" alt="" class="img-fluid"  style="height: 60px;" />
+                </div>
+                <!-- Text on the right -->
+                <div class="text-center">
+                    <p class="mb-0 text-muted">Total Enquiry</p>
+                    <h4 class="font-weight-bold">{{$enquiryCount}}</h4>
                 </div>
             </div>
         </div>
+    </div>
 
-        <div class="col-lg-2 col-md-4 mb-3">
-            <div class="card shadow bg-white py-3 rounded d-flex align-items-center" style="height: 200px;">
-                <div class="card-body d-flex flex-column justify-content-between">
-                    <div class="mr-3">
-                        <img src="/assets/image/dashboard/innerpece_dashboard_review_icon.svg" alt="" class="img-fluid" />
-                    </div>
-                    <div>
-                        <p class="mb-0 text-muted">Total Reviews</p>
-                        <h4 class="font-weight-bold">{{$clientReview}}</h4>
-                    </div>
+    <div class="col-lg-2 col-md-4 mb-1">
+        <div class="card shadow bg-white rounded d-flex align-items-center" style="height: 100px;">
+            <div class="card-body d-flex  align-items-center w-100">
+                <!-- Icon on the left -->
+                <div class="px-2">
+                    <img src="/assets/image/dashboard/innerpece_dashboard_review_icon.svg" alt="" class="img-fluid" style="height: 60px;" />
+                </div>
+                <!-- Text on the right -->
+                <div class="text-center">
+                    <p class="mb-0 text-muted">Total Reviews</p>
+                    <h4 class="font-weight-bold">{{$clientReview}}</h4>
                 </div>
             </div>
         </div>
-
     </div>
 </div>
+
 @endsection

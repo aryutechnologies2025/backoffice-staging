@@ -40,6 +40,8 @@
             <th class="text-center "><span> Title </span></th>
             <th class="text-center "><span> Image </span></th>
             <th class="text-center "><span> Category </span></th>
+            <th class="text-center "><span>Date&Time </span></th>
+
             <th class="text-center "><i class="bi bi-caret-up-fill activearrow"   ></i>
                 <span> Status </span>
                 <i class="bi bi-caret-down-fill inactivearrow"></i>
@@ -83,6 +85,7 @@
                         <td class="text-center"><img src="{{asset($row->cover_img) }}"  alt="{{ $row->alternate_name ?? 'Default Alt Text' }}" style="max-width: 100px; max-height: 100px; object-fit: cover;"></td>
 
                         <td class="text-center">{{ $formattedCategories }}</td>
+                        <td class="text-center">{{ $row->created_at }}</td>
                         @php
                         $disp_status = 'In Active';
                         $actTitle = 'Click to activate';

@@ -38,6 +38,7 @@
                         <th class="text-center"><span>Name</span></th>
                         <th class="text-center"><span>Email</span></th>
                         <th class="text-center"><span>Phone</span></th>
+                        <th class="text-center"><span>Time&Date</span></th>
                         <th class="text-center"><span>Message</span></th>
                     </tr>
                 </thead>
@@ -53,6 +54,7 @@
                         <td class="text-center">{{ $row->first_name }} {{ $row->last_name }}</td>
                         <td class="text-center">{{ $row->email }}</td>
                         <td class="text-center">{{ $row->phone }}</td>
+                        <td class="text-center">{{ $row->created_at }}</td>
                         <td class="text-center">
                             <button class="btn btn-primary view-message-btn" data-message="{{ $row->message }}" data-bs-toggle="modal" data-bs-target="#customMessageModal">
                                 View Message

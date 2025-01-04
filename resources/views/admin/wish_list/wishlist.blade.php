@@ -33,6 +33,8 @@
                         <th class="text-center"><span> User Name </span></th>
                         <th class="text-center"><span>User Email</span></th>
                         <th class="text-center"><span>User Phone</span></th>
+                        <th class="text-center"><span>Date & Time</span></th>
+
                     </tr>
                 </thead>
                 <tbody>
@@ -49,7 +51,8 @@
                     <td class="text-center">{{ $row->program_dts ? $row->program_dts->title : 'N/A' }}</td>
                     <td class="text-center">{{ $row->user ? $row->user->first_name : 'N/A' }}{{$row->user ? $row->user->last_name : 'N/A'}}</td>
                <td class="text-center">{{ $row->user ? $row->user->email : 'N/A' }}</td>
-               <td class="text-center">{{ $row->user ? $row->user->phone : 'N/A' }}</td>   
+               <td class="text-center">{{ $row->user ? $row->user->phone : 'N/A' }}</td>
+               <td class="text-center">{{ $row->created_at }}</td>   
                     </tr>
                     @endforeach
                     @endif

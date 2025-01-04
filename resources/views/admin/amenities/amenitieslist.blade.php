@@ -39,6 +39,8 @@
                         <th class="text-center"><span>S.No</span></th>
                         <th class="text-center "><span> Amenity Logo</span></th>
                         <th class="text-center "><span> Amenity </span></th>
+                        <th class="text-center "><span>Date&Time </span></th>
+
                         <th class="text-center "><span> Status </span></th>
                         <th class="text-center "><span> Action </span></th>
                     </tr>
@@ -55,6 +57,7 @@
                     <td class="text-center">{{ $loop->iteration }}</td>
                     <td class="text-center"><img src="{{ asset($row->amenity_pic) }}" alt="Thumbnail" style="max-width: 100px; max-height: 100px; object-fit: cover;"></td>
                         <td class="text-center">{{ $row->amenity_name }}</td>
+                        <td class="text-center">{{ $row->created_at }}</td>
                         @php
                         $disp_status = 'In Active';
                         $actTitle = 'Click to activate';
