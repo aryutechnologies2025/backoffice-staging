@@ -88,6 +88,21 @@
     .form-switch {
     padding-left: 3.5em;
 }
+
+.form-input label{
+width: 150% !important;
+}
+
+.forms{
+    margin-left: 100px;
+}
+
+@media (min-width: 768px) {
+    .col-md-1 {
+        flex: 0 0 auto;
+        width: 10.33333333%;
+    }
+}
 </style>
 <div class="container-wrapper py-5">
     <div class="row">
@@ -201,8 +216,8 @@
                         <!-- Cover Image -->
                         <div class="row mt-4">
                             <div class="col-md-1 h-25">
-                                <label for="file-ip-1" class="form-label">Cover Image</label>
-                                <div class="form-input text-center pt-2 pb-0">
+                                <label for="file-ip-1" class="form-label ">Cover Image</label>
+                                <div class="form-input text-center pt-2 pb-0 w-50%">
                                     <label for="file-ip-1" class="d-block pt-4">
                                         <img id="file-ip-1-preview"
                                             src="/assets/image/dashboard/innerpece_addpic_icon.svg"
@@ -211,19 +226,19 @@
                                     </label>
                                     <input type="file" id="file-ip-1" name="cover_img" class="form-control"
                                         accept="image/png, image/jpeg, image/svg+xml">
-                                    <small class="text-danger d-block mt-2">* Upload size [640x120]</small>
+                                    <small class="text-danger d-block mt-2 ms-5">* Upload size [640x120]</small>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="row g-3 pt-4">
-                                    <div class="col-12 pt-4">
+                                    <div class="col-12 pt-4 forms">
                                         <label class="">Upload Image Name <span
                                                 class="text-danger">*</span></label>
                                         <input type="text" id="upload_image_name" name="upload_image_name"
                                             placeholder="Rename the Photo" value="{{ old('upload_image_name') }}"
                                             class="form-control py-2 rounded-3 shadow-sm w-50" required>
                                     </div>
-                                    <div class="col-12">
+                                    <div class="col-12 pt-4 forms">
                                         <label class="">Alternate Image Name <span
                                                 class="text-danger">*</span></label>
                                         <input type="text" id="alternate_image_name" name="alternate_image_name"
