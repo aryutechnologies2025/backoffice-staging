@@ -16,7 +16,7 @@ class Review extends Model
    // Relationship with the User model
    public function user()
    {
-       return $this->belongsTo(User::class);
+       return $this->belongsTo(User::class, 'user_id');
    }
 
    // Relationship with the InclusivePackageDetail model

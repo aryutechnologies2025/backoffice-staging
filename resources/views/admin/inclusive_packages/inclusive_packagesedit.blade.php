@@ -1,54 +1,107 @@
 @extends('layouts.app')
 @Section('content')
 <style>
-a:hover {
-    color: red;
+    a:hover {
+        color: red;
+    }
+
+    a {
+        color: rgb(37, 150, 190);
+    }
+
+    .add {
+        color: blue;
+    }
+
+    /* Align the form with the title */
+    .container-wrapper {
+        padding-left: 30px;
+        /* Adjust as per your layout */
+        padding-right: 30px;
+        /* Consistent padding for both sides */
+    }
+
+    .form-body {
+
+        padding-top: 1% !important;
+        padding-bottom: 1% !important;
+        width: 90% !important;
+    }
+
+    .mb-1 {
+        margin-bottom: .5rem !important;
+    }
+
+    .px-5 {
+
+        padding-left: 0rem !important;
+    }
+
+    .form-control {
+        width: 80%;
+    }
+
+    .btn-add {
+        background-color: #2164c0 !important;
+        border-radius: 15px !important;
+        color: #FFF !important;
+
+        padding: 10px 28px !important;
+        font-size: 12px !important;
+        border: none;
+
+    }
+
+
+    .form-input img {
+        width: 100%;
+    }
+
+    .form-check-input {
+        margin-top: 0% !important;
+    }
+
+    .form-check-input {
+        margin-top: 0% !important;
+    }
+
+    .plan-item .form-label {
+        font-weight: bold;
+    }
+
+    .plan-item input {
+        margin-bottom: 10px;
+    }
+
+    .btn-add {
+        background-color: #007bff;
+        color: white;
+        font-weight: bold;
+    }
+
+    #summernote3 {
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        padding: 10px;
+        background-color: #fff;
+    }
+    .form-switch {
+    padding-left: 3.5em;
 }
 
-a {
-    color: rgb(37, 150, 190);
+.form-input label{
+width: 150% !important;
 }
 
-.edit {
-    color: blue;
+.forms{
+    margin-left: 100px;
 }
 
-/* Align the form with the title */
-.container-wrapper {
-    padding-left: 30px;
-    /* Adjust as per your layout */
-    padding-right: 30px;
-    /* Consistent padding for both sides */
-}
-
-.form-body {
-
-    padding-top: 1% !important;
-    padding-bottom: 1% !important;
-}
-
-.mb-1 {
-    margin-bottom: .5rem !important;
-}
-
-.px-5 {
-
-    padding-left: 1rem !important;
-}
-
-.form-control {
-    width: 80%;
-}
-
-.btn-add {
-    background-color: #2164c0 !important;
-    border-radius: 30px !important;
-    color: #FFF !important;
-    font-size: 10px !important;
-}
-
-.form-input img {
-    width: 70%;
+@media (min-width: 768px) {
+    .col-md-1 {
+        flex: 0 0 auto;
+        width: 10.33333333%;
+    }
 }
 </style>
 <div class="container-wrapper pt-5">

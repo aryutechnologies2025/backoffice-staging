@@ -58,11 +58,11 @@
     }
 
     .form-check-input {
-        margin-top: 0% !important;
+        margin-top: 4% !important;
     }
 
     .form-check-input {
-        margin-top: 0% !important;
+        margin-top: 4% !important;
     }
 
     .plan-item .form-label {
@@ -318,36 +318,70 @@ width: 150% !important;
 
 
 
-                        <!-- 2.LOCATION -->
-                        <div class="row mb-1">
+                        <!-- 2.LOCATION-->
+                        <!-- <div class="row mb-1">
                             <div class="col pt-1">
                                 <div class="form-body px-5 rounded-4">
                                     <h4 class="fw-bold mb-1">02. Location</h4>
                                     <div class="mb-3">
                                         @foreach($address->chunk(4) as $chunk)
-                                        <!-- For each chunk, create a row -->
+                                        For each chunk, create a row
                                         <div class="row g-3">
-                                            @foreach($chunk as $address)
-                                            <!-- Display each address as a column -->
-                                            <div class="col-lg-3 col-md-1 col-sm-6">
-                                                <div class="form-check d-flex align-items-center">
-                                                    <input type="checkbox" class="form-check-input me-2"
-                                                        id="address-{{ $address->id }}" name="address_services[]"
-                                                        value="{{ $address->id }}">
-                                                    <label class="form-check-label mb-0"
-                                                        for="address-{{ $address->id }}"
-                                                        style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                                                        {{ $address->title }}
-                                                    </label>
+                                            @foreach($chunk as $addr)
+                                                 Display each address as a column 
+                                                <div class="col-lg-3 col-md-1 col-sm-6">
+                                                    <div class="form-check d-flex align-items-center">
+                                                        <input type="checkbox" class="form-check-input me-2"
+                                                            id="address-{{ $addr->id }}" name="address_services[]"
+                                                            value="{{ $addr->id }}">
+                                                        <label class="form-check-label mb-0"
+                                                            for="address-{{ $addr->id }}"
+                                                            style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                                            {{ $addr->title }}
+                                                        </label>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            @endforeach
+                                                @endforeach
                                         </div>
                                         @endforeach
                                     </div>
                                 </div>
                             </div>
+                        </div> -->
+
+<!-- 2. LOCATION -->
+<div class="row mb-5">
+    <div class="col pt-1">
+        <div class="form-body px-4 px-md-5 py-4 rounded-4">
+            <h4 class="fw-bold mb-5 text-center text-md-start">02. Location</h4>
+            <div class="mb-3">
+                @foreach($address->chunk(4) as $chunk)
+                <!-- For each chunk, create a row -->
+                <div class="row g-3">
+                    @foreach($chunk as $address)
+                    <!-- Display each address as a column -->
+                    <div class="col-lg-3 col-md-4 col-sm-6 col-12">
+                        <div class="form-check">
+                            <input 
+                                type="checkbox" 
+                                class="form-check-input" 
+                                id="address-{{ $address->id }}" 
+                                name="address_services[]" 
+                                value="{{ $address->id }}">
+                            <label 
+                                class="form-check-label" 
+                                for="address-{{ $address->id }}">
+                                {{ $address->title }}
+                            </label>
                         </div>
+                    </div>
+                    @endforeach
+                </div>
+                @endforeach
+            </div>
+        </div>
+    </div>
+</div>
 
 
                         <!-- 3. TOUR PLANNING -->
@@ -687,98 +721,109 @@ width: 150% !important;
                                 </div>
                             </div>
                         </div>
-                        <!-- 8. AMENITIES -->
-                        <div class="row mb-2">
-                            <div class="col">
-                                <div class="form-body px-5 py-3 rounded-4">
-                                    <h4 class="fw-bold mb-3">10. Amenities</h4>
-                                    <div class="d-flex flex-wrap ">
-                                        @foreach($amenities as $index => $amenity)
-                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
-                                            <div class="form-check d-flex align-items-center">
-                                                <input type="checkbox" class="me-2" id="amenity-{{ $amenity->id }}"
-                                                    name="amenity_services[]" value="{{ $amenity->id }}">
-                                                <label for="amenity-{{ $amenity->id }}"
-                                                    class="mb-0">{{ $amenity->amenity_name }}</label>
-                                            </div>
-                                        </div>
-                                        @if(($index + 1) % 4 == 0)
-                                        <div class="w-100"></div> <!-- Forces a line break after every 4 items -->
-                                        @endif
-                                        @endforeach
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- 9. FOOD & BEVERAGES -->
-                        <div class="row mb-2">
-                            <div class="col">
-                                <div class="form-body px-5 py-3 rounded-4">
-                                    <h4 class="fw-bold mb-3">11. Food and Beverages</h4>
-                                    <div class="d-flex flex-wrap">
-                                        @foreach($foodBeverages as $index => $item)
-                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
-                                            <div class="form-check d-flex align-items-center">
-                                                <input type="checkbox" class="me-2" id="food-beverage-{{ $item->id }}"
-                                                    name="food_beverages[]" value="{{ $item->id }}">
-                                                <label for="food-beverage-{{ $item->id }}"
-                                                    class="mb-0">{{ $item->food_beverage }}</label>
-                                            </div>
-                                        </div>
-                                        @if(($index + 1) % 4 == 0)
-                                        <div class="w-100"></div> <!-- Forces a line break after every 4 items -->
-                                        @endif
-                                        @endforeach
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                   
-                    <!-- 10. ACTIVITIES -->
-                    <div class="row mb-2">
-                        <div class="col">
-                            <div class="form-body px-5 py-3 rounded-4">
-                                <h4 class="fw-bold mb-3">12. Activities</h4>
-                                <div class="d-flex flex-wrap ">
-                                    @foreach($activities as $index => $item)
-                                    <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
-                                        <div class="form-check d-flex align-items-center">
-                                            <input type="checkbox" class="me-2" id="activities-{{ $item->id }}"
-                                                name="activities[]" value="{{ $item->id }}">
-                                            <label for="activities-{{ $item->id }}"
-                                                class="mb-0">{{ $item->activities }}</label>
-                                        </div>
-                                    </div>
-                                    @if(($index + 1) % 4 == 0)
-                                    <div class="w-100"></div> <!-- Forces a line break after every 4 items -->
-                                    @endif
-                                    @endforeach
-                                </div>
-                            </div>
-                        </div>
+<!-- 8. AMENITIES -->
+<div class="row mb-2">
+    <div class="col">
+        <div class="form-body px-5 py-3 rounded-4">
+            <h4 class="fw-bold mb-3">10. Amenities</h4>
+            <div class="d-flex flex-wrap">
+                @foreach($amenities as $index => $amenity)
+                <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                    <div class="form-check d-flex align-items-center">
+                        <input type="checkbox" class="me-2 custom-checkbox" id="amenity-{{ $amenity->id }}"
+                            name="amenity_services[]" value="{{ $amenity->id }}">
+                        <label for="amenity-{{ $amenity->id }}" class="mb-0">{{ $amenity->amenity_name }}</label>
                     </div>
+                </div>
+                @if(($index + 1) % 4 == 0)
+                <div class="w-100"></div> <!-- Forces a line break after every 4 items -->
+                @endif
+                @endforeach
+            </div>
+        </div>
+    </div>
+</div>
 
-                    <!-- 11. SAFETY FEATURES -->
-                    <div class="row mb-2">
-                        <div class="col">
-                            <div class="form-body px-5 py-3 rounded-4">
-                                <h4 class="fw-bold mb-3">13. Safety Features</h4>
-                                <div class="d-flex flex-wrap">
-                                    @foreach($safety_features as $index => $item)
-                                    <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
-                                        <div class="form-check d-flex align-items-center mb-1">
-                                            <input type="checkbox" class="me-2" id="safety_features-{{ $item->id }}"
-                                                name="safety_features[]" value="{{ $item->id }}">
-                                            <label for="safety_features-{{ $item->id }}"
-                                                class="mb-0">{{ $item->safety_features }}</label>
-                                        </div>
-                                    </div>
-                                    @endforeach
-                                </div>
-                            </div>
-                        </div>
+<!-- 9. FOOD & BEVERAGES -->
+<div class="row mb-2">
+    <div class="col">
+        <div class="form-body px-5 py-3 rounded-4">
+            <h4 class="fw-bold mb-3">11. Food and Beverages</h4>
+            <div class="d-flex flex-wrap">
+                @foreach($foodBeverages as $index => $item)
+                <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                    <div class="form-check d-flex align-items-center">
+                        <input type="checkbox" class="me-2 custom-checkbox" id="food-beverage-{{ $item->id }}"
+                            name="food_beverages[]" value="{{ $item->id }}">
+                        <label for="food-beverage-{{ $item->id }}" class="mb-0">{{ $item->food_beverage }}</label>
                     </div>
+                </div>
+                @if(($index + 1) % 4 == 0)
+                <div class="w-100"></div> <!-- Forces a line break after every 4 items -->
+                @endif
+                @endforeach
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 10. ACTIVITIES -->
+<div class="row mb-2">
+    <div class="col">
+        <div class="form-body px-5 py-3 rounded-4">
+            <h4 class="fw-bold mb-3">12. Activities</h4>
+            <div class="d-flex flex-wrap">
+                @foreach($activities as $index => $item)
+                <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                    <div class="form-check d-flex align-items-center">
+                        <input type="checkbox" class="me-2 custom-checkbox" id="activities-{{ $item->id }}"
+                            name="activities[]" value="{{ $item->id }}">
+                        <label for="activities-{{ $item->id }}" class="mb-0">{{ $item->activities }}</label>
+                    </div>
+                </div>
+                @if(($index + 1) % 4 == 0)
+                <div class="w-100"></div> <!-- Forces a line break after every 4 items -->
+                @endif
+                @endforeach
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 11. SAFETY FEATURES -->
+<div class="row mb-2">
+    <div class="col">
+        <div class="form-body px-5 py-3 rounded-4">
+            <h4 class="fw-bold mb-3">13. Safety Features</h4>
+            <div class="d-flex flex-wrap">
+                @foreach($safety_features as $index => $item)
+                <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                    <div class="form-check d-flex align-items-center mb-1">
+                        <input type="checkbox" class="me-2 custom-checkbox" id="safety_features-{{ $item->id }}"
+                            name="safety_features[]" value="{{ $item->id }}">
+                        <label for="safety_features-{{ $item->id }}" class="mb-0">{{ $item->safety_features }}</label>
+                    </div>
+                </div>
+                @endforeach
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add custom CSS -->
+<style>
+    .custom-checkbox {
+        width: 25px;
+        height: 25px;
+    }
+    /* Ensure responsiveness on all screen sizes */
+    @media (max-width: 768px) {
+        .custom-checkbox {
+            width: 20px;
+            height: 20px;
+        }
+    }
+</style>
 
 
 

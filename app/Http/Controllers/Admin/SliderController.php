@@ -27,7 +27,7 @@ class SliderController extends Controller
     public function insert(Request $request)
     {
         $credentials = $request->validate([
-            'image_1' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048|dimensions:width=600,height=600',
+            'image_1' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
             'sub_title' => 'required',
             'upload_image_name' => 'required|string',
             'alternate_image_name' => 'required|string', // Validate alternate image name

@@ -55,7 +55,7 @@
                     <tr>
                     <td class="text-center">{{ $loop->iteration }}</td>
 
-                    <td class="text-center"><img src="{{ asset($row->food_beverage_pic) }}" alt="Thumbnail" style="max-width: 100px; max-height: 100px; object-fit: cover;"></td>
+                    <td class="text-center"><img src="{{ asset($row->food_beverage_pic) }}" alt="{{ $row->alternate_name ?? 'Default Alt Text' }}" style="max-width: 100px; max-height: 100px; object-fit: cover;"></td>
                     <td class="text-center">{{ $row->food_beverage }}</td>
                         <td class="text-center">{{ $row->created_at }}</td>
                         @php

@@ -36,6 +36,7 @@
                         <th class="text-center"><span>Name</span></th>
                         <th class="text-center"><span>Email</span></th>
                         <th class="text-center"><span>Phone</span></th>
+                        <th class="text-center"><span> Program Name </span></th>
 
                         <th class="text-center"><span>Time&Date</span></th>
                         <th class="text-center"><span>Action</span></th>
@@ -53,6 +54,9 @@
                             <td class="text-center">{{ $row->name }}</td>
                             <td class="text-center">{{ $row->email }}</td>
                             <td class="text-center">{{ $row->phone }}</td>
+                            <td class="text-center">{{ $row->package ? $row->package->title : 'N/A' }}</td>
+
+
                             <td class="text-center">{{ $row->created_at }}</td>
                             <td class="text-center">
                                 <button class="btn btn-primary view-btn" 

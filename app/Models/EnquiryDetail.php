@@ -29,9 +29,15 @@ class EnquiryDetail extends Model
     return $this->belongsTo(InclusivePackages::class, 'package_id', 'id');
 }
 
+    
 public function themes()
 {
     return $this->package ? $this->package->theme() : null;
+}
+// In EnquiryDetail.php
+public function review()
+{
+    return $this->hasOne(Review::class, 'enquiry_id'); // Adjust 'enquiry_id' to the correct foreign key
 }
 
 }

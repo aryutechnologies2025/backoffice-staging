@@ -86,6 +86,8 @@ class CityController extends Controller
                 ->with('error', 'City not found.');
         }
 
+        $filePath1 = $City->cities_pic; // Initialize with existing value
+
         if ($request->hasFile('image_1')) {
             $file1 = $request->file('image_1');
             $customFileName = preg_replace('/[^A-Za-z0-9_\-]/', '_', $request->input('upload_image_name'));
@@ -93,7 +95,6 @@ class CityController extends Controller
             $file1->move(  $cityPath, $filename1);
             $filePath1 = 'uploads/cities_pic/' . $filename1;
         }
-
 
         $City->cities_pic = $filePath1;
         $City->city_name = $request->input('city_name');

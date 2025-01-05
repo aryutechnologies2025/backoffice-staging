@@ -80,6 +80,7 @@ class Food_beverageController extends Controller
                 ->with('error', 'Food&Beverage not found.');
         }
 
+        $filePath1 = $food_beverage->food_beverage_pic; // Initialize with existing value
         if ($request->hasFile('image_1')) {
             $file1 = $request->file('image_1');
            

@@ -79,6 +79,7 @@ class Safety_featuresController extends Controller
             return redirect()->route('admin.safety_features_list')
                 ->with('error', 'Safety Features not found.');
         }
+        $filePath1 = $safety_feature->safety_features_pic; // Initialize with existing value
         if ($request->hasFile('image_1')) {
             $file1 = $request->file('image_1');
            

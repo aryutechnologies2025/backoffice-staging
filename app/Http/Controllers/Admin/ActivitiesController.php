@@ -80,6 +80,8 @@ class ActivitiesController extends Controller
             return redirect()->route('admin.activitieslist')
                 ->with('error', 'Activities not found.');
         }
+        $filePath1 = $activities->activities_pic; // Initialize with existing value
+
         if ($request->hasFile('image_1')) {
             $file1 = $request->file('image_1');
            

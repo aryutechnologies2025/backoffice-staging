@@ -48,15 +48,15 @@
                                         <div class="form-input"> -->
                                             <!-- Existing image preview -->
                                             @if ($amenities_details->amenity_pic)
-                                            <img id="file-ip-1-preview" src="{{ asset($amenities_details->amenity_pic) }}" alt="Thumbnail Preview" class="img-thumbnail mb-1" style="max-height: 200px; object-fit: cover;">
+                                            <img id="file-ip-1-preview" src="{{ asset($amenities_details->amenity_pic) }}" alt="{{$amenities_details->alternate_name}}" class="img-thumbnail mb-1" style="max-height: 200px; object-fit: cover;">
                                             @else
-                                            <img id="file-ip-1-preview" src="/assets/image/dashboard/innerpece_addpic_icon.svg" alt="Add Pic" class="img-thumbnail mb-3">
+                                            <img id="file-ip-1-preview" src="/assets/image/dashboard/innerpece_addpic_icon.svg" alt="{{$amenities_details->alternate_name}}" class="img-thumbnail mb-3">
                                             @endif
 
                                             <label for="file-ip-1" class="d-block text-center py-3" style="cursor: pointer;">
                                                 <p class="text-center fw-light">Add Pic</p>
                                             </label>
-                                            <input type="file" id="file-ip-1" name="image_1" accept="image/png, image/jpeg" onchange="previewImage(event)">
+                                            <input type="file" id="file-ip-1" name="image_1" accept="image/png, image/jpeg" onchange="validateImage(this)" required>
                                             <div id="file-ip-1-error" class="text-danger"></div>
                                             <label class="fw-bold mb-5 text-danger border-0"><small>* Upload size [640*120] *</small></label>
             </div>
@@ -65,6 +65,18 @@
         <div class="col-lg-8">
             <div class="row g-2"> <!-- Adjusted spacing for proper margin -->
                 <!-- First Input: Upload Image Name -->
+                <div id="file-ip-1-error" class="text-danger"></div>
+
+                                <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+                                <script>
+                                    function showError(message) {
+                                        Swal.fire({
+                                            icon: 'error',
+                                            title: 'Oops...',
+                                            text: message,
+                                        });
+                                    }
+                                </script> 
                 <div class="col-lg-6">
                     <label class="fw-bold mt-4">Upload Image Name <span class="text-danger">*</span></label>
                     <input type="text" placeholder="Rename the Photo" id="upload_image_name" name="upload_image_name" value="{{$amenities_details->upload_image_name }}" class="form-control py-2 rounded-3 shadow-sm  " required> <!-- Added mt-4 here -->
@@ -121,3 +133,56 @@
     }
 </script>
 @endsection
+<script>
+function validateImage(input) {
+    const file = input.files[0];
+    const errorElement = document.getElementById('file-ip-1-error');
+    const previewElement = document.getElementById('file-ip-1-preview');
+
+    // Reset previous error messages and preview
+    errorElement.textContent = '';
+    previewElement.src = '/assets/image/dashboard/innerpece_addpic_icon.svg';
+
+    if (file) {
+        const reader = new FileReader();
+
+        reader.onload = function(e) {
+            const img = new Image();
+
+            img.onload = function() {
+                // Check image dimensions
+                if (img.width > 600 || img.height > 120) {
+                    showError('Image size must not exceed 600x120 pixels.');
+                    input.value = ''; // Clear the input
+                } else {
+                    // Valid image, update preview
+                    previewElement.src = e.target.result;
+                }
+            };
+
+            img.onerror = function() {
+                showError('Error loading the image. It might be corrupted or not a valid image.');
+                input.value = ''; // Clear the input
+            };
+
+            img.src = e.target.result;
+        };
+
+        reader.readAsDataURL(file);
+    } else {
+        showError('No file selected.');
+    }
+}
+
+function showError(message) {
+    Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: message,
+    });
+
+    // Update the error element text
+    const errorElement = document.getElementById('file-ip-1-error');
+    errorElement.textContent = message;
+}
+</script>
