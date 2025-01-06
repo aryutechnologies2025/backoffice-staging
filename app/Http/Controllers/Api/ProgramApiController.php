@@ -123,6 +123,7 @@ class ProgramApiController extends Controller
                     'date' => $review->created_at->format('M d, Y'),
                 ];
             });
+            $reviewCount = $package->reviews->count();
             $totalReviews = $package->clientReviews->count();
             $averageRating = $package->clientReviews->avg('rating');
             $importantInfoPlainText = strip_tags(html_entity_decode($package->important_info, ENT_QUOTES, 'UTF-8'));
@@ -169,6 +170,7 @@ class ProgramApiController extends Controller
                 'client_reviews' => $clientReviews,
                 'total_reviews' => $totalReviews,
                 'reviews' => $reviews,
+                'review_count' => $reviewCount,
                 'google_map' => $package->google_map,
                 'average_rating' => number_format($averageRating, 1),
                 'created_date' => $package->created_date,
