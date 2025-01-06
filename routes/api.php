@@ -63,7 +63,6 @@ Route::prefix('v1')->group(function () {
         Route::post('/get-program-details', [ProgramApiController::class, 'get_program_details']);
 
 
-        Route::post('/add_review', [ReviewController::class, 'addReview']);
 
     });
 });
@@ -72,6 +71,8 @@ Route::prefix('v1')->group(function () {
 
 Route::middleware('auth:sanctum')->group(function () {
     // User-related Routes
+    Route::post('/add_review', [ReviewController::class, 'addReview']);
+
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/user', function (Request $request) {
         return $request->user();
