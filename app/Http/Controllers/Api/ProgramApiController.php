@@ -125,7 +125,7 @@ class ProgramApiController extends Controller
             });
             $reviewCount = $package->reviews->count();
             $totalReviews = $package->clientReviews->count();
-            $averageRating = $package->clientReviews->avg('rating');
+            $averageRating = $package->reviews->avg('rating');
             $importantInfoPlainText = strip_tags(html_entity_decode($package->important_info, ENT_QUOTES, 'UTF-8'));
             $importantInfoPlainText = str_replace(["<br>", "<br/>", "<br />"], "\n", $importantInfoPlainText);
 
