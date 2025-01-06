@@ -113,7 +113,16 @@ class ProgramApiController extends Controller
                     // 'created_at' => $review->client_review->format('M d, Y'),
                 ];
             });
-
+            $reviews = $package->reviews->map(function ($review) {
+                $user = $review->user; // Get the related user (reviewer's name and image)
+                return [
+                    'first_name' => $review->user->first_name ?? null,  // Get user name, if available
+                    'profile_image' => $review->user->profile_image ?? null,        // User's image
+                    'comment' => $review->comment,
+                    'rating' => $review->rating,
+                    'date' => $review->created_at->format('M d, Y'),
+                ];
+            });
             $totalReviews = $package->clientReviews->count();
             $averageRating = $package->clientReviews->avg('rating');
             $importantInfoPlainText = strip_tags(html_entity_decode($package->important_info, ENT_QUOTES, 'UTF-8'));
@@ -159,6 +168,7 @@ class ProgramApiController extends Controller
                 'safety_features' => $safetyFeatures,
                 'client_reviews' => $clientReviews,
                 'total_reviews' => $totalReviews,
+                'reviews' => $reviews,
                 'google_map' => $package->google_map,
                 'average_rating' => number_format($averageRating, 1),
                 'created_date' => $package->created_date,
