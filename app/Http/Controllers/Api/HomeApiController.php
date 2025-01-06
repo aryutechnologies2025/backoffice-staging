@@ -330,7 +330,49 @@ public function get_combined_data(Request $request)
                     'data' => []
                 ], 200);
             }
-    
+     // Fetch details using the IDs
+            // $amenities = Amenities::whereIn('id', $amenityIds)->pluck('amenity_name', 'id','amenity_pic');
+            $amenities = Amenities::whereIn('id', $amenityIds)
+                ->get(['id', 'amenity_name', 'amenity_pic'])
+                ->keyBy('id')
+                ->map(function ($item) {
+                    return [
+                        'amenity_name' => $item->amenity_name,
+                        'amenity_pic' => $item->amenity_pic,
+                    ];
+                });
+            $foodBeverages = FoodBeverage::whereIn('id', $foodBeverageIds)
+                ->get(['id', 'food_beverage', 'food_beverage_pic'])
+                ->keyBy('id')
+                ->map(function ($item) {
+                    return [
+                        'food_beverage' => $item->food_beverage,
+                        'food_beverage_pic'  => $item->food_beverage_pic,
+                    ];
+                });
+            $activities = Activities::whereIn('id', $activityIds)
+                ->get(['id', 'activities', 'activities_pic'])
+                ->keyBy('id')
+                ->map(function ($item) {
+                    return [
+                        'activities' => $item->activities,
+                        'activities_pic' => $item->activities_pic,
+                    ];
+                });
+                $amenityIds = json_decode($package->amenity_details, true) ?? [];
+                $foodBeverageIds = json_decode($package->food_beverages, true) ?? [];
+                $activityIds = json_decode($package->activities, true) ?? [];
+                $safetyFeatureIds = json_decode($package->safety_features, true) ?? [];
+            $safetyFeatures = Safetyfeatures::whereIn('id', $safetyFeatureIds)
+                ->get(['id', 'safety_features', 'safety_features_pic'])
+                ->keyBy('id')
+                ->map(function ($item) {
+                    return [
+                        'safety_features' => $item->safety_features,
+                        'safety_features_pic' => $item->safety_features_pic,
+                    ];
+                });
+
             // Format the package data
             $formattedPackages = $packages->map(function ($package) {
                 $formattedStartDate = \Carbon\Carbon::parse($package->start_date)->format('M d, Y');
@@ -339,7 +381,7 @@ public function get_combined_data(Request $request)
                 $averageRating = $package->clientReviews->avg('rating') ?: 0; // Default average to 0 if no reviews
                 $category = json_decode($package->category, true) ?? [];
                 $formattedCategory = is_array($category) ? implode(', ', $category) : $category;
-    
+
                 return [
                     'id' => $package->id,
                     'title' => ucfirst($package->title),
@@ -357,6 +399,14 @@ public function get_combined_data(Request $request)
                     'destination' => $package->destination ? $package->destination->city_name : null,
                     'average_rating' => number_format($averageRating, 1),
                     'totalReviews' => $totalReviews,
+                    'amenity_details' => $amenities,
+                    'foodBeverages' => $foodBeverages,
+                    'activities' => $activities,
+                    'safety_features' => $safetyFeatures,
+                    'total_room' => $package->total_room,
+                    'bath_room' => $package->bath_room,
+                    'bed_room' => $package->bed_room,
+                    'hall'=> $package->hall,
                 ];
             });
     
