@@ -345,39 +345,46 @@ public function home_filter(Request $request)
             $safetyFeatureIds = array_merge($safetyFeatureIds, json_decode($package->safety_features, true) ?? []);
         }
 
-        // Fetch details using the IDs
         $amenities = Amenities::whereIn('id', $amenityIds)
-            ->get(['id', 'amenity_name', 'amenity_pic'])
-            ->keyBy('id')
-            ->map(fn($item) => [
+        ->get(['id', 'amenity_name', 'amenity_pic'])
+        ->map(function ($item) {
+            return [
+                'id' => $item->id,
                 'amenity_name' => $item->amenity_name,
                 'amenity_pic' => $item->amenity_pic,
-            ]);
-
-        $foodBeverages = FoodBeverage::whereIn('id', $foodBeverageIds)
-            ->get(['id', 'food_beverage', 'food_beverage_pic'])
-            ->keyBy('id')
-            ->map(fn($item) => [
+            ];
+        })->values();
+    
+    $foodBeverages = FoodBeverage::whereIn('id', $foodBeverageIds)
+        ->get(['id', 'food_beverage', 'food_beverage_pic'])
+        ->map(function ($item) {
+            return [
+                'id' => $item->id,
                 'food_beverage' => $item->food_beverage,
                 'food_beverage_pic' => $item->food_beverage_pic,
-            ]);
-
-        $activities = Activities::whereIn('id', $activityIds)
-            ->get(['id', 'activities', 'activities_pic'])
-            ->keyBy('id')
-            ->map(fn($item) => [
+            ];
+        })->values();
+    
+    $activities = Activities::whereIn('id', $activityIds)
+        ->get(['id', 'activities', 'activities_pic'])
+        ->map(function ($item) {
+            return [
+                'id' => $item->id,
                 'activities' => $item->activities,
                 'activities_pic' => $item->activities_pic,
-            ]);
-
-        $safetyFeatures = Safetyfeatures::whereIn('id', $safetyFeatureIds)
-            ->get(['id', 'safety_features', 'safety_features_pic'])
-            ->keyBy('id')
-            ->map(fn($item) => [
+            ];
+        })->values();
+    
+    $safetyFeatures = Safetyfeatures::whereIn('id', $safetyFeatureIds)
+        ->get(['id', 'safety_features', 'safety_features_pic'])
+        ->map(function ($item) {
+            return [
+                'id' => $item->id,
                 'safety_features' => $item->safety_features,
                 'safety_features_pic' => $item->safety_features_pic,
-            ]);
-
+            ];
+        })->values();
+    
         // Format package data
         $formattedPackages = $packages->map(function ($package) use ($amenities, $foodBeverages, $activities, $safetyFeatures) {
             $formattedStartDate = \Carbon\Carbon::parse($package->start_date)->format('M d, Y');
