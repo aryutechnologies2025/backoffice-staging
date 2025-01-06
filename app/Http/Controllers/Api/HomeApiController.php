@@ -185,7 +185,7 @@ class HomeApiController extends Controller
                 // Extract the first image URL
                 $formattedLocation = ucfirst($package->city) . ', ' . ucfirst($package->state);
                 $totalReviews = $package->clientReviews->count();
-                $averageRating = $package->clientReviews->avg('rating');
+                $averageRating = $package->reviews->avg('rating');
                 $category = json_decode($package->category, true) ?? [];
                 $formattedcategory = is_array($category) ? implode(', ', $category) : $category;
     
