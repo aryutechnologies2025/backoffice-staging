@@ -299,134 +299,138 @@ public function get_combined_data(Request $request)
 
 
 
-    public function home_filter(Request $request)
-    {
-        try {
-            $destination = $request->input('destination', '');
-            $start_date = $request->input('start_date');
-    
-            // Modify the query dynamically based on provided inputs
-            $packagesQuery = InclusivePackages::where('is_deleted', "0");
-    
-            if ($start_date) {
-                $packagesQuery->whereDate('start_date', '<=', $start_date)
-                              ->whereDate('return_date', '>=', $start_date); // Filter by date range
-            }
-    
-            if ($destination) {
-                $packagesQuery->whereHas('destination', function ($query) use ($destination) {
-                    $query->whereRaw('LOWER(REPLACE(city_name, " ", "")) LIKE ?', ['%' . strtolower(str_replace(' ', '', $destination)) . '%']);
-                });
-            }
-    
-            // Fetch the results
-            $packages = $packagesQuery->with(['destination', 'theme', 'clientReviews'])->get();
-    
-            // Check if any packages are found
-            if ($packages->isEmpty()) {
-                return response()->json([
-                    'status' => 'success',
-                    'message' => 'No packages found for the given filters.',
-                    'data' => []
-                ], 200);
-            }
-     // Fetch details using the IDs
-            // $amenities = Amenities::whereIn('id', $amenityIds)->pluck('amenity_name', 'id','amenity_pic');
-            $amenities = Amenities::whereIn('id', $amenityIds)
-                ->get(['id', 'amenity_name', 'amenity_pic'])
-                ->keyBy('id')
-                ->map(function ($item) {
-                    return [
-                        'amenity_name' => $item->amenity_name,
-                        'amenity_pic' => $item->amenity_pic,
-                    ];
-                });
-            $foodBeverages = FoodBeverage::whereIn('id', $foodBeverageIds)
-                ->get(['id', 'food_beverage', 'food_beverage_pic'])
-                ->keyBy('id')
-                ->map(function ($item) {
-                    return [
-                        'food_beverage' => $item->food_beverage,
-                        'food_beverage_pic'  => $item->food_beverage_pic,
-                    ];
-                });
-            $activities = Activities::whereIn('id', $activityIds)
-                ->get(['id', 'activities', 'activities_pic'])
-                ->keyBy('id')
-                ->map(function ($item) {
-                    return [
-                        'activities' => $item->activities,
-                        'activities_pic' => $item->activities_pic,
-                    ];
-                });
-                $amenityIds = json_decode($package->amenity_details, true) ?? [];
-                $foodBeverageIds = json_decode($package->food_beverages, true) ?? [];
-                $activityIds = json_decode($package->activities, true) ?? [];
-                $safetyFeatureIds = json_decode($package->safety_features, true) ?? [];
-            $safetyFeatures = Safetyfeatures::whereIn('id', $safetyFeatureIds)
-                ->get(['id', 'safety_features', 'safety_features_pic'])
-                ->keyBy('id')
-                ->map(function ($item) {
-                    return [
-                        'safety_features' => $item->safety_features,
-                        'safety_features_pic' => $item->safety_features_pic,
-                    ];
-                });
+public function home_filter(Request $request)
+{
+    try {
+        $destination = $request->input('destination', '');
+        $start_date = $request->input('start_date');
 
-            // Format the package data
-            $formattedPackages = $packages->map(function ($package) {
-                $formattedStartDate = \Carbon\Carbon::parse($package->start_date)->format('M d, Y');
-                $formattedLocation = ucfirst($package->city) . ', ' . ucfirst($package->state);
-                $totalReviews = $package->clientReviews->count();
-                $averageRating = $package->clientReviews->avg('rating') ?: 0; // Default average to 0 if no reviews
-                $category = json_decode($package->category, true) ?? [];
-                $formattedCategory = is_array($category) ? implode(', ', $category) : $category;
+        // Base query for fetching packages
+        $packagesQuery = InclusivePackages::where('is_deleted', "0");
 
-                return [
-                    'id' => $package->id,
-                    'title' => ucfirst($package->title),
-                    'category' => ucfirst($formattedCategory),
-                    'location' => $formattedLocation,
-                    'total_days' => $package->total_days,
-                    'member_capacity' => $package->member_capacity,
-                    'price' => $package->price,
-                    'actual_price' => $package->actual_price,
-                    'cover_img' => $package->cover_img,
-                    'start_date' => $formattedStartDate,
-                    'theme_id' => $package->theme ? $package->theme->id : null,
-                    'theme' => $package->theme ? $package->theme->themes_name : null,
-                    'destination_id' => $package->destination ? $package->destination->id : null,
-                    'destination' => $package->destination ? $package->destination->city_name : null,
-                    'average_rating' => number_format($averageRating, 1),
-                    'totalReviews' => $totalReviews,
-                    'amenity_details' => $amenities,
-                    'foodBeverages' => $foodBeverages,
-                    'activities' => $activities,
-                    'safety_features' => $safetyFeatures,
-                    'total_room' => $package->total_room,
-                    'bath_room' => $package->bath_room,
-                    'bed_room' => $package->bed_room,
-                    'hall'=> $package->hall,
-                ];
+        // Filter by date range
+        if ($start_date) {
+            $packagesQuery->whereDate('start_date', '<=', $start_date)
+                          ->whereDate('return_date', '>=', $start_date);
+        }
+
+        // Filter by destination
+        if ($destination) {
+            $packagesQuery->whereHas('destination', function ($query) use ($destination) {
+                $query->whereRaw('LOWER(REPLACE(city_name, " ", "")) LIKE ?', ['%' . strtolower(str_replace(' ', '', $destination)) . '%']);
             });
-    
+        }
+
+        // Fetch packages with relationships
+        $packages = $packagesQuery->with(['destination', 'theme', 'clientReviews'])->get();
+
+        if ($packages->isEmpty()) {
             return response()->json([
                 'status' => 'success',
-                'message' => 'Packages retrieved successfully.',
-                'data' => $formattedPackages
+                'message' => 'No packages found for the given filters.',
+                'data' => []
             ], 200);
-    
-        } catch (\Exception $e) {
-            // Log the error for debugging purposes
-            \Log::error('Error fetching packages: ' . $e->getMessage());
-    
-            return response()->json([
-                'status' => 'error',
-                'message' => 'An error occurred while fetching packages.',
-                'error' => $e->getMessage()
-            ], 500);
         }
+
+        // Initialize IDs for fetching amenities, food, activities, and safety features
+        $amenityIds = [];
+        $foodBeverageIds = [];
+        $activityIds = [];
+        $safetyFeatureIds = [];
+
+        foreach ($packages as $package) {
+            $amenityIds = array_merge($amenityIds, json_decode($package->amenity_details, true) ?? []);
+            $foodBeverageIds = array_merge($foodBeverageIds, json_decode($package->food_beverages, true) ?? []);
+            $activityIds = array_merge($activityIds, json_decode($package->activities, true) ?? []);
+            $safetyFeatureIds = array_merge($safetyFeatureIds, json_decode($package->safety_features, true) ?? []);
+        }
+
+        // Fetch details using the IDs
+        $amenities = Amenities::whereIn('id', $amenityIds)
+            ->get(['id', 'amenity_name', 'amenity_pic'])
+            ->keyBy('id')
+            ->map(fn($item) => [
+                'amenity_name' => $item->amenity_name,
+                'amenity_pic' => $item->amenity_pic,
+            ]);
+
+        $foodBeverages = FoodBeverage::whereIn('id', $foodBeverageIds)
+            ->get(['id', 'food_beverage', 'food_beverage_pic'])
+            ->keyBy('id')
+            ->map(fn($item) => [
+                'food_beverage' => $item->food_beverage,
+                'food_beverage_pic' => $item->food_beverage_pic,
+            ]);
+
+        $activities = Activities::whereIn('id', $activityIds)
+            ->get(['id', 'activities', 'activities_pic'])
+            ->keyBy('id')
+            ->map(fn($item) => [
+                'activities' => $item->activities,
+                'activities_pic' => $item->activities_pic,
+            ]);
+
+        $safetyFeatures = Safetyfeatures::whereIn('id', $safetyFeatureIds)
+            ->get(['id', 'safety_features', 'safety_features_pic'])
+            ->keyBy('id')
+            ->map(fn($item) => [
+                'safety_features' => $item->safety_features,
+                'safety_features_pic' => $item->safety_features_pic,
+            ]);
+
+        // Format package data
+        $formattedPackages = $packages->map(function ($package) use ($amenities, $foodBeverages, $activities, $safetyFeatures) {
+            $formattedStartDate = \Carbon\Carbon::parse($package->start_date)->format('M d, Y');
+            $formattedLocation = ucfirst($package->city) . ', ' . ucfirst($package->state);
+            $totalReviews = $package->clientReviews->count();
+            $averageRating = $package->clientReviews->avg('rating') ?: 0;
+            $category = json_decode($package->category, true) ?? [];
+            $formattedCategory = is_array($category) ? implode(', ', $category) : $category;
+
+            return [
+                'id' => $package->id,
+                'title' => ucfirst($package->title),
+                'category' => ucfirst($formattedCategory),
+                'location' => $formattedLocation,
+                'total_days' => $package->total_days,
+                'member_capacity' => $package->member_capacity,
+                'price' => $package->price,
+                'actual_price' => $package->actual_price,
+                'cover_img' => $package->cover_img,
+                'start_date' => $formattedStartDate,
+                'theme_id' => $package->theme ? $package->theme->id : null,
+                'theme' => $package->theme ? $package->theme->themes_name : null,
+                'destination_id' => $package->destination ? $package->destination->id : null,
+                'destination' => $package->destination ? $package->destination->city_name : null,
+                'average_rating' => number_format($averageRating, 1),
+                'totalReviews' => $totalReviews,
+                'amenity_details' => $amenities,
+                'foodBeverages' => $foodBeverages,
+                'activities' => $activities,
+                'safety_features' => $safetyFeatures,
+                'total_room' => $package->total_room,
+                'bath_room' => $package->bath_room,
+                'bed_room' => $package->bed_room,
+                'hall' => $package->hall,
+            ];
+        });
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Packages retrieved successfully.',
+            'data' => $formattedPackages
+        ], 200);
+    } catch (\Exception $e) {
+        \Log::error('Error fetching packages: ' . $e->getMessage());
+
+        return response()->json([
+            'status' => 'error',
+            'message' => 'An error occurred while fetching packages.',
+            'error' => $e->getMessage()
+        ], 500);
     }
+}
+
     
     public function filter_program_by_date(Request $request)
     {
