@@ -115,12 +115,12 @@ width: 150% !important;
     object-fit: cover;
 }
 
-.form-input {
+/* .form-input {
     border: 1px dashed #ccc;
     padding: 10px;
     border-radius: 5px;
     background-color: #f9f9f9;
-}
+} */
 
 </style>
 <div class="container-wrapper pt-5">
@@ -320,24 +320,18 @@ width: 150% !important;
     });
 
     // Function to preview image after file selection
-    function previewImage(event, inputElement) {
-        const file = event.target.files[0];
-        const number = inputElement.getAttribute('data-number');
-        const previewId = `file-ip-${number}-preview`;
-        const previewImg = document.getElementById(previewId);
+    function previewImage(event) {
+        const input = event.target;
+        const preview = document.getElementById('file-ip-2-preview');
 
-        if (file) {
-            const validTypes = ['image/png', 'image/jpeg', 'image/jpg'];
-            if (validTypes.includes(file.type)) {
-                const reader = new FileReader();
-                reader.onload = function (e) {
-                    previewImg.src = e.target.result;
-                };
-                reader.readAsDataURL(file);
-            } else {
-                alert('Invalid file type. Please upload PNG or JPEG images.');
-                inputElement.value = ''; // Clear invalid file input
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+                preview.src = e.target.result;
             }
+
+            reader.readAsDataURL(input.files[0]);
         }
     }
 
