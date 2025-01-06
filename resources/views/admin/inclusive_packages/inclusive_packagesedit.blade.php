@@ -277,7 +277,7 @@ width: 150% !important;
         $images = json_decode($package_details->events_package_images, true);
         $imageCount = is_array($images) ? count($images) : 0;
     @endphp
-    @if (is_array($images))
+    @if (is_array($images) && $imageCount > 0)
         @foreach ($images as $key => $image)
             <div class="col-md-2 col-sm-4 col-6 photo-upload-field" id="photo-field-{{ $key }}">
                 <div class="form-input text-center">
@@ -291,7 +291,7 @@ width: 150% !important;
             </div>
         @endforeach
     @else
-        <p>No images available.</p>
+        <p>No images uploaded yet.</p>
     @endif
 </div>
 <div class="mt-3">
@@ -301,7 +301,7 @@ width: 150% !important;
 <script>
     let photoCount = {{ $imageCount }}; // Start photo counter from existing photos
 
-    // Add new photo field
+    // Function to add a new photo upload field
     document.getElementById('add-photo-btn').addEventListener('click', function () {
         photoCount++;
         const container = document.getElementById('photo-upload-container');
@@ -319,30 +319,30 @@ width: 150% !important;
         container.insertAdjacentHTML('beforeend', newFieldHtml);
     });
 
-    // Preview image after selection
+    // Function to preview image after file selection
     function previewImage(event, inputElement) {
         const file = event.target.files[0];
         const number = inputElement.getAttribute('data-number');
         const previewId = `file-ip-${number}-preview`;
         const previewImg = document.getElementById(previewId);
 
-        const reader = new FileReader();
-        reader.onload = function (e) {
-            previewImg.src = e.target.result;
-        };
-
         if (file) {
-            if (file.type === 'image/png' || file.type === 'image/jpeg') {
+            const validTypes = ['image/png', 'image/jpeg', 'image/jpg'];
+            if (validTypes.includes(file.type)) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    previewImg.src = e.target.result;
+                };
                 reader.readAsDataURL(file);
             } else {
-                alert('Please upload a valid PNG or JPEG image.');
-                inputElement.value = ''; // Clear invalid file
+                alert('Invalid file type. Please upload PNG or JPEG images.');
+                inputElement.value = ''; // Clear invalid file input
             }
         }
     }
 
-    // Delete photo field
-    document.getElementById('photo-upload-container').addEventListener('click', function (event) {
+    // Function to delete photo field
+    document.addEventListener('click', function (event) {
         if (event.target.classList.contains('delete-photo-btn')) {
             const key = event.target.getAttribute('data-key');
             const photoField = document.getElementById(`photo-field-${key}`);
@@ -352,7 +352,6 @@ width: 150% !important;
         }
     });
 </script>
-
 
 
                         <!-- 2.LOCATION -->
@@ -1072,12 +1071,12 @@ $(document).ready(function() {
         `;
     }
 
-    // Event listener for the "Add More Photos" button
-    $('#add-photo-btn').on('click', function() {
-        photoCount++;
-        const newFieldHtml = createPhotoUploadField(photoCount);
-        $('#photo-upload-container').append(newFieldHtml);
-    });
+    // // Event listener for the "Add More Photos" button
+    // $('#add-photo-btn').on('click', function() {
+    //     photoCount++;
+    //     const newFieldHtml = createPhotoUploadField(photoCount);
+    //     $('#photo-upload-container').append(newFieldHtml);
+    // });
 
     // Function to show preview of selected image
     function showPreview(event) {
