@@ -38,12 +38,12 @@
                         <th class="text-center"><span>S.No</span></th>
                         <th class="text-center"><span> Name</span></th>
                         <th class="text-center "><span>Email</span></th>
-                        <th class="text-center"><span>DOB</span></th>
+                        <!-- <th class="text-center"><span>DOB</span></th> -->
                         <th class="text-center "><span>Phone Number</span></th>
                         <th class="text-center"><span>Address</span></th>
                         <th class="text-center"><span>Date&Time</span></th>
                     
-                        <th class="text-center px-3"><span>Status</span></th>
+                        <th class="text-center"><span>Status</span></th>
                         <th class="text-center"><span>Action</span></th>
                     </tr>
                 </thead>
@@ -59,10 +59,10 @@
                     <td class="text-center">{{ $loop->iteration }}</td>
 
                         <td class="text-center px-3">{{ $row->first_name }} {{$row->last_name}}</td>
-                        <td class="text-center px-3">{{ $row->email }}</td>
-                        <td class="text-center w-50">{{ $row->dob }}</td>
-                        <td class="text-center px-5">{{ $row->phone }}</td>
-                        <td class="text-center px-5">{{ $row->street }}, {{ $row->city }}, {{ $row->state }}, {{ $row->zip_province_code }}, {{ $row->country }}</td>
+                        <td class="text-center px-2">{{ $row->email }}</td>
+                        <!-- <td class="text-center w-45">{{ $row->dob }}</td> -->
+                        <td class="text-center px-3">{{ $row->phone }}</td>
+                        <td class="text-center px-3">{{ $row->street }}, {{ $row->city }}, {{ $row->state }}, {{ $row->zip_province_code }}, {{ $row->country }}</td>
                         <td class="text-center">{{$row->created_at}}</td>
                         @php
                         $disp_status = 'In Active';

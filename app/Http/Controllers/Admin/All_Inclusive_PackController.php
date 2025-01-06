@@ -134,7 +134,7 @@ public function insert(Request $request)
     $filePath1 = null;
     if ($request->hasFile('cover_img')) {
         $file1 = $request->file('cover_img');
-        $customFileName = preg_replace('/[^A-Za-z0-9_\-]/', '_', $request->input('upload_image_name'));
+        $customFileName = preg_replace('/[^A-Za-z0-9_\-]/', '_', $request->input('upload_image_name', 'default_image_name'));
         $filename1 = $customFileName . '.' . $file1->getClientOriginalExtension();
         $file1->move(public_path('/uploads/events_package_images'), $filename1);
         $filePath1 = '/uploads/events_package_images/' . $filename1;
@@ -258,7 +258,6 @@ public function insert(Request $request)
     
     public function update(Request $request, $id)
     {
-        // Validate request data
         $validatedData = $request->validate([
             'themes_name' => 'required',
             'cities_name' => 'required',
@@ -280,109 +279,76 @@ public function insert(Request $request)
             'hall' => 'required',
         ]);
     
-        // Find the record to update
-        $inclusive_packages = InclusivePackages::find($id);
-        if (!$inclusive_packages) {
+        $inclusivePackages = InclusivePackages::find($id);
+    
+        if (!$inclusivePackages) {
             return redirect()->route('admin.inclusive_package_list')
                 ->with('error', 'Record not found');
         }
     
-        // Handle dynamic image uploads
-        $imagePaths = $inclusive_packages->events_package_images ? json_decode($inclusive_packages->events_package_images, true) : [];
+        $imagePaths = json_decode($inclusivePackages->events_package_images, true) ?? [];
         $fileInputs = $request->file();
     
-        foreach ($fileInputs as $key => $files) {
+        // Handling Cover Image
+        if ($request->hasFile('cover_image') && $request->file('cover_image')->isValid()) {
+            $coverImage = $request->file('cover_image');
+            $coverImageName = time() . '_cover_' . $coverImage->getClientOriginalName();
+            $coverImagePath = public_path('/uploads/cover_images');
+    
+            if (!file_exists($coverImagePath)) {
+                mkdir($coverImagePath, 0755, true);
+            }
+    
+            $coverImage->move($coverImagePath, $coverImageName);
+            $inclusivePackages->cover_image = '/uploads/cover_images/' . $coverImageName;
+        }
+    
+        // Handling Gallery Images
+        foreach ($fileInputs as $key => $file) {
             if (strpos($key, 'img_') === 0) {
-                if (is_array($files)) {
-                    foreach ($files as $file) {
-                        if ($file->isValid()) {
-                            $fileName = time() . '_' . $file->getClientOriginalName();
-                            $destinationPath = public_path('/uploads/events_package_images');
+                if ($file->isValid()) {
+                    $fileName = time() . '_' . $file->getClientOriginalName();
+                    $destinationPath = public_path('/uploads/events_package_images');
     
-                            if (!file_exists($destinationPath)) {
-                                mkdir($destinationPath, 0755, true);
-                            }
-    
-                            $file->move($destinationPath, $fileName);
-                            $imagePaths[] = '/uploads/events_package_images/' . $fileName;
-                        }
+                    if (!file_exists($destinationPath)) {
+                        mkdir($destinationPath, 0755, true);
                     }
-                } else {
-                    if ($files->isValid()) {
-                        $fileName = time() . '_' . $files->getClientOriginalName();
-                        $destinationPath = public_path('/uploads/events_package_images');
     
-                        if (!file_exists($destinationPath)) {
-                            mkdir($destinationPath, 0755, true);
-                        }
-    
-                        $files->move($destinationPath, $fileName);
-                        $imagePaths[] = '/uploads/events_package_images/' . $fileName;
-                    }
+                    $file->move($destinationPath, $fileName);
+                    $imagePaths[] = '/uploads/events_package_images/' . $fileName;
                 }
             }
         }
     
-        if ($request->hasFile('cover_img')) {
-            $file1 = $request->file('cover_img');
-            $customFileName = preg_replace('/[^A-Za-z0-9_\-]/', '_', $request->input('upload_image_name'));
-            $filename1 = $customFileName . '.' . $file1->getClientOriginalExtension();
-            $file1->move(public_path('/uploads/events_package_images'), $filename1);
-            $filePath1 = 'uploads/events_package_images/' . $filename1;
-            $inclusive_packages->cover_img = $filePath1;
-        }
-    
-        $inclusive_packages->fill([
-            'program_inclusion' => $request->input('program_inclusion'),
-            'break_fast' => $request->input('break_fast'),
-            'lunch' => $request->input('lunch'),
-            'dinner' => $request->input('dinner'),
-            'upload_image_name' => $request->input('upload_image_name'),
-            'alternate_name' => $request->input('alternate_image_name'),
-            'theme_id' => $request->input('themes_name'),
-            'city_details' => $validatedData['cities_name'],
-            'title' => $validatedData['title'],
-            'program_description' => $validatedData['program_description'],
-            'category' => json_encode($request->input('prop_cat')),
-            'address' => json_encode($request->input('address_services')),
-            'tour_planning' => json_encode([
-                'plan_title' => $validatedData['plan_title'],
-                'plan_subtitle' => $validatedData['plan_subtitle'],
-                'plan_description' => $validatedData['plan_description']
-            ]),
-            'start_date' => $request->input('start_date'),
-            'return_date' => $request->input('return_date'),
-            'total_days' => $validatedData['total_days'],
-            'member_capacity' => $validatedData['member_capacity'],
-            'member_type' => $request->input('mem_type'),
-            'price' => $validatedData['price'],
-            'actual_price' => $validatedData['actual_price'],
-            'camp_rule' => json_encode($validatedData['camp_rule']),
-            'important_info' => $validatedData['important_info'],
-            'google_map' => $validatedData['google_map'],
+        $inclusivePackages->fill([
+            'themes_name' => $request->input('themes_name'),
+            'cities_name' => $request->input('cities_name'),
+            'title' => $request->input('title'),
+            'program_description' => $request->input('program_description'),
+            'plan_title' => $request->input('plan_title'),
+            'plan_subtitle' => $request->input('plan_subtitle'),
+            'plan_description' => $request->input('plan_description'),
+            'total_days' => $request->input('total_days'),
+            'member_capacity' => $request->input('member_capacity'),
+            'price' => $request->input('price'),
+            'actual_price' => $request->input('actual_price'),
+            'camp_rule' => $request->input('camp_rule'),
+            'important_info' => $request->input('important_info'),
+            'google_map' => $request->input('google_map'),
             'events_package_images' => json_encode($imagePaths),
-            'total_room' => $validatedData['total_room'],
-            'bath_room' => $validatedData['bath_room'],
-            'bed_room' => $validatedData['bed_room'],
-            'hall' => $validatedData['hall'],
-            'amenity_details' => json_encode($request->input('amenity_services')),
-            'food_beverages' => json_encode($request->input('food_beverages')),
-            'activities' => json_encode($request->input('activities')),
-            'safety_features' => json_encode($request->input('safety_features')),
-            'is_deleted' => '0',
+            'total_room' => $request->input('total_room'),
+            'bath_room' => $request->input('bath_room'),
+            'bed_room' => $request->input('bed_room'),
+            'hall' => $request->input('hall'),
             'updated_at' => now(),
-            'created_by' => 'admin',
-            'status' => $request->has('status') && $request->input('status') === 'on' ? '1' : '0',
         ]);
     
-        $inclusive_packages->save();
-    
-        // Update cache
-        Cache::put("inclusive_package_{$id}", $inclusive_packages, now()->addHours(1));
+        $inclusivePackages->save();
     
         return redirect()->route('admin.inclusive_package_list')
             ->with('success', 'Record updated successfully');
     }
+    
     
 
     public function change_status(Request $request)

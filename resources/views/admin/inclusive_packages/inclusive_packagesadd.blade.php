@@ -54,15 +54,15 @@
 
 
     .form-input img {
-        width: 100%;
+        width: 80%;
     }
 
     .form-check-input {
-        margin-top: 4% !important;
+        margin-top: 1% !important;
     }
 
     .form-check-input {
-        margin-top: 4% !important;
+        margin-top: 1% !important;
     }
 
     .plan-item .form-label {
@@ -91,10 +91,11 @@
 
 .form-input label{
 width: 150% !important;
+border: 0px !important;
 }
 
 .forms{
-    margin-left: 100px;
+    margin-left: 38px;
 }
 
 @media (min-width: 768px) {
@@ -186,7 +187,7 @@ width: 150% !important;
                         <div class="row g-2 mt-4">
                             <label class="mb-1">Flags <span class="text-danger">*</span></label>
 
-                            <div class="col-md-2">
+                            <div class="col-md-3 col-sm-3">
 
                                 <div class="form-check d-flex justify-content-center align-items-center">
                                     <input type="checkbox" class="form-check-input me-3" id="popular_program"
@@ -195,7 +196,7 @@ width: 150% !important;
                                 </div>
                             </div>
 
-                            <div class="col-md-2">
+                            <div class="col-md-3 col-sm-3">
                                 <div class="form-check d-flex align-items-center">
                                     <input type="checkbox" class="form-check-input me-3" id="upcoming_program"
                                         name="prop_cat[]" value="upcoming_program">
@@ -203,7 +204,7 @@ width: 150% !important;
                                 </div>
                             </div>
 
-                            <div class="col-md-2">
+                            <div class="col-md-3 col-sm-3">
                                 <div class="form-check d-flex align-items-center">
                                     <input type="checkbox" class="form-check-input me-3" id="featured" name="prop_cat[]"
                                         value="featured">
@@ -215,9 +216,9 @@ width: 150% !important;
 
                         <!-- Cover Image -->
                         <div class="row mt-4">
-                            <div class="col-md-1 h-25">
+                            <div class="col-md-2 h-25">
                                 <label for="file-ip-1" class="form-label ">Cover Image</label>
-                                <div class="form-input text-center pt-2 pb-0 w-50%">
+                                <div class="form-input text-start pt-2 pb-0">
                                     <label for="file-ip-1" class="d-block pt-4">
                                         <img id="file-ip-1-preview"
                                             src="/assets/image/dashboard/innerpece_addpic_icon.svg"
@@ -226,7 +227,7 @@ width: 150% !important;
                                     </label>
                                     <input type="file" id="file-ip-1" name="cover_img" class="form-control"
                                         accept="image/png, image/jpeg, image/svg+xml">
-                                    <small class="text-danger d-block mt-2">* Upload size [640x120]</small>
+                                    <small class="text-danger d-block mt-2 text-center">* Upload size [640x120]</small>
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -252,11 +253,11 @@ width: 150% !important;
                         <div class="row mt-4">
                             <div class="col">
                                 <label class="py-3">Gallery Image</label>
-                                <div id="photo-upload-container" class="row g-4">
+                                <div id="photo-upload-container" class="row g-6">
                                     <!-- Dynamically added photo containers will go here -->
                                 </div>
                                 <div class="text mt-3">
-                                    <button type="button" class="btn-add rounded border-0 px-1 py-3 text-white"
+                                    <button type="button" class="btn-add rounded border-0 px-3 py-3 text-white"
                                         onclick="addPhotoField()">
                                         <i class="fa fa-plus" aria-hidden="true"></i> Add Photo
                                     </button>
@@ -352,7 +353,7 @@ width: 150% !important;
 <!-- 2. LOCATION -->
 <div class="row mb-5">
     <div class="col pt-1">
-        <div class="form-body px-4 px-md-5 py-4 rounded-4">
+        <div class="form-body px-4 px-md-1 py-4 rounded-4">
             <h4 class="fw-bold mb-5 text-center text-md-start">02. Location</h4>
             <div class="mb-3">
                 @foreach($address->chunk(4) as $chunk)
