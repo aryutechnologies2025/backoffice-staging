@@ -15,7 +15,7 @@ class ReviewController extends Controller
             'user_id' => 'required|exists:users,id',
             'package_id' => 'required|exists:inclusive_package_details,id',  // Make sure package_id exists in inclusive_package_details
             'comment' => 'required|string',
-            'rating' => 'required|integer|min:1|max:5',
+           
         ]);
 
         // Create the review record
