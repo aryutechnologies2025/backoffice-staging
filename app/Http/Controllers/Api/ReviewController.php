@@ -13,15 +13,15 @@ class ReviewController extends Controller
         // Validate incoming request
         $request->validate([
             'user_id' => 'required|exists:users,id',
-            'package_id' => 'required|exists:inclusive_package_details,id', // Ensure package_id exists in inclusive_package_details
+            'package_id' => 'required|exists:inclusive_package_details,id',
             'comment' => 'nullable|string',
             'rating' => 'nullable|integer|min:1|max:5',
         ]);
     
         // Ensure at least one of comment or rating is present
-        if (empty($request->comment) && empty($request->rating)) {
+        if (is_null($request->comment) && is_null($request->rating)) {
             return response()->json([
-                'message' => 'You must provide either a comment or a rating.',
+                'message' => 'You must provide at least a comment or a rating.',
             ], 422);
         }
     
@@ -34,5 +34,6 @@ class ReviewController extends Controller
             'review' => $review,
         ], 201);
     }
+    
     
 }
