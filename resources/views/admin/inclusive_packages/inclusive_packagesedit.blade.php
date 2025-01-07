@@ -85,43 +85,49 @@
         padding: 10px;
         background-color: #fff;
     }
+
     .form-switch {
-    padding-left: 3.5em;
-}
-
-.form-input label{
-width: 150% !important;
-}
-
-.forms{
-    margin-left: 100px;
-}
-
-@media (min-width: 768px) {
-    .col-md-1 {
-        flex: 0 0 auto;
-        width: 10.33333333%;
+        padding-left: 3.5em;
     }
+
+    .form-input label {
+        width: 150% !important;
+    }
+
+    .forms {
+        margin-left: 100px;
+    }
+
+    @media (min-width: 768px) {
+        .col-md-1 {
+            flex: 0 0 auto;
+            width: 10.33333333%;
+        }
+    }
+
+
+    .photo-upload-field {
+        text-align: center;
+    }
+
+    .photo-upload-field img {
+        width: 100%;
+        /* Ensures images are responsive */
+        max-height: 150px;
+        /* Optional, for consistent image height */
+        object-fit: cover;
+    }
+
+    .g-3 {
+    --bs-gutter-x: 6rem !important;
 }
-
-
-.photo-upload-field {
-    text-align: center;
-}
-
-.photo-upload-field img {
-    width: 100%; /* Ensures images are responsive */
-    max-height: 150px; /* Optional, for consistent image height */
-    object-fit: cover;
-}
-
-/* .form-input {
+ 
+    /* .form-input {
     border: 1px dashed #ccc;
     padding: 10px;
     border-radius: 5px;
     background-color: #f9f9f9;
 } */
-
 </style>
 <div class="container-wrapper pt-5">
     <div class="row">
@@ -137,7 +143,7 @@ width: 150% !important;
         <form id="form_valid" action="{{ route('admin.inclusive_package_update', $package_details->id) }}" method="POST"
             autocomplete="off" enctype="multipart/form-data">
             @csrf
-            
+
             <!-- 1.INFORMATION -->
             <div class="row mb-4">
                 <div class="col-lg-12">
@@ -153,7 +159,8 @@ width: 150% !important;
                                     <option value="">Select Theme</option>
                                     @foreach($themes as $id => $name)
                                     <option value="{{ $id }}" {{ $id == $selectedthemeId ? 'selected' : '' }}>
-                                        {{ $name }}</option>
+                                        {{ $name }}
+                                    </option>
                                     @endforeach
                                 </select>
                             </div>
@@ -230,7 +237,7 @@ width: 150% !important;
                             <label class="fw-bold">Cover Image</label>
                             <div class="row align-items-center">
                                 <!-- Cover Image Preview -->
-                                <div class="col-lg-3 text-center">
+                                <div class="col-lg-3 text-start">
                                     @if($package_details->cover_img)
                                     <img id="file-ip-100-preview" src="{{ asset($package_details->cover_img) }}"
                                         alt="Cover Image" class="rounded-3 shadow-sm"
@@ -251,15 +258,15 @@ width: 150% !important;
 
                                 <!-- Upload and Alternate Image Names -->
                                 <div class="col-lg-9">
-                                    <div class="row g-3">
-                                        <div class="col-12">
+                                    <div class="row g-2">
+                                        <div class="col-6">
                                             <label class="fw-bold">Upload Image Name <span
                                                     class="text-danger">*</span></label>
                                             <input type="text" placeholder="Rename the Photo" id="upload_image_name"
                                                 name="upload_image_name" value="{{$package_details->upload_image_name}}"
                                                 class="form-control py-2 rounded-3 shadow-sm" required>
                                         </div>
-                                        <div class="col-12">
+                                        <div class="col-6">
                                             <label class="fw-bold">Alternate Image Name <span
                                                     class="text-danger">*</span></label>
                                             <input type="text" placeholder="Alternate Name" id="alternate_image_name"
@@ -272,40 +279,44 @@ width: 150% !important;
                         </div>
 
                         <div id="photo-upload-container" class="row g-3">
-    <label class="fw-bold mt-4">Gallery Image</label>
-    @php
-        $images = json_decode($package_details->events_package_images, true);
-        $imageCount = is_array($images) ? count($images) : 0;
-    @endphp
-    @if (is_array($images) && $imageCount > 0)
-        @foreach ($images as $key => $image)
-            <div class="col-md-2 col-sm-4 col-6 photo-upload-field" id="photo-field-{{ $key }}">
-                <div class="form-input text-center">
-                    <label for="file-ip-{{ $key }}">
-                        <img class="img-fluid mt-3" id="file-ip-{{ $key }}-preview" src="{{ asset($image) }}" alt="Image Preview">
-                        <p class="fw-light mt-2">Edit Pic</p>
-                    </label>
-                    <input type="file" name="img_{{ $key }}" id="file-ip-{{ $key }}" data-number="{{ $key }}" accept="image/*" onchange="previewImage(event, this)">
-                    <button type="button" class="btn btn-danger btn-sm mt-2 delete-photo-btn" data-key="{{ $key }}">Delete</button>
-                </div>
-            </div>
-        @endforeach
-    @else
-        <p>No images uploaded yet.</p>
-    @endif
-</div>
-<div class="mt-3">
-    <button id="add-photo-btn" type="button" class="btn btn-primary">Add More Photos</button>
-</div>
+                            <label class="fw-bold mt-4">Gallery Image</label>
+                            @php
+                            $images = json_decode($package_details->events_package_images, true);
+                            $imageCount = is_array($images) ? count($images) : 0;
+                            @endphp
+                            @if (is_array($images) && $imageCount > 0)
+                            @foreach ($images as $key => $image)
+                            <div class="col-md-2 col-sm-4 col-6 photo-upload-field" id="photo-field-{{ $key }}">
+                                <div class="form-input text-center">
+                                    <label for="file-ip-{{ $key }}">
+                                        <img class="img-fluid mt-3" id="file-ip-{{ $key }}-preview" src="{{ asset($image) }}" alt="Image Preview">
+                                        <p class="fw-light mt-2">Edit Pic</p>
+                                    </label>
+                                    <input type="file" name="img_{{ $key }}" id="file-ip-{{ $key }}" data-number="{{ $key }}" accept="image/*" onchange="previewImage(event, this)">
+                                    <button type="button" class="btn btn-danger btn-sm mt-2 delete-photo-btn" data-key="{{ $key }}">Delete</button>
+                                </div>
+                            </div>
+                            @endforeach
+                            @else
+                            <p>No images uploaded yet.</p>
+                            @endif
+                        </div>
+                        <div class="mt-3">
+                            <button id="add-photo-btn" type="button" class="btn btn-primary">Add More Photos</button>
+                        </div>
 
-<script>
-    let photoCount = {{ $imageCount }}; // Start photo counter from existing photos
+                        <script>
+                            let photoCount = {
+                                {
+                                    $imageCount
+                                }
+                            }; // Start photo counter from existing photos
 
-    // Function to add a new photo upload field
-    document.getElementById('add-photo-btn').addEventListener('click', function () {
-        photoCount++;
-        const container = document.getElementById('photo-upload-container');
-        const newFieldHtml = `
+                            // Function to add a new photo upload field
+                            document.getElementById('add-photo-btn').addEventListener('click', function() {
+                                photoCount++;
+                                const container = document.getElementById('photo-upload-container');
+                                const newFieldHtml = `
             <div class="col-md-2 col-sm-4 col-6 photo-upload-field" id="photo-field-${photoCount}">
                 <div class="form-input text-center">
                     <label for="file-ip-${photoCount}">
@@ -316,36 +327,36 @@ width: 150% !important;
                     <button type="button" class="btn btn-danger btn-sm mt-2 delete-photo-btn" data-key="${photoCount}">Delete</button>
                 </div>
             </div>`;
-        container.insertAdjacentHTML('beforeend', newFieldHtml);
-    });
+                                container.insertAdjacentHTML('beforeend', newFieldHtml);
+                            });
 
-    // Function to preview image after file selection
-    function previewImage(event) {
-        const input = event.target;
-        const preview = document.getElementById('file-ip-2-preview');
+                            // Function to preview image after file selection
+                            function previewImage(event) {
+                                const input = event.target;
+                                const preview = document.getElementById('file-ip-2-preview');
 
-        if (input.files && input.files[0]) {
-            const reader = new FileReader();
+                                if (input.files && input.files[0]) {
+                                    const reader = new FileReader();
 
-            reader.onload = function(e) {
-                preview.src = e.target.result;
-            }
+                                    reader.onload = function(e) {
+                                        preview.src = e.target.result;
+                                    }
 
-            reader.readAsDataURL(input.files[0]);
-        }
-    }
+                                    reader.readAsDataURL(input.files[0]);
+                                }
+                            }
 
-    // Function to delete photo field
-    document.addEventListener('click', function (event) {
-        if (event.target.classList.contains('delete-photo-btn')) {
-            const key = event.target.getAttribute('data-key');
-            const photoField = document.getElementById(`photo-field-${key}`);
-            if (photoField) {
-                photoField.remove();
-            }
-        }
-    });
-</script>
+                            // Function to delete photo field
+                            document.addEventListener('click', function(event) {
+                                if (event.target.classList.contains('delete-photo-btn')) {
+                                    const key = event.target.getAttribute('data-key');
+                                    const photoField = document.getElementById(`photo-field-${key}`);
+                                    if (photoField) {
+                                        photoField.remove();
+                                    }
+                                }
+                            });
+                        </script>
 
 
                         <!-- 2.LOCATION -->
@@ -542,22 +553,22 @@ width: 150% !important;
             <h4 class="fw-bold mb-2">04.Rooms and Beds</h4>
             <div class="mb-3">
                 <div class="row g-2 align-items-end">
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <label class="fw-bold mb-2">Rooms<span class="text-danger"></span></label>
                         <input type="text" class="form-control py-2 rounded-3 shadow-sm" name="total_room"
                             id="total_room" value="{{$package_details->total_room}}" required>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <label class="fw-bold mb-2">Bath Rooms<span class="text-danger"></span></label>
                         <input type="text" class="form-control py-2 rounded-3 shadow-sm" name="bath_room" id="bath_room"
                             value="{{$package_details->bath_room}}" required>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <label class="fw-bold mb-2">Bed Rooms</label>
                         <input type="text" class="form-control py-2 rounded-3 shadow-sm" id="bed_room" name="bed_room"
                             value="{{$package_details->bed_room}}" required>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <label class="fw-bold mb-2">Hall</label>
                         <input type="text" class="form-control py-2 rounded-3 shadow-sm" id="hall" name="hall"
                             value="{{$package_details->hall}}" required>
@@ -576,13 +587,13 @@ width: 150% !important;
             <h4 class="fw-bold mb-3">5. Pricing</h4>
             <div class="mb-2">
                 <div class="row mb-2">
-                    <div class="col-lg-6">
+                    <div class="col-lg-3">
                         <label class="fw-bold mb-2 ">Member Capacity <span class="text-danger">*</span></label>
                         <input type="text" id="member_capacity" name="member_capacity"
                             class="form-control py-2 rounded-3 shadow-sm mb-2" placeholder="Member Capacity" required
                             value="{{$package_details->member_capacity}}">
                     </div>
-                    <div class="col-lg-6">
+                    <div class="col-lg-3">
                         <label class="fw-bold mb-2 ">Sprit Amount <span class="text-danger">*</span></label>
                         <select id="mem_type" name="mem_type" class="form-select py-2 rounded-3 shadow-sm mb-2"
                             required>
@@ -593,12 +604,12 @@ width: 150% !important;
                             </option>
                         </select>
                     </div>
-                    <div class="col-lg-6">
+                    <div class="col-lg-3">
                         <label class="fw-bold mb-2 ">Actual Amount <span class="text-danger">*</span></label>
                         <input type="text" id="price" name="price" class="form-control py-2 rounded-3 shadow-sm"
                             placeholder="Actual Amount" value="{{$package_details->price}}" required>
                     </div>
-                    <div class="col-lg-6">
+                    <div class="col-lg-3">
                         <label class="fw-bold mb-2">Discount Amount <span class="text-danger">*</span></label>
                         <input type="text" id="actual_price" name="actual_price"
                             class="form-control py-2 rounded-3 shadow-sm" placeholder="Discount Amount"
@@ -665,7 +676,7 @@ width: 150% !important;
 <!-- 7. Important info -->
 <div class="row mb-3">
     <div class="col">
-        <div class="form-body px-4 py-3 rounded-4">
+        <div class="form-body px-1 py-3 rounded-4">
             <h4 class="fw-bold mb-3">7. Important info <span class="text-danger">*</span></h4>
             <div>
                 <input type="hidden" id="important_info" name="important_info">
@@ -683,7 +694,7 @@ width: 150% !important;
 <!-- 8. Program Inclusion -->
 <div class="row mb-3">
     <div class="col">
-        <div class="form-body px-4 py-3 rounded-4">
+        <div class="form-body px-1 py-3 rounded-4">
             <h4 class="fw-bold mb-3">8. Program Inclusion</h4>
             <div>
                 <input type="hidden" id="program_inclusion" name="program_inclusion">
@@ -701,7 +712,7 @@ width: 150% !important;
 <!-- 9. Location -->
 <div class="row mb-3">
     <div class="col">
-        <div class="form-body px-4 py-3 rounded-4">
+        <div class="form-body px-1 py-3 rounded-4">
             <h4 class="fw-bold mb-3">9. Location</h4>
             <div>
                 <div class="col-lg-6">
@@ -717,7 +728,7 @@ width: 150% !important;
 <!-- 10. Food Menu -->
 <div class="row mb-3">
     <div class="col">
-        <div class="form-body px-4 py-3 rounded-4">
+        <div class="form-body px-1 py-3 rounded-4">
             <h4 class="fw-bold mb-3">10. Food Menu</h4>
             <div class="row g-2">
                 <!-- Breakfast -->
@@ -761,12 +772,12 @@ width: 150% !important;
 <!-- 11. Amenities -->
 <div class="row mb-3">
     <div class="col">
-        <div class="form-body px-4 py-3 rounded-4">
+        <div class="form-body px-2 py-3 rounded-4">
             <h4 class="fw-bold mb-3">11. Amenities</h4>
             <div class="row g-2 mb-2">
                 @foreach($amenities_dts->chunk(4) as $chunk)
                 @foreach($chunk as $amenity)
-                <div class="col-lg-3 col-md-4 col-sm-6 mb-2">
+                <div class="col-lg-3 col-md-5 col-sm-6 mb-2">
                     <div class="form-check">
                         <input type="checkbox" class="form-check-input" id="amenity-{{ $amenity->id }}"
                             name="amenity_services[]" value="{{ $amenity->id }}" @if(in_array((string) $amenity->id,
@@ -785,12 +796,12 @@ width: 150% !important;
 <!-- 12. Food & Beverages -->
 <div class="row mb-3">
     <div class="col">
-        <div class="form-body px-4 py-3 rounded-4">
+        <div class="form-body px-2 py-3 rounded-4">
             <h4 class="fw-bold mb-3">12. Food & Beverages</h4>
             <div class="row g-2 mb-3">
                 @foreach($foodBeverages_dts->chunk(6) as $chunk)
                 @foreach($chunk as $item)
-                <div class="col-lg-3 col-md-4 col-sm-6 mb-2">
+                <div class="col-lg-3 col-md-5 col-sm-6 mb-2">
                     <div class="form-check">
                         <input type="checkbox" class="form-check-input" id="food-beverage-{{ $item->id }}"
                             name="food_beverages[]" value="{{ $item->id }}" @if(in_array((string) $item->id,
@@ -809,12 +820,12 @@ width: 150% !important;
 <!-- 13. Activities -->
 <div class="row mb-3">
     <div class="col">
-        <div class="form-body px-4 py-3 rounded-4">
+        <div class="form-body px-2 py-3 rounded-4">
             <h4 class="fw-bold mb-3">13. Activities</h4>
             <div class="row g-2 mb-3">
                 @foreach($activities_dts->chunk(6) as $chunk)
                 @foreach($chunk as $item)
-                <div class="col-lg-3 col-md-4 col-sm-6 mb-2">
+                <div class="col-lg-3 col-md-5 col-sm-6 mb-2">
                     <div class="form-check">
                         <input type="checkbox" class="form-check-input" id="activities-{{ $item->id }}"
                             name="activities[]" value="{{ $item->id }}" @if(in_array((string) $item->id,
@@ -832,12 +843,12 @@ width: 150% !important;
 <!-- 14. Safety Features -->
 <div class="row mb-3">
     <div class="col">
-        <div class="form-body px-4 py-3 rounded-4">
+        <div class="form-body px-2 py-3 rounded-4">
             <h4 class="fw-bold mb-3">14. Safety Features</h4>
             <div class="row g-2 mb-3">
                 @foreach($safety_features_dts->chunk(6) as $chunk)
                 @foreach($chunk as $item)
-                <div class="col-lg-3 col-md-4 col-sm-6 mb-2">
+                <div class="col-lg-3 col-md-5 col-sm-6 mb-2">
                     <div class="form-check">
                         <input type="checkbox" class="form-check-input" id="safety_features-{{ $item->id }}"
                             name="safety_features[]" value="{{ $item->id }}" @if(in_array((string) $item->id,
@@ -883,176 +894,176 @@ width: 150% !important;
 </div>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    let planCount = @json(count($tourPlanning['plan_title']));
+    document.addEventListener('DOMContentLoaded', function() {
+        let planCount = @json(count($tourPlanning['plan_title']));
 
-    // Function to clone the existing plan item
-    function createPlanFields() {
-        planCount++; // Increment plan count
-        const container = document.getElementById('plan-container');
-        const template = container.querySelector('.plan-item');
+        // Function to clone the existing plan item
+        function createPlanFields() {
+            planCount++; // Increment plan count
+            const container = document.getElementById('plan-container');
+            const template = container.querySelector('.plan-item');
 
-        // Clone the template
-        const newPlan = template.cloneNode(true);
+            // Clone the template
+            const newPlan = template.cloneNode(true);
 
-        // Clear values in the cloned fields
-        newPlan.querySelectorAll('input, textarea').forEach((field) => {
-            field.value = ''; // Clear values
-        });
+            // Clear values in the cloned fields
+            newPlan.querySelectorAll('input, textarea').forEach((field) => {
+                field.value = ''; // Clear values
+            });
 
-        // Append the new plan item
-        container.appendChild(newPlan);
-    }
-
-    // Event listener for the "Add" button
-    document.getElementById('add-plan-btn').addEventListener('click', function() {
-        createPlanFields();
-    });
-
-    // Event delegation to handle removal of plan items
-    document.getElementById('plan-container').addEventListener('click', function(event) {
-        if (event.target.closest('.remove-plan')) {
-            event.preventDefault();
-            const planItem = event.target.closest('.plan-item');
-            planItem.remove();
+            // Append the new plan item
+            container.appendChild(newPlan);
         }
-    });
-});
 
-
-$(document).ready(function() {
-    $('#summernote1,#summernote2,#summernote3,#summernote4,#summernote5,#summernote6,#summernote7,#summernote8')
-        .summernote({
-            height: 200 // Set the height of the editor
+        // Event listener for the "Add" button
+        document.getElementById('add-plan-btn').addEventListener('click', function() {
+            createPlanFields();
         });
 
-    // Update hidden input when Summernote content changes
-    $('#summernote1').on('summernote.change', function() {
-        $('#program_description').val($(this).val());
+        // Event delegation to handle removal of plan items
+        document.getElementById('plan-container').addEventListener('click', function(event) {
+            if (event.target.closest('.remove-plan')) {
+                event.preventDefault();
+                const planItem = event.target.closest('.plan-item');
+                planItem.remove();
+            }
+        });
     });
-    $('#summernote1').summernote({
-        placeholder: 'Hello stand alone ui',
-        tabsize: 2,
-        height: 100,
-        toolbar: [
-            ['style', ['style']],
-            ['font', ['bold', 'underline', 'clear']],
-            ['color', ['color']],
-            ['para', ['ul', 'ol', 'paragraph']],
-            ['table', ['table']],
-            ['insert', ['link', 'picture', 'video']],
-            ['view', ['fullscreen', 'codeview', 'help']]
-        ]
-    });
-    $('#summernote2').summernote({
-        placeholder: 'Hello stand alone ui',
-        tabsize: 2,
-        height: 100,
-        toolbar: [
-            ['style', ['style']],
-            ['font', ['bold', 'underline', 'clear']],
-            ['color', ['color']],
-            ['para', ['ul', 'ol', 'paragraph']],
-            ['table', ['table']],
-            ['insert', ['link', 'picture', 'video']],
-            ['view', ['fullscreen', 'codeview', 'help']]
-        ]
-    });
-    $('#summernote3').summernote({
-        placeholder: 'Hello stand alone ui',
-        tabsize: 2,
-        height: 100,
-        toolbar: [
-            ['style', ['style']],
-            ['font', ['bold', 'underline', 'clear']],
-            ['color', ['color']],
-            ['para', ['ul', 'ol', 'paragraph']],
-            ['table', ['table']],
-            ['insert', ['link', 'picture', 'video']],
-            ['view', ['fullscreen', 'codeview', 'help']]
-        ]
-    });
-    $('#summernote4').summernote({
-        placeholder: 'Hello stand alone ui',
-        tabsize: 2,
-        height: 100,
-        toolbar: [
-            ['style', ['style']],
-            ['font', ['bold', 'underline', 'clear']],
-            ['color', ['color']],
-            ['para', ['ul', 'ol', 'paragraph']],
-            ['table', ['table']],
-            ['insert', ['link', 'picture', 'video']],
-            ['view', ['fullscreen', 'codeview', 'help']]
-        ]
-    });
-    $('#summernote5').summernote({
-        placeholder: 'Hello stand alone ui',
-        tabsize: 2,
-        height: 100,
-        toolbar: [
-            ['style', ['style']],
-            ['font', ['bold', 'underline', 'clear']],
-            ['color', ['color']],
-            ['para', ['ul', 'ol', 'paragraph']],
-            ['table', ['table']],
-            ['insert', ['link', 'picture', 'video']],
-            ['view', ['fullscreen', 'codeview', 'help']]
-        ]
-    });
-    $('#summernote6').summernote({
-        placeholder: 'Hello stand alone ui',
-        tabsize: 2,
-        height: 100,
-        toolbar: [
-            ['style', ['style']],
-            ['font', ['bold', 'underline', 'clear']],
-            ['color', ['color']],
-            ['para', ['ul', 'ol', 'paragraph']],
-            ['table', ['table']],
-            ['insert', ['link', 'picture', 'video']],
-            ['view', ['fullscreen', 'codeview', 'help']]
-        ]
-    });
-    $('#summernote7').summernote({
-        placeholder: 'Hello stand alone ui',
-        tabsize: 2,
-        height: 100,
-        toolbar: [
-            ['style', ['style']],
-            ['font', ['bold', 'underline', 'clear']],
-            ['color', ['color']],
-            ['para', ['ul', 'ol', 'paragraph']],
-            ['table', ['table']],
-            ['insert', ['link', 'picture', 'video']],
-            ['view', ['fullscreen', 'codeview', 'help']]
-        ]
-    });
-    $('#summernote8').summernote({
-        placeholder: 'Hello stand alone ui',
-        tabsize: 2,
-        height: 100,
-        toolbar: [
-            ['style', ['style']],
-            ['font', ['bold', 'underline', 'clear']],
-            ['color', ['color']],
-            ['para', ['ul', 'ol', 'paragraph']],
-            ['table', ['table']],
-            ['insert', ['link', 'picture', 'video']],
-            ['view', ['fullscreen', 'codeview', 'help']]
-        ]
-    });
+
+
+    $(document).ready(function() {
+        $('#summernote1,#summernote2,#summernote3,#summernote4,#summernote5,#summernote6,#summernote7,#summernote8')
+            .summernote({
+                height: 200 // Set the height of the editor
+            });
+
+        // Update hidden input when Summernote content changes
+        $('#summernote1').on('summernote.change', function() {
+            $('#program_description').val($(this).val());
+        });
+        $('#summernote1').summernote({
+            placeholder: 'Hello stand alone ui',
+            tabsize: 2,
+            height: 100,
+            toolbar: [
+                ['style', ['style']],
+                ['font', ['bold', 'underline', 'clear']],
+                ['color', ['color']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['table', ['table']],
+                ['insert', ['link', 'picture', 'video']],
+                ['view', ['fullscreen', 'codeview', 'help']]
+            ]
+        });
+        $('#summernote2').summernote({
+            placeholder: 'Hello stand alone ui',
+            tabsize: 2,
+            height: 100,
+            toolbar: [
+                ['style', ['style']],
+                ['font', ['bold', 'underline', 'clear']],
+                ['color', ['color']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['table', ['table']],
+                ['insert', ['link', 'picture', 'video']],
+                ['view', ['fullscreen', 'codeview', 'help']]
+            ]
+        });
+        $('#summernote3').summernote({
+            placeholder: 'Hello stand alone ui',
+            tabsize: 2,
+            height: 100,
+            toolbar: [
+                ['style', ['style']],
+                ['font', ['bold', 'underline', 'clear']],
+                ['color', ['color']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['table', ['table']],
+                ['insert', ['link', 'picture', 'video']],
+                ['view', ['fullscreen', 'codeview', 'help']]
+            ]
+        });
+        $('#summernote4').summernote({
+            placeholder: 'Hello stand alone ui',
+            tabsize: 2,
+            height: 100,
+            toolbar: [
+                ['style', ['style']],
+                ['font', ['bold', 'underline', 'clear']],
+                ['color', ['color']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['table', ['table']],
+                ['insert', ['link', 'picture', 'video']],
+                ['view', ['fullscreen', 'codeview', 'help']]
+            ]
+        });
+        $('#summernote5').summernote({
+            placeholder: 'Hello stand alone ui',
+            tabsize: 2,
+            height: 100,
+            toolbar: [
+                ['style', ['style']],
+                ['font', ['bold', 'underline', 'clear']],
+                ['color', ['color']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['table', ['table']],
+                ['insert', ['link', 'picture', 'video']],
+                ['view', ['fullscreen', 'codeview', 'help']]
+            ]
+        });
+        $('#summernote6').summernote({
+            placeholder: 'Hello stand alone ui',
+            tabsize: 2,
+            height: 100,
+            toolbar: [
+                ['style', ['style']],
+                ['font', ['bold', 'underline', 'clear']],
+                ['color', ['color']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['table', ['table']],
+                ['insert', ['link', 'picture', 'video']],
+                ['view', ['fullscreen', 'codeview', 'help']]
+            ]
+        });
+        $('#summernote7').summernote({
+            placeholder: 'Hello stand alone ui',
+            tabsize: 2,
+            height: 100,
+            toolbar: [
+                ['style', ['style']],
+                ['font', ['bold', 'underline', 'clear']],
+                ['color', ['color']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['table', ['table']],
+                ['insert', ['link', 'picture', 'video']],
+                ['view', ['fullscreen', 'codeview', 'help']]
+            ]
+        });
+        $('#summernote8').summernote({
+            placeholder: 'Hello stand alone ui',
+            tabsize: 2,
+            height: 100,
+            toolbar: [
+                ['style', ['style']],
+                ['font', ['bold', 'underline', 'clear']],
+                ['color', ['color']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['table', ['table']],
+                ['insert', ['link', 'picture', 'video']],
+                ['view', ['fullscreen', 'codeview', 'help']]
+            ]
+        });
 
 
 
 
 
 
-    let photoCount = @json($imageCount); // Use the correct count variable
+        let photoCount = @json($imageCount); // Use the correct count variable
 
-    // Function to generate new photo upload field HTML
-    function createPhotoUploadField(count) {
-        return `
+        // Function to generate new photo upload field HTML
+        function createPhotoUploadField(count) {
+            return `
             <div class="col-lg-2 photo-upload-field">
                 <div class="form-input">
                     <label for="file-ip-${count}" class="px-4 py-3 text-center">
@@ -1063,54 +1074,54 @@ $(document).ready(function() {
                 </div>
             </div>
         `;
-    }
+        }
 
-    // // Event listener for the "Add More Photos" button
-    // $('#add-photo-btn').on('click', function() {
-    //     photoCount++;
-    //     const newFieldHtml = createPhotoUploadField(photoCount);
-    //     $('#photo-upload-container').append(newFieldHtml);
-    // });
+        // // Event listener for the "Add More Photos" button
+        // $('#add-photo-btn').on('click', function() {
+        //     photoCount++;
+        //     const newFieldHtml = createPhotoUploadField(photoCount);
+        //     $('#photo-upload-container').append(newFieldHtml);
+        // });
 
-    // Function to show preview of selected image
-    function showPreview(event) {
-        var file = event.target.files[0];
-        var number = $(event.target).data('number'); // Use data attribute to get the number
-        var previewId = "#file-ip-" + number + "-preview";
+        // Function to show preview of selected image
+        function showPreview(event) {
+            var file = event.target.files[0];
+            var number = $(event.target).data('number'); // Use data attribute to get the number
+            var previewId = "#file-ip-" + number + "-preview";
 
-        var reader = new FileReader();
+            var reader = new FileReader();
 
-        reader.onload = function(e) {
-            $(previewId).attr('src', e.target.result);
-        };
+            reader.onload = function(e) {
+                $(previewId).attr('src', e.target.result);
+            };
 
-        if (file) {
-            if (file.size <= 20 * 1024 * 1024) { // 2 MB limit
-                if (file.type === 'image/png' || file.type === 'image/jpeg' || file.type === 'image/svg+xml') {
-                    reader.readAsDataURL(file);
+            if (file) {
+                if (file.size <= 20 * 1024 * 1024) { // 2 MB limit
+                    if (file.type === 'image/png' || file.type === 'image/jpeg' || file.type === 'image/svg+xml') {
+                        reader.readAsDataURL(file);
+                    } else {
+                        alert('Please upload a valid PNG or JPEG image.');
+                    }
                 } else {
-                    alert('Please upload a valid PNG or JPEG image.');
+                    alert('File size exceeds 2 MB limit.');
                 }
-            } else {
-                alert('File size exceeds 2 MB limit.');
             }
         }
-    }
 
-    // Delegate event binding for dynamically added file inputs
-    $('#photo-upload-container').on('change', 'input[type="file"]', showPreview);
-});
-
+        // Delegate event binding for dynamically added file inputs
+        $('#photo-upload-container').on('change', 'input[type="file"]', showPreview);
+    });
 
 
-function addCampRuleField() {
-    // Find the container where new fields will be added
-    var container = document.getElementById('camp-rule-container');
 
-    // Create a new div for the new field
-    var newField = document.createElement('div');
-    newField.className = 'row g-2 mb-4 camp-rule-field';
-    newField.innerHTML = `
+    function addCampRuleField() {
+        // Find the container where new fields will be added
+        var container = document.getElementById('camp-rule-container');
+
+        // Create a new div for the new field
+        var newField = document.createElement('div');
+        newField.className = 'row g-2 mb-4 camp-rule-field';
+        newField.innerHTML = `
         <div class="col">
             <input type="text" name="camp_rule[]" class="form-control py-3 rounded-3 shadow-sm" placeholder="Rule And Regulations" required>
         </div>
@@ -1123,31 +1134,31 @@ function addCampRuleField() {
             </a>
         </div>`;
 
-    // Append the new field to the container
-    container.appendChild(newField);
-}
-
-function removeField(element) {
-    // Find the parent element (field container) and remove it
-    var field = element.closest('.camp-rule-field');
-    if (field) {
-        field.remove();
+        // Append the new field to the container
+        container.appendChild(newField);
     }
-}
 
-function previewImage(event) {
-    const input = event.target;
-    const preview = document.getElementById('file-ip-2-preview');
-
-    if (input.files && input.files[0]) {
-        const reader = new FileReader();
-
-        reader.onload = function(e) {
-            preview.src = e.target.result;
+    function removeField(element) {
+        // Find the parent element (field container) and remove it
+        var field = element.closest('.camp-rule-field');
+        if (field) {
+            field.remove();
         }
-
-        reader.readAsDataURL(input.files[0]);
     }
-}
+
+    function previewImage(event) {
+        const input = event.target;
+        const preview = document.getElementById('file-ip-2-preview');
+
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+                preview.src = e.target.result;
+            }
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
 </script>
 @endsection
