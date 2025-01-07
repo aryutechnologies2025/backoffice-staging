@@ -119,9 +119,9 @@
     }
 
     .g-3 {
-    --bs-gutter-x: 6rem !important;
-}
- 
+        --bs-gutter-x: 6rem !important;
+    }
+
     /* .form-input {
     border: 1px dashed #ccc;
     padding: 10px;
@@ -237,9 +237,9 @@
                             <label class="fw-bold">Cover Image</label>
                             <div class="row align-items-center">
                                 <!-- Cover Image Preview -->
-                                <div class="col-lg-3 text-start">
+                                <label for="file-ip-1" class="d-block pt-4">
                                     @if($package_details->cover_img)
-                                    <img id="file-ip-100-preview" src="{{ asset($package_details->cover_img) }}"
+                                    <img id="file-ip-1-preview" src="{{ asset($package_details->cover_img) }}"
                                         alt="Cover Image" class="rounded-3 shadow-sm"
                                         style="max-width: 250px; max-height: 250px; object-fit: cover;">
                                     @else
@@ -247,76 +247,78 @@
                                         src="/assets/image/dashboard/innerpece_addpic_icon.svg" alt="Add Pic"
                                         class="rounded-3 shadow-sm" style="max-width: 250px; max-height: 250px;">
                                     @endif
-                                    <p class="mt-2 fw-light">Add Pic</p>
-                                    <input type="file" id="file-ip-100" name="cover_img"
+                                    <p class="mt-2">Add Pic</p>
+                                </label>
+                                <!-- <input type="file" id="file-ip-1" name="cover_img" class="form-control"
+                                    accept="image/png, image/jpeg, image/svg+xml"> -->
+                                <!-- <input type="file" id="file-ip-100" name="cover_img"
                                         accept="image/png, image/jpeg, image/svg+xml" onchange="previewImage(event)"
-                                        class="form-control mt-3">
-                                    <div id="file-ip-100-error" class="text-danger mt-2"></div>
-                                    <small class="text-danger d-block mt-2">* Upload size [640x120]</small>
+                                        class="form-control mt-3"> -->
+                                <!-- <div id="file-ip-100-error" class="text-danger mt-2"></div> -->
+                                <small class="text-danger d-block mt-2">* Upload size [640x120]</small>
+                            </div>
 
-                                </div>
-
-                                <!-- Upload and Alternate Image Names -->
-                                <div class="col-lg-9">
-                                    <div class="row g-2">
-                                        <div class="col-6">
-                                            <label class="fw-bold">Upload Image Name <span
-                                                    class="text-danger">*</span></label>
-                                            <input type="text" placeholder="Rename the Photo" id="upload_image_name"
-                                                name="upload_image_name" value="{{$package_details->upload_image_name}}"
-                                                class="form-control py-2 rounded-3 shadow-sm" required>
-                                        </div>
-                                        <div class="col-6">
-                                            <label class="fw-bold">Alternate Image Name <span
-                                                    class="text-danger">*</span></label>
-                                            <input type="text" placeholder="Alternate Name" id="alternate_image_name"
-                                                name="alternate_image_name" value="{{$package_details->alternate_name}}"
-                                                class="form-control py-2 rounded-3 shadow-sm" required>
-                                        </div>
+                            <!-- Upload and Alternate Image Names -->
+                            <div class="col-lg-9">
+                                <div class="row g-2">
+                                    <div class="col-6">
+                                        <label class="fw-bold">Upload Image Name <span
+                                                class="text-danger">*</span></label>
+                                        <input type="text" placeholder="Rename the Photo" id="upload_image_name"
+                                            name="upload_image_name" value="{{$package_details->upload_image_name}}"
+                                            class="form-control py-2 rounded-3 shadow-sm" required>
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="fw-bold">Alternate Image Name <span
+                                                class="text-danger">*</span></label>
+                                        <input type="text" placeholder="Alternate Name" id="alternate_image_name"
+                                            name="alternate_image_name" value="{{$package_details->alternate_name}}"
+                                            class="form-control py-2 rounded-3 shadow-sm" required>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                    </div>
 
-                        <div id="photo-upload-container" class="row g-3">
-                            <label class="fw-bold mt-4">Gallery Image</label>
-                            @php
-                            $images = json_decode($package_details->events_package_images, true);
-                            $imageCount = is_array($images) ? count($images) : 0;
-                            @endphp
-                            @if (is_array($images) && $imageCount > 0)
-                            @foreach ($images as $key => $image)
-                            <div class="col-md-2 col-sm-4 col-6 photo-upload-field" id="photo-field-{{ $key }}">
-                                <div class="form-input text-center">
-                                    <label for="file-ip-{{ $key }}">
-                                        <img class="img-fluid mt-3" id="file-ip-{{ $key }}-preview" src="{{ asset($image) }}" alt="Image Preview">
-                                        <p class="fw-light mt-2">Edit Pic</p>
-                                    </label>
-                                    <input type="file" name="img_{{ $key }}" id="file-ip-{{ $key }}" data-number="{{ $key }}" accept="image/*" onchange="previewImage(event, this)">
-                                    <button type="button" class="btn btn-danger btn-sm mt-2 delete-photo-btn" data-key="{{ $key }}">Delete</button>
-                                </div>
+                    <div id="photo-upload-container" class="row g-3">
+                        <label class="fw-bold mt-4">Gallery Image</label>
+                        @php
+                        $images = json_decode($package_details->events_package_images, true);
+                        $imageCount = is_array($images) ? count($images) : 0;
+                        @endphp
+                        @if (is_array($images) && $imageCount > 0)
+                        @foreach ($images as $key => $image)
+                        <div class="col-md-2 col-sm-4 col-6 photo-upload-field" id="photo-field-{{ $key }}">
+                            <div class="form-input text-center">
+                                <label for="file-ip-{{ $key }}">
+                                    <img class="img-fluid mt-3" id="file-ip-{{ $key }}-preview" src="{{ asset($image) }}" alt="Image Preview">
+                                    <p class="fw-light mt-2">Edit Pic</p>
+                                </label>
+                                <input type="file" name="img_{{ $key }}" id="file-ip-{{ $key }}" data-number="{{ $key }}" accept="image/*" onchange="previewImage(event, this)">
+                                <button type="button" class="btn btn-danger btn-sm mt-2 delete-photo-btn" data-key="{{ $key }}">Delete</button>
                             </div>
-                            @endforeach
-                            @else
-                            <p>No images uploaded yet.</p>
-                            @endif
                         </div>
-                        <div class="mt-3">
-                            <button id="add-photo-btn" type="button" class="btn btn-primary">Add More Photos</button>
-                        </div>
+                        @endforeach
+                        @else
+                        <p>No images uploaded yet.</p>
+                        @endif
+                    </div>
+                    <div class="mt-3">
+                        <button id="add-photo-btn" type="button" class="btn btn-primary">Add More Photos</button>
+                    </div>
 
-                        <script>
-                            let photoCount = {
-                                {
-                                    $imageCount
-                                }
-                            }; // Start photo counter from existing photos
+                    <script>
+                        let photoCount = {
+                            {
+                                $imageCount
+                            }
+                        }; // Start photo counter from existing photos
 
-                            // Function to add a new photo upload field
-                            document.getElementById('add-photo-btn').addEventListener('click', function() {
-                                photoCount++;
-                                const container = document.getElementById('photo-upload-container');
-                                const newFieldHtml = `
+                        // Function to add a new photo upload field
+                        document.getElementById('add-photo-btn').addEventListener('click', function() {
+                            photoCount++;
+                            const container = document.getElementById('photo-upload-container');
+                            const newFieldHtml = `
             <div class="col-md-2 col-sm-4 col-6 photo-upload-field" id="photo-field-${photoCount}">
                 <div class="form-input text-center">
                     <label for="file-ip-${photoCount}">
@@ -327,40 +329,40 @@
                     <button type="button" class="btn btn-danger btn-sm mt-2 delete-photo-btn" data-key="${photoCount}">Delete</button>
                 </div>
             </div>`;
-                                container.insertAdjacentHTML('beforeend', newFieldHtml);
-                            });
+                            container.insertAdjacentHTML('beforeend', newFieldHtml);
+                        });
 
-                            // Function to preview image after file selection
-                            function previewImage(event) {
-                                const input = event.target;
-                                const preview = document.getElementById('file-ip-2-preview');
+                        // Function to preview image after file selection
+                        function previewImage(event) {
+                            const input = event.target;
+                            const preview = document.getElementById('file-ip-2-preview');
 
-                                if (input.files && input.files[0]) {
-                                    const reader = new FileReader();
+                            if (input.files && input.files[0]) {
+                                const reader = new FileReader();
 
-                                    reader.onload = function(e) {
-                                        preview.src = e.target.result;
-                                    }
+                                reader.onload = function(e) {
+                                    preview.src = e.target.result;
+                                }
 
-                                    reader.readAsDataURL(input.files[0]);
+                                reader.readAsDataURL(input.files[0]);
+                            }
+                        }
+
+                        // Function to delete photo field
+                        document.addEventListener('click', function(event) {
+                            if (event.target.classList.contains('delete-photo-btn')) {
+                                const key = event.target.getAttribute('data-key');
+                                const photoField = document.getElementById(`photo-field-${key}`);
+                                if (photoField) {
+                                    photoField.remove();
                                 }
                             }
-
-                            // Function to delete photo field
-                            document.addEventListener('click', function(event) {
-                                if (event.target.classList.contains('delete-photo-btn')) {
-                                    const key = event.target.getAttribute('data-key');
-                                    const photoField = document.getElementById(`photo-field-${key}`);
-                                    if (photoField) {
-                                        photoField.remove();
-                                    }
-                                }
-                            });
-                        </script>
+                        });
+                    </script>
 
 
-                        <!-- 2.LOCATION -->
-                        {{-- <div class="row mb-1">
+                    <!-- 2.LOCATION -->
+                    {{-- <div class="row mb-1">
             <div class="col">
                 <div class="form-body px-5  rounded-4">
                     <h4 class="fw-bold mb-3">2.Location</h4>
@@ -371,43 +373,43 @@
                             <div class="col-lg-12  ">
                                 <!-- <input type="text" id="address" name="address" class="form-control py-3 rounded-3 shadow-sm" placeholder="Address" required value=""> -->
                                 <!-- <textarea id="program_descriptions" class="container__textarea p-5 textarea-feild" name="address" required>{{$package_details->address}}</textarea>
-                        -->
-                        <!-- <div class="mb-3">
+                    -->
+                    <!-- <div class="mb-3">
                                     <div id="commentEditor2" class="form-control " style="height: 200px;"></div>
                                 </div> -->
-                        @php
-                        $plain_text_address = strip_tags($package_details->address);
-                        @endphp
-                        <div class=" mt-2">
-                            <div class="row">
-                                <div class="col-lg-12 ">
-                                    <div id="summernote2">{{$plain_text_address}}</div>
-                                </div>
+                    @php
+                    $plain_text_address = strip_tags($package_details->address);
+                    @endphp
+                    <div class=" mt-2">
+                        <div class="row">
+                            <div class="col-lg-12 ">
+                                <div id="summernote2">{{$plain_text_address}}</div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="row g-2 mb-2 d-flex justify-content-around">
-                    <div class="col">
-                        <label class="fw-bold  mb-4">City <span class="text-danger">*</span></label>
-                        <input type="text" placeholder="City" id="city" name="city"
-                            class="form-control py-2 rounded-3 shadow-sm" required value="{{$package_details->city}}">
-                    </div>
-                    <div class="col">
-                        <label class="fw-bold mb-4 ">State <span class="text-danger">*</span></label>
-                        <input type="text" placeholder="State" id="state" name="state"
-                            class="form-control py-2 rounded-3 shadow-sm" required value="{{$package_details->state}}">
-                    </div>
+            </div>
+            <div class="row g-2 mb-2 d-flex justify-content-around">
+                <div class="col">
+                    <label class="fw-bold  mb-4">City <span class="text-danger">*</span></label>
+                    <input type="text" placeholder="City" id="city" name="city"
+                        class="form-control py-2 rounded-3 shadow-sm" required value="{{$package_details->city}}">
                 </div>
-                <div class="row mb-4">
-                    <div class="col-lg-12">
-                        <label class="fw-bold mb-4 ">Country <span class="text-danger">*</span></label>
-                        <input type="text" id="country" name="country" class="form-control py-2 rounded-3 shadow-sm"
-                            placeholder="Country" required value="{{$package_details->country}}">
-                    </div>
+                <div class="col">
+                    <label class="fw-bold mb-4 ">State <span class="text-danger">*</span></label>
+                    <input type="text" placeholder="State" id="state" name="state"
+                        class="form-control py-2 rounded-3 shadow-sm" required value="{{$package_details->state}}">
+                </div>
+            </div>
+            <div class="row mb-4">
+                <div class="col-lg-12">
+                    <label class="fw-bold mb-4 ">Country <span class="text-danger">*</span></label>
+                    <input type="text" id="country" name="country" class="form-control py-2 rounded-3 shadow-sm"
+                        placeholder="Country" required value="{{$package_details->country}}">
                 </div>
             </div>
     </div>
+</div>
 </div>
 </div> --}}
 
@@ -451,14 +453,14 @@
                 <div class="plan-item">
                     <!-- Plan Title and Plan Subtitle on the same line -->
                     <div class="row g-2 mt-2 d-flex justify-content-between">
-                        <div class="col-lg-5">
+                        <div class="col-lg-4">
                             <label class="form-label form-label-top form-label-auto fw-bold mb-2">Plan Title</label>
 
                             <input type="text" name="plan_title[]" class="form-control py-2 rounded-3 shadow-sm"
                                 placeholder="Plan Title" required
                                 value="{{ isset($tourPlanning['plan_title'][$index]) ? $tourPlanning['plan_title'][$index] : '' }}">
                         </div>
-                        <div class="col-lg-5">
+                        <div class="col-lg-4">
                             <label class="form-label form-label-top form-label-auto fw-bold mb-2">Plan Subtitle</label>
 
                             <input type="text" name="plan_subtitle[]" class="form-control py-2 rounded-3 shadow-sm"
