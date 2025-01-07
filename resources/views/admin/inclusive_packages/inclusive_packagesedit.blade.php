@@ -121,7 +121,12 @@
     .g-3 {
         --bs-gutter-x: 6rem !important;
     }
-
+    .me-1 {
+    margin-right: -8.75rem !important;
+}
+.g-4{
+    margin-left: -170px ! important;
+}
     /* .form-input {
     border: 1px dashed #ccc;
     padding: 10px;
@@ -234,51 +239,47 @@
                         </div>
                         <!-- Cover Image -->
                         <div class="mb-4">
-                            <label class="fw-bold">Cover Image</label>
-                            <div class="row align-items-center">
-                                <!-- Cover Image Preview -->
-                                <label for="file-ip-1" class="d-block pt-4">
-                                    @if($package_details->cover_img)
-                                    <img id="file-ip-1-preview" src="{{ asset($package_details->cover_img) }}"
-                                        alt="Cover Image" class="rounded-3 shadow-sm"
-                                        style="max-width: 250px; max-height: 250px; object-fit: cover;">
-                                    @else
-                                    <img id="file-ip-100-preview"
-                                        src="/assets/image/dashboard/innerpece_addpic_icon.svg" alt="Add Pic"
-                                        class="rounded-3 shadow-sm" style="max-width: 250px; max-height: 250px;">
-                                    @endif
-                                    <p class="mt-2">Add Pic</p>
-                                </label>
-                                <input type="file" id="file-ip-1" name="cover_img" class="form-control"
-                                    accept="image/png, image/jpeg, image/svg+xml">
-                                <!-- <input type="file" id="file-ip-100" name="cover_img"
-                                        accept="image/png, image/jpeg, image/svg+xml" onchange="previewImage(event)"
-                                        class="form-control mt-3"> -->
-                                <!-- <div id="file-ip-100-error" class="text-danger mt-2"></div> -->
-                                <small class="text-danger d-block mt-2">* Upload size [640x120]</small>
-                            </div>
+    <label class="fw-bold">Cover Image</label>
+    <div class="row align-items-center">
+        <!-- Flex Container -->
+        <div class="d-flex gap-5 w-full align-items-start">
+            <!-- Cover Image Section -->
+            <div class="">
+                <label for="file-ip-1" class="d-block pt-4">
+                    @if($package_details->cover_img)
+                    <img id="file-ip-1-preview" src="{{ asset($package_details->cover_img) }}" alt="Cover Image"
+                        class="rounded-3 shadow-sm" style="max-width: 250px; max-height: 250px; object-fit: cover;">
+                    @else
+                    <img id="file-ip-100-preview" src="/assets/image/dashboard/innerpece_addpic_icon.svg" alt="Add Pic"
+                        class="rounded-3 shadow-sm" style="max-width: 250px; max-height: 250px;">
+                    @endif
+                    <p class="mt-2 text-center">Add Pic</p>
+                </label>
+                <input type="file" id="file-ip-1" name="cover_img" class="form-control d-none"
+                    accept="image/png, image/jpeg, image/svg+xml">
+                <small class="text-danger d-block mt-2">* Upload size [640x120]</small>
+            </div>
 
-                            <!-- Upload and Alternate Image Names -->
-                            <div class="col-lg-9">
-                                <div class="row g-2">
-                                    <div class="col-6">
-                                        <label class="fw-bold">Upload Image Name <span
-                                                class="text-danger">*</span></label>
-                                        <input type="text" placeholder="Rename the Photo" id="upload_image_name"
-                                            name="upload_image_name" value="{{$package_details->upload_image_name}}"
-                                            class="form-control py-2 rounded-3 shadow-sm" required>
-                                    </div>
-                                    <div class="col-6">
-                                        <label class="fw-bold">Alternate Image Name <span
-                                                class="text-danger">*</span></label>
-                                        <input type="text" placeholder="Alternate Name" id="alternate_image_name"
-                                            name="alternate_image_name" value="{{$package_details->alternate_name}}"
-                                            class="form-control py-2 rounded-3 shadow-sm" required>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+            <!-- Upload and Alternate Image Name Section -->
+            <div class="">
+                <div class="d-flex flex-column align-items-start gap-5">
+                    <div class="d-flex flex-column align-items-start">
+                        <label class="fw-bold">Upload Image Name <span class="text-danger">*</span></label>
+                        <input type="text" placeholder="Rename the Photo" id="upload_image_name" name="upload_image_name"
+                            value="{{$package_details->upload_image_name}}"
+                            class="form-control py-2 rounded-3 shadow-sm" required>
                     </div>
+                    <div class="d-flex flex-column align-items-start">
+                        <label class="fw-bold">Alternate Image Name <span class="text-danger">*</span></label>
+                        <input type="text" placeholder="Alternate Name" id="alternate_image_name"
+                            name="alternate_image_name" value="{{$package_details->alternate_name}}"
+                            class="form-control py-2 rounded-3 shadow-sm" required>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
                     <div id="photo-upload-container" class="row g-3">
                         <label class="fw-bold mt-4">Gallery Image</label>
@@ -452,15 +453,15 @@
                 @foreach($tourPlanning['plan_subtitle'] as $index => $title)
                 <div class="plan-item">
                     <!-- Plan Title and Plan Subtitle on the same line -->
-                    <div class="row g-2 mt-2 d-flex justify-content-between">
-                        <div class="col-lg-4">
+                    <div class="row g-2 mt-2 d-flex ">
+                        <div class="col-lg-6">
                             <label class="form-label form-label-top form-label-auto fw-bold mb-2">Plan Title</label>
 
                             <input type="text" name="plan_title[]" class="form-control py-2 rounded-3 shadow-sm"
                                 placeholder="Plan Title" required
                                 value="{{ isset($tourPlanning['plan_title'][$index]) ? $tourPlanning['plan_title'][$index] : '' }}">
                         </div>
-                        <div class="col-lg-4">
+                        <div class="col-lg-6">
                             <label class="form-label form-label-top form-label-auto fw-bold mb-2">Plan Subtitle</label>
 
                             <input type="text" name="plan_subtitle[]" class="form-control py-2 rounded-3 shadow-sm"
