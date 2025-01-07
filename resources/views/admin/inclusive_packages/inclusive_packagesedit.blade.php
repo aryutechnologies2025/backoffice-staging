@@ -57,13 +57,8 @@
         width: 100%;
     }
 
-    .form-check-input {
-        margin-top: 0% !important;
-    }
 
-    .form-check-input {
-        margin-top: 0% !important;
-    }
+
 
     .plan-item .form-label {
         font-weight: bold;
@@ -121,12 +116,15 @@
     .g-3 {
         --bs-gutter-x: 6rem !important;
     }
+
     .me-1 {
-    margin-right: -8.75rem !important;
-}
-.g-4{
-    margin-left: -170px ! important;
-}
+        margin-right: -8.75rem !important;
+    }
+
+    .g-4 {
+        margin-left: -170px ! important;
+    }
+
     /* .form-input {
     border: 1px dashed #ccc;
     padding: 10px;
@@ -210,156 +208,157 @@
                                 style="height: 250px; overflow-y: auto;">{{$plain_text_description}}</div>
                         </div>
 
+
+
                         <!-- Flags -->
-                        <div class="row g-2 mb-4">
+                        <div class="mb-4">
                             <label class="fw-bold mb-2">Flags</label>
-                            <div class="col-lg-3 col-md-4 col-sm-6">
-                                <div class="form-check">
-                                    <input type="checkbox" class="form-check-input me-1" id="popular_program"
+                            <div class="d-flex gap-5 align-items-center">
+
+                                <div class=" d-flex gap-2 align-items-center">
+                                    <input type="checkbox" id="popular_program"
                                         name="prop_cat[]" value="popular_program"
                                         {{ in_array('popular_program', $selectedprogram) ? 'checked' : '' }}>
-                                    <label for="popular_program" class="form-check-label">Popular Program</label>
+                                    <label for="popular_program">Popular Program</label>
                                 </div>
-                            </div>
-                            <div class="col-lg-3 col-md-4 col-sm-6">
-                                <div class="form-check">
-                                    <input type="checkbox" class="form-check-input me-1" id="upcoming_program"
+                                <div class="d-flex gap-2 align-items-center">
+                                    <input type="checkbox" id="upcoming_program"
                                         name="prop_cat[]" value="upcoming_program"
                                         {{ in_array('upcoming_program', $selectedprogram) ? 'checked' : '' }}>
-                                    <label for="upcoming_program" class="form-check-label">Upcoming Program</label>
+                                    <label for="upcoming_program">Upcoming Program</label>
                                 </div>
-                            </div>
-                            <div class="col-lg-3 col-md-4 col-sm-6">
-                                <div class="form-check">
-                                    <input type="checkbox" class="form-check-input me-1" id="featured" name="prop_cat[]"
+                                <div class="d-flex gap-2 align-items-center">
+                                    <input type="checkbox" id="featured" name="prop_cat[]"
                                         value="featured" {{ in_array('featured', $selectedprogram) ? 'checked' : '' }}>
-                                    <label for="featured" class="form-check-label">Featured</label>
+                                    <label for="featured">Featured</label>
                                 </div>
+
                             </div>
+
                         </div>
+
+
                         <!-- Cover Image -->
                         <div class="mb-4">
-    <label class="fw-bold">Cover Image</label>
-    <div class="row align-items-center">
-        <!-- Flex Container -->
-        <div class="d-flex gap-5 w-full align-items-start">
-            <!-- Cover Image Section -->
-            <div class="">
-                <label for="file-ip-1" class="d-block pt-4">
-                    @if($package_details->cover_img)
-                    <img id="file-ip-1-preview" src="{{ asset($package_details->cover_img) }}" alt="Cover Image"
-                        class="rounded-3 shadow-sm" style="max-width: 250px; max-height: 250px; object-fit: cover;">
-                    @else
-                    <img id="file-ip-100-preview" src="/assets/image/dashboard/innerpece_addpic_icon.svg" alt="Add Pic"
-                        class="rounded-3 shadow-sm" style="max-width: 250px; max-height: 250px;">
-                    @endif
-                    <p class="mt-2 text-center">Add Pic</p>
-                </label>
-                <input type="file" id="file-ip-1" name="cover_img" class="form-control d-none"
-                    accept="image/png, image/jpeg, image/svg+xml">
-                <small class="text-danger d-block mt-2">* Upload size [640x120]</small>
-            </div>
+                            <label class="fw-bold">Cover Image</label>
+                            <div class="row align-items-center">
+                                <!-- Flex Container -->
+                                <div class="d-flex gap-5 w-full align-items-start">
+                                    <!-- Cover Image Section -->
+                                    <div class="">
+                                        <label for="file-ip-1" class="d-block pt-4">
+                                            @if($package_details->cover_img)
+                                            <img id="file-ip-1-preview" src="{{ asset($package_details->cover_img) }}" alt="Cover Image"
+                                                class="rounded-3 shadow-sm" style="max-width: 250px; max-height: 250px; object-fit: cover;">
+                                            @else
+                                            <img id="file-ip-100-preview" src="/assets/image/dashboard/innerpece_addpic_icon.svg" alt="Add Pic"
+                                                class="rounded-3 shadow-sm" style="max-width: 250px; max-height: 250px;">
+                                            @endif
+                                            <p class="mt-2 text-center">Add Pic</p>
+                                        </label>
+                                        <input type="file" id="file-ip-1" name="cover_img" class="form-control d-none"
+                                            accept="image/png, image/jpeg, image/svg+xml">
+                                        <small class="text-danger d-block mt-2">* Upload size [640x120]</small>
+                                    </div>
 
-            <!-- Upload and Alternate Image Name Section -->
-            <div class="">
-                <div class="d-flex flex-column align-items-start gap-5">
-                    <div class="d-flex flex-column align-items-start">
-                        <label class="fw-bold">Upload Image Name <span class="text-danger">*</span></label>
-                        <input type="text" placeholder="Rename the Photo" id="upload_image_name" name="upload_image_name"
-                            value="{{$package_details->upload_image_name}}"
-                            class="form-control py-2 rounded-3 shadow-sm" required>
-                    </div>
-                    <div class="d-flex flex-column align-items-start">
-                        <label class="fw-bold">Alternate Image Name <span class="text-danger">*</span></label>
-                        <input type="text" placeholder="Alternate Name" id="alternate_image_name"
-                            name="alternate_image_name" value="{{$package_details->alternate_name}}"
-                            class="form-control py-2 rounded-3 shadow-sm" required>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-                    <div id="photo-upload-container" class="row g-3">
-                        <label class="fw-bold mt-4">Gallery Image</label>
-                        @php
-                        $images = json_decode($package_details->events_package_images, true);
-                        $imageCount = is_array($images) ? count($images) : 0;
-                        @endphp
-                        @if (is_array($images) && $imageCount > 0)
-                        @foreach ($images as $key => $image)
-                        <div class="col-md-2 col-sm-4 col-6 photo-upload-field" id="photo-field-{{ $key }}">
-                            <div class="form-input text-center">
-                                <label for="file-ip-{{ $key }}">
-                                    <img class="img-fluid mt-3" id="file-ip-{{ $key }}-preview" src="{{ asset($image) }}" alt="Image Preview">
-                                    <p class="fw-light mt-2">Edit Pic</p>
-                                </label>
-                                <input type="file" name="img_{{ $key }}" id="file-ip-{{ $key }}" data-number="{{ $key }}" accept="image/*" onchange="previewImage(event, this)">
-                                <button type="button" class="btn btn-danger btn-sm mt-2 delete-photo-btn" data-key="{{ $key }}">Delete</button>
+                                    <!-- Upload and Alternate Image Name Section -->
+                                    <div class=" py-2">
+                                        <div class="d-flex flex-column align-items-start gap-4">
+                                            <div class="d-flex flex-column align-items-start">
+                                                <label class="fw-bold">Upload Image Name <span class="text-danger">*</span></label>
+                                                <input type="text" placeholder="Rename the Photo" id="upload_image_name" name="upload_image_name"
+                                                    value="{{$package_details->upload_image_name}}"
+                                                    class="form-control px-8 py-2 rounded-3 shadow-sm" required>
+                                            </div>
+                                            <div class="d-flex flex-column align-items-start">
+                                                <label class="fw-bold">Alternate Image Name <span class="text-danger">*</span></label>
+                                                <input type="text" placeholder="Alternate Name" id="alternate_image_name"
+                                                    name="alternate_image_name" value="{{$package_details->alternate_name}}"
+                                                    class="form-control px-8 py-2 rounded-3 shadow-sm" required>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        @endforeach
-                        @else
-                        <p>No images uploaded yet.</p>
-                        @endif
-                    </div>
-                    <div class="mt-3">
-                        <button id="add-photo-btn" type="button" class="btn btn-primary">Add More Photos</button>
-                    </div>
+                        <div id="photo-upload-container" class="row g-3">
+                            <label class="fw-bold mt-4">Gallery Image</label>
+                            @php
+                            $images = json_decode($package_details->events_package_images, true);
+                            $imageCount = is_array($images) ? count($images) : 0;
+                            @endphp
+                            @if (is_array($images) && $imageCount > 0)
+                            @foreach ($images as $key => $image)
+                            <div class="col-md-2 col-sm-4 col-6 photo-upload-field" id="photo-field-{{ $key }}">
+                                <div class="form-input text-center">
+                                    <label for="file-ip-{{ $key }}">
+                                        <img class="img-fluid mt-3" id="file-ip-{{ $key }}-preview" src="{{ asset($image) }}" alt="Image Preview">
+                                        <p class="fw-light mt-2">Edit Pic</p>
+                                    </label>
+                                    <input type="file" name="img_{{ $key }}" id="file-ip-{{ $key }}" data-number="{{ $key }}" accept="image/*" onchange="previewImage(event, this)">
+                                    <button type="button" class="btn btn-danger btn-sm mt-2 delete-photo-btn" data-key="{{ $key }}">Delete</button>
+                                </div>
+                            </div>
+                            @endforeach
+                            @else
+                            <p>No images uploaded yet.</p>
+                            @endif
+                        </div>
+                        <div class="mt-3">
+                            <button id="add-photo-btn" type="button" class="btn btn-primary">Add More Photos</button>
+                        </div>
 
-                    <script>
-                        let photoCount = {{ $imageCount }}; // Start photo counter from existing photos
+                        <script>
+                            // Start photo counter from existing photos
+                            let photoCount = @json($imageCount);
 
-                        // Function to add a new photo upload field
-                        document.getElementById('add-photo-btn').addEventListener('click', function() {
-                            photoCount++;
-                            const container = document.getElementById('photo-upload-container');
-                            const newFieldHtml = `
-            <div class="col-md-2 col-sm-4 col-6 photo-upload-field" id="photo-field-${photoCount}">
-                <div class="form-input text-center">
-                    <label for="file-ip-${photoCount}">
-                        <img class="img-fluid mt-3" id="file-ip-${photoCount}-preview" src="" alt="Image Preview">
-                        <p class="fw-light mt-2">Add Pic</p>
-                    </label>
-                    <input type="file" name="img_${photoCount}" id="file-ip-${photoCount}" data-number="${photoCount}" accept="image/*" onchange="previewImage(event, this)">
-                    <button type="button" class="btn btn-danger btn-sm mt-2 delete-photo-btn" data-key="${photoCount}">Delete</button>
-                </div>
-            </div>`;
-                            container.insertAdjacentHTML('beforeend', newFieldHtml);
-                        });
+                            // Function to add a new photo upload field
+                            document.getElementById('add-photo-btn').addEventListener('click', function() {
+                                photoCount++;
+                                const container = document.getElementById('photo-upload-container');
+                                const newFieldHtml = `
+                                <div class="col-md-2 col-sm-4 col-6 photo-upload-field" id="photo-field-${photoCount}">
+                                    <div class="form-input text-center">
+                                        <label for="file-ip-${photoCount}">
+                                            <img class="img-fluid mt-3" id="file-ip-${photoCount}-preview" src="" alt="Image Preview">
+                                            <p class="fw-light mt-2">Add Pic</p>
+                                        </label>
+                                        <input type="file" name="img_${photoCount}" id="file-ip-${photoCount}" data-number="${photoCount}" accept="image/*" onchange="previewImage(event, this)">
+                                        <button type="button" class="btn btn-danger btn-sm mt-2 delete-photo-btn" data-key="${photoCount}">Delete</button>
+                                    </div>
+                                </div>`;
+                                container.insertAdjacentHTML('beforeend', newFieldHtml);
+                            });
 
-                        // Function to preview image after file selection
-                        function previewImage(event) {
-                            const input = event.target;
-                            const preview = document.getElementById('file-ip-2-preview');
+                            // Function to preview image after file selection
+                            function previewImage(event, inputElement) {
+                                const input = inputElement || event.target;
+                                const preview = document.getElementById(`file-ip-${input.getAttribute('data-number')}-preview`);
 
-                            if (input.files && input.files[0]) {
-                                const reader = new FileReader();
-                            const preview = document.getElementById(`file-ip-${input.getAttribute('data-number')}-preview`);
-                                reader.onload = function(e) {
-                                    preview.src = e.target.result;
+                                if (input.files && input.files[0]) {
+                                    const reader = new FileReader();
+                                    reader.onload = function(e) {
+                                        preview.src = e.target.result;
+                                    }
+                                    reader.readAsDataURL(input.files[0]);
                                 }
-
-                                reader.readAsDataURL(input.files[0]);
                             }
-                        }
 
-                        // Function to delete photo field
-                        document.addEventListener('click', function(event) {
-                            if (event.target.classList.contains('delete-photo-btn')) {
-                                const key = event.target.getAttribute('data-key');
-                                const photoField = document.getElementById(`photo-field-${key}`);
-                                if (photoField) {
-                                    photoField.remove();
+                            // Function to delete photo field
+                            document.addEventListener('click', function(event) {
+                                if (event.target.classList.contains('delete-photo-btn')) {
+                                    const key = event.target.getAttribute('data-key');
+                                    const photoField = document.getElementById(`photo-field-${key}`);
+                                    if (photoField) {
+                                        photoField.remove();
+                                    }
                                 }
-                            }
-                        });
-                    </script>
+                            });
+                        </script>
 
 
-                    <!-- 2.LOCATION -->
-                    {{-- <div class="row mb-1">
+                        <!-- 2.LOCATION -->
+                        {{-- <div class="row mb-1">
             <div class="col">
                 <div class="form-body px-5  rounded-4">
                     <h4 class="fw-bold mb-3">2.Location</h4>
@@ -370,43 +369,43 @@
                             <div class="col-lg-12  ">
                                 <!-- <input type="text" id="address" name="address" class="form-control py-3 rounded-3 shadow-sm" placeholder="Address" required value=""> -->
                                 <!-- <textarea id="program_descriptions" class="container__textarea p-5 textarea-feild" name="address" required>{{$package_details->address}}</textarea>
-                    -->
-                    <!-- <div class="mb-3">
+                        -->
+                        <!-- <div class="mb-3">
                                     <div id="commentEditor2" class="form-control " style="height: 200px;"></div>
                                 </div> -->
-                    @php
-                    $plain_text_address = strip_tags($package_details->address);
-                    @endphp
-                    <div class=" mt-2">
-                        <div class="row">
-                            <div class="col-lg-12 ">
-                                <div id="summernote2">{{$plain_text_address}}</div>
+                        @php
+                        $plain_text_address = strip_tags($package_details->address);
+                        @endphp
+                        <div class=" mt-2">
+                            <div class="row">
+                                <div class="col-lg-12 ">
+                                    <div id="summernote2">{{$plain_text_address}}</div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="row g-2 mb-2 d-flex justify-content-around">
-                <div class="col">
-                    <label class="fw-bold  mb-4">City <span class="text-danger">*</span></label>
-                    <input type="text" placeholder="City" id="city" name="city"
-                        class="form-control py-2 rounded-3 shadow-sm" required value="{{$package_details->city}}">
+                <div class="row g-2 mb-2 d-flex justify-content-around">
+                    <div class="col">
+                        <label class="fw-bold  mb-4">City <span class="text-danger">*</span></label>
+                        <input type="text" placeholder="City" id="city" name="city"
+                            class="form-control py-2 rounded-3 shadow-sm" required value="{{$package_details->city}}">
+                    </div>
+                    <div class="col">
+                        <label class="fw-bold mb-4 ">State <span class="text-danger">*</span></label>
+                        <input type="text" placeholder="State" id="state" name="state"
+                            class="form-control py-2 rounded-3 shadow-sm" required value="{{$package_details->state}}">
+                    </div>
                 </div>
-                <div class="col">
-                    <label class="fw-bold mb-4 ">State <span class="text-danger">*</span></label>
-                    <input type="text" placeholder="State" id="state" name="state"
-                        class="form-control py-2 rounded-3 shadow-sm" required value="{{$package_details->state}}">
-                </div>
-            </div>
-            <div class="row mb-4">
-                <div class="col-lg-12">
-                    <label class="fw-bold mb-4 ">Country <span class="text-danger">*</span></label>
-                    <input type="text" id="country" name="country" class="form-control py-2 rounded-3 shadow-sm"
-                        placeholder="Country" required value="{{$package_details->country}}">
+                <div class="row mb-4">
+                    <div class="col-lg-12">
+                        <label class="fw-bold mb-4 ">Country <span class="text-danger">*</span></label>
+                        <input type="text" id="country" name="country" class="form-control py-2 rounded-3 shadow-sm"
+                            placeholder="Country" required value="{{$package_details->country}}">
+                    </div>
                 </div>
             </div>
     </div>
-</div>
 </div>
 </div> --}}
 
@@ -773,19 +772,20 @@
     <div class="col">
         <div class="form-body px-2 py-3 rounded-4">
             <h4 class="fw-bold mb-3">11. Amenities</h4>
-            <div class="row g-2 mb-2">
+            <div class="row g-1 mb-2">
                 @foreach($amenities_dts->chunk(4) as $chunk)
-                @foreach($chunk as $amenity)
-                <div class="col-lg-3 col-md-5 col-sm-6 mb-2">
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input" id="amenity-{{ $amenity->id }}"
-                            name="amenity_services[]" value="{{ $amenity->id }}" @if(in_array((string) $amenity->id,
-                        $selectedAmenities)) checked @endif>
-                        <label class="form-check-label"
-                            for="amenity-{{ $amenity->id }}">{{ $amenity->amenity_name }}</label>
+                <div class="row mb-2">
+                    @foreach($chunk as $amenity)
+                    <div class="col-lg-3 col-md-5 col-sm-6 mb-2">
+                        <div class="form-check d-flex align-items-center">
+                            <input type="checkbox" class="me-2" id="amenity-{{ $amenity->id }}"
+                                name="amenity_services[]" value="{{ $amenity->id }}" @if(in_array((string) $amenity->id,
+                            $selectedAmenities)) checked @endif>
+                            <label class="form-check-label" for="amenity-{{ $amenity->id }}">{{ $amenity->amenity_name }}</label>
+                        </div>
                     </div>
+                    @endforeach
                 </div>
-                @endforeach
                 @endforeach
             </div>
         </div>
@@ -797,19 +797,21 @@
     <div class="col">
         <div class="form-body px-2 py-3 rounded-4">
             <h4 class="fw-bold mb-3">12. Food & Beverages</h4>
-            <div class="row g-2 mb-3">
-                @foreach($foodBeverages_dts->chunk(6) as $chunk)
-                @foreach($chunk as $item)
-                <div class="col-lg-3 col-md-5 col-sm-6 mb-2">
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input" id="food-beverage-{{ $item->id }}"
-                            name="food_beverages[]" value="{{ $item->id }}" @if(in_array((string) $item->id,
-                        $selectedfood_beverages)) checked @endif>
-                        <label class="form-check-label"
-                            for="food-beverage-{{ $item->id }}">{{ $item->food_beverage }}</label>
+            <div class="row g-2 mb-2">
+                @foreach($foodBeverages_dts->chunk(4) as $chunk)
+                <div class="row mb-2">
+                    @foreach($chunk as $item)
+                    <div class="col-lg-3 col-md-4 col-sm-6 mb-2">
+                        <div class="form-check d-flex align-items-center">
+                            <input type="checkbox" class="me-2" id="food-beverage-{{ $item->id }}"
+                                name="food_beverages[]" value="{{ $item->id }}" @if(in_array((string) $item->id,
+                            $selectedfood_beverages)) checked @endif>
+                            <label class="form-check-label"
+                                for="food-beverage-{{ $item->id }}">{{ $item->food_beverage }}</label>
+                        </div>
                     </div>
+                    @endforeach
                 </div>
-                @endforeach
                 @endforeach
             </div>
         </div>
@@ -822,17 +824,20 @@
         <div class="form-body px-2 py-3 rounded-4">
             <h4 class="fw-bold mb-3">13. Activities</h4>
             <div class="row g-2 mb-3">
-                @foreach($activities_dts->chunk(6) as $chunk)
-                @foreach($chunk as $item)
-                <div class="col-lg-3 col-md-5 col-sm-6 mb-2">
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input" id="activities-{{ $item->id }}"
-                            name="activities[]" value="{{ $item->id }}" @if(in_array((string) $item->id,
-                        $selectedactivities)) checked @endif>
-                        <label class="form-check-label" for="activities-{{ $item->id }}">{{ $item->activities }}</label>
+                @foreach($activities_dts->chunk(4) as $chunk)
+                <div class="row mb-2">
+
+                    @foreach($chunk as $item)
+                    <div class="col-lg-3 col-md-5 col-sm-6 mb-2">
+                        <div class="form-check d-flex align-items-center">
+                            <input type="checkbox" class="me-2" id="activities-{{ $item->id }}"
+                                name="activities[]" value="{{ $item->id }}" @if(in_array((string) $item->id,
+                            $selectedactivities)) checked @endif>
+                            <label class="form-check-label" for="activities-{{ $item->id }}">{{ $item->activities }}</label>
+                        </div>
                     </div>
+                    @endforeach
                 </div>
-                @endforeach
                 @endforeach
             </div>
         </div>
@@ -846,17 +851,20 @@
             <h4 class="fw-bold mb-3">14. Safety Features</h4>
             <div class="row g-2 mb-3">
                 @foreach($safety_features_dts->chunk(6) as $chunk)
-                @foreach($chunk as $item)
-                <div class="col-lg-3 col-md-5 col-sm-6 mb-2">
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input" id="safety_features-{{ $item->id }}"
-                            name="safety_features[]" value="{{ $item->id }}" @if(in_array((string) $item->id,
-                        $selectedsafety_features)) checked @endif>
-                        <label class="form-check-label"
-                            for="safety_features-{{ $item->id }}">{{ $item->safety_features }}</label>
+                <div class="row mb-2">
+
+                    @foreach($chunk as $item)
+                    <div class="col-lg-3 col-md-5 col-sm-6 mb-2">
+                        <div class="form-check d-flex align-items-center">
+                            <input type="checkbox" class="me-2" id="safety_features-{{ $item->id }}"
+                                name="safety_features[]" value="{{ $item->id }}" @if(in_array((string) $item->id,
+                            $selectedsafety_features)) checked @endif>
+                            <label class="form-check-label"
+                                for="safety_features-{{ $item->id }}">{{ $item->safety_features }}</label>
+                        </div>
                     </div>
+                    @endforeach
                 </div>
-                @endforeach
                 @endforeach
             </div>
 
@@ -871,13 +879,13 @@
             </div>
 
 
-            <div class="col-lg-12 text-end mt-5 py-5">
+            <div class="col-lg-12 text-end mt-5 py-5 ">
                 <a href="{{ route('admin.inclusive_package_list') }}">
-                    <button type="button" class="btn btn-outline-secondary px-4 py-3 fw-bold cancel-btn">
+                    <button type="button" class="btn btn-outline-secondary px-4 py-3 fw-bold cancel-btn text-center">
                         Cancel
                     </button>
                 </a>
-                <button type="submit" class="btn btn-primary ms-4 px-5 py-3 fw-bold submit-btn sbmtBtn ">
+                <button type="submit" class="btn btn-primary ms-4 px-6 py-3 fw-bold submit-btn sbmtBtn text-center ">
                     Submit
                 </button>
             </div>
