@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
     $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
     $table->foreignId('package_id')->constrained('inclusive_package_details')->onDelete('cascade');
-    $table->text('comment');
-    $table->integer('rating');
+    $table->text('comment')->nullable();
+    $table->integer('rating')->nullable();
     $table->timestamps();
         });
     }
@@ -26,11 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        $table->dropColumn('user_id');
-        $table->dropColumn('package_id');
-        $table->dropColumn('comment');
-        $table->dropColumn('rating');
-        $table->dropColumn('created_at');
-        $table->dropColumn('updated_at');
+        Schema::dropIfExists('reviews');
     }
 };
