@@ -222,22 +222,35 @@ border: 0px !important;
                                     <label for="file-ip-1" class="d-block pt-4">
                                         <img id="file-ip-1-preview"
                                             src="/assets/image/dashboard/innerpece_addpic_icon.svg"
-                                            class="img-thumbnail">
+                                            class="img-thumbnail" onchange="validateImage(this)">
                                         <p class="mt-2">Add Pic</p>
                                     </label>
                                     <input type="file" id="file-ip-1" name="cover_img" class="form-control"
-                                        accept="image/png, image/jpeg, image/svg+xml">
+                                        accept="image/png, image/jpeg, image/svg+xml"   onchange="validateImage(this)" >
+                                        <div id="file-ip-1-error" class="text-danger"></div>
+
                                     <small class="text-danger d-block mt-2 text-center">* Upload size [640x120]</small>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="row g-3 pt-4">
+                                     <div id="file-ip-1-error" class="text-danger"></div>
+                                <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+                                <script>
+                                function showError(message) {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Oops...',
+                                        text: message,
+                                    });
+                                }
+                                </script>
                                     <div class="col-12 pt-4 forms">
                                         <label class="">Upload Image Name <span
                                                 class="text-danger">*</span></label>
                                         <input type="text" id="upload_image_name" name="upload_image_name"
                                             placeholder="Rename the Photo" value="{{ old('upload_image_name') }}"
-                                            class="form-control py-2 rounded-3 shadow-sm w-50" required>
+                                            class="form-control py-2 rounded-3 shadow-sm w-50"  required>
                                     </div>
                                     <div class="col-12 forms">
                                         <label class="">Alternate Image Name <span
@@ -264,7 +277,7 @@ border: 0px !important;
                                 </div>
                             </div>
                         </div>
-
+                       
                         <script>
                             // Function to add a new photo field dynamically
                             let photoCount = 1; // Initialize photo count
@@ -1206,3 +1219,56 @@ border: 0px !important;
         });
     </script>
     @endsection
+
+    <script>
+function validateImage(input) {
+    const file = input.files[0];
+    const errorElement = document.getElementById('file-ip-1-error');
+    const previewElement = document.getElementById('file-ip-1-preview');
+
+    // Clear previous error messages and reset preview
+    errorElement.textContent = '';
+    previewElement.src = '/assets/image/dashboard/innerpece_addpic_icon.svg';
+
+    if (file) {
+        const reader = new FileReader();
+
+        reader.onload = function(e) {
+            const img = new Image();
+
+            img.onload = function() {
+                console.log('Image loaded with width: ' + img.width + ' and height: ' + img.height);
+
+              
+                if (1200 > img.width || 200 > img.height) {
+                    console.log("Dimensions exceed allowed size!");
+                    showError('Image sixe must be max of  1200x120 pixels.');
+                    input.value = ''; 
+                } else {
+                    console.log("Image dimensions are valid.");
+                
+                    previewElement.src = e.target.result;
+                }
+            };
+
+            // Handling image load error
+            img.onerror = function() {
+                console.log("Error loading image file."); // Debugging log for errors
+                showError("Error loading the image file. It might be corrupted or not a valid image.");
+            };
+
+            img.src = e.target.result;
+        };
+
+        // Read the image as a data URL
+        reader.readAsDataURL(file);
+    } else {
+        showError('No file selected.');
+    }
+}
+
+function showError(message) {
+    const errorElement = document.getElementById('file-ip-1-error');
+    errorElement.textContent = message;
+}
+</script>
