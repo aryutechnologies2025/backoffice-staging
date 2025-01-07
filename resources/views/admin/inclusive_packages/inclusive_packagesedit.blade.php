@@ -309,11 +309,7 @@
                     </div>
 
                     <script>
-                        let photoCount = {
-                            {
-                                $imageCount
-                            }
-                        }; // Start photo counter from existing photos
+                        let photoCount = {{ $imageCount }}; // Start photo counter from existing photos
 
                         // Function to add a new photo upload field
                         document.getElementById('add-photo-btn').addEventListener('click', function() {
@@ -340,7 +336,7 @@
 
                             if (input.files && input.files[0]) {
                                 const reader = new FileReader();
-
+                            const preview = document.getElementById(`file-ip-${input.getAttribute('data-number')}-preview`);
                                 reader.onload = function(e) {
                                     preview.src = e.target.result;
                                 }
