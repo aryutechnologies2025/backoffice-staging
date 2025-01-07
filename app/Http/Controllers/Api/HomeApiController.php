@@ -220,7 +220,7 @@ class HomeApiController extends Controller
                     'foodBeverages' => $details['foodBeverages'] ?? [],
                     'activities' => $details['activities'] ?? [],
                     'safetyFeatures' => $details['safetyFeatures'] ?? [],
-                    'location' =>$details['address'] ?? [],
+                    'addressDetails' =>$details['addressDetails'] ?? [],
                 ];
             });
     

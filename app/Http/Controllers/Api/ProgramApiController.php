@@ -1198,7 +1198,7 @@ public function destination_program_by_price_sort(Request $request)
         $foodBeverageIds = json_decode($package->food_beverages, true) ?? [];
         $activityIds = json_decode($package->activities, true) ?? [];
         $safetyFeatureIds = json_decode($package->safety_features, true) ?? [];
-    $address = json_decode($package->address, true) ?? [];  
+    $addressDetails = json_decode($package->address, true) ?? [];  
         // Fetch related records and format the response
         $amenities = Amenities::whereIn('id', $amenityIds)
             ->get(['id', 'amenity_name', 'amenity_pic'])
@@ -1240,17 +1240,17 @@ public function destination_program_by_price_sort(Request $request)
                 ];
             });
 
-            $address = Address::whereIn('id', $address)
-            ->get(['id', 'title', 'city' , 'state', 'country'])
+$addressDetails = Address::whereIn('id', $addressDetails)
+->get(['id', 'title', 'city' , 'state', 'country'])
 ->map(function ($item) {
-                return [
-                    'id' => $item->id,
-                    'title' => $item->title,
-                    'city' => $item->city,
-                    'state' => $item->state,
-                    'country' => $item->country,
-                ];
-            });
+    return [
+        'id' => $item->id,
+        'title' => $item->title,
+        'city' => $item->city,
+        'state' => $item->state,
+        'country' => $item->country,
+    ];
+});
         // Return the response
         return response()->json([
             'status' => 'success',
