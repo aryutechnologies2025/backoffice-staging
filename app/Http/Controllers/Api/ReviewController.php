@@ -13,25 +13,26 @@ class ReviewController extends Controller
         // Validate incoming request
         $request->validate([
             'user_id' => 'required|exists:users,id',
-            'package_id' => 'required|exists:inclusive_package_details,id',  // Make sure package_id exists in inclusive_package_details
+            'package_id' => 'required|exists:inclusive_package_details,id', // Ensure package_id exists in inclusive_package_details
             'comment' => 'nullable|string',
             'rating' => 'nullable|integer|min:1|max:5',
         ]);
-
+    
         // Ensure at least one of comment or rating is present
-        if (!$request->has('comment') && !$request->has('rating')) {
+        if (empty($request->comment) && empty($request->rating)) {
             return response()->json([
-                'message' => 'Either comment or rating is required.',
+                'message' => 'You must provide either a comment or a rating.',
             ], 422);
         }
-
+    
         // Create the review record
-        $review = Review::create($request->all());
-
+        $review = Review::create($request->only(['user_id', 'package_id', 'comment', 'rating']));
+    
         // Return response
         return response()->json([
             'message' => 'Review added successfully!',
             'review' => $review,
         ], 201);
     }
+    
 }
