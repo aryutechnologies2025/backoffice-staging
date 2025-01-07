@@ -183,7 +183,7 @@ class HomeApiController extends Controller
                 $formattedStartDate = \Carbon\Carbon::parse($package->start_date)->format('M d, Y');
     
                 // Extract the first image URL
-                $formattedLocation = ucfirst($package->city) . ', ' . ucfirst($package->state);
+                $formattedLocation = ucfirst($package->address) . ', ' . ucfirst($package->state);
                 $totalReviews = $package->clientReviews->count();
                 $averageRating = $package->reviews->avg('rating');
                 $category = json_decode($package->category, true) ?? [];

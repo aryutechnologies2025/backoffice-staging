@@ -101,7 +101,8 @@ class ProgramApiController extends Controller
             $formattedStartDate = \Carbon\Carbon::parse($package->start_date)->format('M d, Y');
             $formattedendDate = \Carbon\Carbon::parse($package->return_date)->format('M d, Y');
             $category = json_decode($package->category, true) ?? [];
-
+ // Extract the first image URL
+ $formattedLocation = ucfirst($package->address) . ', ' . ucfirst($package->state);
             $clientReviews = $package->clientReviews->map(function ($review) {
                 $reviewDate =  $reviewDate = Carbon::parse($review->review_dt);
                 return [
@@ -161,6 +162,7 @@ class ProgramApiController extends Controller
                 'important_info' => $importantInfoPlainText,
                 'program_inclusion' => $program_inclusionPlainText,
                 'break_fast' => $break_fastPlainText,
+                'location' => $formattedLocation,
                 'lunch' => $package->lunch,
                 'dinner' => $package->dinner,
                 'amenity_details' => $amenities,
@@ -278,7 +280,7 @@ class ProgramApiController extends Controller
                 $breakFastPlainText = strip_tags(html_entity_decode($package->break_fast, ENT_QUOTES, 'UTF-8'));
                 $breakFastPlainText = str_replace(["<br>", "<br/>", "<br />"], "\n", $breakFastPlainText);
      // Extract the first image URL
-     $formattedLocation = ucfirst($package->city) . ', ' . ucfirst($package->state);
+     $formattedLocation = ucfirst($package->address) . ', ' . ucfirst($package->state);
        // Helper function to get amenities, food & beverage, activities, and safety features
        $getDetailsById = function ($package) {
         $id = $package->id;
@@ -464,7 +466,7 @@ public function destination_program_by_price_sort(Request $request)
             $breakFastPlainText = str_replace(["<br>", "<br/>", "<br />"], "\n", $breakFastPlainText);
             
             // Extract the first image URL
-            $formattedLocation = ucfirst($package->city) . ', ' . ucfirst($package->state);
+            $formattedLocation = ucfirst($package->address) . ', ' . ucfirst($package->state);
             
             // Helper function to get amenities, food & beverage, activities, and safety features
             $getDetailsById = function ($package) {
