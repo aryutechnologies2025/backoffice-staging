@@ -249,8 +249,8 @@
                                     @endif
                                     <p class="mt-2">Add Pic</p>
                                 </label>
-                                <!-- <input type="file" id="file-ip-1" name="cover_img" class="form-control"
-                                    accept="image/png, image/jpeg, image/svg+xml"> -->
+                                <input type="file" id="file-ip-1" name="cover_img" class="form-control"
+                                    accept="image/png, image/jpeg, image/svg+xml">
                                 <!-- <input type="file" id="file-ip-100" name="cover_img"
                                         accept="image/png, image/jpeg, image/svg+xml" onchange="previewImage(event)"
                                         class="form-control mt-3"> -->
