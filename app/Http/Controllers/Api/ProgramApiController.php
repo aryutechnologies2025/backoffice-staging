@@ -1198,8 +1198,8 @@ public function destination_program_by_price_sort(Request $request)
         $foodBeverageIds = json_decode($package->food_beverages, true) ?? [];
         $activityIds = json_decode($package->activities, true) ?? [];
         $safetyFeatureIds = json_decode($package->safety_features, true) ?? [];
-    $addressDetails = json_decode($package->address, true) ?? [];  
-        // Fetch related records and format the response
+        $addressDetailsIds = json_decode($package->address, true) ?? [];
+     // Fetch related records and format the response
         $amenities = Amenities::whereIn('id', $amenityIds)
             ->get(['id', 'amenity_name', 'amenity_pic'])
             ->map(function ($item) {
@@ -1240,7 +1240,7 @@ public function destination_program_by_price_sort(Request $request)
                 ];
             });
 
-$addressDetails = Address::whereIn('id', $addressDetails)
+$addressDetails = Address::whereIn('id', $addressDetailsIds)
 ->get(['id', 'title', 'city' , 'state', 'country'])
 ->map(function ($item) {
     return [
@@ -1260,6 +1260,7 @@ $addressDetails = Address::whereIn('id', $addressDetails)
                 'foodBeverages' => $foodBeverages,
                 'activities' => $activities,
                 'safetyFeatures' => $safetyFeatures,
+                'addressDetails' => $addressDetails,
             ],
         ], 200);
     }
