@@ -1244,8 +1244,8 @@ $addressDetails = Address::whereIn('id', $addressDetailsIds)
 ->get(['id', 'title', 'city' , 'state', 'country'])
 ->map(function ($item) {
     return [
-        'id' => $item->id,
-        'title' => $item->title,
+       
+       
         'city' => $item->city,
         'state' => $item->state,
         'country' => $item->country,
