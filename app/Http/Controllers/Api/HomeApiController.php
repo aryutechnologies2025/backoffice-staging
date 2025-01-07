@@ -195,7 +195,7 @@ class HomeApiController extends Controller
                     'id' => $package->id,
                     'title' => ucfirst($package->title),
                     'category' => ucfirst($formattedcategory),
-                    'location' => $formattedLocation,
+                    // 'location' => $formattedLocation,
                     'total_days' => $package->total_days,
                     'member_capacity' => $package->member_capacity,
                     'price' => $package->price,
@@ -220,6 +220,7 @@ class HomeApiController extends Controller
                     'foodBeverages' => $details['foodBeverages'] ?? [],
                     'activities' => $details['activities'] ?? [],
                     'safetyFeatures' => $details['safetyFeatures'] ?? [],
+                    'location' =>$details['address'] ?? [],
                 ];
             });
     
