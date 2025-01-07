@@ -15,6 +15,7 @@ use App\Models\InclusivePackages;
 use App\Models\Safetyfeatures;
 use App\Models\EnquiryDetail;
 use App\Models\Program_wishlist;
+use App\Models\Address;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
 
@@ -1197,7 +1198,7 @@ public function destination_program_by_price_sort(Request $request)
         $foodBeverageIds = json_decode($package->food_beverages, true) ?? [];
         $activityIds = json_decode($package->activities, true) ?? [];
         $safetyFeatureIds = json_decode($package->safety_features, true) ?? [];
-    
+    $address = json_decode($package->address, true) ?? [];  
         // Fetch related records and format the response
         $amenities = Amenities::whereIn('id', $amenityIds)
             ->get(['id', 'amenity_name', 'amenity_pic'])
@@ -1238,7 +1239,18 @@ public function destination_program_by_price_sort(Request $request)
                     'safety_features_pic' => $item->safety_features_pic,
                 ];
             });
-    
+
+            $address = Address::whereIn('id', $address)
+            ->get(['id', 'title', 'city' , 'state', 'country'])
+->map(function ($item) {
+                return [
+                    'id' => $item->id,
+                    'title' => $item->title,
+                    'city' => $item->city,
+                    'state' => $item->state,
+                    'country' => $item->country,
+                ];
+            });
         // Return the response
         return response()->json([
             'status' => 'success',
