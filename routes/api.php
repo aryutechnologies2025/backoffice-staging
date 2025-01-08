@@ -24,7 +24,7 @@ use App\Http\Controllers\Api\ReviewController;
 
 Route::prefix('v1')->group(function () {
     // Rate-Limited Public Routes
-    Route::middleware(['throttle:500,10'])->group(function () {
+    Route::middleware(['throttle:unlimited'])->group(function () {
         // CSRF Token
         Route::get('/csrf-token', [AuthController::class, 'getToken']);
 

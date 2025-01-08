@@ -39,10 +39,29 @@ class RouteServiceProvider extends ServiceProvider
     /**
      * Configure the rate limiters for the application.
      */
+    // protected function configureRateLimiting(): void
+    // {
+    //     RateLimiter::for('api', function (Request $request) {
+    //         // Allow unlimited requests for admins
+    //         if ($request->user() && $request->user()->isAdmin()) {
+    //             return Limit::none();
+    //         }
+    
+    //         // Default rate limit for other users
+    //         return Limit::perMinute(100)->by($request->user()?->id ?: $request->ip());
+    //     });
+    // }
     protected function configureRateLimiting(): void
     {
+        // Custom rate-limiting rule for unlimited requests
+        RateLimiter::for('unlimited', function (Request $request) {
+            return Limit::none(); // No limit applied
+        });
+
+        // Default rate limiter for API
         RateLimiter::for('api', function (Request $request) {
             return Limit::perMinute(100)->by($request->user()?->id ?: $request->ip());
         });
     }
+
 }
