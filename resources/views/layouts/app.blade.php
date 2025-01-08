@@ -101,6 +101,10 @@
                         <img src="/assets/image/dashboard/enquiry.svg" alt="">
                         <span class="nav_name"> Enquiries </span>
                     </a>
+                    <a href="{{ route('admin.influencer_list') }}" class="nav_link {{ request()->routeIs(['admin.influencer_list', 'admin.influencer_add_form', 'admin.influencer_edit_form']) ? 'active' : '' }} mb-3 text-white">
+                        <img src="/assets/image/dashboard/slider.svg" alt="">
+                        <span class="nav_name"> Influencer </span>
+                    </a>
                     <a href="{{ route('admin.slider_list') }}" class="nav_link {{ request()->routeIs(['admin.slider_list', 'admin.slider_add_form', 'admin.slider_edit_form']) ? 'active' : '' }} mb-3 text-white">
                         <img src="/assets/image/dashboard/slider.svg" alt="">
                         <span class="nav_name"> Slider </span>

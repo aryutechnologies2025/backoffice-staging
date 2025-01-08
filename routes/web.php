@@ -30,7 +30,7 @@ use App\Http\Controllers\Admin\GroupTourController;
 use App\Http\Controllers\Admin\ClientreviewController;
 use App\Http\Controllers\Admin\WishlistController;
 use App\Http\Controllers\Admin\AddressController;
-
+use App\Http\Controllers\Admin\InfluencersController;
 // use App\Http\Controllers\Api\AuthController;
 
 use Illuminate\Support\Facades\Artisan;
@@ -215,6 +215,19 @@ Route::prefix('/')->group(function () {
                 Route::post('/{id}/update', 'update')->name('admin.faq_update');
                 Route::post('/delete', 'delete')->name('admin.faq_delete');
                 Route::post('/change-status', 'change_status')->name('admin.faq_status');
+            });
+        });
+
+         //FAQ
+         Route::controller(InfluencersController::class)->group(function () {
+            Route::prefix('influencer')->group(function () {
+                Route::get('/', 'list')->name('admin.influencer_list');
+                Route::get('/add', 'add_form')->name('admin.influencer_add_form');
+                Route::get('/{id}/edit', 'edit_form')->name('admin.influencer_edit_form');
+                Route::post('/insert', 'insert')->name('admin.influencer_insert');
+                Route::post('/{id}/update', 'update')->name('admin.influencer_update');
+                Route::post('/delete', 'delete')->name('admin.influencer_delete');
+                Route::post('/change-status', 'change_status')->name('admin.influencer_status');
             });
         });
 
