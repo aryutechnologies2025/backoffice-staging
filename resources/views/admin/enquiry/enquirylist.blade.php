@@ -16,6 +16,12 @@
       
         
     }
+    .btn{
+/* background-color: #000 !important; */
+border-radius: 6px !important;
+ color: #FFF !important;
+font-size: 15px !important;
+}
 </style>
 
 <div class="row body-sec py-5  px-5 justify-content-around">
@@ -59,7 +65,7 @@
 
                             <td class="text-center">{{ $row->created_at }}</td>
                             <td class="text-center">
-                                <button class="btn btn-primary view-btn" 
+                                <button class="btn btn-warning view-btn" 
                                 data-name="{{ $row->name }}"
                                 data-email="{{ $row->email }}"
                                 data-phone="{{ $row->phone }}"

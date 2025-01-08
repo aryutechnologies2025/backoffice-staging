@@ -28,6 +28,7 @@ class InclusivePackages extends Authenticatable
     public function theme()
     {
         return $this->belongsTo(Themes::class, 'theme_id');
+        
     }
 
     // public function theme_cat()
