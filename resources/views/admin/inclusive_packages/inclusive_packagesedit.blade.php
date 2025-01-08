@@ -201,11 +201,11 @@
                             @php
                             $plain_text_description = is_array($package_details->program_description)
                             ? json_encode($package_details->program_description)
-                            : strip_tags($package_details->program_description);
+                            : $package_details->program_description;
                             @endphp
 
                             <div id="summernote1" class="form-control py-3 shadow-sm"
-                                style="height: 250px; overflow-y: auto;">{{$plain_text_description}}</div>
+                                style="height: 250px; overflow-y: auto;">{{ !! $plain_text_description !!}}</div>
                         </div>
 
 

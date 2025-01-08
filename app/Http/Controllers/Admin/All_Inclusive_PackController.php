@@ -349,7 +349,7 @@ public function insert(Request $request)
     $inclusive_packages->theme_id = $request->input('themes_name');
     $inclusive_packages->city_details = $validatedData['cities_name'];
     $inclusive_packages->title = $validatedData['title'];
-    $inclusive_packages->program_description = $validatedData['program_description'];
+    $inclusive_packages->program_description = strip_tags($validatedData['program_description'], '<p><a><b><i><ul><ol><li><br>');
     $inclusive_packages->category = json_encode($request->input('prop_cat', []));
     $inclusive_packages->address = $addressJson;
     $inclusive_packages->tour_planning = $tourPlanningJson;
