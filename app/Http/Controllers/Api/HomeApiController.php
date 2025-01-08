@@ -204,8 +204,8 @@ class HomeApiController extends Controller
                     'start_date' => $formattedStartDate,
                     'theme_id' => $package->theme ? $package->theme->id : null, 
                     'theme' => $package->theme ? $package->theme->themes_name : null,
-                    'destination_id' => $package->city ? $package->destination->id : null,
-                    'destination' => $package->theme ? $package->theme->themes_name : null,
+                    'destination_id' => $package->destination ? $package->destination->id : null,
+                    'destination' => $package->destination ? $package->destination->city_name : null,
                     'average_rating' => number_format($averageRating, 1),
                     'totalReviews' => $totalReviews,
 
