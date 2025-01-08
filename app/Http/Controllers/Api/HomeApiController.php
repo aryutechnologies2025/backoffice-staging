@@ -92,7 +92,8 @@ class HomeApiController extends Controller
             'destination_list' => $destination_dts
         ], 200);
     }
-    
+  
+
 
     public function get_program(Request $request)
     {
@@ -105,7 +106,9 @@ class HomeApiController extends Controller
             $destination = $request->input('destination');
             $program_destination =  $request->input('program_destination');
             $view_type =  $request->input('view_type');
-    
+            $getCity = City::where('status', "1")
+            ->where('is_deleted', "0");
+
             // Build the query
             $query = InclusivePackages::where('status', "1")
                 ->where('is_deleted', "0");
@@ -147,6 +150,7 @@ class HomeApiController extends Controller
                 ], 200);
             }
     
+          
             // Helper function to get amenities, food & beverage, activities, and safety features
             $getDetailsById = function ($package) {
                 $id = $package->id;
@@ -221,6 +225,8 @@ class HomeApiController extends Controller
                     'activities' => $details['activities'] ?? [],
                     'safetyFeatures' => $details['safetyFeatures'] ?? [],
                     'addressDetails' => $details['addressDetails'] ?? [],
+
+                   
                 ];
             });
     
