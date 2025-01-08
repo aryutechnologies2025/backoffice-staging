@@ -205,7 +205,7 @@
                             @endphp
 
                             <div id="summernote1" class="form-control py-3 shadow-sm"
-                                style="height: 250px; overflow-y: auto;">{{ !! $plain_text_description !!}}</div>
+                                style="height: 250px; overflow-y: auto;">{{$plain_text_description}}</div>
                         </div>
 
 
