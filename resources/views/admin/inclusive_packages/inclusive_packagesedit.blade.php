@@ -198,11 +198,17 @@
 
 
 
-                            @php
+                            <!-- @php
                             $plain_text_description = is_array($package_details->program_description)
                             ? json_encode($package_details->program_description)
-                            : $package_details->program_description;
+                            : strip_tags($package_details->program_description);
+                            @endphp -->
+                            @php
+                                $plain_text_description = is_array($package_details->program_description)
+                                    ? json_encode($package_details->program_description)
+                                    : html_entity_decode(strip_tags($package_details->program_description));
                             @endphp
+
 
                             <div id="summernote1" class="form-control py-3 shadow-sm"
                                 style="height: 250px; overflow-y: auto;">{{$plain_text_description}}</div>
@@ -473,7 +479,7 @@
                                 <label class="form-label form-label-top form-label-auto fw-bold mb-2">Plan Description
                                     <span class="text-danger">*</span></label>
                                 @php
-                                $plain_text_plan_description = strip_tags($tourPlanning['plan_description'][$index]);
+                                $plain_text_plan_description = html_entity_decode(strip_tags($tourPlanning['plan_description'][$index]));
                                 @endphp
                                 <div class="mt-2">
                                     <div class="row">
@@ -679,7 +685,7 @@
             <div>
                 <input type="hidden" id="important_info" name="important_info">
                 @php
-                $plain_text_important_info = strip_tags($package_details->important_info);
+                $plain_text_important_info = html_entity_decode(strip_tags($package_details->important_info));
                 @endphp
                 <div class="mt-2">
                     <div id="summernote4">{{$plain_text_important_info}}</div>
@@ -697,7 +703,7 @@
             <div>
                 <input type="hidden" id="program_inclusion" name="program_inclusion">
                 @php
-                $plain_text_program_inclusion = strip_tags($package_details->program_inclusion);
+                $plain_text_program_inclusion = html_entity_decode(strip_tags($package_details->program_inclusion));
                 @endphp
                 <div class="mt-2">
                     <div id="summernote5">{{$plain_text_program_inclusion}}</div>
@@ -734,7 +740,7 @@
                     <label class="form-label form-label-top form-label-auto fw-bold mb-2">Breakfast</label>
                     <input type="hidden" id="break_fast" name="break_fast">
                     @php
-                    $plain_text_break_fast = strip_tags($package_details->break_fast);
+                    $plain_text_break_fast = html_entity_decode(strip_tags($package_details->break_fast));
                     @endphp
                     <div class="mt-3">
                         <div id="summernote6">{{$plain_text_break_fast}}</div>
@@ -745,7 +751,7 @@
                     <label class="form-label form-label-top form-label-auto fw-bold mb-2">Lunch</label>
                     <input type="hidden" id="lunch" name="lunch">
                     @php
-                    $plain_text_lunch = strip_tags($package_details->lunch);
+                    $plain_text_lunch = html_entity_decode(strip_tags($package_details->lunch));
                     @endphp
                     <div class="mt-3">
                         <div id="summernote7">{{$plain_text_lunch}}</div>
@@ -756,7 +762,7 @@
                     <label class="form-label form-label-top form-label-auto fw-bold mb-2">Dinner</label>
                     <input type="hidden" id="dinner" name="dinner">
                     @php
-                    $plain_text_dinner = strip_tags($package_details->dinner);
+                    $plain_text_dinner = html_entity_decode(strip_tags($package_details->dinner));
                     @endphp
                     <div class="mt-3">
                         <div id="summernote8">{{$plain_text_dinner}}</div>
