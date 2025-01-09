@@ -55,7 +55,7 @@ class InfluencersController extends Controller
         }
 
         $title = 'Edit Influencer';
-        return view('admin.influencer.influenceredit', compact('influencer', 'title'));
+        return view('admin.influencers.influencer_edit', compact('influencer', 'title'));
     }
 
     public function update(Request $request, $id)
@@ -70,7 +70,7 @@ class InfluencersController extends Controller
         $influencer->status = $request->has('status') && $request->input('status') === 'on' ? '1' : '0';
         $influencer->save();
 
-        return redirect()->route('admin.influencers_list')
+        return redirect()->route('admin.influencer_list')
             ->with('success', 'Influencer updated successfully.');
     }
 

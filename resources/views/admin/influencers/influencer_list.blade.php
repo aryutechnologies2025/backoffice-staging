@@ -22,7 +22,7 @@
     <div class="col-lg-6">
         <div class="d-flex justify-content-end">
             <a href="{{ route('admin.influencer_add_form') }}">
-                <button class="btn btn-add px-5" type="button">Add Address</button>
+                <button class="btn btn-add px-5" type="button">Add Influencer</button>
             </a>
         </div>
     </div>
@@ -56,13 +56,13 @@
                         <td class="text-center">{{ $row->email }}</td>
                         <td class="text-center">{{ $row->created_at }}</td>
                         <td class="text-center" style="width: 20%;">
-                            <a href="{{ route('admin.address_edit_form',$row->id) }}" class="table-edit-link">
+                            <a href="{{ route('admin.influencer_edit_form',$row->id) }}" class="table-edit-link">
                                 <span class="fa-stack">
                                     <i class="fa fa-square fa-stack-2x"></i>
                                     <i class="fa fa-pencil fa-stack-1x fa-inverse"></i>
                                 </span>
                             </a>
-                            <a href="javascript:void(0);" class="table-link danger delconfirm" data-row_id="{{ $row->id }}" data-act_url="{{ route('admin.address_delete') }}" data-csrf_token="{{ csrf_token() }}">
+                            <a href="javascript:void(0);" class="table-link danger delconfirm" data-row_id="{{ $row->id }}" data-act_url="{{ route('admin.influencer_delete') }}" data-csrf_token="{{ csrf_token() }}">
                                 <span class="fa-stack">
                                     <i class="fa fa-square fa-stack-2x"></i>
                                     <i class="fa fa-trash-o fa-stack-1x fa-inverse"></i>

@@ -17,7 +17,8 @@
     .add {
         color: blue;
     }
-    .h5{
+
+    .h5 {
         font-size: 500%;
         font-weight: bolder;
     }
@@ -39,7 +40,7 @@
     </div>
     @endif
 
-    <form action="{{ route('admin.influencer_insert') }}" method="POST">
+    <form id="form_valid" action="{{ route('admin.influencer_update', ['id'=>$influencer->id]) }}" method="POST" autocomplete="off" enctype="multipart/form-data">
         @csrf
         <!-- Personal Details -->
         <div class="mb-4">
@@ -50,47 +51,80 @@
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label for="full_name" class="form-label">Full Name</label>
-                        <input type="text" class="form-control  rounded-3 shadow-sm" id="full_name" name="full_name" value="{{ old('full_name') }}" required>
+                        <input type="text" class="form-control rounded-3 shadow-sm"
+                            id="full_name"
+                            name="full_name"
+                            value="{{ old('full_name', $influencer->full_name ?? '') }}"
+                            required>
                     </div>
                     <div class="col-md-6 mb-3">
                         <label for="email" class="form-label">Email</label>
-                        <input type="email" class="form-control  rounded-3 shadow-sm" id="email" name="email" value="{{ old('email') }}" required>
+                        <input type="email" class="form-control rounded-3 shadow-sm"
+                            id="email"
+                            name="email"
+                            value="{{ old('email', $influencer->email ?? '') }}"
+                            required>
                     </div>
                     <div class="col-md-6 mb-3">
                         <label for="phone" class="form-label">Phone</label>
-                        <input type="text" class="form-control  rounded-3 shadow-sm" id="phone" name="phone" value="{{ old('phone') }}" required>
+                        <input type="text" class="form-control rounded-3 shadow-sm"
+                            id="phone"
+                            name="phone"
+                            value="{{ old('phone', $influencer->phone ?? '') }}"
+                            required>
                     </div>
                     <div class="col-md-6 mb-3">
                         <label for="whatsapp" class="form-label">WhatsApp</label>
-                        <input type="text" class="form-control  rounded-3 shadow-sm" id="whatsapp" name="whatsapp" value="{{ old('whatsapp') }}">
+                        <input type="text" class="form-control rounded-3 shadow-sm"
+                            id="whatsapp"
+                            name="whatsapp"
+                            value="{{ old('whatsapp', $influencer->whatsapp ?? '') }}"
+                            required>
                     </div>
                     <div class="col-md-6 mb-3">
-                        <label for="gender" class="form-label ">Gender</label>
-                        <select class="form-select  rounded-3 shadow-sm" id="gender" name="gender" required>
+                        <label for="gender" class="form-label">Gender</label>
+                        <select class="form-select rounded-3 shadow-sm"
+                            id="gender"
+                            name="gender"
+                            required>
                             <option value="">Select Gender</option>
-                            <option value="Male" {{ old('gender') == 'Male' ? 'selected' : '' }}>Male</option>
-                            <option value="Female" {{ old('gender') == 'Female' ? 'selected' : '' }}>Female</option>
+                            <option value="Male" {{ old('gender', $influencer->gender ?? '') == 'Male' ? 'selected' : '' }}>Male</option>
+                            <option value="Female" {{ old('gender', $influencer->gender ?? '') == 'Female' ? 'selected' : '' }}>Female</option>
                         </select>
                     </div>
                     <div class="col-md-6 mb-3">
                         <label for="age" class="form-label">Age</label>
-                        <input type="number" class="form-control  rounded-3 shadow-sm" id="age" name="age" value="{{ old('age') }}" required>
+                        <input type="number" class="form-control rounded-3 shadow-sm"
+                            id="age"
+                            name="age"
+                            value="{{ old('age', $influencer->age ?? '') }}"
+                            required>
                     </div>
                     <div class="col-md-4 mb-3">
                         <label for="city" class="form-label">City</label>
-                        <input type="text" class="form-control  rounded-3 shadow-sm" id="city" name="city" value="{{ old('city') }}">
+                        <input type="text" class="form-control rounded-3 shadow-sm"
+                            id="city"
+                            name="city"
+                            value="{{ old('city', $influencer->city ?? '') }}">
                     </div>
                     <div class="col-md-4 mb-3">
                         <label for="state" class="form-label">State</label>
-                        <input type="text" class="form-control  rounded-3 shadow-sm" id="state" name="state" value="{{ old('state') }}">
+                        <input type="text" class="form-control rounded-3 shadow-sm"
+                            id="state"
+                            name="state"
+                            value="{{ old('state', $influencer->state ?? '') }}">
                     </div>
                     <div class="col-md-4 mb-3">
                         <label for="country" class="form-label">Country</label>
-                        <input type="text" class="form-control  rounded-3 shadow-sm" id="country" name="country" value="{{ old('country') }}">
+                        <input type="text" class="form-control rounded-3 shadow-sm"
+                            id="country"
+                            name="country"
+                            value="{{ old('country', $influencer->country ?? '') }}">
                     </div>
                 </div>
             </div>
         </div>
+
 
         <!-- Social Media Details -->
         @foreach(['instagram', 'linkedin', 'youtube', 'facebook', 'twitter'] as $platform)
@@ -102,23 +136,38 @@
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label for="{{ $platform }}_name" class="form-label">{{ ucfirst($platform) }} Name</label>
-                        <input type="text" class="form-control  rounded-3 shadow-sm" id="{{ $platform }}_name" name="{{ $platform }}_name" value="{{ old($platform.'_name') }}">
+                        <input type="text" class="form-control rounded-3 shadow-sm"
+                            id="{{ $platform }}_name"
+                            name="{{ $platform }}_name"
+                            value="{{ old($platform.'_name', $influencer->{$platform . '_name'} ?? '') }}"
+                            required>
                     </div>
                     <div class="col-md-6 mb-3">
                         <label for="{{ $platform }}_profile_link" class="form-label">{{ ucfirst($platform) }} Profile Link</label>
-                        <input type="text" class="form-control  rounded-3 shadow-sm" id="{{ $platform }}_profile_link" name="{{ $platform }}_profile_link" value="{{ old($platform.'_profile_link') }}">
+                        <input type="text" class="form-control rounded-3 shadow-sm"
+                            id="{{ $platform }}_profile_link"
+                            name="{{ $platform }}_profile_link"
+                            value="{{ old($platform.'_profile_link', $influencer->{$platform . '_profile_link'} ?? '') }}">
                     </div>
                     <div class="col-md-6 mb-3">
                         <label for="{{ $platform }}_followers_count" class="form-label">{{ ucfirst($platform) }} Followers Count</label>
-                        <input type="number" class="form-control  rounded-3 shadow-sm" id="{{ $platform }}_followers_count" name="{{ $platform }}_followers_count" value="{{ old($platform.'_followers_count') }}">
+                        <input type="number" class="form-control rounded-3 shadow-sm"
+                            id="{{ $platform }}_followers_count"
+                            name="{{ $platform }}_followers_count"
+                            value="{{ old($platform.'_followers_count', $influencer->{$platform . '_followers_count'} ?? '') }}">
                     </div>
                     <div class="col-md-6 mb-3">
                         <label for="{{ $platform }}_category" class="form-label">{{ ucfirst($platform) }} Category</label>
-                        <input type="text" class="form-control  rounded-3 shadow-sm" id="{{ $platform }}_category" name="{{ $platform }}_category" value="{{ old($platform.'_category') }}">
+                        <input type="text" class="form-control rounded-3 shadow-sm"
+                            id="{{ $platform }}_category"
+                            name="{{ $platform }}_category"
+                            value="{{ old($platform.'_category', $influencer->{$platform . '_category'} ?? '') }}">
                     </div>
                 </div>
             </div>
         </div>
+
+
         @endforeach
 
         <div class="row g-2">
