@@ -66,7 +66,28 @@ class InclusivePackages extends Authenticatable
     return $this->belongsTo(themes::class, 'theme_id', 'id');
 }
 
+public function amenities()
+{
+    return $this->hasMany(Amenities::class ,  'id');
+}
 
+// Define relationship for food & beverage
+public function foodAndBeverages()
+{
+    return $this->hasMany(FoodBeverage::class,  'id');
+}
+
+// Define relationship for activities
+public function activities()
+{
+    return $this->hasMany(Activities::class ,  'id');
+}
+
+// Define relationship for safety features
+public function safetyFeatures()
+{
+    return $this->hasMany(Safetyfeatures::class,  'id');
+}
     // public function program_wishlists()
     // {
     //     return $this->hasMany(Program_wishlist::class, 'program_id');

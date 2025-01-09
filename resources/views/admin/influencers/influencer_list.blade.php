@@ -41,7 +41,7 @@
                         <th class="text-center"><span> email </span></th>
                        
                         <th class="text-center"><span>Date&Time</span></th>
-
+                        <th class="text-center"><span>Referral code</span></th>
                         <th class="text-center"><span>Action</span></th>
                     </tr>
                 </thead>
@@ -55,6 +55,8 @@
                         <td class="text-center">{{$row->reference_id}}</td>
                         <td class="text-center">{{ $row->email }}</td>
                         <td class="text-center">{{ $row->created_at }}</td>
+                        <td class="text-center">{{ $row->referral_code }}</td>
+
                         <td class="text-center" style="width: 20%;">
                             <a href="{{ route('admin.influencer_edit_form',$row->id) }}" class="table-edit-link">
                                 <span class="fa-stack">
