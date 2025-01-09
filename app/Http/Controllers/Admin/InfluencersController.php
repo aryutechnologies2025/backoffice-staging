@@ -25,7 +25,7 @@ class InfluencersController extends Controller
     {
        
         $influencer = new Influencers;
-    $url="https://innerpece.com/";
+   
         // Generate the next reference_id
         $lastInfluencer = Influencers::where('reference_id', 'LIKE', 'Inf-%')->orderBy('id', 'desc')->first();
         if ($lastInfluencer) {
@@ -37,7 +37,7 @@ class InfluencersController extends Controller
     
         // Generate referral code
         $newReferralCode = strtoupper(substr(md5(uniqid(rand(), true)), 0, 8)); // Create a unique referral code
-        $signupUrl = $url('/signup/' . $newReferenceId);
+        $signupUrl = url('/signup/' . $newReferenceId);
         // Fill influencer data
         $influencer->fill($request->all());
         $influencer->reference_id = $newReferenceId;
