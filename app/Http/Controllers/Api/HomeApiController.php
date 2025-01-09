@@ -18,6 +18,8 @@ use App\Models\Slider;
 use App\Models\InclusivePackages;
 use App\Models\Group_tour;
 use App\Models\Geo_feature;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 class HomeApiController extends Controller
@@ -25,6 +27,9 @@ class HomeApiController extends Controller
 
     public function get_slider()
     {
+        DB::listen(function ($query) {
+            Log::info('SQL Query: ' . $query->sql);
+        });
         // Fetch active, non-deleted sliders ordered by 'list_order'
         $sliders = Slider::where('status', "1")
             ->where('is_deleted', "0")
@@ -49,6 +54,9 @@ class HomeApiController extends Controller
 
     public function get_themes()
     {
+        DB::listen(function ($query) {
+            Log::info('SQL Query: ' . $query->sql);
+        });
         // Fetch active, non-deleted themes ordered by 'list_order'
         $themes = Themes::where('status', "1")
             ->where('is_deleted', "0")
@@ -72,6 +80,9 @@ class HomeApiController extends Controller
     
     public function get_destination()
     {
+        DB::listen(function ($query) {
+            Log::info('SQL Query: ' . $query->sql);
+        });
         // Fetch active, non-deleted cities ordered by 'list_order'
         $destination_dts = City::where('status', "1")
             ->where('is_deleted', "0")
@@ -97,7 +108,9 @@ class HomeApiController extends Controller
 
     public function get_program(Request $request)
     {
-      
+        DB::listen(function ($query) {
+            Log::info('SQL Query: ' . $query->sql);
+        });
         try {
             $requestData = $request->all(); 
     
@@ -248,6 +261,95 @@ class HomeApiController extends Controller
         }
     } 
     
+    // public function get_program(Request $request)
+    // {
+    //     DB::listen(function ($query) {
+    //         Log::info('SQL Query: ' . $query->sql);
+    //     });
+
+    //     try {
+    //         $program_type = $request->input('program_type');
+    //         $theme = $request->input('theme');
+    //         $destination = $request->input('destination');
+    //         $program_destination = $request->input('program_destination');
+    //         $view_type = $request->input('view_type');
+    
+    //         // Build the query
+    //         $query = InclusivePackages::where('status', "1")
+    //             ->where('is_deleted', "0");
+    
+    //         // Apply filters dynamically
+    //         if ($program_type) {
+    //             $query->whereJsonContains('category', $program_type);
+    //         }
+    //         if ($theme) {
+    //             $query->where('theme_id', $theme);
+    //             $view_type = 'all';
+    //         }
+    //         if ($destination || $program_destination) {
+    //             $query->where('city_details', $destination ?? $program_destination);
+    //             $view_type = 'all';
+    //         }
+    
+    //         // Apply pagination and eager loading
+    //         $packages = $query->with(['theme', 'destination', 'clientReviews'])->simplePaginate(10);
+    
+    //         // Check for empty results
+    //         if ($packages->isEmpty()) {
+    //             return response()->json([
+    //                 'status' => 'success',
+    //                 'message' => 'No programs found.',
+    //                 'data' => []
+    //             ], 200);
+    //         }
+    
+    //         // Fetch additional details in a single query
+    //         $packageIds = $packages->pluck('id')->toArray();
+    //         $details = DB::table('package_details')
+    //             ->whereIn('package_id', $packageIds)
+    //             ->get()
+    //             ->groupBy('package_id');
+    
+    //         // Map packages with details
+    //         $formattedPackages = $packages->map(function ($package) use ($details) {
+    //             $packageDetails = $details[$package->id] ?? [];
+    //             return [
+    //                 'id' => $package->id,
+    //                 'title' => ucfirst($package->title),
+    //                 'theme' => $package->theme ? $package->theme->themes_name : null,
+    //                 'destination' => $package->destination ? $package->destination->city_name : null,
+    //                 'details' => $packageDetails,
+    //                 'reviews' => $package->reviews->map(function ($review) {
+    //                     return [
+    //                         'first_name' => $review->user->first_name ?? null,
+    //                         'profile_image' => $review->user->profile_image ?? null,
+    //                         'comment' => $review->comment,
+    //                         'rating' => $review->rating,
+    //                         'date' => $review->created_at->format('M d, Y'),
+    //                     ];
+    //                 }),
+    //             ];
+    //         });
+    
+    //         return response()->json([
+    //             'status' => 'success',
+    //             'message' => 'Programs retrieved successfully.',
+    //             'data' => $formattedPackages
+    //         ], 200);
+    //     } catch (\Exception $e) {
+    //         return response()->json([
+    //             'status' => 'error',
+    //             'message' => 'An error occurred while fetching programs.',
+    //             'error' => $e->getMessage()
+    //         ], 500);
+    //     }
+    // }
+    
+
+
+
+
+
 
 
 //dashboard api 
