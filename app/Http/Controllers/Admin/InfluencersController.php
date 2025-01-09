@@ -25,7 +25,7 @@ class InfluencersController extends Controller
     {
        
         $influencer = new Influencers;
-   
+    
         // Generate the next reference_id
         $lastInfluencer = Influencers::where('reference_id', 'LIKE', 'Inf-%')->orderBy('id', 'desc')->first();
         if ($lastInfluencer) {
@@ -37,19 +37,23 @@ class InfluencersController extends Controller
     
         // Generate referral code
         $newReferralCode = strtoupper(substr(md5(uniqid(rand(), true)), 0, 8)); // Create a unique referral code
-        $signupUrl = url('/signup/' . $newReferenceId);
+    
         // Fill influencer data
         $influencer->fill($request->all());
         $influencer->reference_id = $newReferenceId;
-        $influencer->referral_code = $signupUrl; // Set the referral code
+        $influencer->referral_code = $newReferralCode; // Set the referral code
         $influencer->created_by = 'admin';
         $influencer->status = $request->has('status') && $request->input('status') === 'on' ? '1' : '0';
         $influencer->is_deleted = '0';
+
+
+
+        
         $influencer->save();
     
         // Generate signup URL
-     
-   
+        $signupUrl = url('/signup/' . $newReferenceId);
+  
         return redirect()->route('admin.influencer_list')
             ->with('success', 'Influencer added successfully. Reference ID: ' . $newReferenceId . ', Referral Code: ' . $newReferralCode . ', Signup URL: ' . $signupUrl);
     }
