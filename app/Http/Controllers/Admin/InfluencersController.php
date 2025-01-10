@@ -50,7 +50,7 @@ class InfluencersController extends Controller
         $influencer = new Influencers;
         
         // Generate the next reference_id
-        $lastInfluencer = Influencers::where('reference_id', 'LIKE', 'Inf-%')->orderBy('id', 'desc')->first();
+        $lastInfluencer = Influencers::where('reference_id', 'LIKE', 'Innerpece-%')->orderBy('id', 'desc')->first();
         if ($lastInfluencer) {
             $lastReferenceId = intval(substr($lastInfluencer->reference_id, 4)); // Extract numeric part
             $newReferenceId = 'Innerpece-' . str_pad($lastReferenceId + 1, 3, '0', STR_PAD_LEFT); // Increment and pad with leading zeros
