@@ -218,7 +218,7 @@ public function showProgramWithReferral($program_slug, Request $request)
     $referral_code = $request->query('ref');
     
     // Find the influencer by referral code
-    $influencer = Influencers::where('referral_code', $referral_code)->first();
+    $influencer = Influencers::where('reference_id', $referral_code)->first();
     
     if (!$influencer) {
         return response()->json([
