@@ -23,7 +23,7 @@
                     <!-- Text on the right -->
                     <div class="text-center">
                         <p class="mb-0 text-muted">Total Program</p>
-                        <h4 class="font-weight-bold">{{ $programCount }}</h4>
+                      <a href="all-inclusive-package"><h4 class="font-weight-bold text-dark">{{ $programCount }}</h4></a>  
                     </div>
                 </div>
             </div>
@@ -39,7 +39,7 @@
                     <!-- Text on the right -->
                     <div class="text-center">
                         <p class="mb-0 text-muted">Total User</p>
-                        <h4 class="font-weight-bold">{{ $userRegister }}</h4>
+              <a href="/user"> <h4 class="font-weight-bold text-dark">{{ $userRegister }}</h4></a>         
                     </div>
                 </div>
             </div>
@@ -56,7 +56,7 @@
                     <!-- Text on the right -->
                     <div class="text-center">
                         <p class="mb-0 text-muted">Total Enquiry</p>
-                        <h4 class="font-weight-bold">{{$enquiryCount}}</h4>
+                     <a href="/enquiry"><h4 class="font-weight-bold text-dark">{{$enquiryCount}}</h4></a>  
                     </div>
                 </div>
             </div>
@@ -72,7 +72,7 @@
                     <!-- Text on the right -->
                     <div class="text-center">
                         <p class="mb-0 text-muted">Total Reviews</p>
-                        <h4 class="font-weight-bold">{{$clientReview}}</h4>
+                     <a href="/client_review"><h4 class="font-weight-bold text-body">{{$clientReview}}</h4></a>   
                     </div>
                 </div>
             </div>

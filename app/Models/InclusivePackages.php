@@ -104,8 +104,9 @@ public function safetyFeatures()
         }
     
         try {
+            $url = "https://innerpece.com";
             // Generate the affiliate URL
-            $affiliateLink = url('/' . $this->id . '/' . Str::slug($this->title) . '?ref=' . $referralCode);
+            $affiliateLink = $url . '/' . $this->id . '/' . Str::slug($this->title) . '?ref=' . $referralCode;
             return $affiliateLink;
         } catch (\Exception $e) {
             // In case of any exception, return a generic error message

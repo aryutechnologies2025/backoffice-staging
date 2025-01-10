@@ -195,18 +195,18 @@ class InfluencersController extends Controller
 
 
     // A helper method to generate affiliate links for an influencer
-private function getAffiliateLinksForInfluencer($influencer)
-{
-    $links = [];
-    $packages = InclusivePackages::all(); // Assuming you are fetching all packages or filtering as necessary
+// private function getAffiliateLinksForInfluencer($influencer)
+// {
+//     $links = [];
+//     $packages = InclusivePackages::all(); // Assuming you are fetching all packages or filtering as necessary
 
-    foreach ($packages as $package) {
-        $links[] = [
-            'title' => $package->title,
-            'url' => url('/' . $package->id . '/' . \Str::slug($package->title) . '?ref=' . $influencer->reference_id)
-        ];
-    }
+//     foreach ($packages as $package) {
+//         $links[] = [
+//             'title' => $package->title,
+//             'url' => url('/' . $package->id . '/' . \Str::slug($package->title) . '?ref=' . $influencer->reference_id)
+//         ];
+//     }
 
-    return $links;
-}
+//     return $links;
+// }
 }
