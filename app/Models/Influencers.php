@@ -57,7 +57,7 @@ class Influencers extends Model
         }
 
         // Generate the affiliate link using the correct referral code
-        $affiliateLink = $package->getAffiliateLink($this->referral_code);
+        $affiliateLink = $package->getAffiliateLink($this->reference_id);
 
         return [
             'title' => $package->title,

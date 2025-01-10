@@ -232,6 +232,9 @@ Route::prefix('/')->group(function () {
         });
        // web.php
 Route::get('/admin/influencer/{influencerId}/affiliate-links', [InfluencersController::class, 'getAffiliateLinks']);
+// routes/web.php
+
+Route::get('/{program_slug}', [InfluencersController::class, 'showProgramWithReferral']);
 
     
         //Podcast

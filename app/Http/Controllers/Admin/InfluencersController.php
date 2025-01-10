@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Influencers;
 use App\Models\InclusivePackageDetail;
+use App\Models\InclusivePackages;
 
 class InfluencersController extends Controller
 {
@@ -52,9 +53,9 @@ class InfluencersController extends Controller
         $lastInfluencer = Influencers::where('reference_id', 'LIKE', 'Inf-%')->orderBy('id', 'desc')->first();
         if ($lastInfluencer) {
             $lastReferenceId = intval(substr($lastInfluencer->reference_id, 4)); // Extract numeric part
-            $newReferenceId = 'Inf-' . str_pad($lastReferenceId + 1, 3, '0', STR_PAD_LEFT); // Increment and pad with leading zeros
+            $newReferenceId = 'Innerpece-' . str_pad($lastReferenceId + 1, 3, '0', STR_PAD_LEFT); // Increment and pad with leading zeros
         } else {
-            $newReferenceId = 'Inf-001'; // Start from Inf-001 if no records exist
+            $newReferenceId = 'Innerpece-001'; // Start from Inf-001 if no records exist
         }
         
         // Generate referral code
@@ -209,4 +210,40 @@ class InfluencersController extends Controller
 
 //     return $links;
 // }
+
+
+public function showProgramWithReferral($program_slug, Request $request)
+{
+    // Capture the referral code from the query string
+    $referral_code = $request->query('ref');
+    
+    // Find the influencer by referral code
+    $influencer = Influencers::where('referral_code', $referral_code)->first();
+    
+    if (!$influencer) {
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Invalid referral code.',
+        ], 404);
+    }
+
+    // Find the program using the program_slug
+    $program = InclusivePackages::where('slug', $program_slug)->first();
+    
+    if (!$program) {
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Program not found.',
+        ], 404);
+    }
+
+    // Optionally, log the referral or process any business logic based on the referral code
+    // You can use session to store the referral or track analytics
+    
+    // Prepare the response
+    return view('program.show', compact('program', 'influencer', 'referral_code'));
+}
+
+
+
 }
