@@ -155,8 +155,8 @@ class InfluencersController extends Controller
 
         if ($influencer) {
             $influencer->status = $mode == 0 ? '0' : '1';
-            $influencer->status_changed_by = 'admin';
-            $influencer->updated_date = now();
+           
+            $influencer->updated_at = now();
             $influencer->save();
 
             return response()->json([
@@ -177,9 +177,9 @@ class InfluencersController extends Controller
 
         $influencer = Influencers::find($record_id);
         if ($influencer) {
-            $influencer->is_deleted = "1";
-            $influencer->deleted_by = 'admin';
-            $influencer->updated_date = now();
+            $influencer->is_deleted ="1";
+            
+            $influencer->updated_at = now();
             $influencer->save();
 
             return response()->json([

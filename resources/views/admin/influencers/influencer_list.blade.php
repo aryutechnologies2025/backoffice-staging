@@ -1,5 +1,3 @@
-<!-- resources/views/admin/influencers/influencer_list.blade.php -->
-
 @extends('layouts.app')
 
 @section('content')
@@ -14,7 +12,7 @@
         color: blue;
     }
     .custom-message-modal {
-        width: 100%!important;
+        width: 100%;
     }
 </style>
 
@@ -45,10 +43,9 @@
                         <th class="text-center"><span>Reference_id</span></th>
                         <th class="text-center"><span>Email</span></th>
                         <th class="text-center"><span>Date&Time</span></th>
-                        <th class="text-center"><span>Referral code</span></th>
+                        <th class="text-center"><span>Information</span></th>
                         <th class="text-center"><span>Affiliate Link</span></th>
                         <th class="text-center"><span>Action</span></th>
-
                     </tr>
                 </thead>
                 <tbody>
@@ -59,7 +56,32 @@
                         <td class="text-center">{{ $row->reference_id }}</td>
                         <td class="text-center">{{ $row->email }}</td>
                         <td class="text-center">{{ $row->created_at }}</td>
-                        <td class="text-center" style="font-size: small;">{{ $row->referral_code }}</td>
+                        <td class="text-center">
+                            <button class="btn btn-warning view-btn" 
+                                data-full_name="{{ $row->full_name }}"
+                                data-email="{{ $row->email }}"
+                                data-phone="{{ $row->phone }}"
+                                data-whatsapp="{{ $row->whatsapp }}" 
+                                data-gender="{{ $row->gender }}"
+                                data-age="{{ $row->age }}"
+                                data-city="{{ $row->city }}"
+                                data-instagram_name="{{ $row->instagram_name }}"
+                                data-instagram_profile_link="{{ $row->instagram_profile_link }}"
+                                data-linkedin_name="{{ $row->linkedin_name }}"
+                                data-linkedin_profile_link="{{ $row->linkedin_profile_link }}"
+                                data-youtube_name="{{ $row->youtube_name }}"
+                                data-youtube_profile_link="{{ $row->youtube_profile_link }}"
+                                data-twitter_name="{{ $row->twitter_name }}"
+                                data-twitter_profile_link="{{ $row->twitter_profile_link }}"
+                                data-facebook_name="{{ $row->facebook_name }}"
+                                data-facebook_profile_link="{{ $row->facebook_profile_link }}"
+                                data-date="{{ $row->created_at->format('d/m/Y h:i:s') }}"
+                                data-bs-toggle="modal" 
+                                data-bs-target="#viewModal">
+                                View
+                            </button>
+                        </td>
+                        <!-- <td class="text-center" style="font-size: small;">{{ $row->referral_code }}</td> -->
                         <td class="text-center" style="width: 10%;">
                             <button class="btn btn-sm btn-info view-links" data-id="{{ $row->id }}" data-name="{{ $row->full_name }}"
                             data-signup-url="{{ url('/signup/' . $row->reference_id) }}">
@@ -82,8 +104,44 @@
                         </td>
                     </tr>
                     @endforeach
+                 
                 </tbody>
             </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="custom-message-modal modal fade" id="viewModal" tabindex="-1" aria-labelledby="viewModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="viewModalLabel">Influencer Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p><strong>Name:</strong> <span id="modalName"></span></p>
+                <p><strong>Email:</strong> <span id="modalEmail"></span></p>
+                <p><strong>Phone:</strong> <span id="modalPhone"></span></p>
+                <p><strong>Whatsapp:</strong> <span id="modalwhatsapp"></span></p>
+                <p><strong>Gender:</strong> <span id="modalgender"></span></p>
+                <p><strong>Age:</strong> <span id="modalage"></span></p>
+                <p><strong>City:</strong> <span id="modalcity"></span></p>
+                <p><strong>Instagram Name:</strong> <span id="modalinstname"></span></p>
+                <p><strong>Instagram Link:</strong> <span id="modalinstlink"></span></p>
+                <p><strong>LinkedIn Name:</strong> <span id="modallinkname"></span></p>
+                <p><strong>LinkedIn Link:</strong> <span id="modallinklink"></span></p>
+                <p><strong>Youtube Name:</strong> <span id="modalyouname"></span></p>
+                <p><strong>Youtube Link:</strong> <span id="modalyoulink"></span></p>
+                <p><strong>Twitter Name:</strong> <span id="modaltwittername"></span></p>
+                <p><strong>Twitter Link:</strong> <span id="modaltwitterlink"></span></p>
+                <p><strong>Facebook Name:</strong> <span id="modalfacename"></span></p>
+                <p><strong>Facebook Link:</strong> <span id="modalfacelink"></span></p>
+                <p><strong>Date & Time:</strong> <span id="modalDate"></span></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
         </div>
     </div>
 </div>
@@ -114,11 +172,13 @@ $(document).on('click', '.view-links', function () {
     const influencerName = $(this).data('name');
     const signupUrl = $(this).data('signup-url');
     $('#affiliateLinksLabel').html(`Affiliate Links for ${influencerName} <a href="${signupUrl}" target="_blank">${signupUrl}</a>`);
+    
     // Display signup URL in the modal
     $('#links-container').html(`
         <p><strong>Signup URL:</strong> <a href="${signupUrl}" target="_blank">${signupUrl}</a></p>
         <p>Loading affiliate links...</p>
     `);
+    
     $.ajax({
         url: `/admin/influencer/${influencerId}/affiliate-links`,
         method: 'GET',
@@ -139,6 +199,28 @@ $(document).on('click', '.view-links', function () {
     });
 
     $('#affiliateLinksModal').modal('show');
+});
+
+// Populate modal with data
+$(document).on('click', '.view-btn', function() {
+    $('#modalName').text($(this).data('full_name'));
+    $('#modalEmail').text($(this).data('email'));
+    $('#modalPhone').text($(this).data('phone'));
+    $('#modalwhatsapp').text($(this).data('whatsapp'));
+    $('#modalgender').text($(this).data('gender'));
+    $('#modalage').text($(this).data('age'));
+    $('#modalcity').text($(this).data('city'));
+    $('#modalinstname').text($(this).data('instagram_name'));
+    $('#modalinstlink').text($(this).data('instagram_profile_link'));
+    $('#modallinkname').text($(this).data('linkedin_name'));
+    $('#modallinklink').text($(this).data('linkedin_profile_link'));
+    $('#modalyouname').text($(this).data('youtube_name'));
+    $('#modalyoulink').text($(this).data('youtube_profile_link'));
+    $('#modaltwittername').text($(this).data('twitter_name'));
+    $('#modaltwitterlink').text($(this).data('twitter_profile_link'));
+    $('#modalfacename').text($(this).data('facebook_name'));
+    $('#modalfacelink').text($(this).data('facebook_profile_link'));
+    $('#modalDate').text($(this).data('date'));
 });
 </script>
 @endsection
