@@ -16,7 +16,9 @@ use App\Models\Safetyfeatures;
 use App\Models\EnquiryDetail;
 use App\Models\Program_wishlist;
 use App\Models\Address;
+use App\Models\Influencers;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 class ProgramApiController extends Controller
@@ -25,6 +27,27 @@ class ProgramApiController extends Controller
     public function get_program_details(Request $request)
     {
         try {
+
+ // Step 1: Check for Referral Code
+ $referralCode = $request->query('ref'); // Extract referral code from URL
+ if ($referralCode) {
+     $influencer = Influencers::where('reference_id', $referralCode)->first();
+     
+     if ($influencer) {
+         // Optionally log the referral or store the information
+         Log::info("Referral used by influencer: " . $influencer->name);
+         
+         // You can store the referral in a new table, like "ReferralLogs"
+         // ReferralLog::create(['influencer_id' => $influencer->id, 'user_ip' => $request->ip()]);
+     } else {
+         // Return an error response for invalid referral code
+         return response()->json([
+             'status' => 'error',
+             'message' => 'Invalid referral code.',
+         ], 400);
+     }
+ }
+
             // Validate the request to ensure an ID is provided
             $request->validate([
                 'program_id' => 'required',
