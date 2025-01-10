@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str; // Import the Str class
 
 class InclusivePackages extends Authenticatable
 {
@@ -92,4 +93,27 @@ public function safetyFeatures()
     // {
     //     return $this->hasMany(Program_wishlist::class, 'program_id');
     // }
+
+
+
+    public function getAffiliateLink($referralCode)
+    {
+        // Ensure that the package title is available and referral code is passed
+        if (empty($this->title) || empty($referralCode)) {
+            return 'Error generating affiliate link. Missing data.';
+        }
+    
+        try {
+            // Generate the affiliate URL
+            $affiliateLink = url('/' . $this->id . '/' . Str::slug($this->title) . '?ref=' . $referralCode);
+            return $affiliateLink;
+        } catch (\Exception $e) {
+            // In case of any exception, return a generic error message
+            return 'Error generating affiliate link. Please try again.';
+        }
+    }
+    
+    
+
 }
+

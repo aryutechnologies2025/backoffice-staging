@@ -230,7 +230,10 @@ Route::prefix('/')->group(function () {
                 Route::post('/change-status', 'change_status')->name('admin.influencer_status');
             });
         });
+       // web.php
+Route::get('/admin/influencer/{influencerId}/affiliate-links', [InfluencersController::class, 'getAffiliateLinks']);
 
+    
         //Podcast
         Route::controller(PodcastController::class)->group(function () {
             Route::prefix('podcast')->group(function () {

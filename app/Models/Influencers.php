@@ -45,4 +45,29 @@ class Influencers extends Model
         'is_deleted'
 
     ];
+    public function getAffiliateLinks()
+{
+    $affiliateLinks = InclusivePackages::where('is_deleted', '0')->where('status', "1")->get()->map(function ($package) {
+        // Ensure that the referral_code is available
+        if (empty($this->referral_code)) {
+            return [
+                'title' => $package->title,
+                'link' => 'Referral code is missing.'
+            ];
+        }
+
+        // Generate the affiliate link using the correct referral code
+        $affiliateLink = $package->getAffiliateLink($this->referral_code);
+
+        return [
+            'title' => $package->title,
+            'link' => $affiliateLink,
+        ];
+    });
+
+    return $affiliateLinks;
+}
+
+    
+
 }

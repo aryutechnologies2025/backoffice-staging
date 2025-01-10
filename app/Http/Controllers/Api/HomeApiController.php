@@ -253,6 +253,25 @@ class HomeApiController extends Controller
     } 
     
 
+    //getting the title in InclusivePackages
+    public function get_title(Request $request)
+    {
+        try {
+            $titles = InclusivePackages::where('is_deleted', '0')->get(['id', 'title']);
+            $affiliateLinks = $titles->map(function ($title) use ($influencer) {
+                $baseUrl = url('/' . $title->id . '/' . str_replace(' ', '-', strtolower($title->title)));
+                return [
+                    'title' => $title->title,
+                    'url' => $baseUrl . '?ref=' . $influencer->referral_code,
+                ];
+            });
+    
+            return response()->json(['status' => '1', 'data' => $titles]);
+        } catch (\Exception $e) {
+            return response()->json(['status' => '0', 'message' => 'An error occurred while fetching titles.']);
+        }
+    }
+
 
 //dashboard api 
 public function get_combined_data(Request $request)
