@@ -27,26 +27,25 @@ class ProgramApiController extends Controller
     public function get_program_details(Request $request)
     {
         try {
-
- // Step 1: Check for Referral Code
- $referralCode = $request->query('ref'); // Extract referral code from URL
- if ($referralCode) {
-     $influencer = Influencers::where('reference_id', $referralCode)->first();
-     
-     if ($influencer) {
-         // Optionally log the referral or store the information
-         Log::info("Referral used by influencer: " . $influencer->name);
-         
-         // You can store the referral in a new table, like "ReferralLogs"
-         // ReferralLog::create(['influencer_id' => $influencer->id, 'user_ip' => $request->ip()]);
-     } else {
-         // Return an error response for invalid referral code
-         return response()->json([
-             'status' => 'error',
-             'message' => 'Invalid referral code.',
-         ], 400);
-     }
- }
+            // Step 1: Check for Referral Code
+            $referralCode = $request->query('ref'); // Extract referral code from URL
+            if ($referralCode) {
+                $influencer = Influencers::where('reference_id', $referralCode)->first();
+                
+                if ($influencer) {
+                    // Optionally log the referral or store the information
+                    Log::info("Referral used by influencer: " . $influencer->name);
+                    
+                    // You can store the referral in a new table, like "ReferralLogs"
+                    // ReferralLog::create(['influencer_id' => $influencer->id, 'user_ip' => $request->ip()]);
+                } else {
+                    // Return an error response for invalid referral code
+                    return response()->json([
+                        'status' => 'error',
+                        'message' => 'Invalid referral code.',
+                    ], 400);
+                }
+            }
 
             // Validate the request to ensure an ID is provided
             $request->validate([
@@ -57,9 +56,19 @@ class ProgramApiController extends Controller
             $id = $request->input('program_id');
             $user_id = $request->input('user_id');
 
-            // Fetch the program details using the provided ID
-            // $package = InclusivePackages::find($id);
+            // Check if the program details are already cached
+            $cacheKey = "program_details_{$id}";
+            $cachedData = \Cache::get($cacheKey);
 
+            if ($cachedData) {
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Program details retrieved successfully from cache.',
+                    'data' => $cachedData
+                ], 200);
+            }
+
+            // Fetch the program details using the provided ID
             $package = InclusivePackages::with('destination', 'theme', 'clientReviews')->find($id);
 
             if (!$package) {
@@ -70,10 +79,6 @@ class ProgramApiController extends Controller
                 ], 404);
             }
 
-            // $amenityIds = json_decode($package->amenity_details, true);
-            // $foodBeverageIds = json_decode($package->food_beverages, true);
-            // $activityIds = json_decode($package->activities, true);
-            // $safetyFeatureIds = json_decode($package->safety_features, true);
             $amenityIds = json_decode($package->amenity_details, true) ?? [];
             $foodBeverageIds = json_decode($package->food_beverages, true) ?? [];
             $activityIds = json_decode($package->activities, true) ?? [];
@@ -82,8 +87,6 @@ class ProgramApiController extends Controller
             $tourPlanning = json_decode($package->tour_planning, true) ?? [];
             $campRule = json_decode($package->camp_rule, true) ?? [];
 
-            // Fetch details using the IDs
-            // $amenities = Amenities::whereIn('id', $amenityIds)->pluck('amenity_name', 'id','amenity_pic');
             $amenities = Amenities::whereIn('id', $amenityIds)
                 ->get(['id', 'amenity_name', 'amenity_pic'])
                 ->keyBy('id')
@@ -121,28 +124,25 @@ class ProgramApiController extends Controller
                     ];
                 });
 
-            // Format the start date
             $formattedStartDate = \Carbon\Carbon::parse($package->start_date)->format('M d, Y');
             $formattedendDate = \Carbon\Carbon::parse($package->return_date)->format('M d, Y');
             $category = json_decode($package->category, true) ?? [];
- // Extract the first image URL
- $formattedLocation = ucfirst($package->address) . ', ' . ucfirst($package->state);
+            $formattedLocation = ucfirst($package->address) . ', ' . ucfirst($package->state);
             $clientReviews = $package->clientReviews->map(function ($review) {
-                $reviewDate =  $reviewDate = Carbon::parse($review->review_dt);
+                $reviewDate = Carbon::parse($review->review_dt);
                 return [
                     'client_name' => $review->client_name,
                     'client_pic' => $review->client_pic,
                     'client_review' => $review->client_review,
                     'review_dt' => $reviewDate->format('d M Y'),
                     'rating' => $review->rating,
-                    // 'created_at' => $review->client_review->format('M d, Y'),
                 ];
             });
             $reviews = $package->reviews->map(function ($review) {
-                $user = $review->user; // Get the related user (reviewer's name and image)
+                $user = $review->user;
                 return [
-                    'first_name' => $review->user->first_name ?? null,  // Get user name, if available
-                    'profile_image' => $review->user->profile_image ?? null,        // User's image
+                    'first_name' => $user->first_name ?? null,
+                    'profile_image' => $user->profile_image ?? null,
                     'comment' => $review->comment,
                     'rating' => $review->rating,
                     'date' => $review->created_at->format('M d, Y'),
@@ -159,7 +159,6 @@ class ProgramApiController extends Controller
 
             $break_fastPlainText = strip_tags(html_entity_decode($package->break_fast, ENT_QUOTES, 'UTF-8'));
             $break_fastPlainText = str_replace(["<br>", "<br/>", "<br />"], "\n", $break_fastPlainText);
-
 
             $responseData = [
                 'id' => $package->id,
@@ -208,23 +207,22 @@ class ProgramApiController extends Controller
 
                 $responseData['wishlists'] = $wishlist;
             }
+
+            // Cache the response data for 60 minutes
+            \Cache::put($cacheKey, $responseData, 60);
+
             return response()->json([
                 'status' => 'success',
                 'message' => 'Program details retrieved successfully.',
                 'data' => $responseData
             ], 200);
         } catch (\Illuminate\Validation\ValidationException $e) {
-            // Return validation error response
             return response()->json([
                 'status' => 'error',
                 'message' => 'Validation error.',
                 'errors' => $e->errors()
             ], 422);
         } catch (\Exception $e) {
-            // Log the exception
-            
-
-            // Return error response
             return response()->json([
                 'status' => 'error',
                 'message' => 'An error occurred while fetching program details.',
