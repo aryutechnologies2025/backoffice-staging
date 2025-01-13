@@ -110,7 +110,9 @@ class HomeApiController extends Controller
         });
         try {
             $requestData = $request->all(); 
-    
+            $id = $request->input('program_id');
+            $user_id = $request->input('user_id');
+
             $program_type =  $request->input('program_type');
             $theme =  $request->input('theme');
             $destination = $request->input('destination');
@@ -147,7 +149,8 @@ class HomeApiController extends Controller
             if ($view_type !== 'all') {
                 $query->take(4); // Limit to 4 packages if view_type is not 'all'
             }
-    
+            $package = InclusivePackages::with('destination', 'theme', 'clientReviews')->find($id);
+
             // Execute the query
             $packages = $query->with(['theme', 'destination', 'clientReviews'])->paginate(10);
             
@@ -169,7 +172,12 @@ class HomeApiController extends Controller
                 $response = (new ProgramApiController)->getAmenitiesFoodBeverageActivitiesSafetyFeaturesById(new Request(['id' => $id]));
                 return json_decode($response->getContent(), true)['data'];
             };
-    
+     // Format the start date
+     $formattedStartDate = \Carbon\Carbon::parse($package->start_date)->format('M d, Y');
+     $formattedEndDate = \Carbon\Carbon::parse($package->return_date)->format('M d, Y');
+     $category = json_decode($package->category, true) ?? [];
+     $formattedLocation = ucfirst($package->address) . ', ' . ucfirst($package->state);
+
             // Process each package to format the output
             $formattedPackages = $packages->map(function ($package) use ($getDetailsById) {
                 // Decode JSON fields
@@ -190,6 +198,29 @@ class HomeApiController extends Controller
                     'date' => $review->created_at->format('M d, Y'),
                 ];
             });
+            $clientReviews = $package->clientReviews->map(function ($review) {
+                $reviewDate = Carbon::parse($review->review_dt);
+                return [
+                    'client_name' => $review->client_name,
+                    'client_pic' => $review->client_pic,
+                    'client_review' => $review->client_review,
+                    'review_dt' => $reviewDate->format('d M Y'),
+                    'rating' => $review->rating,
+                ];
+            });
+
+            $reviewCount = $package->reviews->count();
+            $totalReviews = $package->clientReviews->count();
+            $averageRating = $package->reviews->avg('rating');
+
+            $importantInfoPlainText = strip_tags(html_entity_decode($package->important_info, ENT_QUOTES, 'UTF-8'));
+            $importantInfoPlainText = str_replace(["<br>", "<br/>", "<br />"], "\n", $importantInfoPlainText);
+
+            $programInclusionPlainText = strip_tags(html_entity_decode($package->program_inclusion, ENT_QUOTES, 'UTF-8'));
+            $programInclusionPlainText = str_replace(["<br>", "<br/>", "<br />"], "\n", $programInclusionPlainText);
+
+            $breakFastPlainText = strip_tags(html_entity_decode($package->break_fast, ENT_QUOTES, 'UTF-8'));
+            $breakFastPlainText = str_replace(["<br>", "<br/>", "<br />"], "\n", $breakFastPlainText);
                 // Fetch amenities, food & beverage, activities, safety features
                 $details = $getDetailsById($package);
                 
@@ -237,6 +268,33 @@ class HomeApiController extends Controller
                     'addressDetails' => $details['addressDetails'] ?? [],
 
                    
+
+
+
+                    'flag' => $category,
+                    'destination' => $package->destination->city_name,
+                    'tour_planning' => $tourPlanning,
+// 'start_date' => $formattedStartDate,
+//                 'end_date' => $formattedEndDate,
+                'total_days' => $package->total_days,
+                'member_capacity' => $package->member_capacity,
+                'member_type' => $package->member_type,
+'actual_price' => $package->price,
+                'discount_price' => $package->actual_price,
+                'payment_policy' => $campRule,
+                'important_info' => $importantInfoPlainText,
+                'program_inclusion' => $programInclusionPlainText,
+                'break_fast' => $breakFastPlainText,
+                'location' => $formattedLocation,
+                'lunch' => $package->lunch,
+                'dinner' => $package->dinner,
+                'review_count' => $reviewCount,
+                'google_map' => $package->google_map,
+                'average_rating' => number_format($averageRating, 1),
+                'created_date' => $package->created_date,
+                'total_reviews' => $totalReviews,
+
+
                 ];
             });
     
