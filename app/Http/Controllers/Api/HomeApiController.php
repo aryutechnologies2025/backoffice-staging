@@ -108,24 +108,26 @@ class HomeApiController extends Controller
         DB::listen(function ($query) {
             Log::info('SQL Query: ' . $query->sql);
         });
+    
         try {
-            $requestData = $request->all(); 
+            $requestData = $request->all();
             $id = $request->input('program_id');
             $user_id = $request->input('user_id');
-
-            $program_type =  $request->input('program_type');
-            $theme =  $request->input('theme');
+            $program_type = $request->input('program_type');
+            $theme = $request->input('theme');
             $destination = $request->input('destination');
-            $program_destination =  $request->input('program_destination');
-            $view_type =  $request->input('view_type');
+            $program_destination = $request->input('program_destination');
+            $view_type = $request->input('view_type');
+    
+            // Query for city
             $getCity = City::where('status', "1")
-            ->where('is_deleted', "0");
-
-            // Build the query
+                ->where('is_deleted', "0");
+    
+            // Base query for packages
             $query = InclusivePackages::where('status', "1")
                 ->where('is_deleted', "0");
-            
-            // Conditionally apply filters based on input
+    
+            // Add filters to the query
             if ($program_type) {
                 $query->whereJsonContains('category', $program_type);
             }
@@ -135,7 +137,7 @@ class HomeApiController extends Controller
                 $view_type = 'all';
             }
     
-            if($destination) {
+            if ($destination) {
                 $query->where('city_details', $destination);
                 $view_type = 'all';
             }
@@ -145,16 +147,17 @@ class HomeApiController extends Controller
                 $view_type = 'all';
             }
     
-            // Apply the limit conditionally
+            // Apply limit if view_type is not 'all'
             if ($view_type !== 'all') {
-                $query->take(4); // Limit to 4 packages if view_type is not 'all'
+                $query->take(4);
             }
+    
+            // Fetch specific package if id is provided
             $package = InclusivePackages::with('destination', 'theme', 'clientReviews')->find($id);
-
-            // Execute the query
+    
+            // Execute the query and paginate
             $packages = $query->with(['theme', 'destination', 'clientReviews'])->paginate(10);
-            
-            // Check if any packages were found
+    
             if ($packages->isEmpty()) {
                 return response()->json([
                     'status' => 'success',
@@ -163,159 +166,88 @@ class HomeApiController extends Controller
                 ], 200);
             }
     
-          
-            // Helper function to get amenities, food & beverage, activities, and safety features
+            // Helper function to fetch additional details
             $getDetailsById = function ($package) {
                 $id = $package->id;
-                
-                // Call your original method logic here (or modify it to return the required data)
                 $response = (new ProgramApiController)->getAmenitiesFoodBeverageActivitiesSafetyFeaturesById(new Request(['id' => $id]));
                 return json_decode($response->getContent(), true)['data'];
             };
-     // Format the start date
-     $formattedStartDate = \Carbon\Carbon::parse($package->start_date)->format('M d, Y');
-     $formattedEndDate = \Carbon\Carbon::parse($package->return_date)->format('M d, Y');
-     $category = json_decode($package->category, true) ?? [];
-     $formattedLocation = ucfirst($package->address) . ', ' . ucfirst($package->state);
-
-            // Process each package to format the output
+    
+            // Format packages
             $formattedPackages = $packages->map(function ($package) use ($getDetailsById) {
-                // Decode JSON fields
-                $eventsPackageImages = json_decode($package->cover_img, true);
-                $tourPlanning = json_decode($package->tour_planning, true);
-                $campRule = json_decode($package->camp_rule, true);
-                $amenityDetails = json_decode($package->amenity_details, true);
-                $activities = json_decode($package->activities, true);
-                $safetyFeatures = json_decode($package->safety_features, true);
-                // Process reviews and attach user data
-            $reviews = $package->reviews->map(function ($review) {
-                $user = $review->user; // Get the related user (reviewer's name and image)
-                return [
-                    'first_name' => $review->user->first_name ?? null,  // Get user name, if available
-                    'profile_image' => $review->user->profile_image ?? null,        // User's image
-                    'comment' => $review->comment,
-                    'rating' => $review->rating,
-                    'date' => $review->created_at->format('M d, Y'),
-                ];
-            });
-            $clientReviews = $package->clientReviews->map(function ($review) {
-                $reviewDate = Carbon::parse($review->review_dt);
-                return [
-                    'client_name' => $review->client_name,
-                    'client_pic' => $review->client_pic,
-                    'client_review' => $review->client_review,
-                    'review_dt' => $reviewDate->format('d M Y'),
-                    'rating' => $review->rating,
-                ];
-            });
-
-            $reviewCount = $package->reviews->count();
-            $totalReviews = $package->clientReviews->count();
-            $averageRating = $package->reviews->avg('rating');
-
-            $importantInfoPlainText = strip_tags(html_entity_decode($package->important_info, ENT_QUOTES, 'UTF-8'));
-            $importantInfoPlainText = str_replace(["<br>", "<br/>", "<br />"], "\n", $importantInfoPlainText);
-
-            $programInclusionPlainText = strip_tags(html_entity_decode($package->program_inclusion, ENT_QUOTES, 'UTF-8'));
-            $programInclusionPlainText = str_replace(["<br>", "<br/>", "<br />"], "\n", $programInclusionPlainText);
-
-            $breakFastPlainText = strip_tags(html_entity_decode($package->break_fast, ENT_QUOTES, 'UTF-8'));
-            $breakFastPlainText = str_replace(["<br>", "<br/>", "<br />"], "\n", $breakFastPlainText);
-                // Fetch amenities, food & beverage, activities, safety features
                 $details = $getDetailsById($package);
-                
-                // Format the start date
-                $formattedStartDate = \Carbon\Carbon::parse($package->start_date)->format('M d, Y');
     
-                // Extract the first image URL
-                $formattedLocation = ucfirst($package->address) . ', ' . ucfirst($package->state);
-                $totalReviews = $package->clientReviews->count();
-                $averageRating = $package->reviews->avg('rating');
                 $category = json_decode($package->category, true) ?? [];
-                $formattedcategory = is_array($category) ? implode(', ', $category) : $category;
+                $formattedCategory = is_array($category) ? implode(', ', $category) : $category;
     
-                
-                // Return the formatted package data, including additional details
+                $importantInfoPlainText = strip_tags(html_entity_decode($package->important_info, ENT_QUOTES, 'UTF-8'));
+                $programInclusionPlainText = strip_tags(html_entity_decode($package->program_inclusion, ENT_QUOTES, 'UTF-8'));
+                $breakFastPlainText = strip_tags(html_entity_decode($package->break_fast, ENT_QUOTES, 'UTF-8'));
+    
+                $reviews = $package->reviews->map(function ($review) {
+                    return [
+                        'first_name' => $review->user->first_name ?? null,
+                        'profile_image' => $review->user->profile_image ?? null,
+                        'comment' => $review->comment,
+                        'rating' => $review->rating,
+                        'date' => $review->created_at->format('M d, Y'),
+                    ];
+                });
+    
+                $clientReviews = $package->clientReviews->map(function ($review) {
+                    $reviewDate = Carbon::parse($review->review_dt);
+                    return [
+                        'client_name' => $review->client_name,
+                        'client_pic' => $review->client_pic,
+                        'client_review' => $review->client_review,
+                        'review_dt' => $reviewDate->format('d M Y'),
+                        'rating' => $review->rating,
+                    ];
+                });
+    
                 return [
                     'id' => $package->id,
                     'title' => ucfirst($package->title),
-                    'category' => ucfirst($formattedcategory),
-                    // 'location' => $formattedLocation,
+                    'category' => $formattedCategory,
                     'total_days' => $package->total_days,
                     'member_capacity' => $package->member_capacity,
                     'price' => $package->price,
                     'actual_price' => $package->actual_price,
                     'cover_img' => $package->cover_img,
-                    'start_date' => $formattedStartDate,
-                    'theme_id' => $package->theme ? $package->theme->id : null, 
+                    'start_date' => \Carbon\Carbon::parse($package->start_date)->format('M d, Y'),
+                    'theme_id' => $package->theme ? $package->theme->id : null,
                     'theme' => $package->theme ? $package->theme->themes_name : null,
                     'destination_id' => $package->destination ? $package->destination->id : null,
                     'destination' => $package->destination ? $package->destination->city_name : null,
-                    'average_rating' => number_format($averageRating, 1),
-                    'totalReviews' => $totalReviews,
-
-                    'total_room' => $package->total_room,
-                    'bath_room' => $package->bath_room,
-                    'bed_room' => $package->bed_room,
-                    'hall'=> $package->hall,
                     'reviews' => $reviews,
-
-                    // Adding the fetched details
+                    'clientReviews' => $clientReviews,
+                    'average_rating' => number_format($package->reviews->avg('rating'), 1),
+                    'important_info' => $importantInfoPlainText,
+                    'program_inclusion' => $programInclusionPlainText,
+                    'break_fast' => $breakFastPlainText,
                     'amenities' => $details['amenities'] ?? [],
                     'foodBeverages' => $details['foodBeverages'] ?? [],
                     'activities' => $details['activities'] ?? [],
                     'safetyFeatures' => $details['safetyFeatures'] ?? [],
                     'addressDetails' => $details['addressDetails'] ?? [],
-
-                   
-
-
-
-                    'flag' => $category,
-                    'destination' => $package->destination->city_name,
-                    'tour_planning' => $tourPlanning,
-// 'start_date' => $formattedStartDate,
-//                 'end_date' => $formattedEndDate,
-                'total_days' => $package->total_days,
-                'member_capacity' => $package->member_capacity,
-                'member_type' => $package->member_type,
-'actual_price' => $package->price,
-                'discount_price' => $package->actual_price,
-                'payment_policy' => $campRule,
-                'important_info' => $importantInfoPlainText,
-                'program_inclusion' => $programInclusionPlainText,
-                'break_fast' => $breakFastPlainText,
-                'location' => $formattedLocation,
-                'lunch' => $package->lunch,
-                'dinner' => $package->dinner,
-                'review_count' => $reviewCount,
-                'google_map' => $package->google_map,
-                'average_rating' => number_format($averageRating, 1),
-                'created_date' => $package->created_date,
-                'total_reviews' => $totalReviews,
-
-
                 ];
             });
     
-            // Return the formatted data with success status
             return response()->json([
                 'status' => 'success',
-                'message' => '' . str_replace('_', ' ', $program_type) . ' retrieved successfully.',
-                'data' => $formattedPackages
+                'message' => ucfirst(str_replace('_', ' ', $program_type)) . ' retrieved successfully.',
+                'data' => $formattedPackages,
             ], 200);
         } catch (\Exception $e) {
-           
-    
-            // Return error response
             return response()->json([
                 'status' => 'error',
-                'message' => 'An error occurred while fetching ',
-                'error' => $e->getMessage()
+                'message' => 'An error occurred while fetching the program.',
+                'error' => $e->getMessage(),
             ], 500);
         }
-    } 
+    }
     
+
     // public function get_program(Request $request)
     // {
     //     DB::listen(function ($query) {
