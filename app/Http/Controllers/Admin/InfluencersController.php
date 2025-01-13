@@ -44,39 +44,43 @@ class InfluencersController extends Controller
         $title = 'Add Influencer';
         return view('admin.influencers.influencer_add', compact('title'));
     }
-
     public function insert(Request $request)
     {
-        $influencer = new Influencers;
-        
+       
+        $influencer = new Influencers();
+    
         // Generate the next reference_id
-        $lastInfluencer = Influencers::where('reference_id', 'LIKE', 'Innerpece-%')->orderBy('id', 'desc')->first();
+        $lastInfluencer = Influencers::where('reference_id', 'LIKE', 'Innerpece-%')
+            ->orderBy('id', 'desc')
+            ->first();
+    
         if ($lastInfluencer) {
-            $lastReferenceId = intval(substr($lastInfluencer->reference_id, 4)); // Extract numeric part
-            $newReferenceId = 'Innerpece-' . str_pad($lastReferenceId + 1, 3, '0', STR_PAD_LEFT); // Increment and pad with leading zeros
+            $lastReferenceId = intval(substr($lastInfluencer->reference_id, 10)); // Adjusted to extract after 'Innerpece-'
+            $newReferenceId = 'Innerpece-' . str_pad($lastReferenceId + 1, 3, '0', STR_PAD_LEFT);
         } else {
-            $newReferenceId = 'Innerpece-001'; // Start from Inf-001 if no records exist
+            $newReferenceId = 'Innerpece-001'; // Start from Innerpece-001 if no records exist
         }
-        
+    
         // Generate referral code
-        $newReferralCode = strtoupper(substr(md5(uniqid(rand(), true)), 0, 8)); // Create a unique referral code
-        
+        $newReferralCode = strtoupper(substr(md5(uniqid(rand(), true)), 0, 8));
+    
         // Fill influencer data
         $influencer->fill($request->all());
-        $influencer->reference_id = $newReferenceId;
-        $influencer->referral_code = $newReferralCode; // Set the referral code
-        $influencer->created_by = 'admin';
-        $influencer->status = $request->has('status') && $request->input('status') === 'on' ? '1' : '0';
+         $influencer->reference_id = $newReferenceId;
+        $influencer->referral_code = $newReferralCode;
+        $influencer->created_by = 'admin'; // Hardcoded for now, consider fetching logged-in admin's name
+        $influencer->status = $request->boolean('status') ? '1' : '0'; // Use boolean() helper for checkboxes
         $influencer->is_deleted = '0';
-        
+    
         $influencer->save();
-        
+    
         // Generate signup URL
         $signupUrl = url('/signup/' . $newReferenceId);
-      
+    
         return redirect()->route('admin.influencer_list')
-            ->with('success', 'Influencer added successfully. Reference ID: ' . $newReferenceId . ', Referral Code: ' . $newReferralCode . ', Signup URL: ' . $signupUrl);
+            ->with('success', "Influencer added successfully. Reference ID: {$newReferenceId}, Referral Code: {$newReferralCode}, Signup URL: {$signupUrl}");
     }
+    
     
 
     // public function getAffiliateLinks($id)
@@ -214,35 +218,39 @@ class InfluencersController extends Controller
 
 public function showProgramWithReferral($program_slug, Request $request)
 {
-    // Capture the referral code from the query string
+    // Capture the referral code from the query string (optional)
     $referral_code = $request->query('ref');
-    
-    // Find the influencer by referral code
-    $influencer = Influencers::where('reference_id', $referral_code)->first();
-    
-    if (!$influencer) {
-        return response()->json([
-            'status' => 'error',
-            'message' => 'Invalid referral code.',
-        ], 404);
+    $influencer = null;
+
+    // If referral code is provided, find the influencer
+    if ($referral_code) {
+        $influencer = Influencers::where('reference_id', $referral_code)->first();
+
+        if (!$influencer) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Invalid referral code.',
+            ], 404); // Return error if the referral code is invalid
+        }
+
+        // Optional: Log or process referral logic if influencer is valid
+        $influencer->increment('clicks');
     }
 
     // Find the program using the program_slug
     $program = InclusivePackages::where('slug', $program_slug)->first();
-    
+
     if (!$program) {
         return response()->json([
             'status' => 'error',
             'message' => 'Program not found.',
-        ], 404);
+        ], 404); // Return error if the program is not found
     }
 
-    // Optionally, log the referral or process any business logic based on the referral code
-    // You can use session to store the referral or track analytics
-    
-    // Prepare the response
+    // Prepare the response with or without referral details
     return view('program.show', compact('program', 'influencer', 'referral_code'));
 }
+
 
 
 

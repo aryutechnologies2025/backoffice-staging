@@ -234,7 +234,7 @@ Route::prefix('/')->group(function () {
 Route::get('/admin/influencer/{influencerId}/affiliate-links', [InfluencersController::class, 'getAffiliateLinks']);
 // routes/web.php
 
-Route::get('/{program_slug}', [InfluencersController::class, 'showProgramWithReferral']);
+// Route::get('/{program_slug}', [InfluencersController::class, 'showProgramWithReferral']);
 
     
         //Podcast
