@@ -27,25 +27,26 @@ class ProgramApiController extends Controller
     public function get_program_details(Request $request)
     {
         try {
-            // Step 1: Check for Referral Code
-            $referralCode = $request->query('ref'); // Extract referral code from URL
-            if ($referralCode) {
-                $influencer = Influencers::where('reference_id', $referralCode)->first();
-                
-                if ($influencer) {
-                    // Optionally log the referral or store the information
-                    Log::info("Referral used by influencer: " . $influencer->name);
-                    
-                    // You can store the referral in a new table, like "ReferralLogs"
-                    // ReferralLog::create(['influencer_id' => $influencer->id, 'user_ip' => $request->ip()]);
-                } else {
-                    // Return an error response for invalid referral code
-                    return response()->json([
-                        'status' => 'error',
-                        'message' => 'Invalid referral code.',
-                    ], 400);
-                }
-            }
+
+ // Step 1: Check for Referral Code
+ $referralCode = $request->query('ref'); // Extract referral code from URL
+ if ($referralCode) {
+     $influencer = Influencers::where('reference_id', $referralCode)->first();
+     
+     if ($influencer) {
+         // Optionally log the referral or store the information
+         Log::info("Referral used by influencer: " . $influencer->name);
+         
+         // You can store the referral in a new table, like "ReferralLogs"
+         // ReferralLog::create(['influencer_id' => $influencer->id, 'user_ip' => $request->ip()]);
+     } else {
+         // Return an error response for invalid referral code
+         return response()->json([
+             'status' => 'error',
+             'message' => 'Invalid referral code.',
+         ], 400);
+     }
+ }
 
             // Validate the request to ensure an ID is provided
             $request->validate([
@@ -56,154 +57,150 @@ class ProgramApiController extends Controller
             $id = $request->input('program_id');
             $user_id = $request->input('user_id');
 
-            // Step 4: Check cache for program details
-            $cacheKey = 'program_details_' . $id;
-            $package = Cache::get($cacheKey);
+            // Fetch the program details using the provided ID
+            // $package = InclusivePackages::find($id);
+
+            $package = InclusivePackages::with('destination', 'theme', 'clientReviews')->find($id);
 
             if (!$package) {
-                // Fetch the program details using the provided ID
-                $package = InclusivePackages::with('destination', 'theme', 'clientReviews')->find($id);
-
-                if (!$package) {
-                    return response()->json([
-                        'status' => 'error',
-                        'message' => 'Program not found.',
-                        'data' => null
-                    ], 404);
-                }
-
-                $amenityIds = json_decode($package->amenity_details, true) ?? [];
-                $foodBeverageIds = json_decode($package->food_beverages, true) ?? [];
-                $activityIds = json_decode($package->activities, true) ?? [];
-                $safetyFeatureIds = json_decode($package->safety_features, true) ?? [];
-                $eventsPackageImages = json_decode($package->events_package_images, true) ?? [];
-                $tourPlanning = json_decode($package->tour_planning, true) ?? [];
-                $campRule = json_decode($package->camp_rule, true) ?? [];
-
-                // Fetch details using the IDs
-                $amenities = Amenities::whereIn('id', $amenityIds)
-                    ->get(['id', 'amenity_name', 'amenity_pic'])
-                    ->keyBy('id')
-                    ->map(function ($item) {
-                        return [
-                            'amenity_name' => $item->amenity_name,
-                            'amenity_pic' => $item->amenity_pic,
-                        ];
-                    });
-                $foodBeverages = FoodBeverage::whereIn('id', $foodBeverageIds)
-                    ->get(['id', 'food_beverage', 'food_beverage_pic'])
-                    ->keyBy('id')
-                    ->map(function ($item) {
-                        return [
-                            'food_beverage' => $item->food_beverage,
-                            'food_beverage_pic' => $item->food_beverage_pic,
-                        ];
-                    });
-                $activities = Activities::whereIn('id', $activityIds)
-                    ->get(['id', 'activities', 'activities_pic'])
-                    ->keyBy('id')
-                    ->map(function ($item) {
-                        return [
-                            'activities' => $item->activities,
-                            'activities_pic' => $item->activities_pic,
-                        ];
-                    });
-                $safetyFeatures = Safetyfeatures::whereIn('id', $safetyFeatureIds)
-                    ->get(['id', 'safety_features', 'safety_features_pic'])
-                    ->keyBy('id')
-                    ->map(function ($item) {
-                        return [
-                            'safety_features' => $item->safety_features,
-                            'safety_features_pic' => $item->safety_features_pic,
-                        ];
-                    });
-
-                // Format the start date
-                $formattedStartDate = \Carbon\Carbon::parse($package->start_date)->format('M d, Y');
-                $formattedEndDate = \Carbon\Carbon::parse($package->return_date)->format('M d, Y');
-                $category = json_decode($package->category, true) ?? [];
-                $formattedLocation = ucfirst($package->address) . ', ' . ucfirst($package->state);
-
-                $clientReviews = $package->clientReviews->map(function ($review) {
-                    $reviewDate = Carbon::parse($review->review_dt);
-                    return [
-                        'client_name' => $review->client_name,
-                        'client_pic' => $review->client_pic,
-                        'client_review' => $review->client_review,
-                        'review_dt' => $reviewDate->format('d M Y'),
-                        'rating' => $review->rating,
-                    ];
-                });
-
-                $reviews = $package->reviews->map(function ($review) {
-                    $user = $review->user; // Get the related user (reviewer's name and image)
-                    return [
-                        'first_name' => $review->user->first_name ?? null,  // Get user name, if available
-                        'profile_image' => $review->user->profile_image ?? null,        // User's image
-                        'comment' => $review->comment,
-                        'rating' => $review->rating,
-                        'date' => $review->created_at->format('M d, Y'),
-                    ];
-                });
-
-                $reviewCount = $package->reviews->count();
-                $totalReviews = $package->clientReviews->count();
-                $averageRating = $package->reviews->avg('rating');
-
-                $importantInfoPlainText = strip_tags(html_entity_decode($package->important_info, ENT_QUOTES, 'UTF-8'));
-                $importantInfoPlainText = str_replace(["<br>", "<br/>", "<br />"], "\n", $importantInfoPlainText);
-
-                $programInclusionPlainText = strip_tags(html_entity_decode($package->program_inclusion, ENT_QUOTES, 'UTF-8'));
-                $programInclusionPlainText = str_replace(["<br>", "<br/>", "<br />"], "\n", $programInclusionPlainText);
-
-                $breakFastPlainText = strip_tags(html_entity_decode($package->break_fast, ENT_QUOTES, 'UTF-8'));
-                $breakFastPlainText = str_replace(["<br>", "<br/>", "<br />"], "\n", $breakFastPlainText);
-
-                $responseData = [
-                    'id' => $package->id,
-                    'title' => $package->title,
-                    'program_desc' => $package->program_description,
-                    'flag' => $category,
-                    'destination' => $package->destination->city_name,
-                    'theme' => $package->theme->themes_name,
-                    'state' => $package->state,
-                    'city' => $package->city,
-                    'address' => $package->address,
-                    'country' => $package->country,
-                    'tour_planning' => $tourPlanning,
-                    'cover_img' => $package->cover_img,
-                    'gallery_img' => $eventsPackageImages,
-                    'start_date' => $formattedStartDate,
-                    'end_date' => $formattedEndDate,
-                    'total_days' => $package->total_days,
-                    'member_capacity' => $package->member_capacity,
-                    'member_type' => $package->member_type,
-                    'actual_price' => $package->price,
-                    'discount_price' => $package->actual_price,
-                    'payment_policy' => $campRule,
-                    'important_info' => $importantInfoPlainText,
-                    'program_inclusion' => $programInclusionPlainText,
-                    'break_fast' => $breakFastPlainText,
-                    'location' => $formattedLocation,
-                    'lunch' => $package->lunch,
-                    'dinner' => $package->dinner,
-                    'amenity_details' => $amenities,
-                    'foodBeverages' => $foodBeverages,
-                    'activities' => $activities,
-                    'safety_features' => $safetyFeatures,
-                    'client_reviews' => $clientReviews,
-                    'total_reviews' => $totalReviews,
-                    'reviews' => $reviews,
-                    'review_count' => $reviewCount,
-                    'google_map' => $package->google_map,
-                    'average_rating' => number_format($averageRating, 1),
-                    'created_date' => $package->created_date,
-                ];
-
-                // Store the result in cache for 60 minutes (1 hour)
-                Cache::put($cacheKey, $responseData, 60); // Cache for 1 hour
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Program not found.',
+                    'data' => null
+                ], 404);
             }
 
+            // $amenityIds = json_decode($package->amenity_details, true);
+            // $foodBeverageIds = json_decode($package->food_beverages, true);
+            // $activityIds = json_decode($package->activities, true);
+            // $safetyFeatureIds = json_decode($package->safety_features, true);
+            $amenityIds = json_decode($package->amenity_details, true) ?? [];
+            $foodBeverageIds = json_decode($package->food_beverages, true) ?? [];
+            $activityIds = json_decode($package->activities, true) ?? [];
+            $safetyFeatureIds = json_decode($package->safety_features, true) ?? [];
+            $eventsPackageImages = json_decode($package->events_package_images, true) ?? [];
+            $tourPlanning = json_decode($package->tour_planning, true) ?? [];
+            $campRule = json_decode($package->camp_rule, true) ?? [];
+
+            // Fetch details using the IDs
+            // $amenities = Amenities::whereIn('id', $amenityIds)->pluck('amenity_name', 'id','amenity_pic');
+            $amenities = Amenities::whereIn('id', $amenityIds)
+                ->get(['id', 'amenity_name', 'amenity_pic'])
+                ->keyBy('id')
+                ->map(function ($item) {
+                    return [
+                        'amenity_name' => $item->amenity_name,
+                        'amenity_pic' => $item->amenity_pic,
+                    ];
+                });
+            $foodBeverages = FoodBeverage::whereIn('id', $foodBeverageIds)
+                ->get(['id', 'food_beverage', 'food_beverage_pic'])
+                ->keyBy('id')
+                ->map(function ($item) {
+                    return [
+                        'food_beverage' => $item->food_beverage,
+                        'food_beverage_pic'  => $item->food_beverage_pic,
+                    ];
+                });
+            $activities = Activities::whereIn('id', $activityIds)
+                ->get(['id', 'activities', 'activities_pic'])
+                ->keyBy('id')
+                ->map(function ($item) {
+                    return [
+                        'activities' => $item->activities,
+                        'activities_pic' => $item->activities_pic,
+                    ];
+                });
+            $safetyFeatures = Safetyfeatures::whereIn('id', $safetyFeatureIds)
+                ->get(['id', 'safety_features', 'safety_features_pic'])
+                ->keyBy('id')
+                ->map(function ($item) {
+                    return [
+                        'safety_features' => $item->safety_features,
+                        'safety_features_pic' => $item->safety_features_pic,
+                    ];
+                });
+
+            // Format the start date
+            $formattedStartDate = \Carbon\Carbon::parse($package->start_date)->format('M d, Y');
+            $formattedendDate = \Carbon\Carbon::parse($package->return_date)->format('M d, Y');
+            $category = json_decode($package->category, true) ?? [];
+ // Extract the first image URL
+ $formattedLocation = ucfirst($package->address) . ', ' . ucfirst($package->state);
+            $clientReviews = $package->clientReviews->map(function ($review) {
+                $reviewDate =  $reviewDate = Carbon::parse($review->review_dt);
+                return [
+                    'client_name' => $review->client_name,
+                    'client_pic' => $review->client_pic,
+                    'client_review' => $review->client_review,
+                    'review_dt' => $reviewDate->format('d M Y'),
+                    'rating' => $review->rating,
+                    // 'created_at' => $review->client_review->format('M d, Y'),
+                ];
+            });
+            $reviews = $package->reviews->map(function ($review) {
+                $user = $review->user; // Get the related user (reviewer's name and image)
+                return [
+                    'first_name' => $review->user->first_name ?? null,  // Get user name, if available
+                    'profile_image' => $review->user->profile_image ?? null,        // User's image
+                    'comment' => $review->comment,
+                    'rating' => $review->rating,
+                    'date' => $review->created_at->format('M d, Y'),
+                ];
+            });
+            $reviewCount = $package->reviews->count();
+            $totalReviews = $package->clientReviews->count();
+            $averageRating = $package->reviews->avg('rating');
+            $importantInfoPlainText = strip_tags(html_entity_decode($package->important_info, ENT_QUOTES, 'UTF-8'));
+            $importantInfoPlainText = str_replace(["<br>", "<br/>", "<br />"], "\n", $importantInfoPlainText);
+
+            $program_inclusionPlainText = strip_tags(html_entity_decode($package->program_inclusion, ENT_QUOTES, 'UTF-8'));
+            $program_inclusionPlainText = str_replace(["<br>", "<br/>", "<br />"], "\n", $program_inclusionPlainText);
+
+            $break_fastPlainText = strip_tags(html_entity_decode($package->break_fast, ENT_QUOTES, 'UTF-8'));
+            $break_fastPlainText = str_replace(["<br>", "<br/>", "<br />"], "\n", $break_fastPlainText);
+
+
+            $responseData = [
+                'id' => $package->id,
+                'title' => $package->title,
+                'program_desc' => $package->program_description,
+                'flag' => $category,
+                'destination' => $package->destination->city_name,
+                'theme' => $package->theme->themes_name,
+                'state' => $package->state,
+                'city' => $package->city,
+                'address' => $package->address,
+                'country' => $package->country,
+                'tour_planning' => $tourPlanning,
+                'cover_img' => $package->cover_img,
+                'gallery_img' => $eventsPackageImages,
+                'start_date' => $formattedStartDate,
+                'end_date' => $formattedendDate,
+                'total_days' => $package->total_days,
+                'member_capacity' => $package->member_capacity,
+                'member_type' => $package->member_type,
+                'actual_price' => $package->price,
+                'discount_price' => $package->actual_price,
+                'payment_policy' => $campRule,
+                'important_info' => $importantInfoPlainText,
+                'program_inclusion' => $program_inclusionPlainText,
+                'break_fast' => $break_fastPlainText,
+                'location' => $formattedLocation,
+                'lunch' => $package->lunch,
+                'dinner' => $package->dinner,
+                'amenity_details' => $amenities,
+                'foodBeverages' => $foodBeverages,
+                'activities' => $activities,
+                'safety_features' => $safetyFeatures,
+                'client_reviews' => $clientReviews,
+                'total_reviews' => $totalReviews,
+                'reviews' => $reviews,
+                'review_count' => $reviewCount,
+                'google_map' => $package->google_map,
+                'average_rating' => number_format($averageRating, 1),
+                'created_date' => $package->created_date,
+            ];
             if ($user_id) {
                 $wishlist = Program_wishlist::where('user_id', $user_id)
                     ->where('program_id', $id)
@@ -211,7 +208,6 @@ class ProgramApiController extends Controller
 
                 $responseData['wishlists'] = $wishlist;
             }
-
             return response()->json([
                 'status' => 'success',
                 'message' => 'Program details retrieved successfully.',
@@ -226,6 +222,7 @@ class ProgramApiController extends Controller
             ], 422);
         } catch (\Exception $e) {
             // Log the exception
+            
 
             // Return error response
             return response()->json([
