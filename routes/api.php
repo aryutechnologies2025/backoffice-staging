@@ -48,7 +48,7 @@ Route::prefix('v1')->group(function () {
         Route::get('/get-combined-data', [HomeApiController::class, 'get_combined_data']);
 
         // Program Filtering Routes
-        // Route::post('/get-program', [HomeApiController::class, 'get_program']);
+         Route::post('/get-program', [HomeApiController::class, 'get_program']);
         Route::post('/home-filter', [HomeApiController::class, 'home_filter']);
         Route::post('/filter-program-by-price_sort', [ProgramApiController::class, 'filter_program_by_price_sort']);
         Route::post('/destination-program-by-price_sort', [ProgramApiController::class, 'destination_program_by_price_sort']);
