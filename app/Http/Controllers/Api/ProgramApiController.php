@@ -56,6 +56,9 @@ class ProgramApiController extends Controller
             // Retrieve the ID from the request
             $id = $request->input('program_id');
             $user_id = $request->input('user_id');
+ // Step 4: Check cache for program details
+ $cacheKey = 'program_details_' . $id;
+ $package = Cache::get($cacheKey);
 
             // Fetch the program details using the provided ID
             // $package = InclusivePackages::find($id);
@@ -201,6 +204,8 @@ class ProgramApiController extends Controller
                 'average_rating' => number_format($averageRating, 1),
                 'created_date' => $package->created_date,
             ];
+              // Store the result in cache for 60 minutes (1 hour)
+              Cache::put($cacheKey, $responseData, 60); // Cache for 1 hour
             if ($user_id) {
                 $wishlist = Program_wishlist::where('user_id', $user_id)
                     ->where('program_id', $id)
