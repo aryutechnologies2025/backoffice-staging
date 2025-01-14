@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\SiteApiController;
 use App\Http\Controllers\Api\HomeApiController;
 use App\Http\Controllers\Api\ProgramApiController;
 use App\Http\Controllers\Api\ReviewController;
+use App\Http\Controllers\ReferralLogController;
 
 /*
 |----------------------------------------------------------------------
@@ -63,6 +64,9 @@ Route::prefix('v1')->group(function () {
          Route::post('/get-program-details', [ProgramApiController::class, 'get_program_details']);
 
 Route::get('/get-title', [HomeApiController::class, 'get_title']);
+
+Route::post('/referral-log', [ReferralLogController::class, 'store']);  // Store new referral log
+Route::get('/referral-logs', [ReferralLogController::class, 'index']);  // View all referral logs
 
     });
 });
