@@ -27,23 +27,21 @@ class ProgramApiController extends Controller
     public function get_program_details(Request $request)
     {
         try {
-            // Step 1: Check for Referral Code
-            $referralCode = $request->query('ref'); // Extract referral code from URL
+            $referralCode = $request->query('ref'); // Get the referral code from the URL
             if ($referralCode) {
                 $influencer = Influencers::where('reference_id', $referralCode)->first();
                 
                 if ($influencer) {
-                    // Optionally log the referral or store the information
-                    Log::info("Referral used by influencer: " . $influencer->name);
+                    // Log or store the influencer referral
+                    Log::info("User referred by influencer: " . $influencer->name);
                     
-                    // You can store the referral in a new table, like "ReferralLogs"
-                    // ReferralLog::create(['influencer_id' => $influencer->id, 'user_ip' => $request->ip()]);
-                } else {
-                    // Return an error response for invalid referral code
-                    return response()->json([
-                        'status' => 'error',
-                        'message' => 'Invalid referral code.',
-                    ], 400);
+                    // Optionally save this information for analytics
+                    ReferralLog::create([
+                        'influencer_id' => $influencer->id,
+                        'user_ip' => $request->ip(),
+                        'program_id' => $request->input('program_id') ?? null, // Optional: Link it to the program
+                        'user_agent' => $request->header('User-Agent') // Capture browser details
+                    ]);
                 }
             }
 
