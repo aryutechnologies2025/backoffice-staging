@@ -235,6 +235,10 @@ Route::get('/admin/influencer/{influencerId}/affiliate-links', [InfluencersContr
 // routes/web.php
 
 // Route::get('/{program_slug}', [InfluencersController::class, 'showProgramWithReferral']);
+Route::get('/affiliate-click/{id}', [InfluencersController::class, 'trackAffiliateClick'])->name('affiliate.click');
+Route::get('/{program_id}', [InfluencersController::class, 'show'])
+    ->middleware('track.affiliate')
+    ->name('program.show');
 
     
         //Podcast

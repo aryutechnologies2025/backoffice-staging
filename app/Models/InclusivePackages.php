@@ -99,21 +99,27 @@ public function safetyFeatures()
 
     public function getAffiliateLink($referralCode)
     {
-        // Ensure that the package title is available and referral code is passed
+        // Ensure the package title and referral code are available
         if (empty($this->title) || empty($referralCode)) {
             return 'Error generating affiliate link. Missing data.';
         }
     
         try {
-            $url = "https://innerpece.com";
+            // Base URL from the configuration or fallback
+            $url = ( 'https://innerpece.com');
+    
             // Generate the affiliate URL
-            $affiliateLink = $url . '/' . $this->id . '/' . Str::slug($this->title) . '?ref=' . $referralCode;
+            $affiliateLink = $url . '/' . $this->id . '/' . Str::slug($this->title) . 
+                             '?program_id=' . $this->id . 
+                             '&reference_id=' . $referralCode;
+    
             return $affiliateLink;
         } catch (\Exception $e) {
-            // In case of any exception, return a generic error message
+            // Handle any errors and return a generic error message
             return 'Error generating affiliate link. Please try again.';
         }
     }
+    
     
     public static function boot()
     {
@@ -133,6 +139,30 @@ public function safetyFeatures()
             }
         });
     }
+
+
+    public function getAffiliateLinksForInfluencer($influencer)
+{
+    $links = [];
+    $packages = InclusivePackages::all(); // Fetch all packages
+
+    foreach ($packages as $package) {
+        $links[] = [
+            'title' => $package->title,
+            'url' => route('affiliate.click', ['id' => $influencer->reference_id]) . '?program=' . $package->id,
+        ];
+    }
+
+    return $links;
+}
+
+
+
+
+public function affiliateTrackings()
+{
+    return $this->hasMany(AffiliateTracking::class, 'program_id');
+}
 
 }
 

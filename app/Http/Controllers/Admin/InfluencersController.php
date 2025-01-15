@@ -252,6 +252,24 @@ public function showProgramWithReferral($program_slug, Request $request)
 }
 
 
+public function trackAffiliateClick($id)
+{
+    // Find the influencer by reference_id
+    $influencer = Influencers::where('reference_id', $id)->first();
+
+    if (!$influencer) {
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Invalid affiliate link.',
+        ], 404);
+    }
+
+    // Increment the clicks count
+    $influencer->increment('clicks');
+
+    // Optional: Redirect to the program or a custom URL
+    return redirect()->to('/some-destination')->with('success', 'Thanks for visiting!');
+}
 
 
 }
