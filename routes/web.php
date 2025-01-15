@@ -32,7 +32,7 @@ use App\Http\Controllers\Admin\WishlistController;
 use App\Http\Controllers\Admin\AddressController;
 use App\Http\Controllers\Admin\InfluencersController;
 // use App\Http\Controllers\Api\AuthController;
-
+use App\Http\Controllers\AffiliateController;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 
@@ -239,6 +239,7 @@ Route::get('/affiliate-click/{id}', [InfluencersController::class, 'trackAffilia
 Route::get('/{program_id}', [InfluencersController::class, 'show'])
     ->middleware('track.affiliate')
     ->name('program.show');
+    Route::get('/affiliate-click/{ref_id}', [AffiliateController::class, 'recordClick'])->name('affiliate.recordClick');
 
     
         //Podcast
