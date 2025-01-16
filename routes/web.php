@@ -79,6 +79,7 @@ use Illuminate\Support\Facades\Http;
 // });
 // Route::middleware('web')->get('/csrf-token', [AuthController::class, 'getToken']);
 
+Route::get('/affiliate/click/{ref_id}', [AffiliateController::class, 'recordClick']);
 
 Route::prefix('/')->group(function () {
     Route::get('/', [AdminController::class, 'index'])->name('admin.login');

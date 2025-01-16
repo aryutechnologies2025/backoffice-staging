@@ -63,7 +63,8 @@ Route::prefix('v1')->group(function () {
         Route::post('/get-program-details', [ProgramApiController::class, 'get_program_details']);
 
 Route::get('/get-title', [HomeApiController::class, 'get_title']);
-Route::get('/affiliate/{reference_id}', [AffiliateController::class, 'recordClick']);
+// Route::get('/affiliate/{reference_id}', [AffiliateController::class, 'recordClick']);
+Route::get('/affiliate/click/{ref_id}', [AffiliateController::class, 'recordClick']);
 
     });
 });
