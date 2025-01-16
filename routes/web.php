@@ -79,7 +79,6 @@ use Illuminate\Support\Facades\Http;
 // });
 // Route::middleware('web')->get('/csrf-token', [AuthController::class, 'getToken']);
 
-Route::get('/affiliate/click/{ref_id}', [AffiliateController::class, 'recordClick']);
 
 Route::prefix('/')->group(function () {
     Route::get('/', [AdminController::class, 'index'])->name('admin.login');
@@ -232,15 +231,11 @@ Route::prefix('/')->group(function () {
             });
         });
        // web.php
-Route::get('/admin/influencer/{influencerId}/affiliate-links', [InfluencersController::class, 'getAffiliateLinks']);
 // routes/web.php
 
 // Route::get('/{program_slug}', [InfluencersController::class, 'showProgramWithReferral']);
 Route::get('/affiliate-click/{id}', [InfluencersController::class, 'trackAffiliateClick'])->name('affiliate.click');
-Route::get('/{program_id}', [InfluencersController::class, 'show'])
-    ->middleware('track.affiliate')
-    ->name('program.show');
-    Route::get('/affiliate-click/{ref_id}', [AffiliateController::class, 'recordClick'])->name('affiliate.recordClick');
+
 
     
         //Podcast
