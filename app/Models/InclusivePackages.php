@@ -99,26 +99,25 @@ public function safetyFeatures()
 
     public function getAffiliateLink($referralCode)
     {
-        // Ensure the package title and referral code are available
         if (empty($this->title) || empty($referralCode)) {
-            return 'Error generating affiliate link. Missing data.';
+            \Log::error("Missing data for affiliate link generation.");
+            return 'Error generating affiliate link.';
         }
     
         try {
-            // Base URL from the configuration or fallback
-            $url = ( 'https://innerpece.com');
-    
-            // Generate the affiliate URL
+            $url = config('app.url', 'https://innerpece.com');
             $affiliateLink = $url . '/' . $this->id . '/' . Str::slug($this->title) . 
                              '?program_id=' . $this->id . 
                              '&reference_id=' . $referralCode;
     
+            \Log::info("Generated Affiliate Link: $affiliateLink");
             return $affiliateLink;
         } catch (\Exception $e) {
-            // Handle any errors and return a generic error message
-            return 'Error generating affiliate link. Please try again.';
+            \Log::error("Error generating affiliate link: " . $e->getMessage());
+            return 'Error generating affiliate link.';
         }
     }
+    
     
     
     public static function boot()
