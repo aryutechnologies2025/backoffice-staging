@@ -28,28 +28,35 @@ class ProgramApiController extends Controller
     public function get_program_details(Request $request)
     {
         try {
-            // Validate the request
+            $referralCode = $request->query('ref'); // Get the referral code from the URL
+            if ($referralCode) {
+                $influencer = Influencers::where('reference_id', $referralCode)->first();
+                
+                if ($influencer) {
+                    // Log or store the influencer referral
+                    Log::info("User referred by influencer: " . $influencer->name);
+                    
+                    // Optionally save this information for analytics
+                    ReferralLog::create([
+                        'influencer_id' => $influencer->id,
+                        'user_ip' => $request->ip(),
+                        'program_id' => $request->input('program_id') ?? null, // Optional: Link it to the program
+                        'user_agent' => $request->header('User-Agent') // Capture browser details
+                    ]);
+                }
+            }
+
+            // Validate the request to ensure an ID is provided
             $request->validate([
                 'program_id' => 'required',
-                'reference_id' => 'required',
             ]);
 
-            // Retrieve input data
-            $programId = $request->input('program_id');
-            $referenceId = $request->input('reference_id');
-            $ipAddress = $request->ip();
-            $userAgent = $request->header('User-Agent');
+            // Retrieve the ID from the request
+            $id = $request->input('program_id');
+            $user_id = $request->input('user_id');
 
-            // Log affiliate link click
-            AffiliateLinkClick::create([
-                'program_id' => $programId,
-                'reference_id' => $referenceId,
-                'ip_address' => $ipAddress,
-                'user_agent' => $userAgent,
-            ]);
-
-            // Existing logic for fetching and caching program details
-            $cacheKey = "program_details_{$programId}";
+            // Check if the program details are already cached
+            $cacheKey = "program_details_{$id}";
             $cachedData = \Cache::get($cacheKey);
 
             if ($cachedData) {
@@ -61,7 +68,7 @@ class ProgramApiController extends Controller
             }
 
             // Fetch the program details using the provided ID
-            $package = InclusivePackages::with('destination', 'theme', 'clientReviews')->find($programId);
+            $package = InclusivePackages::with('destination', 'theme', 'clientReviews')->find($id);
 
             if (!$package) {
                 return response()->json([
@@ -192,9 +199,9 @@ class ProgramApiController extends Controller
                 'average_rating' => number_format($averageRating, 1),
                 'created_date' => $package->created_date,
             ];
-            if ($request->input('user_id')) {
-                $wishlist = Program_wishlist::where('user_id', $request->input('user_id'))
-                    ->where('program_id', $programId)
+            if ($user_id) {
+                $wishlist = Program_wishlist::where('user_id', $user_id)
+                    ->where('program_id', $id)
                     ->exists();
 
                 $responseData['wishlists'] = $wishlist;
