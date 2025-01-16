@@ -66,9 +66,6 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
     ];
 
-    protected $routeMiddleware = [
-        // Other middleware
-        'track.affiliate' => \App\Http\Middleware\TrackAffiliate::class,
-    ];
+    
     
 }
