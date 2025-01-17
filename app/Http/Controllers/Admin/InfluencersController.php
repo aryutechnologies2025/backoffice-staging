@@ -72,7 +72,7 @@ class InfluencersController extends Controller
         $influencer->save();
         
         // Generate signup URL
-        $signupUrl = url('/signup/' . $newReferenceId);
+        $signupUrl = 'https://innerpece.com/signup/' . $newReferenceId;
       
         return redirect()->route('admin.influencer_list')
             ->with('success', 'Influencer added successfully. Reference ID: ' . $newReferenceId . ', Referral Code: ' . $newReferralCode . ', Signup URL: ' . $signupUrl);
