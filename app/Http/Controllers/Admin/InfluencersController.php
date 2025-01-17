@@ -212,37 +212,37 @@ class InfluencersController extends Controller
 // }
 
 
-public function showProgramWithReferral($program_slug, Request $request)
-{
-    // Capture the referral code from the query string
-    $referral_code = $request->query('ref');
+// public function showProgramWithReferral($program_slug, Request $request)
+// {
+//     // Capture the referral code from the query string
+//     $referral_code = $request->query('ref');
     
-    // Find the influencer by referral code
-    $influencer = Influencers::where('reference_id', $referral_code)->first();
+//     // Find the influencer by referral code
+//     $influencer = Influencers::where('reference_id', $referral_code)->first();
     
-    if (!$influencer) {
-        return response()->json([
-            'status' => 'error',
-            'message' => 'Invalid referral code.',
-        ], 404);
-    }
+//     if (!$influencer) {
+//         return response()->json([
+//             'status' => 'error',
+//             'message' => 'Invalid referral code.',
+//         ], 404);
+//     }
 
-    // Find the program using the program_slug
-    $program = InclusivePackages::where('slug', $program_slug)->first();
+//     // Find the program using the program_slug
+//     $program = InclusivePackages::where('slug', $program_slug)->first();
     
-    if (!$program) {
-        return response()->json([
-            'status' => 'error',
-            'message' => 'Program not found.',
-        ], 404);
-    }
+//     if (!$program) {
+//         return response()->json([
+//             'status' => 'error',
+//             'message' => 'Program not found.',
+//         ], 404);
+//     }
 
-    // Optionally, log the referral or process any business logic based on the referral code
-    // You can use session to store the referral or track analytics
+//     // Optionally, log the referral or process any business logic based on the referral code
+//     // You can use session to store the referral or track analytics
     
-    // Prepare the response
-    return view('program.show', compact('program', 'influencer', 'referral_code'));
-}
+//     // Prepare the response
+//     return view('program.show', compact('program', 'influencer', 'referral_code'));
+// }
 
 
 

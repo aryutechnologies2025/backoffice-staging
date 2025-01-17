@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('influencers', function (Blueprint $table) {
-            $table->integer('clicks')->default(0)->after('referral_code');
+        Schema::table('enquiry_details', function (Blueprint $table) {
+            $table->string('reference_id')->nullable()->after('rooms_count');
         });
     }
 
@@ -21,8 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('influencers', function (Blueprint $table) {
-            $table->dropColumn('clicks');
+        Schema::table('enquiry_details', function (Blueprint $table) {
+            $table->dropColumn('reference_id');
         });
     }
 };

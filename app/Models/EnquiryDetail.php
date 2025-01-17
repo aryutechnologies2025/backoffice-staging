@@ -23,6 +23,7 @@ class EnquiryDetail extends Model
         'female_count',
         'travel_date',
         'rooms_count',
+        'reference_id'
     ];
     public function package()
 {
