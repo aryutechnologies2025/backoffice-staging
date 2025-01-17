@@ -1073,7 +1073,7 @@ public function destination_program_by_price_sort(Request $request)
         ], 201);
     }
 
-    public function Home_enquiry_form_insert(Request $request)
+    public function home_enquiry_form_insert(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
