@@ -22,7 +22,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
 use App\Models\AffiliateLinkClick;
-use App\models\HomeEnquiryDetail;
+use App\Models\HomeEnquiryDetail;
 
 class ProgramApiController extends Controller
 {
