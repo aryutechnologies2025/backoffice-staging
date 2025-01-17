@@ -26,7 +26,7 @@ font-size: 15px !important;
 
 <div class="row body-sec py-5  px-5 justify-content-around">
     <div class="col-lg-12">
-        <b><a href="/dashboard" >Dashboard</a> > <a class="enquiry" href="" >Booking</a></b>
+        <b><a href="/dashboard" >Dashboard</a> > <a class="enquiry" href="/enquiry" >Enquiry</a></b>
         <br><br>
         <h3 class="fw-bold">{{$title}}</h3>
     </div>
@@ -42,7 +42,6 @@ font-size: 15px !important;
                         <th class="text-center"><span>Name</span></th>
                         <th class="text-center"><span>Email</span></th>
                         <th class="text-center"><span>Phone</span></th>
-                        <th class="text-center"><span> Program Name </span></th>
 
                         <th class="text-center"><span>Time&Date</span></th>
                         <th class="text-center"><span>Action</span></th>
@@ -60,7 +59,6 @@ font-size: 15px !important;
                             <td class="text-center">{{ $row->name }}</td>
                             <td class="text-center">{{ $row->email }}</td>
                             <td class="text-center">{{ $row->phone }}</td>
-                            <td class="text-center">{{ $row->package ? $row->package->title : 'N/A' }}</td>
 
 
                             <td class="text-center">{{ $row->created_at }}</td>

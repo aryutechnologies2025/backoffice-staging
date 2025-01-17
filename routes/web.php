@@ -32,7 +32,7 @@ use App\Http\Controllers\Admin\WishlistController;
 use App\Http\Controllers\Admin\AddressController;
 use App\Http\Controllers\Admin\InfluencersController;
 // use App\Http\Controllers\Api\AuthController;
-
+use App\Http\Controllers\Admin\HomeEnquiryController;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 
@@ -406,6 +406,15 @@ Route::get('/admin/influencer/{influencerId}/affiliate-links', [InfluencersContr
                 Route::get('/', 'list')->name('admin.enquiry_list');
             });
         });
+
+
+        //Home Enquiry Details
+        Route::controller(HomeEnquiryController::class)->group(function () {
+            Route::prefix('home-enquiry')->group(function () {
+                Route::get('/', 'list')->name('admin.home_enquiry_list');
+            });
+        });
+
 
         //settings features
         Route::controller(SettingController::class)->group(function () {

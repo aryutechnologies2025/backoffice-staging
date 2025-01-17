@@ -22,6 +22,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
 use App\Models\AffiliateLinkClick;
+use App\models\HomeEnquiryDetail;
 
 class ProgramApiController extends Controller
 {
@@ -1065,6 +1066,39 @@ public function destination_program_by_price_sort(Request $request)
         }
 
         $enquiry = EnquiryDetail::create($request->all());
+
+        return response()->json([
+            'message' => 'Enquiry submitted successfully',
+            'data' => $enquiry
+        ], 201);
+    }
+
+    public function Home_enquiry_form_insert(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255', // Validate email format
+            'phone' => [
+                'required',
+                'regex:/^\+?[0-9]{10,15}$/',
+            ],
+            'comments' => 'required|string',
+            'location' => 'required|string',
+            'days' => 'required',
+            'travel_destination' => 'required|string',
+            'budget_per_head' => 'required|string',
+            'cab_need' => 'required|string',
+            'total_count' => 'required',
+            'male_count' => 'required',
+            'female_count' => 'required',
+            'travel_date' => 'required',
+            'rooms_count' => 'required|integer',
+        ]);
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        $enquiry = HomeEnquiryDetail::create($request->all());
 
         return response()->json([
             'message' => 'Enquiry submitted successfully',

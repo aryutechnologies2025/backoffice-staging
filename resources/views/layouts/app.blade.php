@@ -99,7 +99,11 @@
                     </a>
                     <a href="{{ route('admin.enquiry_list') }}" class="nav_link {{ request()->routeIs(['admin.enquiry_list']) ? 'active' : '' }} mb-3 text-white">
                         <img src="/assets/image/dashboard/enquiry.svg" alt="">
-                        <span class="nav_name"> Enquiries </span>
+                        <span class="nav_name"> Booking </span>
+                    </a>
+                    <a href="{{ route('admin.home_enquiry_list') }}" class="nav_link {{ request()->routeIs(['admin.home_enquiry_list']) ? 'active' : '' }} mb-3 text-white">
+                        <img src="/assets/image/dashboard/enquiry.svg" alt="">
+                        <span class="nav_name"> Enquiry  </span>
                     </a>
                     <a href="{{ route('admin.influencer_list') }}" class="nav_link {{ request()->routeIs(['admin.influencer_list', 'admin.influencer_add_form', 'admin.influencer_edit_form']) ? 'active' : '' }} mb-3 text-white">
                         <img src="/assets/image/dashboard/slider.svg" alt="">

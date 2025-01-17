@@ -16,7 +16,7 @@ use App\Models\Geo_feature;
 use App\Models\Themes;
 use App\Models\Themes_category;
 use App\Models\Destination_category;
-use App\Models\Address;
+
 
 
 
@@ -41,13 +41,12 @@ class All_Inclusive_PackController extends Controller
         $cities = City::where('status', "1")->where('is_deleted', "0")->pluck('city_name', 'id');
         $themes = Themes::where('status', "1")->where('is_deleted', "0")->pluck('themes_name', 'id');
         $amenities = Amenities::where('status', "1")->where('is_deleted', "0")->get();
-        $address = Address::where('is_deleted', "0")->get();
         $foodBeverages = FoodBeverage::where('status', "1")->where('is_deleted', "0")->get();
         $activities = Activities::where('status', "1")->where('is_deleted', "0")->get();
         $safety_features = Safetyfeatures::where('status', "1")->where('is_deleted', "0")->get();
         // $geo_feature = Geo_feature::where('status', "1")->where('is_deleted', "0")->pluck('geo_feature', 'id');
 
-        return view('admin.inclusive_packages.inclusive_packagesadd', compact('title', 'cities', 'themes', 'amenities', 'foodBeverages', 'activities', 'safety_features', 'address' ));
+        return view('admin.inclusive_packages.inclusive_packagesadd', compact('title', 'cities', 'themes', 'amenities', 'foodBeverages', 'activities', 'safety_features' ));
     }
 
 
@@ -96,6 +95,8 @@ public function insert(Request $request)
         'camp_rule' => 'required',
         'important_info' => 'required',
         'google_map' => 'required',
+    
+        
     ]);
 
     // Handle dynamic image uploads
@@ -155,7 +156,6 @@ public function insert(Request $request)
     $activitiesJson = json_encode($request->input('activities'));
     $safetyFeaturesJson = json_encode($request->input('safety_features'));
     $campRulesJson = json_encode($request->input('camp_rule'));
-    $addressJson = json_encode($request->input('address_services'));
 
     // Insert into MySQL
     $inclusive_packages = new InclusivePackages();
@@ -169,8 +169,9 @@ public function insert(Request $request)
     $inclusive_packages->city_details = $validatedData['cities_name'];
     $inclusive_packages->title = $validatedData['title'];
     $inclusive_packages->program_description = $validatedData['program_description'];
+    $inclusive_packages->address = $request->input('address') ?? '';
     $inclusive_packages->category = json_encode($request->input('prop_cat'));
-    $inclusive_packages->address = $addressJson;
+    $inclusive_packages->location = $request->input('location');
     $inclusive_packages->tour_planning = $tourPlanningJson;
     $inclusive_packages->start_date = $request->input('start_date');
     $inclusive_packages->return_date = $request->input('return_date');
@@ -216,7 +217,6 @@ public function insert(Request $request)
         $package_details = InclusivePackages::find($id);
         $cities_dts = City::where('status', "1")->where('is_deleted', "0")->pluck('city_name', 'id');
         $amenities_dts = Amenities::where('status', "1")->where('is_deleted', "0")->get();
-        $address_dts = Address::where('is_deleted', "0")->get();
         $foodBeverages_dts = FoodBeverage::where('status', "1")->where('is_deleted', "0")->get();
         $activities_dts = Activities::where('status', "1")->where('is_deleted', "0")->get();
         $safety_features_dts = Safetyfeatures::where('status', "1")->where('is_deleted', "0")->get();
@@ -227,7 +227,6 @@ public function insert(Request $request)
         }
 
         $selectedAmenities = json_decode($package_details->amenity_details, true) ?? [];
-        $selectedAddress = json_decode($package_details->address, true) ?? [];
         $selectedfood_beverages = json_decode($package_details->food_beverages, true) ?? [];
         $selectedactivities = json_decode($package_details->activities, true) ?? [];
         $selectedsafety_features = json_decode($package_details->safety_features, true) ?? [];
@@ -252,7 +251,7 @@ public function insert(Request $request)
         $title = ' Edit Program';
 //         echo"<pre>";
 // print_r($package_details);die;
-        return view('admin.inclusive_packages.inclusive_packagesedit', compact('package_details', 'title', 'cities_dts', 'themes', 'amenities_dts', 'foodBeverages_dts', 'activities_dts', 'safety_features_dts', 'selectedCityId', 'selectedAmenities', 'selectedthemeId', 'selectedfood_beverages', 'selectedactivities', 'selectedsafety_features', 'geo_feature_dts', 'selectedgeo_featureId', 'categories', 'dest_categories', 'selecteddesCategoryId', 'selectedCategoryId','selectedprogram','selectedAddress','address_dts'));
+        return view('admin.inclusive_packages.inclusive_packagesedit', compact('package_details', 'title', 'cities_dts', 'themes', 'amenities_dts', 'foodBeverages_dts', 'activities_dts', 'safety_features_dts', 'selectedCityId', 'selectedAmenities', 'selectedthemeId', 'selectedfood_beverages', 'selectedactivities', 'selectedsafety_features', 'geo_feature_dts', 'selectedgeo_featureId', 'categories', 'dest_categories', 'selecteddesCategoryId', 'selectedCategoryId','selectedprogram'));
     }
 
     
@@ -278,6 +277,7 @@ public function insert(Request $request)
         'bath_room' => 'required',
         'bed_room' => 'required',
         'hall' => 'required',
+        
     ]);
 
     // Find the record to update
@@ -339,7 +339,6 @@ public function insert(Request $request)
         'plan_description' => $validatedData['plan_description']
     ]);
     $amenitiesJson = json_encode($request->input('amenity_services', []));
-    $addressJson = json_encode($request->input('address_services', []));
     $foodBeveragesJson = json_encode($request->input('food_beverages', []));
     $activitiesJson = json_encode($request->input('activities', []));
     $safetyFeaturesJson = json_encode($request->input('safety_features', []));
@@ -351,7 +350,6 @@ public function insert(Request $request)
     $inclusive_packages->title = $validatedData['title'];
     $inclusive_packages->program_description = $validatedData['program_description'];
     $inclusive_packages->category = json_encode($request->input('prop_cat', []));
-    $inclusive_packages->address = $addressJson;
     $inclusive_packages->tour_planning = $tourPlanningJson;
     $inclusive_packages->start_date = $request->input('start_date');
     $inclusive_packages->return_date = $request->input('return_date');
