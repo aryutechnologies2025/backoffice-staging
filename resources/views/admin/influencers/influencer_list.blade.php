@@ -84,7 +84,7 @@
                         <!-- <td class="text-center" style="font-size: small;">{{ $row->referral_code }}</td> -->
                         <td class="text-center" style="width: 10%;">
                             <button class="btn btn-sm btn-info view-links" data-id="{{ $row->id }}" data-name="{{ $row->full_name }}"
-                            data-signup-url="https://innerpece.com/signup/{{ $row->reference_id }}">
+                            data-signup-url="https://innerpece.com/signup?ref={{ $row->reference_id }}">
                                 View Affiliate Links
                             </button>
                         </td>
