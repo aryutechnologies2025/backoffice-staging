@@ -190,7 +190,8 @@ class HomeApiController extends Controller
                 
                 // Format the start date
                 $formattedStartDate = \Carbon\Carbon::parse($package->start_date)->format('M d, Y');
-    
+                $formattedendDate = \Carbon\Carbon::parse($package->return_date)->format('M d, Y');
+
                 // Extract the first image URL
                 $formattedLocation = ucfirst($package->address) . ', ' . ucfirst($package->state);
                 $totalReviews = $package->clientReviews->count();
@@ -211,6 +212,7 @@ class HomeApiController extends Controller
                     'actual_price' => $package->actual_price,
                     'cover_img' => $package->cover_img,
                     'start_date' => $formattedStartDate,
+                    'end_date' => $formattedendDate,
                     'theme_id' => $package->theme ? $package->theme->id : null, 
                     'theme' => $package->theme ? $package->theme->themes_name : null,
                     'destination_id' => $package->destination ? $package->destination->id : null,
