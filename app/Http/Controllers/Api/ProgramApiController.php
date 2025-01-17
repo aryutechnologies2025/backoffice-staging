@@ -19,44 +19,47 @@ use App\Models\Address;
 use App\Models\Influencers;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
 use App\Models\AffiliateLinkClick;
 
 class ProgramApiController extends Controller
 {
-
     public function get_program_details(Request $request)
     {
         try {
-            $referralCode = $request->query('ref'); // Get the referral code from the URL
-            if ($referralCode) {
-                $influencer = Influencers::where('reference_id', $referralCode)->first();
-                
-                if ($influencer) {
-                    // Log or store the influencer referral
-                    Log::info("User referred by influencer: " . $influencer->name);
-                    
-                    // Optionally save this information for analytics
-                    ReferralLog::create([
-                        'influencer_id' => $influencer->id,
-                        'user_ip' => $request->ip(),
-                        'program_id' => $request->input('program_id') ?? null, // Optional: Link it to the program
-                        'user_agent' => $request->header('User-Agent') // Capture browser details
-                    ]);
-                }
-            }
-
-            // Validate the request to ensure an ID is provided
+            // Step 1: Validate the request (Ensure program_id is present)
             $request->validate([
                 'program_id' => 'required',
             ]);
 
-            // Retrieve the ID from the request
-            $id = $request->input('program_id');
-            $user_id = $request->input('user_id');
+            // Step 2: Retrieve the program_id and reference_id from the request
+            $programId = $request->input('program_id'); // e.g., 36
+            $referenceId = $request->input('reference_id'); // e.g., INPC001
+            $user_id = $request->input('user_id'); // Optional user_id
+
+            // Step 3: Find the program by ID
+            $program = InclusivePackages::find($programId);
+
+            if (!$program) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Program not found',
+                ], 404);
+            }
+
+            // Step 4: Optional - Track the visit with reference_id
+            if ($referenceId) {
+                // Log the visit into a database for tracking (Example)
+                \DB::table('program_visits')->insert([
+                    'program_id' => $programId,
+                    'reference_id' => $referenceId,
+                    'visited_at' => now(),
+                ]);
+            }
 
             // Check if the program details are already cached
-            $cacheKey = "program_details_{$id}";
+            $cacheKey = "program_details_{$programId}";
             $cachedData = \Cache::get($cacheKey);
 
             if ($cachedData) {
@@ -68,7 +71,7 @@ class ProgramApiController extends Controller
             }
 
             // Fetch the program details using the provided ID
-            $package = InclusivePackages::with('destination', 'theme', 'clientReviews')->find($id);
+            $package = InclusivePackages::with('destination', 'theme', 'clientReviews')->find($programId);
 
             if (!$package) {
                 return response()->json([
@@ -201,7 +204,7 @@ class ProgramApiController extends Controller
             ];
             if ($user_id) {
                 $wishlist = Program_wishlist::where('user_id', $user_id)
-                    ->where('program_id', $id)
+                    ->where('program_id', $programId)
                     ->exists();
 
                 $responseData['wishlists'] = $wishlist;
@@ -229,7 +232,31 @@ class ProgramApiController extends Controller
             ], 500);
         }
     }
+    public function generateAffiliateLink($programId, $affiliateId)    {
+        // Fetch program details
+        $program = InclusivePackages::find($programId);
 
+        if (!$program) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Program not found'
+            ], 404);
+        }
+
+        // Generate slug from the program title
+        $programSlug = Str::slug($program->title, '-');
+
+        // Generate the affiliate link
+        $affiliateLink = "https://innerpece.com/{$programId}/{$programSlug}?ref={$affiliateId}";
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Affiliate link generated successfully',
+            'data' => [
+                'affiliate_link' => $affiliateLink
+            ]
+        ]);
+    }
     public function filter_program_by_price_sort(Request $request)
     {
         try {

@@ -68,13 +68,6 @@ class Influencers extends Model
     return $affiliateLinks;
 }
 
-public function affiliateTrackings()
-    {
-        return $this->hasMany(AffiliateTracking::class, 'influencer_id');
-    }
-    public function affiliateLinkClicks()
-    {
-        return $this->hasMany(AffiliateLinkClick::class);
-    }
+    
 
 }

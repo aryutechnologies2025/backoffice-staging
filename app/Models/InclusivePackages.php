@@ -99,26 +99,21 @@ public function safetyFeatures()
 
     public function getAffiliateLink($referralCode)
     {
+        // Ensure that the package title is available and referral code is passed
         if (empty($this->title) || empty($referralCode)) {
-            \Log::error("Missing data for affiliate link generation.");
-            return 'Error generating affiliate link.';
+            return 'Error generating affiliate link. Missing data.';
         }
     
         try {
-            $url = config('app.url', 'https://innerpece.com');
-            $affiliateLink = $url . '/' . $this->id . '/' . Str::slug($this->title) . 
-                             '?program_id=' . $this->id . 
-                             '&reference_id=' . $referralCode;
-    
-            \Log::info("Generated Affiliate Link: $affiliateLink");
+            $url = "https://innerpece.com";
+            // Generate the affiliate URL
+            $affiliateLink = $url . '/' . $this->id . '/' . Str::slug($this->title) . '?ref=' . $referralCode;
             return $affiliateLink;
         } catch (\Exception $e) {
-            \Log::error("Error generating affiliate link: " . $e->getMessage());
-            return 'Error generating affiliate link.';
+            // In case of any exception, return a generic error message
+            return 'Error generating affiliate link. Please try again.';
         }
     }
-    
-    
     
     public static function boot()
     {
@@ -138,30 +133,6 @@ public function safetyFeatures()
             }
         });
     }
-
-
-    public function getAffiliateLinksForInfluencer($influencer)
-{
-    $links = [];
-    $packages = InclusivePackages::all(); // Fetch all packages
-
-    foreach ($packages as $package) {
-        $links[] = [
-            'title' => $package->title,
-            'url' => route('affiliate.click', ['id' => $influencer->reference_id]) . '?program=' . $package->id,
-        ];
-    }
-
-    return $links;
-}
-
-
-
-
-public function affiliateTrackings()
-{
-    return $this->hasMany(AffiliateTracking::class, 'program_id');
-}
 
 }
 

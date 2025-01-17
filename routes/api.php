@@ -8,7 +8,7 @@ use App\Http\Controllers\Api\SiteApiController;
 use App\Http\Controllers\Api\HomeApiController;
 use App\Http\Controllers\Api\ProgramApiController;
 use App\Http\Controllers\Api\ReviewController;
-use App\Http\Controllers\Api\AffiliateController;
+
 /*
 |----------------------------------------------------------------------
 | API Routes
@@ -48,7 +48,7 @@ Route::prefix('v1')->group(function () {
         Route::get('/get-combined-data', [HomeApiController::class, 'get_combined_data']);
 
         // Program Filtering Routes
-         Route::post('/get-program', [HomeApiController::class, 'get_program']);
+        Route::post('/get-program', [HomeApiController::class, 'get_program']);
         Route::post('/home-filter', [HomeApiController::class, 'home_filter']);
         Route::post('/filter-program-by-price_sort', [ProgramApiController::class, 'filter_program_by_price_sort']);
         Route::post('/destination-program-by-price_sort', [ProgramApiController::class, 'destination_program_by_price_sort']);
@@ -63,8 +63,6 @@ Route::prefix('v1')->group(function () {
         Route::post('/get-program-details', [ProgramApiController::class, 'get_program_details']);
 
 Route::get('/get-title', [HomeApiController::class, 'get_title']);
-// Route::get('/affiliate/{reference_id}', [AffiliateController::class, 'recordClick']);
-Route::get('/affiliate/click/{ref_id}', [AffiliateController::class, 'recordClick']);
 
     });
 });

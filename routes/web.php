@@ -32,7 +32,7 @@ use App\Http\Controllers\Admin\WishlistController;
 use App\Http\Controllers\Admin\AddressController;
 use App\Http\Controllers\Admin\InfluencersController;
 // use App\Http\Controllers\Api\AuthController;
-use App\Http\Controllers\AffiliateController;
+
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 
@@ -231,11 +231,10 @@ Route::prefix('/')->group(function () {
             });
         });
        // web.php
+Route::get('/admin/influencer/{influencerId}/affiliate-links', [InfluencersController::class, 'getAffiliateLinks']);
 // routes/web.php
 
-// Route::get('/{program_slug}', [InfluencersController::class, 'showProgramWithReferral']);
-Route::get('/affiliate-click/{id}', [InfluencersController::class, 'trackAffiliateClick'])->name('affiliate.click');
-
+Route::get('/{program_slug}', [InfluencersController::class, 'showProgramWithReferral']);
 
     
         //Podcast
