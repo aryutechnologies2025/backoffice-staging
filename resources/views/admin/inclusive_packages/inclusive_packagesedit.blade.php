@@ -310,7 +310,7 @@
                             <p>No images uploaded yet.</p>
                             @endif
                         </div>
-                        <div class="mt-3">
+                        <div class="mt-3 mb-4">
                             <button id="add-photo-btn" type="button" class="btn btn-primary">Add More Photos</button>
                         </div>
 
@@ -416,30 +416,17 @@
 </div> --}}
 
 
-<div class="row mb-1">
-    <div class="col">
-        <div class="form-body px-5 py-4 rounded-4">
-            <h4 class="fw-bold mb-3">2. Location</h4>
-            <div class="row mb-4">
-                @foreach($address_dts->chunk(4) as $chunk)
-                <div class="row mb-3">
-                    @foreach($chunk as $address)
-                    <div class="col-lg-3 col-md-4 col-sm-6 mb-3">
-                        <div class="form-check d-flex align-items-center">
-                            <input type="checkbox" class="me-2" id="address-{{ $address->id }}"
-                                name="address_services[]" value="{{ $address->id }}" @if(in_array((string) $address->id,
-                            $selectedAddress)) checked @endif>
-                            <label class="form-label" for="address-{{ $address->id }}">{{ $address->title }}</label>
-                        </div>
-                    </div>
-                    @endforeach
-                </div>
-                @endforeach
-            </div>
-        </div>
-    </div>
+
+
+     <!-- 2. LOCATION -->
+     <div class="row mb-3">
+
+<h4 class="fw-bold mb-2">02. Location</h4>
+<div class="col-md-3 mb-3">
+<input type="text" class="form-control  rounded-3 shadow-sm" id="location" name="location"  value="{{$package_details->location}}" required>
 </div>
 
+</div>
 
 <!-- 3. TOUR PLANNING -->
 <div class="row mb-3">
@@ -541,7 +528,7 @@
                     <!-- Total No. of Days -->
                     <div class="col-lg-4 col-md-4 col-sm-12">
                         <label class="fw-bold mb-3">Total No. of Days</label>
-                        <input type="text" class="form-control py-2 rounded-3 shadow-sm" id="total_days"
+                        <input type="number" class="form-control py-2 rounded-3 shadow-sm" id="total_days"
                             name="total_days" value="{{$package_details->total_days}}" readonly>
                     </div>
                 </div>
@@ -559,22 +546,22 @@
                 <div class="row g-2 align-items-end">
                     <div class="col-md-3">
                         <label class="fw-bold mb-2">Rooms<span class="text-danger"></span></label>
-                        <input type="text" class="form-control py-2 rounded-3 shadow-sm" name="total_room"
+                        <input type="number" class="form-control py-2 rounded-3 shadow-sm" name="total_room"
                             id="total_room" value="{{$package_details->total_room}}" required>
                     </div>
                     <div class="col-md-3">
                         <label class="fw-bold mb-2">Bath Rooms<span class="text-danger"></span></label>
-                        <input type="text" class="form-control py-2 rounded-3 shadow-sm" name="bath_room" id="bath_room"
+                        <input type="number" class="form-control py-2 rounded-3 shadow-sm" name="bath_room" id="bath_room"
                             value="{{$package_details->bath_room}}" required>
                     </div>
                     <div class="col-md-3">
                         <label class="fw-bold mb-2">Bed Rooms</label>
-                        <input type="text" class="form-control py-2 rounded-3 shadow-sm" id="bed_room" name="bed_room"
+                        <input type="number" class="form-control py-2 rounded-3 shadow-sm" id="bed_room" name="bed_room"
                             value="{{$package_details->bed_room}}" required>
                     </div>
                     <div class="col-md-3">
                         <label class="fw-bold mb-2">Hall</label>
-                        <input type="text" class="form-control py-2 rounded-3 shadow-sm" id="hall" name="hall"
+                        <input type="number" class="form-control py-2 rounded-3 shadow-sm" id="hall" name="hall"
                             value="{{$package_details->hall}}" required>
                     </div>
                 </div>
@@ -593,7 +580,7 @@
                 <div class="row mb-2">
                     <div class="col-lg-3">
                         <label class="fw-bold mb-2 ">Member Capacity <span class="text-danger">*</span></label>
-                        <input type="text" id="member_capacity" name="member_capacity"
+                        <input type="number" id="member_capacity" name="member_capacity"
                             class="form-control py-2 rounded-3 shadow-sm mb-2" placeholder="Member Capacity" required
                             value="{{$package_details->member_capacity}}">
                     </div>
@@ -610,12 +597,12 @@
                     </div>
                     <div class="col-lg-3">
                         <label class="fw-bold mb-2 ">Actual Amount <span class="text-danger">*</span></label>
-                        <input type="text" id="price" name="price" class="form-control py-2 rounded-3 shadow-sm"
+                        <input type="number" id="price" name="price" class="form-control py-2 rounded-3 shadow-sm"
                             placeholder="Actual Amount" value="{{$package_details->price}}" required>
                     </div>
                     <div class="col-lg-3">
                         <label class="fw-bold mb-2">Discount Amount <span class="text-danger">*</span></label>
-                        <input type="text" id="actual_price" name="actual_price"
+                        <input type="number" id="actual_price" name="actual_price"
                             class="form-control py-2 rounded-3 shadow-sm" placeholder="Discount Amount"
                             value="{{$package_details->actual_price}}" required>
                     </div>

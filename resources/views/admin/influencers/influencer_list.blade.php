@@ -180,7 +180,7 @@ $(document).on('click', '.view-links', function () {
     
     // Display signup URL in the modal
     $('#links-container').html(`
-        <p><strong>Signup URL:</strong> <a href="${signupUrl}" target="_blank">${signupUrl}</a></p>
+        <p><strong>Signup URL:</strong> <a href="${signupUrl}" target="_blank" class="track-click" data-link="${signupUrl}">${signupUrl}</a></p>
         <p>Loading affiliate links...</p>
     `);
     
@@ -191,7 +191,7 @@ $(document).on('click', '.view-links', function () {
             if (response.status === '1') {
                 const links = response.data;
                 const linksHtml = links
-                    .map(link => `<p><strong>${link.title}:</strong> <a href="${link.link}" target="_blank">${link.link}</a></p>`)
+                    .map(link => `<p><strong>${link.title}:</strong> <a href="${link.link}" target="_blank" class="track-click" data-link="${link.link}">${link.link}</a></p>`)
                     .join('');
                 $('#links-container').html(linksHtml);
             } else {
@@ -206,6 +206,38 @@ $(document).on('click', '.view-links', function () {
     $('#affiliateLinksModal').modal('show');
 });
 
+// Track clicks on affiliate links
+$(document).on('click', '.track-click', function () {
+    const link = $(this).data('link');
+    $.ajax({
+        url: '/admin/influencer/track-click',
+        method: 'POST',
+        data: {
+            link: link,
+            _token: '{{ csrf_token() }}'
+        },
+        success: function (response) {
+            console.log('Click tracked successfully');
+        },
+        error: function () {
+            console.log('Error tracking click');
+        },
+    });
+});
+$(document).ready(function() {
+        $('#cityTable').DataTable({
+            "pageLength": 10,
+            "lengthChange": true,
+            "ordering": true,
+            "searching": true,
+            "language": {
+                "emptyTable": "No records found",
+            },
+            "columnDefs": [
+                { "orderable": true, "targets": [0, 3] } // Disable ordering on S.No and Time&Date columns
+            ]
+        });
+    });
 // Populate modal with data
 $(document).on('click', '.view-btn', function() {
     $('#modalName').text($(this).data('full_name'));

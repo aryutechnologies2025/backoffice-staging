@@ -107,7 +107,7 @@
                 "emptyTable": "No records found",
             },
             "columnDefs": [
-                { "orderable": false, "targets": [0, 3] } // Disable ordering on S.No and Date & Time columns
+                { "orderable": true, "targets": [0, 3] } // Disable ordering on S.No and Date & Time columns
             ]
         });
     });

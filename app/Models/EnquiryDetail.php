@@ -3,7 +3,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
+use App\Models\InclusivePackages;
+use App\Models\Review;
 class EnquiryDetail extends Model
 {
     use HasFactory;
@@ -23,7 +24,8 @@ class EnquiryDetail extends Model
         'female_count',
         'travel_date',
         'rooms_count',
-        'reference_id'
+        'reference_id',
+        'package_id'
     ];
     public function package()
 {

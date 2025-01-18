@@ -42,9 +42,9 @@
             <th class="text-center "><span> Category </span></th>
             <th class="text-center "><span>Date&Time </span></th>
 
-            <th class="text-center "><i class="bi bi-caret-up-fill activearrow"   ></i>
+            <th class="text-center ">
                 <span> Status </span>
-                <i class="bi bi-caret-down-fill inactivearrow"></i>
+               
 
             </th>
             <th class="text-center"><span> Action </span></th>
@@ -140,7 +140,7 @@
                 "emptyTable": "No records found",
             },
             "columnDefs": [
-                { "orderable": false, "targets": [0, 3] } // Disable ordering on Icon and Action columns
+                { "orderable": true, "targets": [0, 3] } // Disable ordering on Icon and Action columns
             ]
         });
     });

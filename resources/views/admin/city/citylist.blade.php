@@ -55,7 +55,7 @@
                     <tr>
                     <td class="text-center">{{ $loop->iteration }}</td>
                         <td class="text-center">
-                            <img src="{{ asset($row->cities_pic) }}" alt="{{ $row->alternate_name ?? 'Default Alt Text' }}" style="max-width: 70px; max-height: 70px; object-fit: cover;">
+                            <img src="{{ asset($row->cities_pic) }}" alt="{{ $row->alternate_name ?? 'Default Alt Text' }}" style="max-width: 56px; max-height: 56px; object-fit: cover;">
                         </td>
                         <td class="text-center">{{ $row->city_name }}</td>
                         <td class="text-center">{{ $row->created_at }}</td>
@@ -115,7 +115,7 @@
                 "emptyTable": "No records found",
             },
             "columnDefs": [
-                { "orderable": false, "targets": [0, 3] } // Disable ordering on Icon and Action columns
+                { "orderable": true, "targets": [0, 3] } // Disable ordering on Icon and Action columns
             ]
         });
     });

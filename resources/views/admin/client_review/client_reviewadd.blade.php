@@ -131,7 +131,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <label class="fw-bold mb-2" id="label_textarea">Rating <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control py-2 rounded-3 shadow-sm" name="rating" id="rating" value="{{ old('rating') }}" required>
+                                    <input type="number" class="form-control py-2 rounded-3 shadow-sm" name="rating" id="rating" value="{{ old('rating') }}" required>
                                 </div>
 
                                 <div class="row g-2">

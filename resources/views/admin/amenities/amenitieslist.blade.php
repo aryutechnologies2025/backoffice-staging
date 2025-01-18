@@ -111,7 +111,7 @@
                 "emptyTable": "No records found",
             },
             "columnDefs": [
-                { "orderable": false, "targets": [0, 3] } // Disable ordering on Icon and Action columns
+                { "orderable": true, "targets": [0, 3] } // Disable ordering on Icon and Action columns
             ]
         });
     });

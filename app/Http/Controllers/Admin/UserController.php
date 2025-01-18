@@ -38,7 +38,7 @@ class UserController extends Controller
             'zip_province_code' => 'required',
             'country' => 'required',
             'preferred_lang' => 'required',
-
+            'terms_condition' => 'required',
         ]);
 
 

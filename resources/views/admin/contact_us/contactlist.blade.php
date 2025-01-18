@@ -103,7 +103,7 @@
             },
             columnDefs: [
                 {
-                    orderable: false,
+                    orderable: true,
                     targets: [3],
                 },
             ],

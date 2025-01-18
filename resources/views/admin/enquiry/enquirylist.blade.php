@@ -141,7 +141,7 @@ font-size: 15px !important;
                 "emptyTable": "No records found",
             },
             "columnDefs": [
-                { "orderable": false, "targets": [0, 4] } // Disable ordering on specific columns
+                { "orderable": true, "targets": [0, 4] } // Disable ordering on specific columns
             ]
         });
 

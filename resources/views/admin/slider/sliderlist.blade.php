@@ -64,7 +64,7 @@
                             <img
                                 src="{{ asset($row->slider_image) }}"
                                 alt="{{ $row->alternate_name ?? 'Default Alt Text' }}"
-                                style="max-width: 100px; max-height: 100px; object-fit: cover;">
+                                style="max-width: 70px; max-height: 70px; object-fit: cover;">
                         </td>
                         <td class="text-center">{{ $row->slider_name }}</td>
                         <td class="text-center">{{ $row->created_at }}</td>
@@ -120,7 +120,7 @@
                 "emptyTable": "No records found",
             },
             "columnDefs": [
-                { "orderable": false, "targets": [0, 3] } // Disable ordering on Icon and Action columns
+                { "orderable": true, "targets": [0, 3] } // Disable ordering on S.No and Time&Date columns
             ]
         });
     });

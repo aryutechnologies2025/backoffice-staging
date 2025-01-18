@@ -86,7 +86,7 @@
                         <div class="row g-2 mb-4">
                             <div class="col">
                                 <label class="fw-bold mb-4 "> Phone Number <span class="text-danger">*</span></label>
-                                <input type="text" id="phone" placeholder="Phone Number" name="phone" value="{{ $user_details->phone }}" class="form-control py-2 rounded-3 shadow-sm" required>
+                                <input type="number" id="phone" placeholder="Phone Number" name="phone" value="{{ $user_details->phone }}" class="form-control py-2 rounded-3 shadow-sm" required>
                             </div>
                         </div>
                         <div class="row g-2 mb-4">
@@ -110,7 +110,7 @@
                         <div class="row g-2 mb-4">
                             <div class="col">
                                 <label class="fw-bold mb-4 "> Zip/Postal Code <span class="text-danger">*</span></label>
-                                <input type="text" id="zip_province_code" placeholder="Zip/Postal Code" name="zip_province_code" value="{{ $user_details->zip_province_code }}" class="form-control py-2 rounded-3 shadow-sm" required>
+                                <input type="number" id="zip_province_code" placeholder="Zip/Postal Code" name="zip_province_code" value="{{ $user_details->zip_province_code }}" class="form-control py-2 rounded-3 shadow-sm" required>
                             </div>
                         </div>
                         <div class="row g-2 mb-4">

@@ -67,7 +67,7 @@
                     </div>
                     <div class="col-md-3 mb-3">
                         <label for="phone" class="form-label">Phone</label>
-                        <input type="text" class="form-control rounded-3 shadow-sm"
+                        <input type="number" class="form-control rounded-3 shadow-sm"
                             id="phone"
                             name="phone"
                             value="{{ old('phone', $influencer->phone ?? '') }}"
@@ -75,7 +75,7 @@
                     </div>
                     <div class="col-md-3 mb-3">
                         <label for="whatsapp" class="form-label">WhatsApp</label>
-                        <input type="text" class="form-control rounded-3 shadow-sm"
+                        <input type="number" class="form-control rounded-3 shadow-sm"
                             id="whatsapp"
                             name="whatsapp"
                             value="{{ old('whatsapp', $influencer->whatsapp ?? '') }}"

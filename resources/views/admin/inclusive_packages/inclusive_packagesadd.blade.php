@@ -434,7 +434,7 @@ a {
                                             </div>
                                             <div class="col-md-4">
                                                 <label class="mb-2">Total No. of Days</label>
-                                                <input type="text" class="form-control py-2 rounded-3 shadow-sm"
+                                                <input type="number" class="form-control py-2 rounded-3 shadow-sm"
                                                     id="total_days" name="total_days" value="{{old('total_days')}}"
                                                     readonly>
                                             </div>
@@ -453,24 +453,24 @@ a {
                                         <div class="row g-2 align-items-end">
                                             <div class="col-md-3">
                                                 <label class=" mb-2">Rooms<span class="text-danger"></span></label>
-                                                <input type="text" class="form-control py-2 rounded-3 shadow-sm"
+                                                <input type="number" class="form-control py-2 rounded-3 shadow-sm"
                                                     name="total_room" id="total_room" value="{{old('total_room')}}"
                                                     required>
                                             </div>
                                             <div class="col-md-3">
                                                 <label class="mb-2">Bath Rooms<span class="text-danger"></span></label>
-                                                <input type="text" class="form-control py-2 rounded-3 shadow-sm"
+                                                <input type="number" class="form-control py-2 rounded-3 shadow-sm"
                                                     name="bath_room" id="bath_room" value="{{old('bath_room')}}"
                                                     required>
                                             </div>
                                             <div class="col-md-3">
                                                 <label class=" mb-2">Bed Rooms</label>
-                                                <input type="text" class="form-control py-2 rounded-3 shadow-sm"
+                                                <input type="number" class="form-control py-2 rounded-3 shadow-sm"
                                                     id="bed_room" name="bed_room" value="{{old('bed_room')}}" required>
                                             </div>
                                             <div class="col-md-3">
                                                 <label class=" mb-2">Hall</label>
-                                                <input type="text" class="form-control py-2 rounded-3 shadow-sm"
+                                                <input type="number" class="form-control py-2 rounded-3 shadow-sm"
                                                     id="hall" name="hall" value="{{old('hall')}}" required>
                                             </div>
                                         </div>
@@ -491,13 +491,13 @@ a {
                                             <div class="col-md-3 py-4">
                                                 <label class="pb-2">Member Capacity <span
                                                         class="text-danger">*</span></label>
-                                                <input type="text" id="member_capacity" name="member_capacity"
+                                                <input type="number" id="member_capacity" name="member_capacity"
                                                     class="form-control py-2 rounded-3 shadow-sm"
                                                     placeholder="Member Capacity" required
                                                     value="{{old('member_capacity')}}">
                                             </div>
                                             <div class="col-md-3 py-4">
-                                                <label class="pb-2">Payment</label>
+                                                <label class="pb-2">Sprit Amount</label>
                                                 <select id="mem_type" name="mem_type"
                                                     class="form-select py-2 rounded-3 shadow-sm" required>
                                                     <option value="">Select</option>
@@ -511,14 +511,14 @@ a {
                                             <div class="col-md-3 py-4">
                                                 <label class="pb-2 "> Actual Amount <span
                                                         class="text-danger">*</span></label>
-                                                <input type="text" id="price" name="price"
+                                                <input type="number" id="price" name="price"
                                                     class="form-control py-2 rounded-3 shadow-sm"
                                                     placeholder="Actual Amount" value="{{old('price')}}" required>
                                             </div>
                                             <div class="col-md-3 py-4">
                                                 <label class=" pb-2 "> Discount Amount <span
                                                         class="text-danger">*</span></label>
-                                                <input type="text" id="actual_price" name="actual_price"
+                                                <input type="number" id="actual_price" name="actual_price"
                                                     class="form-control py-2 rounded-3 shadow-sm"
                                                     placeholder="Actual Price" value="{{old('actual_price')}}" required>
                                             </div>

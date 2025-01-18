@@ -110,7 +110,7 @@
                     </div>
                     <div class="col-md-4">
                         <label class="fw-bold mb-2">Order <span class="text-danger">*</span></label>
-                        <input type="text" placeholder="Order" id="list_order" name="list_order"
+                        <input type="number" placeholder="Order" id="list_order" name="list_order"
                                value="{{ old('order') }}" class="form-control py-2 rounded-3 shadow-sm" required>
                     </div>
                 </div>

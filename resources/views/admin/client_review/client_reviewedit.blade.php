@@ -138,7 +138,7 @@ width: 80%;
                         </div>
                         <div class="col-lg-6">
                             <label class="fw-bold mb-4">Rating <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control py-2 rounded-3 shadow-sm" name="rating" id="rating" value="{{ old('rating', $client_details->rating) }}" required>
+                            <input type="number" class="form-control py-2 rounded-3 shadow-sm" name="rating" id="rating" value="{{ old('rating', $client_details->rating) }}" required>
                         </div>
                     </div>
 
