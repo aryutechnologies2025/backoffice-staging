@@ -29,7 +29,7 @@ class EnquiryDetail extends Model
     ];
     public function package()
 {
-    return $this->belongsTo(InclusivePackages::class, 'package_id', 'id');
+    return $this->hasMany(InclusivePackages::class, 'package_id');
 }
 
     

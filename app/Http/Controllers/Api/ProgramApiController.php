@@ -1060,6 +1060,7 @@ public function destination_program_by_price_sort(Request $request)
             'female_count' => 'required',
             'travel_date' => 'required',
             'rooms_count' => 'required|integer',
+            'package_id' => 'required|exists:inclusive_package_details,id', // Validate package_id
         ]);
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
