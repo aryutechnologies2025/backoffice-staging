@@ -288,79 +288,97 @@
                             </div>
                         </div>
                         <div id="photo-upload-container" class="row g-3">
-                            <label class="fw-bold mt-4">Gallery Image</label>
-                            @php
-                            $images = json_decode($package_details->events_package_images, true);
-                            $imageCount = is_array($images) ? count($images) : 0;
-                            @endphp
-                            @if (is_array($images) && $imageCount > 0)
-                            @foreach ($images as $key => $image)
-                            <div class="col-md-2 col-sm-4 col-6 photo-upload-field" id="photo-field-{{ $key }}">
-                                <div class="form-input text-center">
-                                    <label for="file-ip-{{ $key }}">
-                                        <img class="img-fluid mt-3" id="file-ip-{{ $key }}-preview" src="{{ asset($image) }}" alt="Image Preview">
-                                        <p class="fw-light mt-2">Edit Pic</p>
-                                    </label>
-                                    <input type="file" name="img_{{ $key }}" id="file-ip-{{ $key }}" data-number="{{ $key }}" accept="image/*" onchange="previewImage(event, this)">
-                                    <button type="button" class="btn btn-danger btn-sm mt-2 delete-photo-btn" data-key="{{ $key }}">Delete</button>
-                                </div>
-                            </div>
-                            @endforeach
-                            @else
-                            <p>No images uploaded yet.</p>
-                            @endif
-                        </div>
-                        <div class="mt-3 mb-4">
-                            <button id="add-photo-btn" type="button" class="btn btn-primary">Add More Photos</button>
-                        </div>
+    <label class="fw-bold mt-4">Gallery Image</label>
+    
+    @php
+        // Ensure that the 'events_package_images' is a valid JSON string
+        $images = !empty($package_details->events_package_images) ? json_decode($package_details->events_package_images, true) : [];
+        $imageCount = count($images);
+    @endphp
 
-                        <script>
-                            // Start photo counter from existing photos
-                            let photoCount = @json($imageCount);
+    @if ($imageCount > 0)
+        @foreach ($images as $key => $image)
+            <div class="col-md-2 col-sm-4 col-6 photo-upload-field" id="photo-field-{{ $key }}">
+                <div class="form-input text-center">
+                    <label for="file-ip-{{ $key }}">
+                        <img class="img-fluid mt-3" id="file-ip-{{ $key }}-preview" src="{{ asset($image) }}" alt="Image Preview">
+                        <p class="fw-light mt-2">Edit Pic</p>
+                    </label>
+                    <input type="file" name="img_{{ $key }}" id="file-ip-{{ $key }}" data-number="{{ $key }}" accept="image/*" onchange="previewImage(event, this)">
+                    <button type="button" class="btn btn-danger btn-sm mt-2 delete-photo-btn" data-key="{{ $key }}" data-image="{{ $image }}">Delete</button>
+                </div>
+            </div>
+        @endforeach
+    @else
+        <p>No images uploaded yet.</p>
+    @endif
+</div>
 
-                            // Function to add a new photo upload field
-                            document.getElementById('add-photo-btn').addEventListener('click', function() {
-                                photoCount++;
-                                const container = document.getElementById('photo-upload-container');
-                                const newFieldHtml = `
-                                <div class="col-md-2 col-sm-4 col-6 photo-upload-field" id="photo-field-${photoCount}">
-                                    <div class="form-input text-center">
-                                        <label for="file-ip-${photoCount}">
-                                            <img class="img-fluid mt-3" id="file-ip-${photoCount}-preview" src="" alt="Image Preview">
-                                            <p class="fw-light mt-2">Add Pic</p>
-                                        </label>
-                                        <input type="file" name="img_${photoCount}" id="file-ip-${photoCount}" data-number="${photoCount}" accept="image/*" onchange="previewImage(event, this)">
-                                        <button type="button" class="btn btn-danger btn-sm mt-2 delete-photo-btn" data-key="${photoCount}">Delete</button>
-                                    </div>
-                                </div>`;
-                                container.insertAdjacentHTML('beforeend', newFieldHtml);
-                            });
+<!-- Hidden input to store deleted images -->
+<input type="hidden" name="deleted_images" id="deleted-images" value="[]">
 
-                            // Function to preview image after file selection
-                            function previewImage(event, inputElement) {
-                                const input = inputElement || event.target;
-                                const preview = document.getElementById(`file-ip-${input.getAttribute('data-number')}-preview`);
+<div class="mt-3 mb-4">
+    <button id="add-photo-btn" type="button" class="btn btn-primary">Add More Photos</button>
+</div>
 
-                                if (input.files && input.files[0]) {
-                                    const reader = new FileReader();
-                                    reader.onload = function(e) {
-                                        preview.src = e.target.result;
-                                    }
-                                    reader.readAsDataURL(input.files[0]);
-                                }
-                            }
+<script>
+    // Start photo counter from existing photos
+    let photoCount = @json($imageCount);
 
-                            // Function to delete photo field
-                            document.addEventListener('click', function(event) {
-                                if (event.target.classList.contains('delete-photo-btn')) {
-                                    const key = event.target.getAttribute('data-key');
-                                    const photoField = document.getElementById(`photo-field-${key}`);
-                                    if (photoField) {
-                                        photoField.remove();
-                                    }
-                                }
-                            });
-                        </script>
+    // Function to add a new photo upload field
+    document.getElementById('add-photo-btn').addEventListener('click', function() {
+        photoCount++;
+        const container = document.getElementById('photo-upload-container');
+        const newFieldHtml = `
+            <div class="col-md-2 col-sm-4 col-6 photo-upload-field" id="photo-field-${photoCount}">
+                <div class="form-input text-center">
+                    <label for="file-ip-${photoCount}">
+                        <img class="img-fluid mt-3" id="file-ip-${photoCount}-preview" src="" alt="Image Preview">
+                        <p class="fw-light mt-2">Add Pic</p>
+                    </label>
+                    <input type="file" name="img_${photoCount}" id="file-ip-${photoCount}" data-number="${photoCount}" accept="image/*" onchange="previewImage(event, this)">
+                    <button type="button" class="btn btn-danger btn-sm mt-2 delete-photo-btn" data-key="${photoCount}">Delete</button>
+                </div>
+            </div>`;
+        container.insertAdjacentHTML('beforeend', newFieldHtml);
+    });
+
+    // Function to preview image after file selection
+    function previewImage(event, inputElement) {
+        const input = inputElement || event.target;
+        const preview = document.getElementById(`file-ip-${input.getAttribute('data-number')}-preview`);
+
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                preview.src = e.target.result;
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    // Function to delete photo field
+    document.getElementById('photo-upload-container').addEventListener('click', function(event) {
+        if (event.target.classList.contains('delete-photo-btn')) {
+            const key = event.target.getAttribute('data-key');
+            const photoField = document.querySelector(`#photo-field-${key}`);
+            const imagePath = event.target.getAttribute('data-image');
+            
+            if (photoField) {
+                // Add the image path to the hidden field
+                const deletedImagesInput = document.getElementById('deleted-images');
+                const deletedImages = JSON.parse(deletedImagesInput.value);
+                deletedImages.push(imagePath); // Add the image path to the list
+                deletedImagesInput.value = JSON.stringify(deletedImages);
+                
+                // Remove the photo field from the UI
+                photoField.remove();
+            }
+        }
+    });
+</script>
+
+
 
 
                         <!-- 2.LOCATION -->
