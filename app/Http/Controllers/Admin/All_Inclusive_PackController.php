@@ -16,12 +16,29 @@ use App\Models\Geo_feature;
 use App\Models\Themes;
 use App\Models\Themes_category;
 use App\Models\Destination_category;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 
 
 
 
 class All_Inclusive_PackController extends Controller
 {
+
+
+public function deleteImage(Request $request)
+{
+    $imagePath = $request->input('image_path');
+    Log::info('Attempting to delete image:', ['image_path' => $imagePath]);
+
+    if ($imagePath && file_exists(public_path($imagePath))) {
+        unlink(public_path($imagePath));
+        return response()->json(['success' => true]);
+    }
+
+    Log::error('Image deletion failed:', ['image_path' => $imagePath]);
+    return response()->json(['success' => false, 'message' => 'Image not found or already deleted.']);
+}
 
 
     public function list(Request $request)
@@ -343,7 +360,8 @@ public function insert(Request $request)
     $activitiesJson = json_encode($request->input('activities', []));
     $safetyFeaturesJson = json_encode($request->input('safety_features', []));
     $campRulesJson = json_encode($validatedData['camp_rule']);
-
+//adding location
+    $inclusive_packages->location = $request->input('location');
     // Update the model fields
     $inclusive_packages->theme_id = $request->input('themes_name');
     $inclusive_packages->city_details = $validatedData['cities_name'];
