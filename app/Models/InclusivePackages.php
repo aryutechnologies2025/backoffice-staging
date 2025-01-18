@@ -17,6 +17,13 @@ class InclusivePackages extends Authenticatable
         'google_map',
         'slug'
     ];
+
+
+    public function enquiries()
+    {
+        return $this->hasMany(EnquiryDetail::class, 'package_id', 'id');
+    }
+    
     public function destination()
     {
         return $this->belongsTo(City::class, 'city_details');
