@@ -33,7 +33,7 @@
     <div class="col-lg-12">
         <div class="table-sec rounded-bottom-4 mb-5">
             <!-- Button to Download Excel -->
-            <button id="downloadExcel" class="btn btn-success mb-3">Download Excel</button>
+            <button id="downloadExcel" class="btn btn-success mb-3">Download List</button>
 
             <table id="cityTable" class="table pt-2">
                 <thead>
