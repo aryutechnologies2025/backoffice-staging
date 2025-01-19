@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\EnquiryDetail;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class EnquiryController extends Controller
 {
@@ -15,4 +17,6 @@ class EnquiryController extends Controller
 
         return view('admin.enquiry.enquirylist', compact('title', 'enquiry_dts'));
     }
+
+   
 }

@@ -35,6 +35,8 @@ font-size: 15px !important;
 <div class="row body-sec px-5">
     <div class="col-lg-12">
         <div class="table-sec rounded-bottom-4 mb-5">
+        <button id="downloadExcel" class="btn btn-success mb-3">Download Excel</button>
+
             <table id="cityTable" class="table pt-2">
                 <thead>
                     <tr class="rounded-top-4">
@@ -143,6 +145,12 @@ font-size: 15px !important;
             ]
         });
 
+ // Export Table to Excel
+ $('#downloadExcel').on('click', function() {
+            var wb = XLSX.utils.table_to_book(document.getElementById('cityTable'), { sheet: "Enquiries" });
+            XLSX.writeFile(wb, 'Enquiries_Data.xlsx');
+        });
+
         // Populate modal with data
         $('.view-btn').on('click', function() {
             const comments = $(this).data('comments');
@@ -162,6 +170,46 @@ font-size: 15px !important;
             $('#modalTravelDate').text($(this).data('travel_date'));
             $('#modalRoomsCount').text($(this).data('rooms_count'));
             $('#modalDate').text(date);
+        });
+        // Download Excel
+        $('#downloadExcel').on('click', function() {
+            // First, capture the main table data
+            var wb = XLSX.utils.table_to_book(document.getElementById('cityTable'), { sheet: "Enquiries" });
+
+            // Now, capture modal data for all rows
+            var modalData = [
+                ["Name", "Email", "Phone", "Location", "Days", "Travel Destination", "Budget Per Head", "Cab Need", "Total Count", "Male Count", "Female Count", "Travel Date", "Rooms Count", "Comments", "Date & Time"]
+            ];
+
+            // Loop through all rows to get their modal data
+            $('#cityTable tbody tr').each(function() {
+                var row = $(this);
+                var modalRow = [
+                    row.find('.view-btn').data('name'),
+                    row.find('.view-btn').data('email'),
+                    row.find('.view-btn').data('phone'),
+                    row.find('.view-btn').data('location'),
+                    row.find('.view-btn').data('days'),
+                    row.find('.view-btn').data('travel_destination'),
+                    row.find('.view-btn').data('budget_per_head'),
+                    row.find('.view-btn').data('cab_need'),
+                    row.find('.view-btn').data('total_count'),
+                    row.find('.view-btn').data('male_count'),
+                    row.find('.view-btn').data('female_count'),
+                    row.find('.view-btn').data('travel_date'),
+                    row.find('.view-btn').data('rooms_count'),
+                    row.find('.view-btn').data('comments'),
+                    row.find('.view-btn').data('date')
+                ];
+                modalData.push(modalRow);
+            });
+
+            // Create a new sheet for modal data and append it to the workbook
+            var ws = XLSX.utils.aoa_to_sheet(modalData);
+            XLSX.utils.book_append_sheet(wb, ws, "Modal Data");
+
+            // Trigger Excel file download
+            XLSX.writeFile(wb, 'Enquiries_Data_With_All_Modal.xlsx');
         });
     });
 </script>

@@ -1,30 +1,27 @@
 @extends('layouts.app')
-@Section('content')
+@section('content')
 <style>
     a:hover {
         color: red;
     }
-    a{
+    a {
         color:rgb(37, 150, 190);
     }
-    .enquiry{
+    .enquiry {
         color:blue;
     }
-    .modal{
+    .modal {
         width: 100%!important;
-       padding-top: 10%!important;
-      
-        
+        padding-top: 10%!important;
     }
-    .btn{
-/* background-color: #000 !important; */
-border-radius: 6px !important;
- color: #FFF !important;
-font-size: 15px !important;
-}
+    .btn {
+        border-radius: 6px !important;
+        color: #FFF !important;
+        font-size: 15px !important;
+    }
 </style>
 
-<div class="row body-sec py-5  px-5 justify-content-around">
+<div class="row body-sec py-5 px-5 justify-content-around">
     <div class="col-lg-12">
         <b><a href="/dashboard" >Dashboard</a> > <a class="enquiry" href="" >Booking</a></b>
         <br><br>
@@ -35,6 +32,9 @@ font-size: 15px !important;
 <div class="row body-sec px-5">
     <div class="col-lg-12">
         <div class="table-sec rounded-bottom-4 mb-5">
+            <!-- Button to Download Excel -->
+            <button id="downloadExcel" class="btn btn-success mb-3">Download Excel</button>
+
             <table id="cityTable" class="table pt-2">
                 <thead>
                     <tr class="rounded-top-4">
@@ -42,8 +42,7 @@ font-size: 15px !important;
                         <th class="text-center"><span>Name</span></th>
                         <th class="text-center"><span>Email</span></th>
                         <th class="text-center"><span>Phone</span></th>
-                        <th class="text-center"><span> Program Name </span></th>
-
+                        <th class="text-center"><span>Program Name</span></th>
                         <th class="text-center"><span>Time&Date</span></th>
                         <th class="text-center"><span>Action</span></th>
                     </tr>
@@ -61,28 +60,27 @@ font-size: 15px !important;
                             <td class="text-center">{{ $row->email }}</td>
                             <td class="text-center">{{ $row->phone }}</td>
                             <td class="text-center">{{ $row->package ? $row->package->title : 'N/A' }}</td>
-
-
                             <td class="text-center">{{ $row->created_at }}</td>
                             <td class="text-center">
                                 <button class="btn btn-warning view-btn" 
-                                data-name="{{ $row->name }}"
-                                data-email="{{ $row->email }}"
-                                data-phone="{{ $row->phone }}"
-                                        data-comments="{{ $row->comments }}" 
-                                        data-location="{{ $row->location }}"
-                                        data-days="{{ $row->days }}"
-                                        data-travel_destination="{{ $row->travel_destination }}"
-                                        data-budget_per_head="{{ $row->budget_per_head }}"
-                                        data-cab_need="{{ $row->cab_need }}"
-                                        data-total_count="{{ $row->total_count }}"
-                                        data-male_count="{{$row->male_count}}"
-                                        data-female_count="{{$row->female_count}}"
-                                        data-travel_date="{{ $row->travel_date }}"
-                                        data-rooms_count="{{ $row->rooms_count }}"
-                                        data-date="{{ $row->created_at->format('d/m/Y h:i:s') }}"
-                                        data-bs-toggle="modal" 
-                                        data-bs-target="#viewModal">
+                                    data-id="{{ $row->id }}"
+                                    data-name="{{ $row->name }}"
+                                    data-email="{{ $row->email }}"
+                                    data-phone="{{ $row->phone }}"
+                                    data-comments="{{ $row->comments }}" 
+                                    data-location="{{ $row->location }}"
+                                    data-days="{{ $row->days }}"
+                                    data-travel_destination="{{ $row->travel_destination }}"
+                                    data-budget_per_head="{{ $row->budget_per_head }}"
+                                    data-cab_need="{{ $row->cab_need }}"
+                                    data-total_count="{{ $row->total_count }}"
+                                    data-male_count="{{ $row->male_count }}"
+                                    data-female_count="{{ $row->female_count }}"
+                                    data-travel_date="{{ $row->travel_date }}"
+                                    data-rooms_count="{{ $row->rooms_count }}"
+                                    data-date="{{ $row->created_at->format('d/m/Y h:i:s') }}"
+                                    data-bs-toggle="modal" 
+                                    data-bs-target="#viewModal">
                                     View
                                 </button>
                             </td>
@@ -96,11 +94,11 @@ font-size: 15px !important;
 </div>
 
 <!-- Modal -->
-<div class="modal fade" id="viewModal"  tabindex="-1" aria-labelledby="viewModalLabel" aria-hidden="true" >
-    <div class="modal-dialog" >
+<div class="modal fade" id="viewModal" tabindex="-1" aria-labelledby="viewModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="viewModalLabel" >Enquiry Details</h5>
+                <h5 class="modal-title" id="viewModalLabel">Enquiry Details</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -132,6 +130,7 @@ font-size: 15px !important;
 @section('scripts')
 <script>
     $(document).ready(function() {
+        // Initialize DataTable
         $('#cityTable').DataTable({
             "pageLength": 10,
             "lengthChange": true,
@@ -147,12 +146,10 @@ font-size: 15px !important;
 
         // Populate modal with data
         $('.view-btn').on('click', function() {
-            const comments = $(this).data('comments');
-            const date = $(this).data('date');
             $('#modalName').text($(this).data('name'));
             $('#modalEmail').text($(this).data('email'));
             $('#modalPhone').text($(this).data('phone'));
-            $('#modalComments').text(comments);
+            $('#modalComments').text($(this).data('comments'));
             $('#modalLocation').text($(this).data('location'));
             $('#modalDays').text($(this).data('days'));
             $('#modalTravelDestination').text($(this).data('travel_destination'));
@@ -163,7 +160,48 @@ font-size: 15px !important;
             $('#modalFemaleCount').text($(this).data('female_count'));
             $('#modalTravelDate').text($(this).data('travel_date'));
             $('#modalRoomsCount').text($(this).data('rooms_count'));
-            $('#modalDate').text(date);
+            $('#modalDate').text($(this).data('date'));
+        });
+
+        // Download Excel
+        $('#downloadExcel').on('click', function() {
+            // First, capture the main table data
+            var wb = XLSX.utils.table_to_book(document.getElementById('cityTable'), { sheet: "Enquiries" });
+
+            // Now, capture modal data for all rows
+            var modalData = [
+                ["Name", "Email", "Phone", "Location", "Days", "Travel Destination", "Budget Per Head", "Cab Need", "Total Count", "Male Count", "Female Count", "Travel Date", "Rooms Count", "Comments", "Date & Time"]
+            ];
+
+            // Loop through all rows to get their modal data
+            $('#cityTable tbody tr').each(function() {
+                var row = $(this);
+                var modalRow = [
+                    row.find('.view-btn').data('name'),
+                    row.find('.view-btn').data('email'),
+                    row.find('.view-btn').data('phone'),
+                    row.find('.view-btn').data('location'),
+                    row.find('.view-btn').data('days'),
+                    row.find('.view-btn').data('travel_destination'),
+                    row.find('.view-btn').data('budget_per_head'),
+                    row.find('.view-btn').data('cab_need'),
+                    row.find('.view-btn').data('total_count'),
+                    row.find('.view-btn').data('male_count'),
+                    row.find('.view-btn').data('female_count'),
+                    row.find('.view-btn').data('travel_date'),
+                    row.find('.view-btn').data('rooms_count'),
+                    row.find('.view-btn').data('comments'),
+                    row.find('.view-btn').data('date')
+                ];
+                modalData.push(modalRow);
+            });
+
+            // Create a new sheet for modal data and append it to the workbook
+            var ws = XLSX.utils.aoa_to_sheet(modalData);
+            XLSX.utils.book_append_sheet(wb, ws, "Modal Data");
+
+            // Trigger Excel file download
+            XLSX.writeFile(wb, 'Enquiries_Data_With_All_Modal.xlsx');
         });
     });
 </script>
