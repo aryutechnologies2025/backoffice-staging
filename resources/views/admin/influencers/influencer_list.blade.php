@@ -16,7 +16,7 @@
     }
 </style>
 
-<div class="row body-sec py-5 px-5 justify-content-around">
+<div class="row body-sec py-5 px-8 justify-content-around">
     <div class="col-lg-6">
         <b><a href="/dashboard">Dashboard</a> > <a class="city" href="/address">Address</a></b>
         <br><br>
