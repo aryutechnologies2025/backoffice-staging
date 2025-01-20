@@ -1059,7 +1059,7 @@ public function destination_program_by_price_sort(Request $request)
             'total_count' => 'required',
             'male_count' => 'required',
             'female_count' => 'required',
-            'travel_date' => 'required',
+            'travel_date' => 'required|date|after_or_equal:today',
             'rooms_count' => 'required|integer',
         ]);
         if ($validator->fails()) {
@@ -1092,7 +1092,7 @@ public function destination_program_by_price_sort(Request $request)
             'total_count' => 'required',
             'male_count' => 'required',
             'female_count' => 'required',
-            'travel_date' => 'required',
+            'travel_date' => 'required|date|after_or_equal:today',
             'rooms_count' => 'required|integer',
         ]);
         if ($validator->fails()) {

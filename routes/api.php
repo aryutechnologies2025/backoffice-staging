@@ -31,6 +31,7 @@ Route::prefix('v1')->group(function () {
         Route::post('/signup', [AuthController::class, 'signup']);
         Route::post('/login', [AuthController::class, 'login']);
         Route::post('/contact', [AuthController::class, 'store_contact']); // Contact Form
+        //header enquiry form
         Route::post('/home-enquiry-form', [ProgramApiController::class, 'home_enquiry_form_insert']);
 
         // Site Content Routes
