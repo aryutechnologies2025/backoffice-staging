@@ -367,7 +367,8 @@ class ProgramApiController extends Controller
                     'bath_room' => $package->bath_room,
                     'amerities' => $package->amerities,
                     'food_beverages' => $package->food_beverages,
-                    'location' => $formattedLocation,
+                    // 'location' => $formattedLocation,
+                    'location' =>$package->location,
                     // Adding the fetched details
                     'amenities' => $details['amenities'] ?? [],
                     'foodBeverages' => $details['foodBeverages'] ?? [],
@@ -554,8 +555,9 @@ public function destination_program_by_price_sort(Request $request)
                 'bath_room' => $package->bath_room,
                 'amerities' => $package->amerities,
                 'food_beverages' => $package->food_beverages,
-                'location' => $formattedLocation,
+                // 'location' => $formattedLocation,
                 // Adding the fetched details
+                'location' =>$package->location,
                 'amenities' => $details['amenities'] ?? [],
                 'foodBeverages' => $details['foodBeverages'] ?? [],
                 'activities' => $details['activities'] ?? [],
@@ -748,6 +750,7 @@ public function destination_program_by_price_sort(Request $request)
                     'total_reviews' => $totalReviews,
                     'average_rating' => number_format($averageRating, 1),
                     'created_date' => $package->created_date,
+                    'location' => $package->location 
                 ];
 
                 // Check if the user ID is provided and add wishlist information

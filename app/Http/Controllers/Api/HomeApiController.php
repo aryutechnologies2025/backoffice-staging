@@ -765,7 +765,7 @@ public function home_filter(Request $request)
                     'id' => $package->id,
                     'title' => ucfirst($package->title),
                     'category' => ucfirst($formattedCategory),
-                    'location' => $formattedLocation,
+                    // 'location' => $formattedLocation,
                     'total_days' => $package->total_days,
                     'member_capacity' => $package->member_capacity,
                     'price' => $package->price,
@@ -778,6 +778,7 @@ public function home_filter(Request $request)
                     'destination' => $package->destination ? $package->destination->city_name : null,
                     'average_rating' => number_format($averageRating, 1),
                     'totalReviews' => $totalReviews,
+                    'location ' => $package->location
                 ];
             });
     
