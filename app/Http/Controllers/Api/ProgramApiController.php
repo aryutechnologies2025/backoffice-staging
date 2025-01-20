@@ -130,7 +130,7 @@ class ProgramApiController extends Controller
             $formattedStartDate = \Carbon\Carbon::parse($package->start_date)->format('M d, Y');
             $formattedendDate = \Carbon\Carbon::parse($package->return_date)->format('M d, Y');
             $category = json_decode($package->category, true) ?? [];
-            $formattedLocation = ucfirst($package->address) . ', ' . ucfirst($package->state);
+            // $formattedLocation = ucfirst($package->address) . ', ' . ucfirst($package->state);
             $clientReviews = $package->clientReviews->map(function ($review) {
                 $reviewDate = Carbon::parse($review->review_dt);
                 return [
