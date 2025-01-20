@@ -170,6 +170,7 @@ class ProgramApiController extends Controller
                 'flag' => $category,
                 'destination' => $package->destination->city_name,
                 'theme' => $package->theme->themes_name,
+                'location' => $package->location,
                 'state' => $package->state,
                 'city' => $package->city,
                 'address' => $package->address,
