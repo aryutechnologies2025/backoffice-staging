@@ -23,6 +23,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
 use App\Models\AffiliateLinkClick;
 use App\Models\HomeEnquiryDetail;
+use Illuminate\Support\Facades\Cache;
 
 class ProgramApiController extends Controller
 {
@@ -213,7 +214,7 @@ class ProgramApiController extends Controller
             }
 
             // Cache the response data for 60 minutes
-            \Cache::put($cacheKey, $responseData, 60);
+            Cache::put($cacheKey, $responseData, 60);
 
             return response()->json([
                 'status' => 'success',
