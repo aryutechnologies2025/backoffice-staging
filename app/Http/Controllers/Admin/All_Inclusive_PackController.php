@@ -380,6 +380,7 @@ public function insert(Request $request)
     
         // Update the model fields
         $inclusive_packages->theme_id = $request->input('themes_name');
+        $inclusive_packages->location = $request->input('location');
         $inclusive_packages->city_details = $validatedData['cities_name'];
         $inclusive_packages->title = $validatedData['title'];
         $inclusive_packages->program_description = $validatedData['program_description'];
