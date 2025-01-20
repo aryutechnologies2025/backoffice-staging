@@ -206,7 +206,7 @@ class HomeApiController extends Controller
                     'title' => ucfirst($package->title),
                     'category' => ucfirst($formattedcategory),
                     // 'location' => $formattedLocation,
-                    // 'total_days' => $package->total_days,
+                    'total_days' => $package->total_days,
                     'member_capacity' => $package->member_capacity,
                     'price' => $package->price,
                     'actual_price' => $package->actual_price,
@@ -218,7 +218,7 @@ class HomeApiController extends Controller
                     'destination_id' => $package->destination ? $package->destination->id : null,
                     'destination' => $package->destination ? $package->destination->city_name : null,
                     'average_rating' => number_format($averageRating, 1),
-                    // 'totalReviews' => $totalReviews,
+                    'totalReviews' => $totalReviews,
                     'location' => $package->location,
                     'total_room' => $package->total_room,
                     'bath_room' => $package->bath_room,
@@ -231,7 +231,7 @@ class HomeApiController extends Controller
                     // 'foodBeverages' => $details['foodBeverages'] ?? [],
                     // 'activities' => $details['activities'] ?? [],
                     // 'safetyFeatures' => $details['safetyFeatures'] ?? [],
-                    'addressDetails' => $details['addressDetails'] ?? [],
+                    // 'addressDetails' => $details['addressDetails'] ?? [],
 
                    
                 ];
