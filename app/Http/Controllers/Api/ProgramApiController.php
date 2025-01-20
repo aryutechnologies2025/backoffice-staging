@@ -189,7 +189,7 @@ class ProgramApiController extends Controller
                 'important_info' => $importantInfoPlainText,
                 'program_inclusion' => $program_inclusionPlainText,
                 'break_fast' => $break_fastPlainText,
-                'location' => $formattedLocation,
+                // 'location' => $formattedLocation,
                 'lunch' => $package->lunch,
                 'dinner' => $package->dinner,
                 'amenity_details' => $amenities,
