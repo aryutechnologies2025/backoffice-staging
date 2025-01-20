@@ -84,7 +84,8 @@
                         <!-- <td class="text-center" style="font-size: small;">{{ $row->referral_code }}</td> -->
                         <td class="text-center" style="width: 10%;">
                             <button class="btn btn-sm btn-info view-links" data-id="{{ $row->id }}" data-name="{{ $row->full_name }}"
-                            data-signup-url="https://innerpece.com/signup?ref={{ $row->reference_id }}">
+                            data-signup-url="https://innerpece.com/signup?ref={{ $row->reference_id }}-{{ substr($row->full_name, 0, 4) }}"
+                           > 
                                 View Affiliate Links
                             </button>
                         </td>
@@ -176,6 +177,7 @@ $(document).on('click', '.view-links', function () {
     const influencerId = $(this).data('id');
     const influencerName = $(this).data('name');
     const signupUrl = $(this).data('signup-url');
+    const shortName = influencerName.substring(0, 4);
     $('#affiliateLinksLabel').html(`Affiliate Links for ${influencerName} <a href="${signupUrl}" target="_blank">${signupUrl}</a>`);
     
     // Display signup URL in the modal
@@ -191,7 +193,7 @@ $(document).on('click', '.view-links', function () {
             if (response.status === '1') {
                 const links = response.data;
                 const linksHtml = links
-                    .map(link => `<p><strong>${link.title}:</strong> <a href="${link.link}" target="_blank" class="track-click" data-link="${link.link}">${link.link}</a></p>`)
+                    .map(link => `<p><strong>${link.title}:</strong> <a href="${link.link}-${shortName}" target="_blank" class="track-click" data-link="${link.link}-${shortName}">${link.link}-${shortName}</a></p>`)
                     .join('');
                 $('#links-container').html(linksHtml);
             } else {
