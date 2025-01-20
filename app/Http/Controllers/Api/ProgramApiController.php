@@ -202,6 +202,8 @@ class ProgramApiController extends Controller
                 'google_map' => $package->google_map,
                 'average_rating' => number_format($averageRating, 1),
                 'created_date' => $package->created_date,
+                'current_location' => $package->location
+
             ];
             if ($user_id) {
                 $wishlist = Program_wishlist::where('user_id', $user_id)
@@ -372,6 +374,8 @@ class ProgramApiController extends Controller
                     'foodBeverages' => $details['foodBeverages'] ?? [],
                     'activities' => $details['activities'] ?? [],
                     'safetyFeatures' => $details['safetyFeatures'] ?? [],
+                    'current_location' => $package->location
+
                 ];
     
                 // If userId is provided, check if the program is in their wishlist
@@ -559,6 +563,8 @@ public function destination_program_by_price_sort(Request $request)
                 'foodBeverages' => $details['foodBeverages'] ?? [],
                 'activities' => $details['activities'] ?? [],
                 'safetyFeatures' => $details['safetyFeatures'] ?? [],
+                
+                'current_location' => $package->location
             ];
 
             // If userId is provided, check if the program is in their wishlist

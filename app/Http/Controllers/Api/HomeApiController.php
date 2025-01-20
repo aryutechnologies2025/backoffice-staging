@@ -219,7 +219,7 @@ class HomeApiController extends Controller
                     'destination' => $package->destination ? $package->destination->city_name : null,
                     'average_rating' => number_format($averageRating, 1),
                     'totalReviews' => $totalReviews,
-
+                    'current_location' => $package->location,
                     'total_room' => $package->total_room,
                     'bath_room' => $package->bath_room,
                     'bed_room' => $package->bed_room,
@@ -601,6 +601,8 @@ public function home_filter(Request $request)
                 'bath_room' => $package->bath_room,
                 'bed_room' => $package->bed_room,
                 'hall' => $package->hall,
+                'current_location' => $package->location
+
             ];
         });
 
