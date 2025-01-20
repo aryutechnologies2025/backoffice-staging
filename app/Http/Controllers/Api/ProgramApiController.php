@@ -23,7 +23,6 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
 use App\Models\AffiliateLinkClick;
 use App\Models\HomeEnquiryDetail;
-use Illuminate\Support\Facades\Cache;
 
 class ProgramApiController extends Controller
 {
@@ -131,7 +130,7 @@ class ProgramApiController extends Controller
             $formattedStartDate = \Carbon\Carbon::parse($package->start_date)->format('M d, Y');
             $formattedendDate = \Carbon\Carbon::parse($package->return_date)->format('M d, Y');
             $category = json_decode($package->category, true) ?? [];
-            // $formattedLocation = ucfirst($package->address) . ', ' . ucfirst($package->state);
+            $formattedLocation = ucfirst($package->address) . ', ' . ucfirst($package->state);
             $clientReviews = $package->clientReviews->map(function ($review) {
                 $reviewDate = Carbon::parse($review->review_dt);
                 return [
@@ -171,7 +170,6 @@ class ProgramApiController extends Controller
                 'flag' => $category,
                 'destination' => $package->destination->city_name,
                 'theme' => $package->theme->themes_name,
-                'location' => $package->location,
                 'state' => $package->state,
                 'city' => $package->city,
                 'address' => $package->address,
@@ -190,7 +188,7 @@ class ProgramApiController extends Controller
                 'important_info' => $importantInfoPlainText,
                 'program_inclusion' => $program_inclusionPlainText,
                 'break_fast' => $break_fastPlainText,
-                // 'location' => $formattedLocation,
+                'location' => $formattedLocation,
                 'lunch' => $package->lunch,
                 'dinner' => $package->dinner,
                 'amenity_details' => $amenities,
@@ -214,7 +212,7 @@ class ProgramApiController extends Controller
             }
 
             // Cache the response data for 60 minutes
-            Cache::put($cacheKey, $responseData, 60);
+            \Cache::put($cacheKey, $responseData, 60);
 
             return response()->json([
                 'status' => 'success',
@@ -368,8 +366,7 @@ class ProgramApiController extends Controller
                     'bath_room' => $package->bath_room,
                     'amerities' => $package->amerities,
                     'food_beverages' => $package->food_beverages,
-                    // 'location' => $formattedLocation,
-                    'location' =>$package->location,
+                    'location' => $formattedLocation,
                     // Adding the fetched details
                     'amenities' => $details['amenities'] ?? [],
                     'foodBeverages' => $details['foodBeverages'] ?? [],
@@ -556,9 +553,8 @@ public function destination_program_by_price_sort(Request $request)
                 'bath_room' => $package->bath_room,
                 'amerities' => $package->amerities,
                 'food_beverages' => $package->food_beverages,
-                // 'location' => $formattedLocation,
+                'location' => $formattedLocation,
                 // Adding the fetched details
-                'location' =>$package->location,
                 'amenities' => $details['amenities'] ?? [],
                 'foodBeverages' => $details['foodBeverages'] ?? [],
                 'activities' => $details['activities'] ?? [],
@@ -751,7 +747,6 @@ public function destination_program_by_price_sort(Request $request)
                     'total_reviews' => $totalReviews,
                     'average_rating' => number_format($averageRating, 1),
                     'created_date' => $package->created_date,
-                    'location' => $package->location 
                 ];
 
                 // Check if the user ID is provided and add wishlist information
@@ -1063,7 +1058,7 @@ public function destination_program_by_price_sort(Request $request)
             'total_count' => 'required',
             'male_count' => 'required',
             'female_count' => 'required',
-            'travel_date' => 'required|date|after_or_equal:today',
+            'travel_date' => 'required',
             'rooms_count' => 'required|integer',
         ]);
         if ($validator->fails()) {
@@ -1096,7 +1091,7 @@ public function destination_program_by_price_sort(Request $request)
             'total_count' => 'required',
             'male_count' => 'required',
             'female_count' => 'required',
-            'travel_date' => 'required|date|after_or_equal:today',
+            'travel_date' => 'required',
             'rooms_count' => 'required|integer',
         ]);
         if ($validator->fails()) {

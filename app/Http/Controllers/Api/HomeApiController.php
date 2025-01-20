@@ -195,7 +195,6 @@ class HomeApiController extends Controller
                 // Extract the first image URL
                 $formattedLocation = ucfirst($package->address) . ', ' . ucfirst($package->state);
                 $totalReviews = $package->clientReviews->count();
-                $clientReviewsCount = $package->reviews->count();
                 $averageRating = $package->reviews->avg('rating');
                 $category = json_decode($package->category, true) ?? [];
                 $formattedcategory = is_array($category) ? implode(', ', $category) : $category;
@@ -220,8 +219,7 @@ class HomeApiController extends Controller
                     'destination' => $package->destination ? $package->destination->city_name : null,
                     'average_rating' => number_format($averageRating, 1),
                     'totalReviews' => $totalReviews,
-                    'clientReviewsCount' => $clientReviewsCount,
-                    'location' => $package->location,
+
                     'total_room' => $package->total_room,
                     'bath_room' => $package->bath_room,
                     'bed_room' => $package->bed_room,
@@ -582,7 +580,7 @@ public function home_filter(Request $request)
                 'id' => $package->id,
                 'title' => ucfirst($package->title),
                 'category' => ucfirst($formattedCategory),
-                // 'location' => $formattedLocation,
+                'location' => $formattedLocation,
                 'total_days' => $package->total_days,
                 'member_capacity' => $package->member_capacity,
                 'price' => $package->price,
@@ -603,7 +601,6 @@ public function home_filter(Request $request)
                 'bath_room' => $package->bath_room,
                 'bed_room' => $package->bed_room,
                 'hall' => $package->hall,
-                'location' => $package->location
             ];
         });
 
@@ -670,7 +667,7 @@ public function home_filter(Request $request)
                     'id' => $package->id,
                     'title' => ucfirst($package->title),
                     'category' => ucfirst($formattedCategory),
-                    // 'location' => $formattedLocation,
+                    'location' => $formattedLocation,
                     'total_days' => $package->total_days,
                     'member_capacity' => $package->member_capacity,
                     'price' => $package->price,
@@ -683,7 +680,6 @@ public function home_filter(Request $request)
                     'destination' => $package->destination ? $package->destination->city_name : null,
                     'average_rating' => number_format($averageRating, 1),
                     'totalReviews' => $totalReviews,
-                    'location' => $package->location,
                 ];
             });
     
@@ -765,7 +761,7 @@ public function home_filter(Request $request)
                     'id' => $package->id,
                     'title' => ucfirst($package->title),
                     'category' => ucfirst($formattedCategory),
-                    // 'location' => $formattedLocation,
+                    'location' => $formattedLocation,
                     'total_days' => $package->total_days,
                     'member_capacity' => $package->member_capacity,
                     'price' => $package->price,
@@ -778,7 +774,6 @@ public function home_filter(Request $request)
                     'destination' => $package->destination ? $package->destination->city_name : null,
                     'average_rating' => number_format($averageRating, 1),
                     'totalReviews' => $totalReviews,
-                    'location ' => $package->location
                 ];
             });
     
