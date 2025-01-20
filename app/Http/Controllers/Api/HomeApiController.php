@@ -175,16 +175,16 @@ class HomeApiController extends Controller
                 $activities = json_decode($package->activities, true);
                 $safetyFeatures = json_decode($package->safety_features, true);
                 // Process reviews and attach user data
-            // $reviews = $package->reviews->map(function ($review) {
-            //     $user = $review->user; // Get the related user (reviewer's name and image)
-            //     return [
-            //         'first_name' => $review->user->first_name ?? null,  // Get user name, if available
-            //         'profile_image' => $review->user->profile_image ?? null,        // User's image
-            //         'comment' => $review->comment,
-            //         'rating' => $review->rating,
-            //         'date' => $review->created_at->format('M d, Y'),
-            //     ];
-            // });
+            $reviews = $package->reviews->map(function ($review) {
+                $user = $review->user; // Get the related user (reviewer's name and image)
+                return [
+                    'first_name' => $review->user->first_name ?? null,  // Get user name, if available
+                    'profile_image' => $review->user->profile_image ?? null,        // User's image
+                    'comment' => $review->comment,
+                    'rating' => $review->rating,
+                    'date' => $review->created_at->format('M d, Y'),
+                ];
+            });
                 // Fetch amenities, food & beverage, activities, safety features
                 $details = $getDetailsById($package);
                 
@@ -223,15 +223,15 @@ class HomeApiController extends Controller
                     'total_room' => $package->total_room,
                     'bath_room' => $package->bath_room,
                     'bed_room' => $package->bed_room,
-                    // 'hall'=> $package->hall,
-                    // 'reviews' => $reviews,
+                    'hall'=> $package->hall,
+                    'reviews' => $reviews,
 
                     // Adding the fetched details
                     'amenities' => $details['amenities'] ?? [],
-                    // 'foodBeverages' => $details['foodBeverages'] ?? [],
-                    // 'activities' => $details['activities'] ?? [],
-                    // 'safetyFeatures' => $details['safetyFeatures'] ?? [],
-                    // 'addressDetails' => $details['addressDetails'] ?? [],
+                    'foodBeverages' => $details['foodBeverages'] ?? [],
+                    'activities' => $details['activities'] ?? [],
+                    'safetyFeatures' => $details['safetyFeatures'] ?? [],
+                    'addressDetails' => $details['addressDetails'] ?? [],
 
                    
                 ];
