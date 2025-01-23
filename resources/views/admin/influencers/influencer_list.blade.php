@@ -45,6 +45,7 @@
                         <th class="text-center"><span>Date&Time</span></th>
                         <th class="text-center"><span>Information</span></th>
                         <th class="text-center"><span>Affiliate Link</span></th>
+                        <th class="text-center"><span>Clicks</span></th>
                         <th class="text-center"><span>Action</span></th>
                     </tr>
                 </thead>
@@ -88,6 +89,17 @@
                            > 
                                 View Affiliate Links
                             </button>
+                        </td>
+                        <td class="text-center">
+                            @if ($row->affiliate_links->isNotEmpty())
+                            <ul>
+                                @foreach ($row->affiliate_links as $link)
+                                <li>{{ $link['click_count'] ?? 'N/A' }}</li>
+                                @endforeach
+                            </ul>
+                            @else
+                            0
+                            @endif
                         </td>
                         <td class="text-center">
                             <a href="{{ route('admin.influencer_edit_form', $row->id) }}" class="table-edit-link">

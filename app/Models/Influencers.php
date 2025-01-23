@@ -8,7 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class Influencers extends Model
 {
     use HasFactory;
+
     protected $table = 'influencers';
+
     protected $fillable = [
         'reference_id',
         'full_name',
@@ -42,32 +44,48 @@ class Influencers extends Model
         'twitter_category',
         'created_by',
         'status',
-        'is_deleted'
-
+        'is_deleted',
+        'referral_code', // Ensure this column exists in the database
     ];
+
+    /**
+     * Get affiliate links for this influencer based on inclusive packages.
+     *
+     * @return \Illuminate\Support\Collection
+     */
     public function getAffiliateLinks()
-{
-    $affiliateLinks = InclusivePackages::where('is_deleted', '0')->where('status', "1")->get()->map(function ($package) {
-        // Ensure that the referral_code is available
-        if (empty($this->referral_code)) {
-            return [
-                'title' => $package->title,
-                'link' => 'Referral code is missing.'
-            ];
-        }
+    {
+        $affiliateLinks = InclusivePackages::where('is_deleted', '0')
+            ->where('status', "1")
+            ->get()
+            ->map(function ($package) {
+                // If referral_code is missing, provide a placeholder response
+                if (empty($this->referral_code)) {
+                    return [
+                        'title' => $package->title,
+                        'link' => 'Referral code is missing.',
+                    ];
+                }
 
-        // Generate the affiliate link using the correct referral code
-        $affiliateLink = $package->getAffiliateLink($this->reference_id);
+                // Generate the affiliate link using the reference_id
+                $affiliateLink = $package->getAffiliateLink($this->reference_id);
 
-        return [
-            'title' => $package->title,
-            'link' => $affiliateLink,
-        ];
-    });
+                return [
+                    'title' => $package->title,
+                    'link' => $affiliateLink,
+                ];
+            });
 
-    return $affiliateLinks;
-}
+        return $affiliateLinks;
+    }
 
-    
-
+    /**
+     * Define a relationship to the AffiliateLinks model.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function affiliateLinks()
+    {
+        return $this->hasMany(AffiliateLinks::class, 'influencer_id');
+    }
 }
