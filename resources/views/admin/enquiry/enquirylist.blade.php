@@ -59,7 +59,7 @@
                             <td class="text-center">{{ $row->name }}</td>
                             <td class="text-center">{{ $row->email }}</td>
                             <td class="text-center">{{ $row->phone }}</td>
-                            <td class="text-center">{{ $row->package ? $row->package->title : 'N/A' }}</td>
+                            <td class="text-center">{{ $row->program_title }}</td>
                             <td class="text-center">{{ $row->created_at }}</td>
                             <td class="text-center">
                                 <button class="btn btn-warning view-btn" 
@@ -107,6 +107,7 @@
                 <p><strong>Phone:</strong> <span id="modalPhone"></span></p>
                 <p><strong>Location:</strong> <span id="modalLocation"></span></p>
                 <p><strong>Days:</strong> <span id="modalDays"></span></p>
+                
                 <p><strong>Travel Destination:</strong> <span id="modalTravelDestination"></span></p>
                 <p><strong>Budget Per Head:</strong> <span id="modalBudgetPerHead"></span></p>
                 <p><strong>Cab Need:</strong> <span id="modalCabNeed"></span></p>
