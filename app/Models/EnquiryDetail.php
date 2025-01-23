@@ -25,7 +25,8 @@ class EnquiryDetail extends Model
         'travel_date',
         'rooms_count',
         'reference_id',
-        'package_id'
+        'package_id',
+        'program_title'
     ];
     public function package()
 {
