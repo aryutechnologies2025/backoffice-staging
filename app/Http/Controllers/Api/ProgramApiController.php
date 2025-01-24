@@ -1061,8 +1061,11 @@ class ProgramApiController extends Controller
             'female_count' => 'required|integer',
             'travel_date' => 'required|date',
             'rooms_count' => 'required|integer',
-            'child_count' => 'required|min:0',
-            'child_age' => 'required|array|min:' . $request->child_count, // Validate as array
+            'child_count' => 'required|integer|min:0',
+            'child_age' => 'required_if:child_count,<,1|array|min:' . ($request->input('child_count') > 0 ? $request->input('child_count') : 0),
+          
+            // 'child_age.*' => 'integer|min:0', // Validate each age
+            // 'child_age' => 'required|min:' . $request->child_count, // Validate as array
             'child_age.*' => 'min:0', // Validate each age
         ]);
 
@@ -1138,8 +1141,11 @@ class ProgramApiController extends Controller
             'female_count' => 'required',
             'travel_date' => 'required',
             'rooms_count' => 'required|integer',
-            'child_count' => 'required|min:0',
-            'child_age' => 'required|array|min:' . ($request->child_count > 0 ? 1 : 0), // Validate as array if child_count > 0
+            'child_count' => 'required|integer|min:0',
+            'child_age' => 'required_if:child_count,<,1|array|min:' . ($request->input('child_count') > 0 ? $request->input('child_count') : 0),
+          
+            // 'child_age.*' => 'integer|min:0', // Validate each age
+            // 'child_age' => 'required|min:' . $request->child_count, // Validate as array
             'child_age.*' => 'min:0', // Validate each age
         ]);
         if ($validator->fails()) {
