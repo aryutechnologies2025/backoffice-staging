@@ -26,7 +26,7 @@ class ReviewController extends Controller
         }
     
         // Create the review record
-        $review = Review::create($request->only(['user_id', 'package_id', 'comment', 'rating']));
+        $review = Review::create($request->only(['user_id', 'package_id', 'comment', 'rating']))->orderBy('created_at', 'desc')->get();
     
         // Return response
         return response()->json([
