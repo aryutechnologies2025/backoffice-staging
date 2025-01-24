@@ -64,7 +64,8 @@ Route::prefix('v1')->group(function () {
         Route::post('/get-program-details', [ProgramApiController::class, 'get_program_details']);
 
 Route::get('/get-title', [HomeApiController::class, 'get_title']);
-
+Route::post('/enquiry-mail/{id}', [ProgramApiController::class, 'getClientNotification']);
+Route::post('/home-enquiry-mail/{id}', [ProgramApiController::class, 'getHomeNotification']);
     });
 });
 
@@ -85,7 +86,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // Program Details
     
     Route::post('/enquiry-form', [ProgramApiController::class, 'enquiry_form_insert']);
-
+    // Route::post('/enquiry-mail/{id}', [ProgramApiController::class, 'getClientNotification']);
     // Amenities
     Route::get('/get-amenities', [ProgramApiController::class, 'getAmenities']);
     Route::post('/getActivitiesbyId', [ProgramApiController::class, 'getAmenitiesFoodBeverageActivitiesSafetyFeaturesById']);

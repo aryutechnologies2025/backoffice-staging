@@ -262,7 +262,7 @@ a {
                             </div>
                         </div>
                         <!-- Gallery Images -->
-                        <div class="row mt-4">
+                        <div class="row mt-4 py-5">
                             <div class="col">
                                 <label class="py-3">Gallery Image</label>
                                 <div id="photo-upload-container" class="row g-6">
@@ -334,9 +334,9 @@ a {
                         <!-- 2. LOCATION -->
                         <div class="row mb-3">
 
-                            <h4 class="fw-bold mb-2">02. Location</h4>
+                            <h4 class="fw-bold mb-2 py-2">2. Location</h4>
                             <div class="col-md-3 mb-3">
-                        <input type="text" class="form-control  rounded-3 shadow-sm" id="location" name="location" value="{{ old('location') }}" required>
+                        <textarea class="form-control rounded-3 shadow-sm" id="location" name="location" placeholder=" Enter City & State & Country" required>{{ old('location') }}</textarea>
                     </div>
 
                         </div>

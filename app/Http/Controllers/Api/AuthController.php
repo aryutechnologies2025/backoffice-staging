@@ -4,16 +4,18 @@ namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-
+use App\Mail\ContactAdminEmail;
+use App\Mail\ContactEmail;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Log;
-
+use Illuminate\Support\Facades\Mail;
 
 use App\Models\ContactUs;
 use App\Models\User;
+
 
 use Illuminate\Http\JsonResponse;
 
@@ -342,8 +344,30 @@ class AuthController extends Controller
                 'email' =>$email,
                 'phone' =>  $phone,
                 'message' =>  $msg
-            ]);
 
+                
+            ]);
+            try {
+                // Send email to the client
+                Mail::to($contact->email)->send(new ContactEmail([
+                    'name' => $contact->first_name,
+                    'email' => $contact->email,
+                    'phone' => $contact->phone,
+                    'comments' => $contact->message,
+                ]));
+        
+                // Send email to admin
+                Mail::to('barathkrishnamoorthy17@gmail.com')->send(new ContactAdminEmail([
+                    'name' => $contact->first_name,
+                    'email' => $contact->email,
+                    'phone' => $contact->phone,
+                    'comments' => $contact->message,
+                   
+                ]));
+            } catch (\Exception $e) {
+                // Log any email sending errors
+                Log::error('Mail failed: ' . $e->getMessage());
+            }
             return response()->json([
                 'message' => 'Contact message sent successfully!',
                 'contact' => $contact

@@ -19,10 +19,13 @@ use App\Models\Address;
 use App\Models\Influencers;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
 use App\Models\AffiliateLinkClick;
 use App\Models\HomeEnquiryDetail;
+use App\Mail\enquiryEmail;
+use App\Mail\AdminEmail;
 
 class ProgramApiController extends Controller
 {
@@ -151,7 +154,7 @@ class ProgramApiController extends Controller
                     'date' => $review->created_at->format('M d, Y'),
                 ];
             });
-           
+
             $reviewCount = $package->reviews->count();
             $totalReviews = $package->clientReviews->count();
             $averageRating = $package->reviews->avg('rating');
@@ -1054,7 +1057,7 @@ class ProgramApiController extends Controller
             'comments' => 'required|string',
             'location' => 'required|string',
             'days' => 'required|integer',
-            'travel_destination' => 'required|string',
+            'travel_destination' => 'string|nullable',
             'budget_per_head' => 'required|string',
             'cab_need' => 'required|string',
             'total_count' => 'required|integer',
@@ -1064,7 +1067,7 @@ class ProgramApiController extends Controller
             'rooms_count' => 'required|integer',
             'child_count' => 'required|integer|min:0',
             'child_age' => 'required_if:child_count,<,1|array|min:' . ($request->input('child_count') > 0 ? $request->input('child_count') : 0),
-          
+
             // 'child_age.*' => 'integer|min:0', // Validate each age
             // 'child_age' => 'required|min:' . $request->child_count, // Validate as array
             'child_age.*' => 'min:0', // Validate each age
@@ -1079,13 +1082,84 @@ class ProgramApiController extends Controller
 
         $enquiry = EnquiryDetail::create($enquiryData);
 
+        // Send email notifications
+        try {
+            // Send email to the client
+            Mail::to($enquiry->email)->send(new enquiryEmail([
+                'name' => $enquiry->name,
+                'email' => $enquiry->email,
+                'phone' => $enquiry->phone,
+                'travel_destination' => $enquiry->travel_destination,
+
+                'comments' => $enquiry->comments,
+            ]));
+
+            // Send email to admin
+            Mail::to('barathkrishnamoorthy17@gmail.com')->send(new adminEmail([
+                'name' => $enquiry->name,
+                'email' => $enquiry->email,
+                'phone' => $enquiry->phone,
+                'comments' => $enquiry->comments,
+                'location' => $enquiry->location,
+                'days' => $enquiry->days,
+                'travel_destination' => $enquiry->travel_destination,
+                'cab_need' => $enquiry->cab_need,
+                'total_count' => $enquiry->total_count,
+                'child_count' => $enquiry->child_count,
+            ]));
+        } catch (\Exception $e) {
+            // Log any email sending errors
+            Log::error('Mail failed: ' . $e->getMessage());
+        }
+
         return response()->json([
-            'message' => 'Enquiry submitted successfully',
+            'message' => 'Enquiry submitted successfully. Emails sent if applicable.',
             'data' => $enquiry
         ], 201);
     }
 
 
+
+    // public function getClientNotification(Request $request, $id)
+    // {
+    //     $projectDetails = EnquiryDetail::find($id);
+    //     if ($projectDetails) {
+    //         $clientEmail = $projectDetails->email;
+
+    //         if (filter_var($clientEmail, FILTER_VALIDATE_EMAIL)) {
+    //             try {
+    //                 // Send email to the client
+    //                 Mail::to($clientEmail)->send(new enquiryEmail([
+    //                     'name' => $projectDetails->name,
+    //                     'email' => $projectDetails->email,
+    //                     'phone' => $projectDetails->phone,
+    //                     'comments' => $projectDetails->comments,
+    //                 ]));
+
+    //                 // Send email to admin
+    //                 Mail::to('barathkrishnamoorthy17@gmail.com')->send(new adminEmail([
+    //                     'name' => $projectDetails->name,
+    //                     'email' => $projectDetails->email,
+    //                     'phone' => $projectDetails->phone,
+    //                     'comments' => $projectDetails->comments,
+    //                 ]));
+
+    //                 return response()->json(['success' => true, 'message' => 'Emails sent successfully.']);
+    //             } catch (\Exception $e) {
+    //                 // Log the error details
+    //                 Log::error('Mail failed: ' . $e->getMessage());
+
+    //                 return response()->json(['success' => false, 'message' => 'Failed to send email.']);
+    //             }
+    //         } else {
+    //             Log::error('Invalid or empty client email: ' . $clientEmail);
+    //             return response()->json(['success' => false, 'message' => 'Client email is empty or invalid.']);
+    //         }
+    //     } else {
+    //         Log::error('Project not found with ID: ' . $id);
+    //         return response()->json(['success' => false, 'message' => 'Project not found.']);
+    //     }
+    // }
 
 
 
@@ -1144,7 +1218,7 @@ class ProgramApiController extends Controller
             'rooms_count' => 'required|integer',
             'child_count' => 'required|integer|min:0',
             'child_age' => 'required_if:child_count,<,1|array|min:' . ($request->input('child_count') > 0 ? $request->input('child_count') : 0),
-          
+
             // 'child_age.*' => 'integer|min:0', // Validate each age
             // 'child_age' => 'required|min:' . $request->child_count, // Validate as array
             'child_age.*' => 'min:0', // Validate each age
@@ -1157,11 +1231,81 @@ class ProgramApiController extends Controller
         $enquiryData['child_age'] = json_encode($request->input('child_age')); // Convert child_age to JSON
 
         $enquiry = HomeEnquiryDetail::create($enquiryData);
+        try {
+            // Send email to the client
+            Mail::to($enquiry->email)->send(new enquiryEmail([
+                'name' => $enquiry->name,
+                'email' => $enquiry->email,
+                'phone' => $enquiry->phone,
+                'comments' => $enquiry->comments,
+            ]));
+
+            // Send email to admin
+            Mail::to('barathkrishnamoorthy17@gmail.com')->send(new adminEmail([
+                'name' => $enquiry->name,
+                'email' => $enquiry->email,
+                'phone' => $enquiry->phone,
+                'comments' => $enquiry->comments,
+                'location' => $enquiry->location,
+                'days' => $enquiry->days,
+                'travel_destination' => $enquiry->travel_destination,
+                'cab_need' => $enquiry->cab_need,
+                'total_count' => $enquiry->total_count,
+                'child_count' => $enquiry->child_count,
+            ]));
+        } catch (\Exception $e) {
+            // Log any email sending errors
+            Log::error('Mail failed: ' . $e->getMessage());
+        }
 
         return response()->json([
             'message' => 'Enquiry submitted successfully',
             'data' => $enquiry
         ], 201);
+    }
+
+
+
+    public function getHomeNotification(Request $request, $id)
+    {
+        $projectDetails = HomeEnquiryDetail::find($id);
+        if ($projectDetails) {
+            $clientEmail = $projectDetails->email;
+
+            if (filter_var($clientEmail, FILTER_VALIDATE_EMAIL)) {
+                try {
+                    // Send email to the client
+                    Mail::to($clientEmail)->send(new enquiryEmail([
+                        'name' => $projectDetails->name,
+                        'email' => $projectDetails->email,
+                        'phone' => $projectDetails->phone,
+                        'comments' => $projectDetails->comments,
+                    ]));
+
+                    // Send email to admin
+                    Mail::to('barathkrishnamoorthy17@gmail.com')->send(new adminEmail([
+                        'name' => $projectDetails->name,
+                        'email' => $projectDetails->email,
+                        'phone' => $projectDetails->phone,
+                        'comments' => $projectDetails->comments,
+                        'travel_destination' => $projectDetails->travel_destination,
+                    ]));
+
+                    return response()->json(['success' => true, 'message' => 'Emails sent successfully.']);
+                } catch (\Exception $e) {
+                    // Log the error details
+                    Log::error('Mail failed: ' . $e->getMessage());
+
+                    return response()->json(['success' => false, 'message' => 'Failed to send email.']);
+                }
+            } else {
+                Log::error('Invalid or empty client email: ' . $clientEmail);
+                return response()->json(['success' => false, 'message' => 'Client email is empty or invalid.']);
+            }
+        } else {
+            Log::error('Project not found with ID: ' . $id);
+            return response()->json(['success' => false, 'message' => 'Project not found.']);
+        }
     }
     // public function store_wishlist(Request $request)
     // {

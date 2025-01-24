@@ -76,6 +76,7 @@
                                     data-total_count="{{ $row->total_count }}"
                                     data-male_count="{{ $row->male_count }}"
                                     data-female_count="{{ $row->female_count }}"
+                                    data-child_count="{{ $row->child_count }}"
                                     data-travel_date="{{ $row->travel_date }}"
                                     data-rooms_count="{{ $row->rooms_count }}"
                                     data-date="{{ $row->created_at->format('d/m/Y h:i:s') }}"
@@ -107,7 +108,7 @@
                 <p><strong>Phone:</strong> <span id="modalPhone"></span></p>
                 <p><strong>Location:</strong> <span id="modalLocation"></span></p>
                 <p><strong>Days:</strong> <span id="modalDays"></span></p>
-                
+                <p><strong>No.of.child:</strong> <span id="modelChild"></span></p>
                 <p><strong>Travel Destination:</strong> <span id="modalTravelDestination"></span></p>
                 <p><strong>Budget Per Head:</strong> <span id="modalBudgetPerHead"></span></p>
                 <p><strong>Cab Need:</strong> <span id="modalCabNeed"></span></p>
@@ -157,6 +158,7 @@
             $('#modalBudgetPerHead').text($(this).data('budget_per_head'));
             $('#modalCabNeed').text($(this).data('cab_need'));
             $('#modalTotalCount').text($(this).data('total_count'));
+            $('#modelChild').text($(this).data('child_count'));
             $('#modalMaleCount').text($(this).data('male_count'));
             $('#modalFemaleCount').text($(this).data('female_count'));
             $('#modalTravelDate').text($(this).data('travel_date'));
@@ -183,6 +185,7 @@
                     row.find('.view-btn').data('phone'),
                     row.find('.view-btn').data('location'),
                     row.find('.view-btn').data('days'),
+                    row.find('.view-btn').data('child_count'),
                     row.find('.view-btn').data('travel_destination'),
                     row.find('.view-btn').data('budget_per_head'),
                     row.find('.view-btn').data('cab_need'),

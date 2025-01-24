@@ -157,7 +157,7 @@ class ActivitiesController extends Controller
 
             // Set the updated_date field
             $activities->updated_date = date('Y-m-d H:i:s');
-            $activities->deleted_by = 'admin';
+            $activities->updated_by = 'admin';
             // Save the changes
             $activities->save();
 

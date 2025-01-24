@@ -385,7 +385,7 @@
                         {{-- <div class="row mb-1">
             <div class="col">
                 <div class="form-body px-5  rounded-4">
-                    <h4 class="fw-bold mb-3">2.Location</h4>
+                    <h4 class="fw-bold mb-2 py-2">2.Location</h4>
                     <div class="mb-3">
                         <div class="row mb-2">
                             <input type="hidden" id="address" name="address">
@@ -439,9 +439,9 @@
      <!-- 2. LOCATION -->
      <div class="row mb-3">
 
-<h4 class="fw-bold mb-2">02. Location</h4>
+<h4 class="fw-bold mb-2 py-2">02. Location</h4>
 <div class="col-md-3 mb-3">
-<input type="text" class="form-control  rounded-3 shadow-sm" id="location" name="location"  value="{{$package_details->location}}" required>
+<textarea type="text" class="form-control  rounded-3 shadow-sm" id="location" name="location"  value="{{$package_details->location}}" required>
 </div>
 
 </div>
