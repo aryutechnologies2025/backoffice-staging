@@ -57,7 +57,7 @@
                     <tr>
                     <td class="text-center">{{ $loop->iteration }}</td>
 
-                    <td class="text-center"><img src="{{ asset($row->user->profile_image ?? '/assets/image/login/inner_pece_logo.png') }}" alt="Thumbnail" style="max-width: 100px; max-height: 100px; object-fit: cover;"></td>
+                    <td class="text-center"><img src="{{ asset($row->user->profile_image ?? '/assets/image/dashboard/innerpece_toogle_icon.svg') }}" alt="Thumbnail" style="max-width: 100px; max-height: 100px; object-fit: cover;"></td>
                         <td class="text-center">{{ $row->user->first_name }}</td>
                         <td class="text-center">{{ $row->package->title }}</td>
                         <td class="text-center">{{ $row->rating }}</td>
