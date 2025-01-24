@@ -141,7 +141,9 @@ class ProgramApiController extends Controller
                     'rating' => $review->rating,
                 ];
             });
-            $reviews = $package->reviews->map(function ($review) {
+            $reviews = $package->reviews
+            ->sortByDesc('created_at') // Order by date descending
+            ->map(function ($review) {
                 $user = $review->user;
                 return [
                     'first_name' => $user->first_name ?? null,
@@ -151,6 +153,7 @@ class ProgramApiController extends Controller
                     'date' => $review->created_at->format('M d, Y'),
                 ];
             });
+        
             $reviewCount = $package->reviews->count();
             $totalReviews = $package->clientReviews->count();
             $averageRating = $package->reviews->avg('rating');
