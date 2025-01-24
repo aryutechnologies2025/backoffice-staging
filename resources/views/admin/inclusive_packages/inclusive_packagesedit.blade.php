@@ -52,7 +52,7 @@
 
     }
 
-
+    
     .form-input img {
         width: 100%;
     }
