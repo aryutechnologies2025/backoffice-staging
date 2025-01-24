@@ -10,7 +10,9 @@
     .user{
         color:blue;
     }
-
+    .custom-message-modal{
+        width: 100%!important;
+    }
 </style>
 <div class="row body-sec py-5  px-5 justify-content-around">
     <div class="col-lg-6">
@@ -37,11 +39,11 @@
                     <tr class="rounded-top-4">
                         <th class="text-center"><span> S.No </span></th>
                         <th class="text-center"><span> Client Pic </span></th>
-                        <th class="text-center"><span> Client Name </span></th>
+                        <th class="text-center px-18"><span> Client Name </span></th>
                         <th class="text-center"><span> Program Name </span></th>
                         <th class="text-center"><span> Rating </span></th>
-                        <th class='text-center'><span>Comment</span></th>
                         <th class='text-center'><span>Date&Time</span></th>
+                        <th class="text-center"><span> Comment </span></th>
                         <!-- <th class="text-center"><span> Status </span></th>
                         <th class="text-center"><span> Action </span></th> -->
                     </tr>
@@ -61,9 +63,13 @@
                         <td class="text-center">{{ $row->user->first_name }}</td>
                         <td class="text-center">{{ $row->package->title }}</td>
                         <td class="text-center">{{ $row->rating }}</td>
-                        <td class="text-center">{{ $row->comment }}</td>
+                        
                         <td class="text-center">{{ $row->created_at }}</td>
-                       
+                        <td class="text-center">
+                            <button class="btn-add btn-warning view-message-btn" data-message="{{ $row->comment }}" data-bs-toggle="modal" data-bs-target="#customMessageModal">
+                                View Comment
+                            </button>
+                        </td>
                      
                         
                     @endforeach
@@ -76,6 +82,24 @@
     </div>
 </div>
 
+<!-- Modal placed outside of navbar -->
+<div class="custom-message-modal modal fade" id="customMessageModal" tabindex="-1" aria-labelledby="customMessageModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="customMessageModalLabel">Message Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p id="messageContent"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
 @endsection
 @section('scripts')
 <script>
@@ -92,6 +116,17 @@
                 { "orderable": true, "targets": [0, 3] } // Disable ordering on Icon and Action columns
             ]
         });
+    
+    $('.view-message-btn').on('click', function () {
+            const message = $(this).data('message');
+            $('#messageContent').text(message);
+            $('#customMessageModal').modal('show');
+        });
     });
 </script>
+<script>
+      $('#myModal').on('shown.bs.modal', function () {
+        $('#myInput').trigger('focus')
+      });
+    </script>
 @endsection
