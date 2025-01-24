@@ -24,6 +24,8 @@ class HomeEnquiryDetail extends Model
         'female_count',
         'travel_date',
         'rooms_count',
+        'child_count',
+        'child_age'
         
     ];
 }

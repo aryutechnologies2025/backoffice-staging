@@ -26,7 +26,9 @@ class EnquiryDetail extends Model
         'rooms_count',
         'reference_id',
         'package_id',
-        'program_title'
+        'program_title',
+        'child_count',
+        'child_age',
     ];
     public function package()
 {
