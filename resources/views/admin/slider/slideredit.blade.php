@@ -62,7 +62,7 @@
                                 <label for="file-ip-1" class="d-block text-center py-2" style="cursor: pointer;">
                                     <p class="text-center fw-light">Add Pic</p>
                                 </label>
-                                <input type="file" id="file-ip-1" name="image_1" accept="image/png, image/jpeg" onchange="previewImage(event)">
+                                <input type="file" id="file-ip-1" name="image_1" accept="image/png, image/jpeg" onchange="validateImage(this)" required>
                                 <div id="file-ip-1-error" class="text-danger"></div>
                                 <label class="fw-bold mb-5 text-danger border-0"><small>* Upload size [640*120] *</small></label>
                             </div>
@@ -81,7 +81,7 @@
                                             text: message,
                                         });
                                     }
-                                </script>
+                                </script>    
                                 <div class="col-lg-6">
                                     <label class="fw-bold mt-4">Upload Image Name <span class="text-danger">*</span></label>
                                     <input type="text" placeholder="Rename the Photo" id="upload_image_name" name="upload_image_name" value="{{ $slider_details->upload_image_name }}" class="form-control py-2 rounded-3 shadow-sm  " required> <!-- Added mt-4 here -->
@@ -137,54 +137,55 @@
 </div>
 @endsection
 <script>
-    function validateImage(input) {
-        const file = input.files[0];
-        const errorElement = document.getElementById('file-ip-1-error');
-        const previewElement = document.getElementById('file-ip-1-preview');
+function validateImage(input) {
+    const file = input.files[0];
+    const errorElement = document.getElementById('file-ip-1-error');
+    const previewElement = document.getElementById('file-ip-1-preview');
 
-        // Clear previous error messages and reset preview
-        errorElement.textContent = '';
-        previewElement.src = '/assets/image/dashboard/innerpece_addpic_icon.svg';
+    // Reset previous error messages and preview
+    errorElement.textContent = '';
+    previewElement.src = '/assets/image/dashboard/innerpece_addpic_icon.svg';
 
-        if (file) {
-            const reader = new FileReader();
+    if (file) {
+        const reader = new FileReader();
 
-            reader.onload = function(e) {
-                const img = new Image();
+        reader.onload = function (e) {
+            const img = new Image();
 
-                img.onload = function() {
-                    console.log('Image loaded with width: ' + img.width + ' and height: ' + img.height);
-                    
-                    // Check if the image exceeds the limit of 600x120
-                    if (img.width > 600 && img.height > 120) {
-                        console.log("Dimensions exceed allowed size!"); // Debugging log
-                        showError('Image size must not exceed 600x120 pixels.');
-                        input.value = ''; // Clear the input if the size exceeds limits
-                    } else {
-                        console.log("Image dimensions are valid.");
-                        // Only show the image preview if dimensions are valid
-                        previewElement.src = e.target.result;
-                    }
-                };
-
-                // Handling image load error
-                img.onerror = function() {
-                    console.log("Error loading image file."); // Debugging log for errors
-                    showError("Error loading the image file. It might be corrupted or not a valid image.");
-                };
-
-                img.src = e.target.result;
+            img.onload = function () {
+                // Check image dimensions
+                if (img.width > 600 && img.height > 120) {
+                    showError('Image size must not exceed 600x120 pixels.');
+                    input.value = ''; // Clear the input
+                } else {
+                    // Valid image, update preview
+                    previewElement.src = e.target.result;
+                }
             };
 
-            // Read the image as a data URL
-            reader.readAsDataURL(file);
-        } else {
-            showError('No file selected.');
-        }
-    }
+            img.onerror = function () {
+                showError('Error loading the image. It might be corrupted or not a valid image.');
+                input.value = ''; // Clear the input
+            };
 
-    function showError(message) {
-        const errorElement = document.getElementById('file-ip-1-error');
-        errorElement.textContent = message;
+            img.src = e.target.result;
+        };
+
+        reader.readAsDataURL(file);
+    } else {
+        showError('No file selected.');
     }
+}
+
+function showError(message) {
+    Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: message,
+    });
+
+    // Update the error element text
+    const errorElement = document.getElementById('file-ip-1-error');
+    errorElement.textContent = message;
+}
 </script>
