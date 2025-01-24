@@ -13,6 +13,10 @@
     .custom-message-modal{
         width: 100%!important;
     }
+    .btn-add {
+        background-color: #f0ad4e;
+        color: #f0ad4e;
+    }
 </style>
 <div class="row body-sec py-5  px-5 justify-content-around">
     <div class="col-lg-6">
@@ -44,6 +48,7 @@
                         <th class="text-center"><span> Rating </span></th>
                         <th class='text-center'><span>Date&Time</span></th>
                         <th class="text-center"><span> Comment </span></th>
+                        <th class="text-center"><span>Action</span></th>
                         <!-- <th class="text-center"><span> Status </span></th>
                         <th class="text-center"><span> Action </span></th> -->
                     </tr>
@@ -59,18 +64,25 @@
                     <tr>
                     <td class="text-center">{{ $loop->iteration }}</td>
 
-                    <td class="text-center"><img src="{{ asset($row->user->profile_image ?? 'path/to/default/image.jpg') }}" alt="{{ $row->user->first_name }}" style="max-width: 100px; max-height: 100px; object-fit: cover;"></td>
-                        <td class="text-center">{{ $row->user->first_name }}</td>
-                        <td class="text-center">{{ $row->package->title }}</td>
+                    <td class="text-center"><img src="{{ asset($row->user->profile_image ?? 'path/to/default/image.jpg') }}" alt="" style="max-width: 100px; max-height: 100px; object-fit: cover;"></td>
+                        <td class="text-center">{{ $row->user->first_name ?? 'N/A' }} {{ $row->user->last_name ?? '' }}</td>
+                        <td class="text-center">{{ $row->package->title ?? 'N/A' }}</td>
                         <td class="text-center">{{ $row->rating }}</td>
                         
                         <td class="text-center">{{ $row->created_at }}</td>
                         <td class="text-center">
-                            <button class="btn-add btn-warning view-message-btn" data-message="{{ $row->comment }}" data-bs-toggle="modal" data-bs-target="#customMessageModal">
+                            <button class="btn-add  view-message-btn" data-message="{{ $row->comment }}" data-bs-toggle="modal" data-bs-target="#customMessageModal">
                                 View Comment
                             </button>
                         </td>
-                     
+                        <td class="text-center" style="width: 20%;">
+                        <a href="javascript:void(0);" class="table-link danger delconfirm" data-row_id="{{ $row->id }}" data-act_url="{{ route('admin.review_delete') }}" data-csrf_token="{{ csrf_token() }}">
+                                <span class="fa-stack">
+                                    <i class="fa fa-square fa-stack-2x"></i>
+                                    <i class="fa fa-trash-o fa-stack-1x fa-inverse"></i>
+                                </span>
+                            </a>
+                        </td>
                         
                     @endforeach
                     @endif

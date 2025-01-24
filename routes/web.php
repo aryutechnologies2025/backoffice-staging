@@ -463,6 +463,7 @@ Route::get('/admin/influencer/{influencerId}/affiliate-links', [InfluencersContr
                 Route::post('/{id}/update', 'update')->name('admin.client_review_update');
                 Route::post('/delete', 'delete')->name('admin.client_review_delete');
                 Route::post('/change-status', 'change_status')->name('admin.client_review_status');
+                Route::post('/review_delete', 'review_delete')->name('admin.review_delete');
             });
         });
 

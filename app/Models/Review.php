@@ -10,7 +10,7 @@ class Review extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id', 'package_id', 'comment', 'rating',
+        'user_id', 'package_id', 'comment', 'rating' , 'is_deleted',
     ];
 
    // Relationship with the User model

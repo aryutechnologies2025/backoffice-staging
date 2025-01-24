@@ -25,12 +25,42 @@ class ClientreviewController extends Controller
         
         $title = 'Client Review List';
         $review_dts = Review::with('package' , 'user') // Eager load the related theme
-           
+            ->where('is_deleted', '0')
             ->orderBy('created_at', 'desc')->get();
        
             return view('admin.review.reviewlist', compact('title', 'review_dts'));
     }
 
+    public function review_delete(Request $request)
+    {
+        // Retrieve the request data
+        $record_id = $request->input('record_id');
+
+        // Find the admin record by ID
+        $review = review::find($record_id);
+        if ($review) {
+            // Update the is_deleted field to 1
+            $review->is_deleted = "1";
+
+           
+            $review->save();
+
+            // Prepare the response
+            $response = [
+                'status' => '1',
+                'response' => 'Record marked as deleted successfully.'
+            ];
+        } else {
+            // Record not found
+            $response = [
+                'status' => '0',
+                'response' => 'Record not found.'
+            ];
+        }
+
+        // Return the response as JSON
+        return response()->json($response);
+    }
 
     public function add_form()
     {
