@@ -1139,7 +1139,7 @@ class ProgramApiController extends Controller
             'travel_date' => 'required',
             'rooms_count' => 'required|integer',
             'child_count' => 'required|integer|min:0',
-            'child_age' => 'required|array|min:' . $request->child_count, // Validate as array
+            'child_age' => 'required|array|min:' . ($request->child_count > 0 ? 1 : 0), // Validate as array if child_count > 0
             'child_age.*' => 'integer|min:0', // Validate each age
         ]);
         if ($validator->fails()) {
