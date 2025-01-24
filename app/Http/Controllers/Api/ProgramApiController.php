@@ -141,19 +141,7 @@ class ProgramApiController extends Controller
                     'rating' => $review->rating,
                 ];
             });
-            // $reviews = $package->reviews->map(function ($review) {
-            //     $user = $review->user;
-            //     return [
-            //         'first_name' => $user->first_name ?? null,
-            //         'profile_image' => $user->profile_image ?? null,
-            //         'comment' => $review->comment,
-            //         'rating' => $review->rating,
-            //         'date' => $review->created_at->format('M d, Y'),
-            //     ];
-            // });
-            $reviews = $package->reviews
-            ->sortByDesc('created_at') 
-            ->map(function ($review) {
+            $reviews = $package->reviews->map(function ($review) {
                 $user = $review->user;
                 return [
                     'first_name' => $user->first_name ?? null,
@@ -163,6 +151,7 @@ class ProgramApiController extends Controller
                     'date' => $review->created_at->format('M d, Y'),
                 ];
             });
+           
             $reviewCount = $package->reviews->count();
             $totalReviews = $package->clientReviews->count();
             $averageRating = $package->reviews->avg('rating');
