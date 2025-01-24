@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 // use App\Models\City;
 use App\Models\Clientreview;
 use App\Models\InclusivePackages;
-
+use App\Models\Review;
 class ClientreviewController extends Controller
 {
     public function list(Request $request)
@@ -20,6 +20,17 @@ class ClientreviewController extends Controller
        
             return view('admin.client_review.client_reviewlist', compact('title', 'review_dts'));
     }
+    public function review_list(Request $request)
+    {
+        
+        $title = 'Client Review List';
+        $review_dts = Review::with('package' , 'user') // Eager load the related theme
+           
+            ->orderBy('created_at', 'desc')->get();
+       
+            return view('admin.review.reviewlist', compact('title', 'review_dts'));
+    }
+
 
     public function add_form()
     {

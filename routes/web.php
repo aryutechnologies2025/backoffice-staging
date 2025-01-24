@@ -231,6 +231,8 @@ Route::prefix('/')->group(function () {
             });
         });
        // web.php
+       Route::get('/track-click/{id}', [InfluencersController::class, 'trackClick'])->name('affiliate.link.track');
+
 Route::get('/admin/influencer/{influencerId}/affiliate-links', [InfluencersController::class, 'getAffiliateLinks']);
 // routes/web.php
 
@@ -454,6 +456,7 @@ Route::get('/admin/influencer/{influencerId}/affiliate-links', [InfluencersContr
         Route::controller(ClientreviewController::class)->group(function () {
             Route::prefix('client_review')->group(function () {
                 Route::get('/', 'list')->name('admin.client_review_list');
+                Route::get('/review_list' , 'review_list')->name('admin.review_review_list');
                 Route::get('/add', 'add_form')->name('admin.client_review_add_form');
                 Route::get('/{id}/edit', 'edit_form')->name('admin.client_review_edit_form');
                 Route::post('/insert', 'insert')->name('admin.client_review_insert');
