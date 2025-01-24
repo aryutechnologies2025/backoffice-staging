@@ -23,9 +23,9 @@
     </div>
     <div class="col-lg-6">
         <div class="d-flex justify-content-end">
-            <a href="{{ route('admin.client_review_add_form') }}">
+            <!-- <a href="{{ route('admin.client_review_add_form') }}">
                 <button class="btn btn-add px-5" type="button">Add Review</button>
-            </a>
+            </a> -->
         </div>
     </div>
 </div>
