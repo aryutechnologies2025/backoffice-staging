@@ -1258,10 +1258,12 @@ class ProgramApiController extends Controller
                 'email' => $enquiry->email,
                 'phone' => $enquiry->phone,
                 'comments' => $enquiry->comments,
+                'travel_destination' => $enquiry->travel_destination,
+
             ]));
 
             // Send email to admin
-            Mail::to('barathkrishnamoorthy17@gmail.com')->send(new adminEmail([
+            Mail::to('barathkrishnamoorthy5585@gmail.com')->send(new adminEmail([
                 'name' => $enquiry->name,
                 'email' => $enquiry->email,
                 'phone' => $enquiry->phone,
