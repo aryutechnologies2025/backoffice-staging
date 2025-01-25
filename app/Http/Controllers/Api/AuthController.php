@@ -120,7 +120,7 @@ class AuthController extends Controller
             }
         }
 
-        $filePath1 = null;
+        
         if ($request->hasFile('image_1')) {
             try {
                 $file1 = $request->file('image_1');
