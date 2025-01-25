@@ -152,7 +152,10 @@ class AuthController extends Controller
 
         $details->profile_image = $filePath1;
         $details->save();
-        return response()->json(['message' => 'User updated successfully!'], 200);
+        return response()->json([
+            'message' => 'User updated successfully!',
+        'user' => $details,
+        ], 200);
     }
 
 
