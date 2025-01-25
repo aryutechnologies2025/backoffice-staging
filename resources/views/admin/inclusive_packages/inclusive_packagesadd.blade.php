@@ -230,7 +230,7 @@ a {
                                         accept="image/png, image/jpeg, image/svg+xml" onchange="validateImage(this)">
                                     <div id="file-ip-1-error" class="text-danger"></div>
 
-                                    <small class="text-danger d-block mt-2 text-center">* Upload size [640x120]</small>
+                                    <small class="text-danger d-block mt-2 text-center">* Upload size [1200x120]</small>
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -612,26 +612,57 @@ a {
                             </div>
                         </div>
 
-                        <div class="row mb-2">
-                            <div class="col">
-                                <div class="form-body px-5 rounded-4">
-                                    <h4 class="fw-bold mb-3">9. Location</h4>
-                                    <div class="mb-1">
-                                        <div id="camp-rule-container">
-                                            <div class="row g-2 mb-2 camp-rule-field">
-                                                <div class="col">
-                                                    <label class="mb-2">Google Map<span
-                                                            class="text-danger">*</span></label>
-                                                    <input type="text" name="google_map" id="google_map"
-                                                        class="form-control py-2 rounded-3 shadow-sm"
-                                                        placeholder="Google Map" required value="{{old('google_map')}}">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <div class="row mb-3">
+    <div class="col">
+        <div class="form-body px-1 py-3 rounded-4">
+            <h4 class="fw-bold mb-3">9. Location</h4>
+            <div>
+                <div class="row align-items-start">
+                    <!-- Google Map Input -->
+                    <div class="col-lg-6">
+                        <label for="google_map" class="fw-bold mb-3">Google Map<span class="text-danger">*</span></label>
+                        <input 
+                            type="text" 
+                            id="google_map" 
+                            name="google_map" 
+                            class="form-control py-3 rounded-3 shadow-sm"
+                            placeholder="Enter Google Map Embed Iframe" 
+                            required>
+                    </div>
+                    <!-- Map Preview Iframe -->
+                    <div class="col-lg-6">
+                        <label class="fw-bold mb-3">Map Preview</label>
+                        <iframe 
+                            id="map_preview" 
+                            width="100%" 
+                            height="250" 
+                            frameborder="0" 
+                            style="border:0;" 
+                            allowfullscreen 
+                            aria-hidden="false" 
+                            tabindex="0">
+                        </iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('google_map').addEventListener('input', function () {
+        const inputValue = this.value;
+        const iframeSrcMatch = inputValue.match(/src=["']([^"']+)["']/); // Extract the src attribute value
+        const mapPreviewIframe = document.getElementById('map_preview');
+        
+        if (iframeSrcMatch && iframeSrcMatch[1]) {
+            mapPreviewIframe.src = iframeSrcMatch[1]; // Set the extracted src to the iframe
+        } else {
+            mapPreviewIframe.removeAttribute('src'); // Clear the iframe if input is invalid
+        }
+    });
+</script>
+
 
                         <div class="row mb-2">
                             <div class="col">

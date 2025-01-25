@@ -78,7 +78,7 @@ return [
     'strict' => true,
     'engine' => null,
     'options'   => [
-        PDO::ATTR_PERSISTENT => true, // Enable persistent connections
+        PDO::ATTR_PERSISTENT => true, 
     ],
   
 ],

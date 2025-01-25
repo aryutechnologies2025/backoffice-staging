@@ -29,6 +29,7 @@ Route::prefix('v1')->group(function () {
 
         // Auth Routes
         Route::post('/signup', [AuthController::class, 'signup']);
+        Route::post('/update-profile/{id}', [AuthController::class, 'user_update']);
         Route::post('/login', [AuthController::class, 'login']);
         Route::post('/contact', [AuthController::class, 'store_contact']); // Contact Form
         //header enquiry form
@@ -82,7 +83,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Wishlist Management
     Route::post('/add-remove-wishlist', [ProgramApiController::class, 'manage_wishlist']);
-
+    Route::get('/get-wishlist', [ProgramApiController::class, 'getWishlist']);
     // Program Details
     
     Route::post('/enquiry-form', [ProgramApiController::class, 'enquiry_form_insert']);

@@ -93,7 +93,7 @@ class AuthController extends Controller
                 'is_deleted' => "0",
                 'created_by' => "user",
                 'created_date' => now(),
-               
+
             ]);
 
             // Return success response
@@ -108,6 +108,54 @@ class AuthController extends Controller
         }
     }
 
+    public function user_update(Request $request, $id)
+    {
+         //profile image
+        $profilePath = public_path('/uploads/profiles_pic');
+
+        if (!file_exists($profilePath)) {
+            if (!mkdir($profilePath, 0755, true) && !is_dir($profilePath)) {
+                Log::error('Failed to create directory: ' . $profilePath);
+                return response()->json(['error' => 'Failed to create upload directory'], 500);
+            }
+        }
+
+        $filePath1 = null;
+        if ($request->hasFile('image_1')) {
+            try {
+                $file1 = $request->file('image_1');
+                $filename1 = time() . '_1.' . $file1->getClientOriginalExtension();
+                $file1->move($profilePath, $filename1);
+                $filePath1 = 'uploads/profiles_pic/' . $filename1;
+
+                // Log success
+                Log::info('File uploaded successfully: ' . $filePath1);
+            } catch (\Exception $e) {
+                // Log error and return response
+                Log::error('File upload error: ' . $e->getMessage());
+                return response()->json(['error' => 'File upload failed'], 500);
+            }
+        }
+        $details = User::find($id);
+        // dd($details);
+        $details->first_name = $request->input('first_name');
+        $details->last_name = $request->input('last_name');
+        $details->email = $request->input('email');
+        $details->dob = $request->input('dob');
+        $details->phone = $request->input('phone');
+        $details->street = $request->input('street');
+        $details->city = $request->input('city');
+        $details->state = $request->input('state');
+        $details->zip_province_code = $request->input('zip_province_code');
+        $details->country = $request->input('country');
+       
+
+        $details->profile_image = $filePath1;
+        $details->save();
+        return response()->json(['message' => 'User updated successfully!'], 200);
+    }
+
+
     public function login(Request $request)
     {
         // Validation
@@ -119,9 +167,9 @@ class AuthController extends Controller
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
-       // dump('check');
+        // dump('check');
 
-       // dump($request->input('email'));
+        // dump($request->input('email'));
         // echo '<pre>';
         // print_r($user);
         // echo '</pre>';
@@ -181,9 +229,6 @@ class AuthController extends Controller
             'token' => $token,
             'user_details' => $userDetails,
         ], 200);
-
-
-
     }
 
 
@@ -199,7 +244,7 @@ class AuthController extends Controller
 
         // Return only the dummy key
         return response()->json([
-            'csrfToken' => $dummyKey, 
+            'csrfToken' => $dummyKey,
         ]);
     }
 
@@ -320,62 +365,57 @@ class AuthController extends Controller
 
     public function store_contact(Request $request)
     {
-      
-
-           $fname=$request->input('first_name');
-           $lname=$request->input('last_name');
-           $email=$request->input('email');
-           $phone=$request->input('phone');
-           $msg= $request->input('message');
-
-           
-            //    $fname='test';
-            //    $lname='test';
-            //    $email='test@gmail.com';
-            //    $phone='12345678';
-            //    $msg= 'test_msg';
 
 
-            // Store the contact us data
-            $contact = ContactUs::create([
-               // 'user_id' => $userId,  from react login user id
-                'first_name' =>$fname,
-                'last_name' =>$lname,
-                'email' =>$email,
-                'phone' =>  $phone,
-                'message' =>  $msg
-
-                
-            ]);
-            try {
-                // Send email to the client
-                Mail::to($contact->email)->send(new ContactEmail([
-                    'name' => $contact->first_name,
-                    'email' => $contact->email,
-                    'phone' => $contact->phone,
-                    'comments' => $contact->message,
-                ]));
-        
-                // Send email to admin
-                Mail::to('barathkrishnamoorthy17@gmail.com')->send(new ContactAdminEmail([
-                    'name' => $contact->first_name,
-                    'email' => $contact->email,
-                    'phone' => $contact->phone,
-                    'comments' => $contact->message,
-                   
-                ]));
-            } catch (\Exception $e) {
-                // Log any email sending errors
-                Log::error('Mail failed: ' . $e->getMessage());
-            }
-            return response()->json([
-                'message' => 'Contact message sent successfully!',
-                'contact' => $contact
-            ], 201);
+        $fname = $request->input('first_name');
+        $lname = $request->input('last_name');
+        $email = $request->input('email');
+        $phone = $request->input('phone');
+        $msg = $request->input('message');
 
 
-       
+        //    $fname='test';
+        //    $lname='test';
+        //    $email='test@gmail.com';
+        //    $phone='12345678';
+        //    $msg= 'test_msg';
+
+
+        // Store the contact us data
+        $contact = ContactUs::create([
+            // 'user_id' => $userId,  from react login user id
+            'first_name' => $fname,
+            'last_name' => $lname,
+            'email' => $email,
+            'phone' =>  $phone,
+            'message' =>  $msg
+
+
+        ]);
+        try {
+            // Send email to the client
+            Mail::to($contact->email)->send(new ContactEmail([
+                'name' => $contact->first_name,
+                'email' => $contact->email,
+                'phone' => $contact->phone,
+                'comments' => $contact->message,
+            ]));
+
+            // Send email to admin
+            Mail::to('barathkrishnamoorthy17@gmail.com')->send(new ContactAdminEmail([
+                'name' => $contact->first_name,
+                'email' => $contact->email,
+                'phone' => $contact->phone,
+                'comments' => $contact->message,
+
+            ]));
+        } catch (\Exception $e) {
+            // Log any email sending errors
+            Log::error('Mail failed: ' . $e->getMessage());
+        }
+        return response()->json([
+            'message' => 'Contact message sent successfully!',
+            'contact' => $contact
+        ], 201);
     }
 }
-
-

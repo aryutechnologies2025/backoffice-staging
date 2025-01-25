@@ -1119,6 +1119,26 @@ class ProgramApiController extends Controller
     }
 
 
+    //getting the enquiry details list by id by user
+    public function getEnquiryDetailsById(Request $request, $id)
+    {
+        $enquiryDetails = EnquiryDetail::where('user_id', $id)->get();
+
+        if ($enquiryDetails->isEmpty()) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'No enquiry details found for the user.',
+                'data' => null
+            ], 404);
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Enquiry details retrieved successfully.',
+            'data' => $enquiryDetails
+        ], 200);
+    }
+   
 
     // public function getClientNotification(Request $request, $id)
     // {
@@ -1378,6 +1398,8 @@ class ProgramApiController extends Controller
             ], 401);
         }
 
+        
+
         $userId = $user->id; // Get the authenticated user's ID
         $programId = $request->input('program_id');
         $action = $request->input('action');
@@ -1434,6 +1456,33 @@ class ProgramApiController extends Controller
         }
     }
 
+    //getting the wishlist list by id
+    public function getWishlist(Request $request)
+    {
+        // Get the authenticated user
+        $user = $request->user(); // This assumes you are using Laravel Sanctum or Passport
+
+        if (!$user) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Unauthorized. Please login to continue.',
+                'data' => null
+            ], 401);
+        }
+
+        $userId = $user->id; // Get the authenticated user's ID
+
+        // Fetch the wishlist entries
+        $wishlist = Program_wishlist::where('user_id', $userId)
+            ->with('program_dts')
+            ->get();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Wishlist retrieved successfully.',
+            'data' => $wishlist
+        ], 200);
+    }
 
     // Retrieve all enquiries
     // public function index()

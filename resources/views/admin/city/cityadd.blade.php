@@ -129,7 +129,7 @@
 
                 img.onload = function () {
                     // Check dimensions
-                    if (img.width > 600 || img.height > 120) {
+                    if (img.width > 600 && img.height > 120) {
                         showSweetError('Image size must not exceed 600x120 pixels.');
                         input.value = ''; // Clear the input
                     } else {
