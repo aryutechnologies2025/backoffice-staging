@@ -34,7 +34,10 @@ Route::prefix('v1')->group(function () {
         Route::post('/contact', [AuthController::class, 'store_contact']); // Contact Form
         //header enquiry form
         Route::post('/home-enquiry-form', [ProgramApiController::class, 'home_enquiry_form_insert']);
+        //for profile
+        Route::get('/get-wishlist', [ProgramApiController::class, 'getWishlist']);
 
+        // Route::post('/getEnquiryDetailsByEmail', [ProgramApiController::class, 'getEnquiryDetailsByEmail']);
         // Site Content Routes
         Route::get('/settings', [SiteApiController::class, 'getSettings']);
         Route::get('/header-content', [SiteApiController::class, 'getheader_dts']);
@@ -83,9 +86,9 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Wishlist Management
     Route::post('/add-remove-wishlist', [ProgramApiController::class, 'manage_wishlist']);
-    Route::get('/get-wishlist', [ProgramApiController::class, 'getWishlist']);
     // Program Details
-    
+    Route::post('/getEnquiryDetailsByEmail', [ProgramApiController::class, 'getEnquiryDetailsByEmail']);
+
     Route::post('/enquiry-form', [ProgramApiController::class, 'enquiry_form_insert']);
     // Route::post('/enquiry-mail/{id}', [ProgramApiController::class, 'getClientNotification']);
     // Amenities

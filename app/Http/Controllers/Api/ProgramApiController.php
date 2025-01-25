@@ -1118,16 +1118,25 @@ class ProgramApiController extends Controller
         ], 201);
     }
 
-
-    //getting the enquiry details list by id by user
-    public function getEnquiryDetailsById(Request $request, $id)
+    //getting the enquiry details by user email to match the enquiry details email
+    public function getEnquiryDetailsByEmail(Request $request)
     {
-        $enquiryDetails = EnquiryDetail::where('user_id', $id)->get();
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email|max:255',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        $email = $request->input('email');
+
+        $enquiryDetails = EnquiryDetail::where('email', $email)->get();
 
         if ($enquiryDetails->isEmpty()) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'No enquiry details found for the user.',
+                'message' => 'No enquiry details found for the provided email.',
                 'data' => null
             ], 404);
         }
