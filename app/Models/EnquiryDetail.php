@@ -29,7 +29,7 @@ class EnquiryDetail extends Model
         'program_title',
         'child_count',
         'child_age',
-        'user_id'
+        'image',
        
     ];
     public function package()
