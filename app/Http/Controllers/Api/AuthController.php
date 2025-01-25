@@ -109,83 +109,69 @@ class AuthController extends Controller
     }
 
     public function user_update(Request $request, $id)
-{
-    // Find the user
-    $details = User::find($id);
-
-    if (!$details) {
-        return response()->json([
-            'error' => 'User not found.'
-        ], 404);
-    }
-
-    // Validate the request
-    $request->validate([
-        'first_name' => 'string|max:255',
-        'last_name' => 'string|max:255',
-        'email' => 'email|unique:users,email,' . $id,
-        'dob' => 'nullable|date',
-        'phone' => 'nullable|string|max:20',
-        'street' => 'nullable|string|max:255',
-        'city' => 'nullable|string|max:255',
-        'state' => 'nullable|string|max:255',
-        'zip_province_code' => 'nullable|string|max:20',
-        'country' => 'nullable|string|max:255',
-        'image_1' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Optional image validation
-    ]);
-
-    // Profile image upload
-    $profilePath = public_path('/uploads/profiles_pic');
-
-    if (!file_exists($profilePath)) {
-        if (!mkdir($profilePath, 0755, true) && !is_dir($profilePath)) {
-            Log::error('Failed to create directory: ' . $profilePath);
-            return response()->json(['error' => 'Failed to create upload directory.'], 500);
+    {
+        // Find the user
+        $details = User::find($id);
+    
+        if (!$details) {
+            return response()->json([
+                'error' => 'User not found.'
+            ], 404);
         }
-    }
-
-    $filePath1 = $details->profile_image; // Keep the existing profile image
-
-    if ($request->hasFile('image_1')) {
-        try {
-            $file1 = $request->file('image_1');
-            $filename1 = time() . '_1.' . $file1->getClientOriginalExtension();
-            $file1->move($profilePath, $filename1);
-            $filePath1 = 'uploads/profiles_pic/' . $filename1;
-
-            // Log success
-            Log::info('File uploaded successfully: ' . $filePath1);
-
-            // Optional: Delete the old profile image if it exists
-            if ($details->profile_image && file_exists(public_path($details->profile_image))) {
-                unlink(public_path($details->profile_image));
+    
+        // Profile image upload
+        $profilePath = public_path('/uploads/profiles_pic');
+    
+        if (!file_exists($profilePath)) {
+            if (!mkdir($profilePath, 0755, true) && !is_dir($profilePath)) {
+                Log::error('Failed to create directory: ' . $profilePath);
+                return response()->json(['error' => 'Failed to create upload directory.'], 500);
             }
-        } catch (\Exception $e) {
-            Log::error('File upload error: ' . $e->getMessage());
-            return response()->json(['error' => 'File upload failed.'], 500);
         }
+    
+        $filePath1 = $details->profile_image; // Keep the existing profile image
+    
+        if ($request->hasFile('image_1')) {
+            try {
+                $file1 = $request->file('image_1');
+                $filename1 = time() . '_1.' . $file1->getClientOriginalExtension();
+                $file1->move($profilePath, $filename1);
+                $filePath1 = 'uploads/profiles_pic/' . $filename1;
+    
+                // Log success
+                Log::info('File uploaded successfully: ' . $filePath1);
+    
+                // Optional: Delete the old profile image if it exists
+                if ($details->profile_image && file_exists(public_path($details->profile_image))) {
+                    unlink(public_path($details->profile_image));
+                }
+            } catch (\Exception $e) {
+                Log::error('File upload error: ' . $e->getMessage());
+                return response()->json(['error' => 'File upload failed.'], 500);
+            }
+        }
+    
+        // Update user details
+        $details->first_name = $request->input('first_name', $details->first_name);
+        $details->last_name = $request->input('last_name', $details->last_name);
+        $details->email = $request->input('email', $details->email);
+        $details->dob = $request->input('dob', $details->dob);
+        $details->phone = $request->input('phone', $details->phone);
+        $details->street = $request->input('street', $details->street);
+        $details->city = $request->input('city', $details->city);
+        $details->state = $request->input('state', $details->state);
+        $details->zip_province_code = $request->input('zip_province_code', $details->zip_province_code);
+        $details->country = $request->input('country', $details->country);
+        $details->profile_image = $filePath1;
+    
+        $details->save();
+    
+        return response()->json([
+            'message' => 'User updated successfully!',
+            'user' => $details,
+        ], 200);
     }
-
-    // Update user details
-    $details->first_name = $request->input('first_name');
-    $details->last_name = $request->input('last_name');
-    $details->email = $request->input('email');
-    $details->dob = $request->input('dob');
-    $details->phone = $request->input('phone');
-    $details->street = $request->input('street');
-    $details->city = $request->input('city');
-    $details->state = $request->input('state');
-    $details->zip_province_code = $request->input('zip_province_code');
-    $details->country = $request->input('country');
-    $details->profile_image = $filePath1;
-
-    $details->save();
-
-    return response()->json([
-        'message' => 'User updated successfully!',
-        'user' => $details,
-    ], 200);
-}
+    
 
 
 
