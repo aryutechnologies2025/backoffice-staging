@@ -1470,20 +1470,44 @@ class ProgramApiController extends Controller
     //getting the wishlist list by id
     public function getWishlist(Request $request)
     {
-        $userId = $request->input('user_id'); // Get the user ID from the request
-
-        // Fetch the wishlist entries
+        // Retrieve user_id from the request query or fallback to the authenticated user
+        $userId = $request->query('user_id') ?? ($request->user() ? $request->user()->id : null);
+    
+        if (!$userId) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Unauthorized or missing user ID. Please provide a valid user ID or login to continue.',
+                'data' => null
+            ], 401);
+        }
+    
+        // Fetch the wishlist entries for the provided user ID
         $wishlist = Program_wishlist::where('user_id', $userId)
-            ->with('program_dts')
+            ->with('program_dts') // Assuming the `program_dts` relationship is correctly defined
             ->get();
-
+    
         return response()->json([
             'status' => 'success',
             'message' => 'Wishlist retrieved successfully.',
             'data' => $wishlist
         ], 200);
     }
+    
+    // public function getWishlist(Request $request)
+    // {
+    //     $userId = $request->input('user_id'); // Get the user ID from the request
 
+    //     // Fetch the wishlist entries
+    //     $wishlist = Program_wishlist::where('user_id', $userId)
+    //         ->with('program_dts')
+    //         ->get();
+
+    //     return response()->json([
+    //         'status' => 'success',
+    //         'message' => 'Wishlist retrieved successfully.',
+    //         'data' => $wishlist
+    //     ], 200);
+    // }
     // Retrieve all enquiries
     // public function index()
     // {

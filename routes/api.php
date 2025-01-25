@@ -32,9 +32,7 @@ Route::prefix('v1')->group(function () {
         Route::post('/update-profile/{id}', [AuthController::class, 'user_update']);
         Route::post('/login', [AuthController::class, 'login']);
         Route::post('/contact', [AuthController::class, 'store_contact']); // Contact Form
-        //for profile
-     Route::get('/get-wishlist', [ProgramApiController::class, 'getWishlist']);
-
+        
         //header enquiry form
         Route::post('/home-enquiry-form', [ProgramApiController::class, 'home_enquiry_form_insert']);
        
@@ -96,5 +94,10 @@ Route::middleware('auth:sanctum')->group(function () {
     // Amenities
     Route::get('/get-amenities', [ProgramApiController::class, 'getAmenities']);
     Route::post('/getActivitiesbyId', [ProgramApiController::class, 'getAmenitiesFoodBeverageActivitiesSafetyFeaturesById']);
+
+    //for profile
+    Route::get('/get-wishlist', [ProgramApiController::class, 'getWishlist']);
+    Route::post('/add-remove-wishlist', [ProgramApiController::class, 'manage_wishlist']);
+
 });
 
