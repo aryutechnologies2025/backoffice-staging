@@ -30,15 +30,13 @@ class EnquiryDetail extends Model
         'child_count',
         'child_age',
         
-        'users_id'
+       
     ];
     public function package()
 {
     return $this->belongsTo(InclusivePackages::class, 'package_id');
 }
-    public function user(){
-        return $this->belongsTo(User::class, 'users_id');
-    }
+   
     
 public function themes()
 {
