@@ -25,7 +25,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Models\AffiliateLinkClick;
 use App\Models\HomeEnquiryDetail;
 use App\Mail\enquiryEmail;
-use App\Mail\AdminEmail;
+use App\Mail\adminEmail;
 
 class ProgramApiController extends Controller
 {
