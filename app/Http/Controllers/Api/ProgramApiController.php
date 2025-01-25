@@ -1470,18 +1470,7 @@ class ProgramApiController extends Controller
     //getting the wishlist list by id
     public function getWishlist(Request $request)
     {
-        // Get the authenticated user
-        $user = $request->user(); // This assumes you are using Laravel Sanctum or Passport
-
-        if (!$user) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Unauthorized. Please login to continue.',
-                'data' => null
-            ], 401);
-        }
-
-        $userId = $user->id; // Get the authenticated user's ID
+        $userId = $request->input('user_id'); // Get the user ID from the request
 
         // Fetch the wishlist entries
         $wishlist = Program_wishlist::where('user_id', $userId)
