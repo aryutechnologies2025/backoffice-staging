@@ -84,6 +84,8 @@
                                     data-bs-target="#viewModal">
                                     View
                                 </button>
+                                <a href="{{ route('admin.enquiry.followups', $row->id) }}" class="btn btn-primary">Follow-up</a>
+
                             </td>
                         </tr>
                         @endforeach

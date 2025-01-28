@@ -51,6 +51,10 @@ public function review()
 {
     return $this->hasOne(Review::class, 'enquiry_id'); // Adjust 'enquiry_id' to the correct foreign key
 }
+public function followUps()
+{
+    return $this->hasMany(FollowUp::class, 'enquiry_id', 'id');
+}
 
 }
 

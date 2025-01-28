@@ -409,7 +409,9 @@ Route::get('/admin/influencer/{influencerId}/affiliate-links', [InfluencersContr
             });
         });
 
-
+        Route::get('admin/enquiry/followups/{id}', [EnquiryController::class, 'viewFollowUps'])->name('admin.enquiry.followups');
+        Route::post('admin/enquiry/addFollowUp/{id}', [EnquiryController::class, 'addFollowUp'])->name('admin.enquiry.addFollowUp');
+        
         //Home Enquiry Details
         Route::controller(HomeEnquiryController::class)->group(function () {
             Route::prefix('home-enquiry')->group(function () {
