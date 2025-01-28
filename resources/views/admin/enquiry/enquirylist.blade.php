@@ -82,10 +82,10 @@
                                     data-date="{{ $row->created_at->format('d/m/Y h:i:s') }}"
                                     data-bs-toggle="modal" 
                                     data-bs-target="#viewModal">
-                                    View
+                                    <i class="bi bi-eye-fill"></i>
                                 </button>
-                                <a href="{{ route('admin.enquiry.followups', $row->id) }}" class="btn btn-primary">Follow-up</a>
-
+                                <a href="{{ route('admin.enquiry.followups', $row->id) }}" class="btn btn-primary"><i class="bi bi-list-check"></i></a>
+                            
                             </td>
                         </tr>
                         @endforeach

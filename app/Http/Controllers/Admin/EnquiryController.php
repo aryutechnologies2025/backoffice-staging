@@ -22,7 +22,7 @@ class EnquiryController extends Controller
         $validated = $request->validate([
             'follow_up_date' => 'required|date',
             
-            'lead_source' => 'nullable|string',
+            'lead_source' => 'required|string',
             'lead_status' => 'nullable|string',
             'follow_up_notes' => 'nullable|string',
             'action_required' => 'nullable|string',
@@ -44,5 +44,11 @@ class EnquiryController extends Controller
         return view('admin.enquiry.followups', compact('enquiry'));
     }
     
-   
+    public function showEnquiryForm($id)
+    {
+        $enquiry = EnquiryDetail::findOrFail($id); // Retrieve the enquiry by ID
+    
+        return view('admin.enquiry.form', compact('enquiry')); // Pass the enquiry to the view
+    }
+    
 }
