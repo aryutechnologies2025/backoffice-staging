@@ -17,8 +17,6 @@
     padding-left: 30px; /* Adjust as per your layout */
     padding-right: 30px; /* Consistent padding for both sides */
 }
-
-
 </style>
 <div class="container-wrapper pt-5">
     <div class="row">

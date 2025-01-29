@@ -19,6 +19,7 @@ class FollowUp extends Model
         'action_required',
         'deal_value',
         'assigned_to',
+        'next_follow_up_date',
     ];
 
     // Define relationship with EnquiryDetail (one-to-many)

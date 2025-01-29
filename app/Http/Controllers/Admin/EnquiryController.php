@@ -29,6 +29,7 @@ class EnquiryController extends Controller
             'deal_value' => 'nullable|numeric',
             'assigned_to' => 'nullable|string',
             'interest_prospect' => 'nullable|string',
+            'next_follow_up_date' => 'nullable|date',
         ]);
     
         $validated['enquiry_id'] = $enquiryId;
@@ -47,7 +48,7 @@ class EnquiryController extends Controller
     public function showEnquiryForm($id)
     {
         $enquiry = EnquiryDetail::findOrFail($id); // Retrieve the enquiry by ID
-    
+
         return view('admin.enquiry.form', compact('enquiry')); // Pass the enquiry to the view
     }
     
