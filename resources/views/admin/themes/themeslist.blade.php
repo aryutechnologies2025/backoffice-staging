@@ -54,7 +54,7 @@
                     <tr>
                     <td class="text-center">{{ $loop->iteration }}</td>
 
-                    <td class="text-center"><img src="{{ asset($row->theme_pic) }}"  alt="{{ $row->alternate_name ?? 'Default Alt Text' }}" style="max-width: 100px; max-height: 100px; object-fit: cover;"></td>
+                    <td class="text-center"><img src="{{ asset($row->theme_pic) ? asset($row->theme_pic) : asset($settings->footer_logo) }}"  alt="{{ $row->alternate_name ?? 'Default Alt Text' }}" style="max-width: 100px; max-height: 100px; object-fit: cover;"></td>
                         <td class="text-center">{{ $row->themes_name }}</td>
                         <td class="text-center">{{ $row->created_at }}</td>
                         @php
