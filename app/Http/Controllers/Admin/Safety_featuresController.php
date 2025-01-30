@@ -17,7 +17,7 @@ class Safety_featuresController extends Controller
 
     public function add_form()
     {
-        $title = 'Safety Features Add';
+        $title = 'Add SafetyFeatures';
         return view('admin.safety_features.safety_featuresadd', compact('title'));
     }
 
@@ -60,7 +60,7 @@ class Safety_featuresController extends Controller
     public function edit_form(Request $request, $id)
     {
         $safety_feature_details = Safetyfeatures::find($id);
-        $title = 'Safety Features Edit';
+        $title = 'Edit SafetyFeatures';
         return view('admin.safety_features.safety_featuresedit', compact('safety_feature_details', 'title'));
     }
 

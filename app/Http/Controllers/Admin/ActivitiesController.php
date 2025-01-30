@@ -17,7 +17,7 @@ class ActivitiesController extends Controller
 
     public function add_form()
     {
-        $title = 'Activities Add';
+        $title = 'Add Activities';
         return view('admin.activities.activitiesadd', compact('title'));
     }
 
@@ -60,7 +60,7 @@ class ActivitiesController extends Controller
     public function edit_form(Request $request, $id)
     {
         $activities_details = Activities::find($id);
-        $title = 'Activities Edit';
+        $title = 'Edit Activities';
         return view('admin.activities.activitiesedit', compact('activities_details', 'title'));
     }
 

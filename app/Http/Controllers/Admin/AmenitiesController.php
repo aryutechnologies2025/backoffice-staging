@@ -61,7 +61,7 @@ class AmenitiesController extends Controller
     public function edit_form(Request $request, $id)
     {
         $amenities_details = Amenities::find($id);
-        $title = 'Amenities Edit';
+        $title = 'Edit Amenities';
         return view('admin.amenities.amenitiesedit', compact('amenities_details', 'title'));
     }
 

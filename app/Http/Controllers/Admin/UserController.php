@@ -18,7 +18,7 @@ class UserController extends Controller
 
     public function add_form()
     {
-        $title = 'User Add';
+        $title = 'Add User';
 
         return view('admin.user.useradd', compact('title'));
     }
@@ -72,7 +72,7 @@ class UserController extends Controller
     public function edit_form(Request $request, $id)
     {
         $user_details = User::find($id);
-        $title = 'User Edit';
+        $title = 'Edit User';
         return view('admin.user.useredit', compact('user_details', 'title'));
     }
 

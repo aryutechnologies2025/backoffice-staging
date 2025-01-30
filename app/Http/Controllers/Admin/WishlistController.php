@@ -10,7 +10,7 @@ class WishlistController extends Controller
 {
     public function list(Request $request)
     {
-        $title = 'Wish List';
+        $title = 'WishList';
         // $wishlist_dts = Program_wishlist::with('user','program_dts')->orderBy('created_at', 'desc')->paginate(10);
 
         $wishlist_dts = Program_wishlist::with(['program_dts', 'user'])

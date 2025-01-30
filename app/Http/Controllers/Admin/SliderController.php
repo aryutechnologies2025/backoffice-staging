@@ -19,7 +19,7 @@ class SliderController extends Controller
 
     public function add_form()
     {
-        $title = ' ADD SLIDER ';
+        $title = ' Add Slider';
 
         return view('admin.slider.slideradd', compact('title'));
     }
@@ -68,7 +68,7 @@ class SliderController extends Controller
     public function edit_form(Request $request, $id)
     {
         $slider_details = Slider::find($id);
-        $title = 'Slider Edit';
+        $title = 'Edit Slider';
         return view('admin.slider.slideredit', compact('slider_details', 'title'));
     }
 
