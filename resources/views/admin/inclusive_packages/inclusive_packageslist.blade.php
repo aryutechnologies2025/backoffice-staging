@@ -82,7 +82,7 @@
                     <td class="text-center">{{ $loop->iteration }}</td>
 
                         <td class="text-center">{{ $row->title }}</td>
-                        <td class="text-center"><img src="{{ $row->cover_img ? asset($row->cover_img) : '/assets/image/dashboard/plane.svg' }}" alt="{{ $row->alternate_name ?? 'Default Alt Text' }}" style="max-width: 100px; max-height: 100px; object-fit: cover;"></td>
+                        <td class="text-center"><img src="{{ $row->cover_img ? asset($row->cover_img) : asset($settings->footer_logo) }}" alt="{{ $row->alternate_name ?? 'Default Alt Text' }}" style="max-width: 100px; max-height: 100px; object-fit: cover;"></td>
 
                         <td class="text-center">{{ $formattedCategories }}</td>
                         <td class="text-center">{{ $row->created_at }}</td>
