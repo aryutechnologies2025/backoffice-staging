@@ -13,7 +13,7 @@ class EnquiryController extends Controller
     public function list(Request $request)
     {
         $title = 'Booking List';
-        $enquiry_dts = EnquiryDetail::with('package')->orderBy('created_at', 'desc')->paginate(10);
+        $enquiry_dts = EnquiryDetail::with('package')->orderBy('created_at', 'desc')->get();
 
         return view('admin.enquiry.enquirylist', compact('title', 'enquiry_dts'));
     }
