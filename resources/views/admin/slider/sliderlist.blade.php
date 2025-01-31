@@ -62,7 +62,7 @@
 
                         <td class="text-center">
                             <img
-                                src="{{ asset($row->slider_image) }}"
+                                src="{{ asset($row->slider_image) ? asset($row->slider_image) : asset($settings->footer_logo) }}"
                                 alt="{{ $row->alternate_name ?? 'Default Alt Text' }}"
                                 style="max-width: 70px; max-height: 70px; object-fit: cover;">
                         </td>

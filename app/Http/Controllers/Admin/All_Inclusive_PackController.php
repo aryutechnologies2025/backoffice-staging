@@ -54,7 +54,7 @@ public function deleteImage(Request $request)
 
     public function add_form()
     {
-        $title = 'ADD PROGRAM';
+        $title = 'Add Program';
         $cities = City::where('status', "1")->where('is_deleted', "0")->pluck('city_name', 'id');
         $themes = Themes::where('status', "1")->where('is_deleted', "0")->pluck('themes_name', 'id');
         $amenities = Amenities::where('status', "1")->where('is_deleted', "0")->get();

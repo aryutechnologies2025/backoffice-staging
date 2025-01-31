@@ -64,7 +64,7 @@ class ClientreviewController extends Controller
 
     public function add_form()
     {
-        $title = 'Client Review Add';
+        $title = 'Add ClientReview';
         $program_dts = InclusivePackages::where('status', "1")->where('is_deleted', "0")->pluck('title', 'id');
         return view('admin.client_review.client_reviewadd', compact('title','program_dts'));
     }

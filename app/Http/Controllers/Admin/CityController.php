@@ -18,7 +18,7 @@ class CityController extends Controller
 
     public function add_form()
     {
-        $title = 'ADD DESTINATION';
+        $title = 'Add Destination';
 
         return view('admin.city.cityadd', compact('title'));
     }
@@ -64,7 +64,7 @@ class CityController extends Controller
     public function edit_form(Request $request, $id)
     {
         $city_details = City::find($id);
-        $title = 'Destination Edit';
+        $title = 'Edit Destination';
         return view('admin.city.cityedit', compact('city_details', 'title'));
     }
 

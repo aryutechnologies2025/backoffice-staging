@@ -51,13 +51,13 @@
                         <div class="row g-2 mb-4">
                             <div class="col">
                                 <label class="fw-bold mb-4 "> Email <span class="text-danger">*</span></label>
-                                <input type="text" placeholder="Email" id="email" name="email" value="{{old('email')}}" class="form-control py-2 rounded-3 shadow-sm" required>
+                                <input type="text" placeholder="Email" id="email" name="email" class="form-control py-2 rounded-3 shadow-sm" required>
                             </div>
                         </div>
                         <div class="row g-2 mb-4">
                             <div class="col">
-                                <label class="fw-bold mb-4 "> password <span class="text-danger">*</span></label>
-                                <input type="password" placeholder="Password" id="password" name="password"  class="form-control py-2 rounded-3 shadow-sm" required>
+                                <label class="fw-bold mb-4 "> Password <span class="text-danger">*</span></label>
+                                <input type="password" placeholder="Password" id="password" name="password" class="form-control py-2 rounded-3 shadow-sm" required>
                             </div>
                         </div>
                         <div class="row g-2 mb-4">

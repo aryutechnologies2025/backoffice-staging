@@ -17,7 +17,7 @@ class Food_beverageController extends Controller
 
     public function add_form()
     {
-        $title = 'Food&Beverage Add';
+        $title = 'Add Food&Beverage';
         return view('admin.food_beverage.food_beverageadd', compact('title'));
     }
 
@@ -58,7 +58,7 @@ class Food_beverageController extends Controller
     public function edit_form(Request $request, $id)
     {
         $food_beverage_details = FoodBeverage::find($id);
-        $title = 'Food&Beverage Edit';
+        $title = 'Edit Food&Beverage';
         return view('admin.food_beverage.food_beverageedit', compact('food_beverage_details', 'title'));
     }
 

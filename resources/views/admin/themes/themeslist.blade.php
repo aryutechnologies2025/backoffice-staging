@@ -10,7 +10,9 @@
     .city{
         color:blue;
     }
-
+    .img{
+        background-color: #ddd !important;
+    }
 </style>
 <div class="row body-sec py-5  px-5 justify-content-around">
     <div class="col-lg-6">
@@ -54,7 +56,7 @@
                     <tr>
                     <td class="text-center">{{ $loop->iteration }}</td>
 
-                    <td class="text-center"><img src="{{ asset($row->theme_pic) }}"  alt="{{ $row->alternate_name ?? 'Default Alt Text' }}" style="max-width: 100px; max-height: 100px; object-fit: cover;"></td>
+                    <td class="text-center"><img src="{{ $row->theme_pic ? asset($row->theme_pic) : asset('uploads/settings/footer_logo/innerpecelogo.png') }}"  alt="{{ $row->alternate_name ?? 'Default Alt Text' }}" style="max-width: 100px; max-height: 100px; object-fit: cover;"></td>
                         <td class="text-center">{{ $row->themes_name }}</td>
                         <td class="text-center">{{ $row->created_at }}</td>
                         @php

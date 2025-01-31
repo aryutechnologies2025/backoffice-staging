@@ -43,6 +43,8 @@
                         <th class="text-center"><span>Email</span></th>
                         <th class="text-center"><span>Phone</span></th>
                         <th class="text-center"><span>Program Name</span></th>
+                        <th class="text-center"><span>Next Follow Up</span></th>
+                        <th class="text-center"><span>Assigned To</span></th>
                         <th class="text-center"><span>Time&Date</span></th>
                         <th class="text-center"><span>Action</span></th>
                     </tr>
@@ -50,7 +52,7 @@
                 <tbody>
                     @if($enquiry_dts->isEmpty())
                         <tr>
-                            <td colspan="5" class="text-center">No records</td>
+                            <td colspan="9" class="text-center">No records</td>
                         </tr>
                     @else
                         @foreach ($enquiry_dts as $row)
@@ -60,6 +62,13 @@
                             <td class="text-center">{{ $row->email }}</td>
                             <td class="text-center">{{ $row->phone }}</td>
                             <td class="text-center">{{ $row->program_title }}</td>
+                            @if($row->followUps->isNotEmpty())
+                                <td class="text-center">{{ $row->followUps->last()->next_follow_up_date }}</td>
+                                <td class="text-center">{{ $row->followUps->last()->assigned_to }}</td>
+                            @else
+                                <td class="text-center">N/A</td>
+                                <td class="text-center">N/A</td>
+                            @endif
                             <td class="text-center">{{ $row->created_at }}</td>
                             <td class="text-center">
                                 <button class="btn btn-warning view-btn" 
@@ -82,8 +91,9 @@
                                     data-date="{{ $row->created_at->format('d/m/Y h:i:s') }}"
                                     data-bs-toggle="modal" 
                                     data-bs-target="#viewModal">
-                                    View
+                                    <i class="bi bi-eye-fill"></i>
                                 </button>
+                                <a href="{{ route('admin.enquiry.followups', $row->id) }}" class="btn btn-primary"><i class="bi bi-list-check"></i></a>
                             </td>
                         </tr>
                         @endforeach
@@ -142,7 +152,7 @@
                 "emptyTable": "No records found",
             },
             "columnDefs": [
-                { "orderable": true, "targets": [0, 4] } // Disable ordering on specific columns
+                { "orderable": true, "targets": [0, 7] } // Disable ordering on specific columns
             ]
         });
 

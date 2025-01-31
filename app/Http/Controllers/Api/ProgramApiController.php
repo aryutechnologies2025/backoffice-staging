@@ -1095,7 +1095,7 @@ class ProgramApiController extends Controller
             ]));
 
             // Send email to admin
-            Mail::to('barathkrishnamoorthy17@gmail.com')->send(new adminEmail([
+            Mail::to('bharath@innerpece.com')->send(new adminEmail([
                 'name' => $enquiry->name,
                 'email' => $enquiry->email,
                 'phone' => $enquiry->phone,
@@ -1272,7 +1272,7 @@ class ProgramApiController extends Controller
             ]));
 
             // Send email to admin
-            Mail::to('barathkrishnamoorthy5585@gmail.com')->send(new adminEmail([
+            Mail::to('bharath@innerpece.com')->send(new adminEmail([
                 'name' => $enquiry->name,
                 'email' => $enquiry->email,
                 'phone' => $enquiry->phone,

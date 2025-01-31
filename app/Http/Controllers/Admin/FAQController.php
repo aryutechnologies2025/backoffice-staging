@@ -17,7 +17,7 @@ class FAQController extends Controller
 
     public function add_form()
     {
-        $title = 'FAQ Add';
+        $title = 'add FAQ';
         return view('admin.faq.faqadd', compact('title'));
     }
 
@@ -44,7 +44,7 @@ class FAQController extends Controller
     public function edit_form(Request $request, $id)
     {
         $faq_details = FAQ::find($id);
-        $title = 'FAQ Edit';
+        $title = 'Edit FAQ';
         return view('admin.faq.faqedit', compact('faq_details', 'title'));
     }
 

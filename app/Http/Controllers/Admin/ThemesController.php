@@ -18,7 +18,7 @@ class ThemesController extends Controller
 
     public function add_form()
     {
-        $title = 'ADD THEME';
+        $title = 'Add Theme';
         return view('admin.themes.themesadd', compact('title'));
     }
 
@@ -64,7 +64,7 @@ class ThemesController extends Controller
     public function edit_form(Request $request, $id)
     {
         $themes_details = Themes::find($id);
-        $title = 'Theme Edit';
+        $title = 'Edit Theme';
         return view('admin.themes.themesedit', compact('themes_details', 'title'));
     }
 

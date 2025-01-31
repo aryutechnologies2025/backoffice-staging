@@ -47,6 +47,19 @@ class InfluencersController extends Controller
 
     public function insert(Request $request)
     {
+        // Validate the request data
+        $request->validate([
+            'full_name' => 'required|string|max:255',
+            'email' => 'required|email|unique:influencers,email',
+            'phone' => 'required|string|max:15',
+            'whatsapp' => 'nullable|string|max:15',
+            'gender' => 'required|string|in:male,female,other',
+            'age' => 'required|integer|min:18|max:100',
+            'city' => 'required|string|max:255',
+            'state' => 'required|string|max:255',
+            'country' => 'required|string|max:255',
+        ]);
+
         $influencer = new Influencers;
         
         // Generate the next reference_id
