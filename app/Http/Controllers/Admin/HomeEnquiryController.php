@@ -11,7 +11,7 @@ class HomeEnquiryController extends Controller
     public function list(Request $request)
     {
         $title = 'Enquiry List';
-        $enquiry_dts = HomeEnquiryDetail::orderBy('created_at', 'desc')->paginate(10);
+        $enquiry_dts = HomeEnquiryDetail::orderBy('created_at', 'desc')->get();
 
         return view('admin.home_enquiry.homeenquirylist', compact('title', 'enquiry_dts'));
     }
