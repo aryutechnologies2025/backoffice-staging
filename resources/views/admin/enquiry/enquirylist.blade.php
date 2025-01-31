@@ -43,6 +43,7 @@
                         <th class="text-center"><span>Email</span></th>
                         <th class="text-center"><span>Phone</span></th>
                         <th class="text-center"><span>Program Name</span></th>
+                        <th class="text-center"><span>Refered By</span></th>
                         <th class="text-center"><span>Next Follow Up</span></th>
                         <th class="text-center"><span>Assigned To</span></th>
                         <th class="text-center"><span>Time&Date</span></th>
@@ -62,6 +63,7 @@
                             <td class="text-center">{{ $row->email }}</td>
                             <td class="text-center">{{ $row->phone }}</td>
                             <td class="text-center">{{ $row->program_title }}</td>
+                            <td class="text-center">{{$row->reference_id}}</td>
                             @if($row->followUps->isNotEmpty())
                                 <td class="text-center">{{ $row->followUps->last()->next_follow_up_date }}</td>
                                 <td class="text-center">{{ $row->followUps->last()->assigned_to }}</td>
