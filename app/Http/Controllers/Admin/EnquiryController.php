@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\EnquiryDetail;
 use App\Models\FollowUp;
+use Illuminate\Support\Facades\Log;
 
 class EnquiryController extends Controller
 {
@@ -13,7 +14,7 @@ class EnquiryController extends Controller
     {
         $title = 'Booking List';
         $enquiry_dts = EnquiryDetail::with('package')->orderBy('created_at', 'desc')->get();
-
+       
         return view('admin.enquiry.enquirylist', compact('title', 'enquiry_dts'));
     }
 
@@ -23,13 +24,13 @@ class EnquiryController extends Controller
             'follow_up_date' => 'required|date',
             
             'lead_source' => 'required|string',
-            'lead_status' => 'nullable|string',
-            'follow_up_notes' => 'nullable|string',
-            'action_required' => 'nullable|string',
-            'deal_value' => 'nullable|numeric',
-            'assigned_to' => 'nullable|string',
-            'interest_prospect' => 'nullable|string',
-            'next_follow_up_date' => 'nullable|date',
+            'lead_status' => 'required|string',
+            'follow_up_notes' => 'required|string',
+            'action_required' => 'required|string',
+            'deal_value' => 'required|numeric',
+            'assigned_to' => 'required|string',
+            'interest_prospect' => 'required|string',
+            'next_follow_up_date' => 'required|date',
         ]);
     
         $validated['enquiry_id'] = $enquiryId;

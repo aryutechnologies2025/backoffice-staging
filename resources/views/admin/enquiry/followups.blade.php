@@ -74,7 +74,7 @@
         <strong><label for="budget_per_head" class="form-label">Budget</label></strong>
         <input type="text" id="budget_per_head" name="budget_per_head" class="form-control" value="{{ $enquiry->budget_per_head }}" disabled>
     </div>
-    
+
     <div class="col-md-4">
         <strong><label for="comments" class="form-label">Notes</label></strong>
         <textarea id="comments" name="comments" class="form-control" disabled>{{ $enquiry->comments }}</textarea>
@@ -82,29 +82,41 @@
 </div>
 
 <div class="col-lg-6 ">
-        <div class="d-flex justify-content-start">
-            <button class="mt-5 btn btn-primary">Add Follow-up data</button>
-        </div>
+    <div class="d-flex justify-content-start">
+        <button class="mt-5 btn btn-primary">Add Follow-up data</button>
     </div>
-<form method="POST" action="{{ route('admin.enquiry.addFollowUp', $enquiry->id) }}">
+</div>
+<form id="form_valid" method="POST" action="{{ route('admin.enquiry.addFollowUp', $enquiry->id) }}" >
     <script>
-        document.querySelector('button.mt-5').addEventListener('click', function() {
-            document.querySelector('form').style.display = 'block';
-        });
-
         document.addEventListener('DOMContentLoaded', function() {
             document.querySelector('form').style.display = 'none';
+
+            document.querySelector('button.mt-5').addEventListener('click', function(e) {
+                e.preventDefault(); // Prevent default button behavior
+                document.querySelector('form').style.display = 'block';
+            });
+        });
+        document.querySelector('button.mt-5').addEventListener('click', function(e) {
+            document.querySelector('form').style.display = 'block';
+            e.preventDefault();
+        });
+
+        document.addEventListener('DOMConten   tLoaded', function() {
+            document.querySelector('form').style.display = 'none';
+            e.preventDefault();
+            
         });
     </script>
     @csrf
     <div class="row mb-3">
         <div class="col-md-4">
-         <strong>   <label for="follow_up_date" class="form-label">Follow-up Date</label></strong>
-            <input type="date" id="follow_up_date" name="follow_up_date" class="form-control" required>
+            <strong> <label  class="form-label">Follow-up Date <span class="text-danger">*</span></label></strong>
+            
+            <input type="date" id="follow_up_date" name="follow_up_date" class="form-control"  >
         </div>
         <div class="col-md-4">
-        <strong><label for="lead_source" class="form-label">Lead Source</label></strong>
-            <select id="lead_source" name="lead_source" class="form-control">
+            <strong><label for="lead_source" class="form-label">Lead Source <span class="text-danger">*</span> </label></strong>
+            <select id="lead_source" name="lead_source" class="form-control" >
                 <option value="Facebook">Facebook</option>
                 <option value="Instagram">Instagram</option>
                 <option value="Website">Website</option>
@@ -113,8 +125,8 @@
             </select>
         </div>
         <div class="col-md-4">
-        <strong>   <label for="lead_status" class="form-label">Lead Status</label></strong>
-            <select id="lead_status" name="lead_status" class="form-control">
+            <strong> <label for="lead_status" class="form-label">Lead Status <span class="text-danger">*</span></label></strong>
+            <select id="lead_status" name="lead_status" class="form-control" >
                 <option value="No Response-Initial">No Response-Initial</option>
                 <option value="⁠No Response-In Process">⁠No Response-In Process</option>
                 <option value="No Service">No Service</option>
@@ -127,34 +139,39 @@
     </div>
     <div class="row mb-3">
         <div class="col-md-4">
-        <strong><label for="follow_up_notes" class="form-label">Follow-up Notes</label></strong>
-            <textarea id="follow_up_notes" name="follow_up_notes" class="form-control"></textarea>
+            <strong><label for="follow_up_notes" class="form-label">Follow-up Notes <span class="text-danger">*</span></label></strong>
+            <textarea id="follow_up_notes" name="follow_up_notes" class="form-control" ></textarea>
         </div>
-        
-            <div class="col-md-4">
-            <strong>   <label for="action_required" class="form-label">Action Required</label></strong>
-            <select id="action_required" name="action_required" class="form-control">
+
+        <div class="col-md-4">
+            <strong> <label for="action_required" class="form-label">Action Required <span class="text-danger">*</span></label></strong>
+            <select id="action_required" name="action_required" class="form-control" >
                 <option value="Opened">Opened</option>
                 <option value="Closed">Closed</option>
             </select>
         </div>
         <div class="col-md-4">
-        <strong><label for="deal_value" class="form-label">Deal Value</label></strong>
-            <input type="number" step="0.01" id="deal_value" name="deal_value" class="form-control">
+            <strong><label for="deal_value" class="form-label">Deal Value <span class="text-danger">*</span></label></strong>
+            <input type="number" step="0.01" id="deal_value" name="deal_value" class="form-control" >
         </div>
     </div>
     <div class="row mb-3 ">
         <div class="col-md-4">
-        <strong>   <label for="interest_prospect" class="form-label">Accepted Or Rejected</label></strong>
-            <input type="text" id="interest_prospect" name="interest_prospect" class="form-control">
+            <strong> <label for="interest_prospect" class="form-label">Accepted Or Rejected</label> <span class="text-danger">*</span></strong>
+            <select id="interest_prospect" name="interest_prospect" class="form-control" >
+                <!-- <option disabled></option> -->
+                <option value="accepted">Accepted</option>
+                <option value="rejected">Rejected</option>
+            </select>
+            <!-- <input type="text" id="interest_prospect" name="interest_prospect" class="form-control"> -->
         </div>
         <div class="col-md-4">
-        <strong><label for="assigned_to" class="form-label">Assigned To</label></strong>
-            <input type="text" id="assigned_to" name="assigned_to" class="form-control">
+            <strong><label for="assigned_to" class="form-label">Assigned To</label> <span class="text-danger">*</span></strong>
+            <input type="text" id="assigned_to" name="assigned_to" class="form-control" >
         </div>
         <div class="col-md-4">
-        <strong>   <label for="interest_prospect" class="form-label">Next FollowUp Date</label></strong>
-            <input type="date" id="next_follow_up_date" name="next_follow_up_date" class="form-control">
+            <strong> <label for="interest_prospect" class="form-label">Next FollowUp Date</label><span class="text-danger">*</span></strong>
+            <input type="date" id="next_follow_up_date" name="next_follow_up_date" class="form-control" >
         </div>
     </div>
     <button type="submit" class="btn btn-add">Submit</button>

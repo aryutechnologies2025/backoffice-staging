@@ -50,7 +50,7 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-3 mb-3">
-                        <label for="full_name" class="form-label">Full Name</label>
+                        <label for="full_name" class="form-label">Full Name <span class="text-danger">*</span></label>
                         <input type="text" class="form-control rounded-3 shadow-sm"
                             id="full_name"
                             name="full_name"
@@ -58,7 +58,7 @@
                             required>
                     </div>
                     <div class="col-md-3 mb-3">
-                        <label for="email" class="form-label">Email</label>
+                        <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
                         <input type="email" class="form-control rounded-3 shadow-sm"
                             id="email"
                             name="email"
@@ -66,7 +66,7 @@
                             required>
                     </div>
                     <div class="col-md-3 mb-3">
-                        <label for="phone" class="form-label">Phone</label>
+                        <label for="phone" class="form-label">Phone <span class="text-danger">*</span></label>
                         <input type="number" class="form-control rounded-3 shadow-sm"
                             id="phone"
                             name="phone"
@@ -74,7 +74,7 @@
                             required>
                     </div>
                     <div class="col-md-3 mb-3">
-                        <label for="whatsapp" class="form-label">WhatsApp</label>
+                        <label for="whatsapp" class="form-label">WhatsApp <span class="text-danger">*</span></label>
                         <input type="number" class="form-control rounded-3 shadow-sm"
                             id="whatsapp"
                             name="whatsapp"
@@ -82,7 +82,7 @@
                             required>
                     </div>
                     <div class="col-md-3 mb-3">
-                        <label for="gender" class="form-label">Gender</label>
+                        <label for="gender" class="form-label">Gender <span class="text-danger">*</span></label>
                         <select class="form-select rounded-3 shadow-sm"
                             id="gender"
                             name="gender"
@@ -93,7 +93,7 @@
                         </select>
                     </div>
                     <div class="col-md-2 mb-3">
-                        <label for="age" class="form-label">Age</label>
+                        <label for="age" class="form-label">Age <span class="text-danger">*</span></label>
                         <input type="number" class="form-control rounded-3 shadow-sm"
                             id="age"
                             name="age"
@@ -101,21 +101,21 @@
                             required>
                     </div>
                     <div class="col-md-2 mb-3">
-                        <label for="city" class="form-label">City</label>
+                        <label for="city" class="form-label">City <span class="text-danger">*</span></label>
                         <input type="text" class="form-control rounded-3 shadow-sm"
                             id="city"
                             name="city"
                             value="{{ old('city', $influencer->city ?? '') }}">
                     </div>
                     <div class="col-md-2 mb-3">
-                        <label for="state" class="form-label">State</label>
+                        <label for="state" class="form-label">State <span class="text-danger">*</span></label>
                         <input type="text" class="form-control rounded-3 shadow-sm"
                             id="state"
                             name="state"
                             value="{{ old('state', $influencer->state ?? '') }}">
                     </div>
                     <div class="col-md-3 mb-3">
-                        <label for="country" class="form-label">Country</label>
+                        <label for="country" class="form-label">Country <span class="text-danger">*</span></label>
                         <input type="text" class="form-control rounded-3 shadow-sm"
                             id="country"
                             name="country"
