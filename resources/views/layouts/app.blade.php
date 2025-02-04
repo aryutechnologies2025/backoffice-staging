@@ -87,8 +87,9 @@
             
                 <div class="nav_list ">
                     <img class="pt-3 px-2 " style="width:90%;" src="{{ $settings->footer_logo ? asset($settings->footer_logo) : '/assets/image/login/inner_pece_logo.png' }}" alt="">
+                    <div>
                     <img src="{{$settings->fav_icon}}" alt=""  class="px-4 mb-3 invisible navbar-toggle-icon" style="height: 30px;">
-
+                    </div>
                     <a href="{{ route('admin.dashboard') }}" class="nav_link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }} mb-3 text-white">
                         <img src="/assets/image/dashboard/Dashboard.svg" alt="">
                         <span class="nav_name">Dashboard</span>
