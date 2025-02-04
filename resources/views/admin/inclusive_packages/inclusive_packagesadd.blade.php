@@ -1,110 +1,110 @@
 @extends('layouts.app')
 @Section('content')
 <style>
-a:hover {
-    color: red;
-}
-
-a {
-    color: rgb(37, 150, 190);
-}
-
-.add {
-    color: blue;
-}
-
-/* Align the form with the title */
-.container-wrapper {
-    padding-left: 30px;
-    /* Adjust as per your layout */
-    padding-right: 30px;
-    /* Consistent padding for both sides */
-}
-
-.form-body {
-
-    padding-top: 1% !important;
-    padding-bottom: 1% !important;
-    width: 90% !important;
-}
-
-.mb-1 {
-    margin-bottom: .5rem !important;
-}
-
-.px-5 {
-
-    padding-left: 0rem !important;
-}
-
-.form-control {
-    width: 80%;
-}
-
-.btn-add {
-    background-color: #2164c0 !important;
-    border-radius: 15px !important;
-    color: #FFF !important;
-
-    padding: 10px 28px !important;
-    font-size: 12px !important;
-    border: none;
-
-}
-
-
-.form-input img {
-    width: 80%;
-}
-
-.form-check-input {
-    margin-top: 1% !important;
-}
-
-.form-check-input {
-    margin-top: 1% !important;
-}
-
-.plan-item .form-label {
-    font-weight: bold;
-}
-
-.plan-item input {
-    margin-bottom: 10px;
-}
-
-.btn-add {
-    background-color: #007bff;
-    color: white;
-    font-weight: bold;
-}
-
-#summernote3 {
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    padding: 10px;
-    background-color: #fff;
-}
-
-.form-switch {
-    padding-left: 3.5em;
-}
-
-.form-input label {
-    width: 150% !important;
-    border: 0px !important;
-}
-
-.forms {
-    margin-left: 38px;
-}
-
-@media (min-width: 768px) {
-    .col-md-1 {
-        flex: 0 0 auto;
-        width: 10.33333333%;
+    a:hover {
+        color: red;
     }
-}
+
+    a {
+        color: rgb(37, 150, 190);
+    }
+
+    .add {
+        color: blue;
+    }
+
+    /* Align the form with the title */
+    .container-wrapper {
+        padding-left: 30px;
+        /* Adjust as per your layout */
+        padding-right: 30px;
+        /* Consistent padding for both sides */
+    }
+
+    .form-body {
+
+        padding-top: 1% !important;
+        padding-bottom: 1% !important;
+        width: 90% !important;
+    }
+
+    .mb-1 {
+        margin-bottom: .5rem !important;
+    }
+
+    .px-5 {
+
+        padding-left: 0rem !important;
+    }
+
+    .form-control {
+        width: 80%;
+    }
+
+    .btn-add {
+        background-color: #2164c0 !important;
+        border-radius: 15px !important;
+        color: #FFF !important;
+
+        padding: 10px 28px !important;
+        font-size: 12px !important;
+        border: none;
+
+    }
+
+
+    .form-input img {
+        width: 80%;
+    }
+
+    .form-check-input {
+        margin-top: 1% !important;
+    }
+
+    .form-check-input {
+        margin-top: 1% !important;
+    }
+
+    .plan-item .form-label {
+        font-weight: bold;
+    }
+
+    .plan-item input {
+        margin-bottom: 10px;
+    }
+
+    .btn-add {
+        background-color: #007bff;
+        color: white;
+        font-weight: bold;
+    }
+
+    #summernote3 {
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        padding: 10px;
+        background-color: #fff;
+    }
+
+    .form-switch {
+        padding-left: 3.5em;
+    }
+
+    .form-input label {
+        width: 150% !important;
+        border: 0px !important;
+    }
+
+    .forms {
+        margin-left: 38px;
+    }
+
+    @media (min-width: 768px) {
+        .col-md-1 {
+            flex: 0 0 auto;
+            width: 10.33333333%;
+        }
+    }
 </style>
 <div class="container-wrapper py-5">
     <div class="row">
@@ -238,13 +238,13 @@ a {
                                     <div id="file-ip-1-error" class="text-danger"></div>
                                     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
                                     <script>
-                                    function showError(message) {
-                                        Swal.fire({
-                                            icon: 'error',
-                                            title: 'Oops...',
-                                            text: message,
-                                        });
-                                    }
+                                        function showError(message) {
+                                            Swal.fire({
+                                                icon: 'error',
+                                                title: 'Oops...',
+                                                text: message,
+                                            });
+                                        }
                                     </script>
                                     <div class="col-12 pt-4 forms">
                                         <label class="">Upload Image Name <span class="text-danger">*</span></label>
@@ -278,18 +278,18 @@ a {
                         </div>
 
                         <script>
-                        // Function to add a new photo field dynamically
-                        let photoCount = 1; // Initialize photo count
+                            // Function to add a new photo field dynamically
+                            let photoCount = 1; // Initialize photo count
 
-                        function addPhotoField() {
-                            const container = document.getElementById('photo-upload-container');
-                            photoCount++; // Increment photo count
+                            function addPhotoField() {
+                                const container = document.getElementById('photo-upload-container');
+                                photoCount++; // Increment photo count
 
-                            // Create a new photo upload field with delete button
-                            const photoField = document.createElement('div');
-                            photoField.classList.add('col-lg-2', 'photo-upload-field');
+                                // Create a new photo upload field with delete button
+                                const photoField = document.createElement('div');
+                                photoField.classList.add('col-lg-2', 'photo-upload-field');
 
-                            photoField.innerHTML = `
+                                photoField.innerHTML = `
                         <div class="form-input">
                             <label for="file-ip-${photoCount}" class="px-4 py-2 text-center">
                                 <img class="text-center mt-3" id="file-ip-${photoCount}-preview" src="/assets/image/dashboard/innerpece_addpic_icon.svg">
@@ -303,30 +303,30 @@ a {
                         </div>
                     `;
 
-                            // Append the new photo field to the container
-                            container.appendChild(photoField);
-                        }
-
-                        // Function to preview the image after selection
-                        function previewImage(event, inputElement) {
-                            const file = event.target.files[0];
-                            const reader = new FileReader();
-
-                            reader.onload = function() {
-                                const preview = inputElement.previousElementSibling.querySelector('img');
-                                preview.src = reader.result;
-                            };
-
-                            if (file) {
-                                reader.readAsDataURL(file);
+                                // Append the new photo field to the container
+                                container.appendChild(photoField);
                             }
-                        }
 
-                        // Function to delete the image container
-                        function deletePhoto(button) {
-                            const photoField = button.closest('.photo-upload-field');
-                            photoField.remove();
-                        }
+                            // Function to preview the image after selection
+                            function previewImage(event, inputElement) {
+                                const file = event.target.files[0];
+                                const reader = new FileReader();
+
+                                reader.onload = function() {
+                                    const preview = inputElement.previousElementSibling.querySelector('img');
+                                    preview.src = reader.result;
+                                };
+
+                                if (file) {
+                                    reader.readAsDataURL(file);
+                                }
+                            }
+
+                            // Function to delete the image container
+                            function deletePhoto(button) {
+                                const photoField = button.closest('.photo-upload-field');
+                                photoField.remove();
+                            }
                         </script>
 
 
@@ -336,8 +336,8 @@ a {
 
                             <h4 class="fw-bold mb-2 py-2">2. Location</h4>
                             <div class="col-md-3 mb-3">
-                        <textarea class="form-control rounded-3 shadow-sm" id="location" name="location" placeholder=" Enter City & State & Country" required>{{ old('location') }}</textarea>
-                    </div>
+                                <textarea class="form-control rounded-3 shadow-sm" id="location" name="location" placeholder=" Enter City & State & Country" required>{{ old('location') }}</textarea>
+                            </div>
 
                         </div>
 
@@ -509,19 +509,25 @@ a {
                                                 </select>
                                             </div>
                                             <div class="col-md-3 py-4">
-                                                <label class="pb-2 "> Actual Amount <span
-                                                        class="text-danger">*</span></label>
-                                                <input type="number" id="price" name="price"
-                                                    class="form-control py-2 rounded-3 shadow-sm"
-                                                    placeholder="Actual Amount" value="{{old('price')}}" required>
+                                                <label class="pb-2">Actual Amount <span class="text-danger">*</span></label>
+                                                <div class="position-relative">
+                                                    <span class="position-absolute top-50 start-0 translate-middle-y ps-3">₹</span>
+                                                    <input type="number" id="price" name="price"
+                                                        class="form-control py-2 ps-5 rounded-3 shadow-sm"
+                                                        placeholder="Actual Amount" value="{{old('price')}}" required>
+                                                </div>
                                             </div>
+
                                             <div class="col-md-3 py-4">
-                                                <label class=" pb-2 "> Discount Amount <span
-                                                        class="text-danger">*</span></label>
-                                                <input type="number" id="actual_price" name="actual_price"
-                                                    class="form-control py-2 rounded-3 shadow-sm"
-                                                    placeholder="Actual Price" value="{{old('actual_price')}}" required>
+                                                <label class="pb-2">Discount Amount <span class="text-danger">*</span></label>
+                                                <div class="position-relative">
+                                                    <span class="position-absolute top-50 start-0 translate-middle-y ps-3">₹</span>
+                                                    <input type="number" id="actual_price" name="actual_price"
+                                                        class="form-control py-2 ps-5 rounded-3 shadow-sm"
+                                                        placeholder="Actual Price" value="{{old('actual_price')}}" required>
+                                                </div>
                                             </div>
+
                                         </div>
                                     </div>
                                 </div>
@@ -613,55 +619,55 @@ a {
                         </div>
 
                         <div class="row mb-3">
-    <div class="col">
-        <div class="form-body px-1 py-3 rounded-4">
-            <h4 class="fw-bold mb-3">9. Location</h4>
-            <div>
-                <div class="row align-items-start">
-                    <!-- Google Map Input -->
-                    <div class="col-lg-6">
-                        <label for="google_map" class="fw-bold mb-3">Google Map<span class="text-danger">*</span></label>
-                        <input 
-                            type="text" 
-                            id="google_map" 
-                            name="google_map" 
-                            class="form-control py-3 rounded-3 shadow-sm"
-                            placeholder="Enter Google Map Embed Iframe" 
-                            required>
-                    </div>
-                    <!-- Map Preview Iframe -->
-                    <div class="col-lg-6">
-                        <label class="fw-bold mb-3">Map Preview</label>
-                        <iframe 
-                            id="map_preview" 
-                            width="100%" 
-                            height="250" 
-                            frameborder="0" 
-                            style="border:0;" 
-                            allowfullscreen 
-                            aria-hidden="false" 
-                            tabindex="0">
-                        </iframe>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+                            <div class="col">
+                                <div class="form-body px-1 py-3 rounded-4">
+                                    <h4 class="fw-bold mb-3">9. Location</h4>
+                                    <div>
+                                        <div class="row align-items-start">
+                                            <!-- Google Map Input -->
+                                            <div class="col-lg-6">
+                                                <label for="google_map" class="fw-bold mb-3">Google Map<span class="text-danger">*</span></label>
+                                                <input
+                                                    type="text"
+                                                    id="google_map"
+                                                    name="google_map"
+                                                    class="form-control py-3 rounded-3 shadow-sm"
+                                                    placeholder="Enter Google Map Embed Iframe"
+                                                    required>
+                                            </div>
+                                            <!-- Map Preview Iframe -->
+                                            <div class="col-lg-6">
+                                                <label class="fw-bold mb-3">Map Preview</label>
+                                                <iframe
+                                                    id="map_preview"
+                                                    width="100%"
+                                                    height="250"
+                                                    frameborder="0"
+                                                    style="border:0;"
+                                                    allowfullscreen
+                                                    aria-hidden="false"
+                                                    tabindex="0">
+                                                </iframe>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
-<script>
-    document.getElementById('google_map').addEventListener('input', function () {
-        const inputValue = this.value;
-        const iframeSrcMatch = inputValue.match(/src=["']([^"']+)["']/); // Extract the src attribute value
-        const mapPreviewIframe = document.getElementById('map_preview');
-        
-        if (iframeSrcMatch && iframeSrcMatch[1]) {
-            mapPreviewIframe.src = iframeSrcMatch[1]; // Set the extracted src to the iframe
-        } else {
-            mapPreviewIframe.removeAttribute('src'); // Clear the iframe if input is invalid
-        }
-    });
-</script>
+                        <script>
+                            document.getElementById('google_map').addEventListener('input', function() {
+                                const inputValue = this.value;
+                                const iframeSrcMatch = inputValue.match(/src=["']([^"']+)["']/); // Extract the src attribute value
+                                const mapPreviewIframe = document.getElementById('map_preview');
+
+                                if (iframeSrcMatch && iframeSrcMatch[1]) {
+                                    mapPreviewIframe.src = iframeSrcMatch[1]; // Set the extracted src to the iframe
+                                } else {
+                                    mapPreviewIframe.removeAttribute('src'); // Clear the iframe if input is invalid
+                                }
+                            });
+                        </script>
 
 
                         <div class="row mb-2">
@@ -814,18 +820,18 @@ a {
 
                         <!-- Add custom CSS -->
                         <style>
-                        .custom-checkbox {
-                            width: 25px;
-                            height: 25px;
-                        }
-
-                        /* Ensure responsiveness on all screen sizes */
-                        @media (max-width: 768px) {
                             .custom-checkbox {
-                                width: 20px;
-                                height: 20px;
+                                width: 25px;
+                                height: 25px;
                             }
-                        }
+
+                            /* Ensure responsiveness on all screen sizes */
+                            @media (max-width: 768px) {
+                                .custom-checkbox {
+                                    width: 20px;
+                                    height: 20px;
+                                }
+                            }
                         </style>
 
 
@@ -863,10 +869,10 @@ a {
                         </div>
 
                         <style>
-                        .form-check-input {
-                            transform: scale(1.5);
-                            /* Increase the size of the checkbox */
-                        }
+                            .form-check-input {
+                                transform: scale(1.5);
+                                /* Increase the size of the checkbox */
+                            }
                         </style>
 
                         <div class="col-lg-12 text-end mt-5">
@@ -886,124 +892,124 @@ a {
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <script>
-    $(document).ready(function() {
-        $('#summernote1,#summernote2,#summernote3,#summernote4,#summernote5,#summernote6,#summernote7,#summernote8')
-            .summernote({
-                height: 200 // Set the height of the editor
+        $(document).ready(function() {
+            $('#summernote1,#summernote2,#summernote3,#summernote4,#summernote5,#summernote6,#summernote7,#summernote8')
+                .summernote({
+                    height: 200 // Set the height of the editor
+                });
+            $('#summernote1').summernote({
+                placeholder: 'Hello stand alone ui',
+                tabsize: 2,
+                height: 100,
+                toolbar: [
+                    ['style', ['style']],
+                    ['font', ['bold', 'underline', 'clear']],
+                    ['color', ['color']],
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    ['table', ['table']],
+                    ['insert', ['link', 'picture', 'video']],
+                    ['view', ['fullscreen', 'codeview', 'help']]
+                ]
             });
-        $('#summernote1').summernote({
-            placeholder: 'Hello stand alone ui',
-            tabsize: 2,
-            height: 100,
-            toolbar: [
-                ['style', ['style']],
-                ['font', ['bold', 'underline', 'clear']],
-                ['color', ['color']],
-                ['para', ['ul', 'ol', 'paragraph']],
-                ['table', ['table']],
-                ['insert', ['link', 'picture', 'video']],
-                ['view', ['fullscreen', 'codeview', 'help']]
-            ]
-        });
 
-        $('#summernote2').summernote({
-            placeholder: 'Hello stand alone ui',
-            tabsize: 2,
-            height: 100,
-            toolbar: [
-                ['style', ['style']],
-                ['font', ['bold', 'underline', 'clear']],
-                ['color', ['color']],
-                ['para', ['ul', 'ol', 'paragraph']],
-                ['table', ['table']],
-                ['insert', ['link', 'picture', 'video']],
-                ['view', ['fullscreen', 'codeview', 'help']]
-            ]
-        });
-        $('#summernote3').summernote({
-            placeholder: 'Hello stand alone ui',
-            tabsize: 2,
-            height: 100,
-            toolbar: [
-                ['style', ['style']],
-                ['font', ['bold', 'underline', 'clear']],
-                ['color', ['color']],
-                ['para', ['ul', 'ol', 'paragraph']],
-                ['table', ['table']],
-                ['insert', ['link', 'picture', 'video']],
-                ['view', ['fullscreen', 'codeview', 'help']]
-            ]
-        });
-        $('#summernote4').summernote({
-            placeholder: 'Hello stand alone ui',
-            tabsize: 2,
-            height: 100,
-            toolbar: [
-                ['style', ['style']],
-                ['font', ['bold', 'underline', 'clear']],
-                ['color', ['color']],
-                ['para', ['ul', 'ol', 'paragraph']],
-                ['table', ['table']],
-                ['insert', ['link', 'picture', 'video']],
-                ['view', ['fullscreen', 'codeview', 'help']]
-            ]
-        });
-        $('#summernote5').summernote({
-            placeholder: 'Hello stand alone ui',
-            tabsize: 2,
-            height: 100,
-            toolbar: [
-                ['style', ['style']],
-                ['font', ['bold', 'underline', 'clear']],
-                ['color', ['color']],
-                ['para', ['ul', 'ol', 'paragraph']],
-                ['table', ['table']],
-                ['insert', ['link', 'picture', 'video']],
-                ['view', ['fullscreen', 'codeview', 'help']]
-            ]
-        });
-        $('#summernote6').summernote({
-            placeholder: 'Hello stand alone ui',
-            tabsize: 2,
-            height: 100,
-            toolbar: [
-                ['style', ['style']],
-                ['font', ['bold', 'underline', 'clear']],
-                ['color', ['color']],
-                ['para', ['ul', 'ol', 'paragraph']],
-                ['table', ['table']],
-                ['insert', ['link', 'picture', 'video']],
-                ['view', ['fullscreen', 'codeview', 'help']]
-            ]
-        });
-        $('#summernote7').summernote({
-            placeholder: 'Hello stand alone ui',
-            tabsize: 2,
-            height: 100,
-            toolbar: [
-                ['style', ['style']],
-                ['font', ['bold', 'underline', 'clear']],
-                ['color', ['color']],
-                ['para', ['ul', 'ol', 'paragraph']],
-                ['table', ['table']],
-                ['insert', ['link', 'picture', 'video']],
-                ['view', ['fullscreen', 'codeview', 'help']]
-            ]
-        });
-        $('#summernote8').summernote({
-            placeholder: 'Hello stand alone ui',
-            tabsize: 2,
-            height: 100,
-            toolbar: [
-                ['style', ['style']],
-                ['font', ['bold', 'underline', 'clear']],
-                ['color', ['color']],
-                ['para', ['ul', 'ol', 'paragraph']],
-                ['table', ['table']],
-                ['insert', ['link', 'picture', 'video']],
-                ['view', ['fullscreen', 'codeview', 'help']]
-            ]
-        });
+            $('#summernote2').summernote({
+                placeholder: 'Hello stand alone ui',
+                tabsize: 2,
+                height: 100,
+                toolbar: [
+                    ['style', ['style']],
+                    ['font', ['bold', 'underline', 'clear']],
+                    ['color', ['color']],
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    ['table', ['table']],
+                    ['insert', ['link', 'picture', 'video']],
+                    ['view', ['fullscreen', 'codeview', 'help']]
+                ]
+            });
+            $('#summernote3').summernote({
+                placeholder: 'Hello stand alone ui',
+                tabsize: 2,
+                height: 100,
+                toolbar: [
+                    ['style', ['style']],
+                    ['font', ['bold', 'underline', 'clear']],
+                    ['color', ['color']],
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    ['table', ['table']],
+                    ['insert', ['link', 'picture', 'video']],
+                    ['view', ['fullscreen', 'codeview', 'help']]
+                ]
+            });
+            $('#summernote4').summernote({
+                placeholder: 'Hello stand alone ui',
+                tabsize: 2,
+                height: 100,
+                toolbar: [
+                    ['style', ['style']],
+                    ['font', ['bold', 'underline', 'clear']],
+                    ['color', ['color']],
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    ['table', ['table']],
+                    ['insert', ['link', 'picture', 'video']],
+                    ['view', ['fullscreen', 'codeview', 'help']]
+                ]
+            });
+            $('#summernote5').summernote({
+                placeholder: 'Hello stand alone ui',
+                tabsize: 2,
+                height: 100,
+                toolbar: [
+                    ['style', ['style']],
+                    ['font', ['bold', 'underline', 'clear']],
+                    ['color', ['color']],
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    ['table', ['table']],
+                    ['insert', ['link', 'picture', 'video']],
+                    ['view', ['fullscreen', 'codeview', 'help']]
+                ]
+            });
+            $('#summernote6').summernote({
+                placeholder: 'Hello stand alone ui',
+                tabsize: 2,
+                height: 100,
+                toolbar: [
+                    ['style', ['style']],
+                    ['font', ['bold', 'underline', 'clear']],
+                    ['color', ['color']],
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    ['table', ['table']],
+                    ['insert', ['link', 'picture', 'video']],
+                    ['view', ['fullscreen', 'codeview', 'help']]
+                ]
+            });
+            $('#summernote7').summernote({
+                placeholder: 'Hello stand alone ui',
+                tabsize: 2,
+                height: 100,
+                toolbar: [
+                    ['style', ['style']],
+                    ['font', ['bold', 'underline', 'clear']],
+                    ['color', ['color']],
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    ['table', ['table']],
+                    ['insert', ['link', 'picture', 'video']],
+                    ['view', ['fullscreen', 'codeview', 'help']]
+                ]
+            });
+            $('#summernote8').summernote({
+                placeholder: 'Hello stand alone ui',
+                tabsize: 2,
+                height: 100,
+                toolbar: [
+                    ['style', ['style']],
+                    ['font', ['bold', 'underline', 'clear']],
+                    ['color', ['color']],
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    ['table', ['table']],
+                    ['insert', ['link', 'picture', 'video']],
+                    ['view', ['fullscreen', 'codeview', 'help']]
+                ]
+            });
 
 
 
@@ -1014,11 +1020,11 @@ a {
 
 
 
-        let photoCount = 1; // Start with existing photo field count
+            let photoCount = 1; // Start with existing photo field count
 
-        // Function to generate new photo upload field HTML
-        function createPhotoUploadField(count) {
-            return `
+            // Function to generate new photo upload field HTML
+            function createPhotoUploadField(count) {
+                return `
                 <div class="col-lg-2 photo-upload-field">
                     <div class="form-input">
                         <label for="file-ip-${count}" class="px-4 py-3 text-center">
@@ -1029,138 +1035,138 @@ a {
                     </div>
                 </div>
             `;
-        }
+            }
 
-        // Event listener for the "Add More Photos" button
-        $('#add-photo-btn').on('click', function() {
-            photoCount++;
-            const newFieldHtml = createPhotoUploadField(photoCount);
-            $('#photo-upload-container').append(newFieldHtml);
-        });
+            // Event listener for the "Add More Photos" button
+            $('#add-photo-btn').on('click', function() {
+                photoCount++;
+                const newFieldHtml = createPhotoUploadField(photoCount);
+                $('#photo-upload-container').append(newFieldHtml);
+            });
 
-        // Function to show preview of selected image
-        function showPreview(event, number) {
-            var file = event.target.files[0];
-            var reader = new FileReader();
-            var previewId = "#file-ip-" + number + "-preview";
-            var errorMessageId = "#file-ip-" + number + "-error";
+            // Function to show preview of selected image
+            function showPreview(event, number) {
+                var file = event.target.files[0];
+                var reader = new FileReader();
+                var previewId = "#file-ip-" + number + "-preview";
+                var errorMessageId = "#file-ip-" + number + "-error";
 
-            reader.onload = function(e) {
-                $(previewId).attr('src', e.target.result);
-                $(errorMessageId).text(''); // Clear any previous error message
-            };
+                reader.onload = function(e) {
+                    $(previewId).attr('src', e.target.result);
+                    $(errorMessageId).text(''); // Clear any previous error message
+                };
 
-            if (file) {
-                if (file.size <= 2 * 1024 * 1024) { // 2 MB limit
-                    if (file.type === 'image/png' || file.type === 'image/jpeg') {
-                        reader.readAsDataURL(file);
+                if (file) {
+                    if (file.size <= 2 * 1024 * 1024) { // 2 MB limit
+                        if (file.type === 'image/png' || file.type === 'image/jpeg') {
+                            reader.readAsDataURL(file);
+                        } else {
+                            $(errorMessageId).text('Please upload a valid PNG or JPEG image.');
+                        }
                     } else {
-                        $(errorMessageId).text('Please upload a valid PNG or JPEG image.');
+                        $(errorMessageId).text('File size exceeds 2 MB limit.');
                     }
-                } else {
-                    $(errorMessageId).text('File size exceeds 2 MB limit.');
                 }
             }
-        }
 
-        // Delegate event binding for dynamically added file inputs
-        $('#photo-upload-container').on('change', 'input[type="file"]', function(event) {
-            var number = $(this).data('number'); // Use data attribute to get the number
-            showPreview(event, number);
-        });
-    });
-
-
-    // document.addEventListener('DOMContentLoaded', function() {
-    //     let planCount = 1; // Initialize with existing plan count
-
-    //     // Function to clone the existing plan item
-    //     function createPlanFields() {
-    //         planCount++; // Increment plan count
-    //         const container = document.getElementById('plan-container');
-    //         const template = container.querySelector('.plan-item');
-
-    //         // Clone the template
-    //         const newPlan = template.cloneNode(true);
-
-    //         // Update IDs and Names for new plan items
-    //         newPlan.querySelectorAll('input, textarea').forEach((field) => {
-    //             // Ensure name is array-style and IDs are unique
-    //             field.name = field.name.replace(/\[\]$/, []);
-    //             field.id = field.id + '-' + planCount;
-    //         });
-
-    //         container.appendChild(newPlan);
-    //     }
-
-    //     // Event listener for the "Add" button
-    //     document.getElementById('add-plan-btn').addEventListener('click', function() {
-    //         createPlanFields();
-    //     });
-
-    //     // Event delegation to handle removal of plan items
-    //     document.getElementById('plan-container').addEventListener('click', function(event) {
-    //         if (event.target.closest('.remove-plan')) {
-    //             event.preventDefault();
-    //             const planItem = event.target.closest('.plan-item');
-    //             planItem.remove();
-    //         }
-    //     });
-    // });
-
-    document.addEventListener('DOMContentLoaded', function() {
-        let planCount = 1; // Initialize with existing plan count
-
-        // Function to clone the existing plan item
-        function createPlanFields() {
-            planCount++; // Increment plan count
-            const container = document.getElementById('plan-container');
-            const template = container.querySelector('.plan-item');
-
-            // Clone the template
-            const newPlan = template.cloneNode(true);
-
-            // Update IDs and Names for new plan items
-            newPlan.querySelectorAll('input, textarea').forEach((field) => {
-                // Ensure name is array-style and IDs are unique
-                field.name = field.name.replace(/\[\]$/, []);
-                field.id = field.id + '-' + planCount;
+            // Delegate event binding for dynamically added file inputs
+            $('#photo-upload-container').on('change', 'input[type="file"]', function(event) {
+                var number = $(this).data('number'); // Use data attribute to get the number
+                showPreview(event, number);
             });
-
-            container.appendChild(newPlan);
-
-            // Re-initialize Summernote for newly added fields
-            $('#summernote3').summernote({
-                height: 200
-            });
-        }
-
-        // Event listener for the "Add" button
-        document.getElementById('add-plan-btn').addEventListener('click', function() {
-            createPlanFields();
         });
 
-        // Event delegation to handle removal of plan items
-        document.getElementById('plan-container').addEventListener('click', function(event) {
-            if (event.target.closest('.remove-plan')) {
-                event.preventDefault();
-                const planItem = event.target.closest('.plan-item');
-                planItem.remove();
+
+        // document.addEventListener('DOMContentLoaded', function() {
+        //     let planCount = 1; // Initialize with existing plan count
+
+        //     // Function to clone the existing plan item
+        //     function createPlanFields() {
+        //         planCount++; // Increment plan count
+        //         const container = document.getElementById('plan-container');
+        //         const template = container.querySelector('.plan-item');
+
+        //         // Clone the template
+        //         const newPlan = template.cloneNode(true);
+
+        //         // Update IDs and Names for new plan items
+        //         newPlan.querySelectorAll('input, textarea').forEach((field) => {
+        //             // Ensure name is array-style and IDs are unique
+        //             field.name = field.name.replace(/\[\]$/, []);
+        //             field.id = field.id + '-' + planCount;
+        //         });
+
+        //         container.appendChild(newPlan);
+        //     }
+
+        //     // Event listener for the "Add" button
+        //     document.getElementById('add-plan-btn').addEventListener('click', function() {
+        //         createPlanFields();
+        //     });
+
+        //     // Event delegation to handle removal of plan items
+        //     document.getElementById('plan-container').addEventListener('click', function(event) {
+        //         if (event.target.closest('.remove-plan')) {
+        //             event.preventDefault();
+        //             const planItem = event.target.closest('.plan-item');
+        //             planItem.remove();
+        //         }
+        //     });
+        // });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            let planCount = 1; // Initialize with existing plan count
+
+            // Function to clone the existing plan item
+            function createPlanFields() {
+                planCount++; // Increment plan count
+                const container = document.getElementById('plan-container');
+                const template = container.querySelector('.plan-item');
+
+                // Clone the template
+                const newPlan = template.cloneNode(true);
+
+                // Update IDs and Names for new plan items
+                newPlan.querySelectorAll('input, textarea').forEach((field) => {
+                    // Ensure name is array-style and IDs are unique
+                    field.name = field.name.replace(/\[\]$/, []);
+                    field.id = field.id + '-' + planCount;
+                });
+
+                container.appendChild(newPlan);
+
+                // Re-initialize Summernote for newly added fields
+                $('#summernote3').summernote({
+                    height: 200
+                });
             }
+
+            // Event listener for the "Add" button
+            document.getElementById('add-plan-btn').addEventListener('click', function() {
+                createPlanFields();
+            });
+
+            // Event delegation to handle removal of plan items
+            document.getElementById('plan-container').addEventListener('click', function(event) {
+                if (event.target.closest('.remove-plan')) {
+                    event.preventDefault();
+                    const planItem = event.target.closest('.plan-item');
+                    planItem.remove();
+                }
+            });
         });
-    });
 
 
 
 
-    function addCampRuleField() {
-        // Find the container where new fields will be added
-        var container = document.getElementById('camp-rule-container');
+        function addCampRuleField() {
+            // Find the container where new fields will be added
+            var container = document.getElementById('camp-rule-container');
 
-        // Create a new div for the new field
-        var newField = document.createElement('div');
-        newField.className = 'row g-2 mb-4 camp-rule-field';
-        newField.innerHTML = `<div class="col">
+            // Create a new div for the new field
+            var newField = document.createElement('div');
+            newField.className = 'row g-2 mb-4 camp-rule-field';
+            newField.innerHTML = `<div class="col">
                 <input type="text" name="camp_rule[]" class="form-control py-3 rounded-3 shadow-sm" placeholder="Payment Policy" required>
             </div>
             <div class="col-lg-1 mt-5 text-end">
@@ -1172,92 +1178,92 @@ a {
                 </a>
             </div>`;
 
-        // Append the new field to the container
-        container.appendChild(newField);
-    }
-
-    function removeField(element) {
-        // Find the parent element (field container) and remove it
-        var field = element.closest('.camp-rule-field');
-        if (field) {
-            field.remove();
+            // Append the new field to the container
+            container.appendChild(newField);
         }
-    }
 
-
-    // total duration
-    document.addEventListener('DOMContentLoaded', () => {
-        const startDateInput = document.getElementById('start_date');
-        const returnDateInput = document.getElementById('return_date');
-        const totalDaysInput = document.getElementById('total_days');
-
-        function calculateDays() {
-            const startDate = new Date(startDateInput.value);
-            const returnDate = new Date(returnDateInput.value);
-            if (startDate && returnDate && returnDate >= startDate) {
-                const diffTime = Math.abs(returnDate - startDate);
-                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-                totalDaysInput.value = diffDays;
-            } else {
-                totalDaysInput.value = '';
+        function removeField(element) {
+            // Find the parent element (field container) and remove it
+            var field = element.closest('.camp-rule-field');
+            if (field) {
+                field.remove();
             }
         }
 
-        startDateInput.addEventListener('change', calculateDays);
-        returnDateInput.addEventListener('change', calculateDays);
-    });
+
+        // total duration
+        document.addEventListener('DOMContentLoaded', () => {
+            const startDateInput = document.getElementById('start_date');
+            const returnDateInput = document.getElementById('return_date');
+            const totalDaysInput = document.getElementById('total_days');
+
+            function calculateDays() {
+                const startDate = new Date(startDateInput.value);
+                const returnDate = new Date(returnDateInput.value);
+                if (startDate && returnDate && returnDate >= startDate) {
+                    const diffTime = Math.abs(returnDate - startDate);
+                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                    totalDaysInput.value = diffDays;
+                } else {
+                    totalDaysInput.value = '';
+                }
+            }
+
+            startDateInput.addEventListener('change', calculateDays);
+            returnDateInput.addEventListener('change', calculateDays);
+        });
     </script>
     @endsection
 
     <script>
-    function validateImage(input) {
-        const file = input.files[0];
-        const errorElement = document.getElementById('file-ip-1-error');
-        const previewElement = document.getElementById('file-ip-1-preview');
+        function validateImage(input) {
+            const file = input.files[0];
+            const errorElement = document.getElementById('file-ip-1-error');
+            const previewElement = document.getElementById('file-ip-1-preview');
 
-        // Clear previous error messages and reset preview
-        errorElement.textContent = '';
-        previewElement.src = '/assets/image/dashboard/innerpece_addpic_icon.svg';
+            // Clear previous error messages and reset preview
+            errorElement.textContent = '';
+            previewElement.src = '/assets/image/dashboard/innerpece_addpic_icon.svg';
 
-        if (file) {
-            const reader = new FileReader();
+            if (file) {
+                const reader = new FileReader();
 
-            reader.onload = function(e) {
-                const img = new Image();
+                reader.onload = function(e) {
+                    const img = new Image();
 
-                img.onload = function() {
-                    console.log('Image loaded with width: ' + img.width + ' and height: ' + img.height);
+                    img.onload = function() {
+                        console.log('Image loaded with width: ' + img.width + ' and height: ' + img.height);
 
 
-                    if (1200 > img.width || 200 > img.height) {
-                        console.log("Dimensions exceed allowed size!");
-                        showError('Image sixe must be max of  1200x120 pixels.');
-                        input.value = '';
-                    } else {
-                        console.log("Image dimensions are valid.");
+                        if (1200 > img.width || 200 > img.height) {
+                            console.log("Dimensions exceed allowed size!");
+                            showError('Image sixe must be max of  1200x120 pixels.');
+                            input.value = '';
+                        } else {
+                            console.log("Image dimensions are valid.");
 
-                        previewElement.src = e.target.result;
-                    }
+                            previewElement.src = e.target.result;
+                        }
+                    };
+
+                    // Handling image load error
+                    img.onerror = function() {
+                        console.log("Error loading image file."); // Debugging log for errors
+                        showError("Error loading the image file. It might be corrupted or not a valid image.");
+                    };
+
+                    img.src = e.target.result;
                 };
 
-                // Handling image load error
-                img.onerror = function() {
-                    console.log("Error loading image file."); // Debugging log for errors
-                    showError("Error loading the image file. It might be corrupted or not a valid image.");
-                };
-
-                img.src = e.target.result;
-            };
-
-            // Read the image as a data URL
-            reader.readAsDataURL(file);
-        } else {
-            showError('No file selected.');
+                // Read the image as a data URL
+                reader.readAsDataURL(file);
+            } else {
+                showError('No file selected.');
+            }
         }
-    }
 
-    function showError(message) {
-        const errorElement = document.getElementById('file-ip-1-error');
-        errorElement.textContent = message;
-    }
+        function showError(message) {
+            const errorElement = document.getElementById('file-ip-1-error');
+            errorElement.textContent = message;
+        }
     </script>

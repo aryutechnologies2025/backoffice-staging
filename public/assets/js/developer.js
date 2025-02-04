@@ -5,9 +5,11 @@ document.addEventListener("DOMContentLoaded", function(event) {
             bodypd = document.getElementById(bodyId),
             headerpd = document.getElementById(headerId),
             logo = document.querySelector(".nav_list img");
+            plane = document.querySelector(".navbar-toggle-icon");
+            
 
         // Ensure all variables exist
-        if (toggle && nav && bodypd && headerpd && logo) {
+        if (toggle && nav && bodypd && headerpd && logo && plane) {
             // Initially set the navbar to be open
             nav.classList.add('show');
             toggle.classList.add('bx-x');
@@ -24,6 +26,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
                 headerpd.classList.toggle('body-pd');
                 // Toggle the logo visibility while keeping its space
                 logo.classList.toggle('invisible');
+                plane.classList.toggle('invisible');
+                
             });
 
          

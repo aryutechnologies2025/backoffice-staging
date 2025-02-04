@@ -327,6 +327,8 @@ public function insert(Request $request)
                 $imagePaths = array_filter($imagePaths, fn($path) => $path !== $deletedImage);
             }
         }
+
+        
     
         // Handle new image uploads
         foreach ($fileInputs as $key => $files) {
@@ -357,14 +359,30 @@ public function insert(Request $request)
             }
         }
     
-        // Handle cover image upload
-        if ($request->hasFile('cover_img')) {
-            $coverImage = $request->file('cover_img');
-            $coverImageName = time() . '_cover.' . $coverImage->getClientOriginalExtension();
-            $coverImagePath = public_path('/uploads/events_package_images');
-            $coverImage->move($coverImagePath, $coverImageName);
-            $inclusive_packages->cover_img = '/uploads/events_package_images/' . $coverImageName;
-        }
+
+        // if ($request->hasFile('cover_img')) {
+            
+
+            if ($request->hasFile('cover_img')) {
+                // Get the uploaded file
+                $coverImage = $request->file('cover_img');
+            
+                // Sanitize the file name
+                $customFileName = preg_replace('/[^A-Za-z0-9_\-]/', '_', $request->input('upload_image_name', 'default_image_name'));
+            
+                // Generate the final file name with extension
+                $coverImageName = $customFileName . '_cover.' . $coverImage->getClientOriginalExtension();
+            
+                // Define the upload path
+                $coverImagePath = 'uploads/events_package_images/';
+            
+                // Move the file to the desired location
+                $coverImage->move(public_path($coverImagePath), $coverImageName);
+            
+                // Save the file path in the database
+                $inclusive_packages->cover_img = $coverImagePath . $coverImageName;
+            }
+            
     
         // JSON encode complex fields
         $tourPlanningJson = json_encode([
@@ -379,6 +397,8 @@ public function insert(Request $request)
         $campRulesJson = json_encode($validatedData['camp_rule']);
     
         // Update the model fields
+        $inclusive_packages->upload_image_name = $request->input('upload_image_name');
+    $inclusive_packages->alternate_name = $request->input('alternate_image_name');
         $inclusive_packages->theme_id = $request->input('themes_name');
         $inclusive_packages->location = $request->input('location');
         $inclusive_packages->city_details = $validatedData['cities_name'];
@@ -417,7 +437,7 @@ public function insert(Request $request)
             ->with('success', 'Record updated successfully');
     }
     
-
+    
 
     
 

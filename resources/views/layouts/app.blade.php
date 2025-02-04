@@ -83,10 +83,12 @@
         
         <nav class="nav w-100">
             <div>
-            <img src="/assets/image/dashboard/plane.svg" alt="" id="navbar-toggle-icon" class="px-5 pb-8">
+            <!-- <img src="/assets/image/dashboard/plane.svg" alt=""  class="px-5 invisible navbar-toggle-icon" style="height: 30px;"> -->
             
                 <div class="nav_list ">
-                    <img class="pt-4 px-2 mb-5" style="width:90%;" src="{{ $settings->footer_logo ? asset($settings->footer_logo) : '/assets/image/login/inner_pece_logo.png' }}" alt="">
+                    <img class="pt-3 px-2 " style="width:90%;" src="{{ $settings->footer_logo ? asset($settings->footer_logo) : '/assets/image/login/inner_pece_logo.png' }}" alt="">
+                    <img src="/assets/image/dashboard/plane.svg" alt=""  class="px-4 mb-3 invisible navbar-toggle-icon" style="height: 30px;">
+
                     <a href="{{ route('admin.dashboard') }}" class="nav_link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }} mb-3 text-white">
                         <img src="/assets/image/dashboard/Dashboard.svg" alt="">
                         <span class="nav_name">Dashboard</span>

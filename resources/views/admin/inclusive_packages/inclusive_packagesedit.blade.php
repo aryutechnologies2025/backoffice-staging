@@ -52,7 +52,7 @@
 
     }
 
-    
+
     .form-input img {
         width: 100%;
     }
@@ -477,28 +477,28 @@
                     </div>
 
                     <!-- Plan Description on the next line -->
-                    <div class="mt-2">
-                        <div class="row">
-                            <div class="col-lg-11">
-                                <input type="hidden" id="plan_description" name="plan_description[]">
-                                <label class="form-label form-label-top form-label-auto fw-bold mb-2">Plan Description
-                                    <span class="text-danger">*</span></label>
-                                @php
-                                $plain_text_plan_description = html_entity_decode(strip_tags($tourPlanning['plan_description'][$index]));
-                                @endphp
-                                <div class="mt-2">
-                                    <div class="row">
-                                        <div class="col-lg-12">
-                                            <div id="summernote3">{{$plain_text_plan_description}}</div>
-                                        </div>
+                    <div class="row g-2 mt-3 align-items-center mb-2">
+
+                        <div class="col-lg-12">
+                            <input type="hidden" id="plan_description" name="plan_description[]">
+                            <label class="form-label mb-2">Plan Description
+                                <span class="text-danger">*</span></label>
+                            @php
+                            $plain_text_plan_description = html_entity_decode(strip_tags($tourPlanning['plan_description'][$index]));
+                            @endphp
+                            <div class="mt-2">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div id="summernote3">{{$plain_text_plan_description}}</div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
+
                     <!-- Remove Button for the plan -->
-                    <div class="text-end">
+                    <div class="text-end px-4 mb-2">
                         <a href="#" class="table-link danger remove-plan">
                             <span class="fa-stack">
                                 <i class="fa fa-square fa-stack-2x"></i>
@@ -510,8 +510,8 @@
                 @endforeach
             </div>
             <!-- Add New Plan Button -->
-            <div class="text-end p-5">
-                <button type="button" id="add-plan-btn" class="btn-add rounded border-0 px-5 py-2 text-end text-white">
+            <div class="text-end ">
+                <button type="button" id="add-plan-btn" class="btn-add rounded-3 border-0 px-3 py-2 text-white">
                     <i class="fa fa-plus" aria-hidden="true"></i> Add
                 </button>
             </div>
@@ -615,16 +615,21 @@
                     </div>
                     <div class="col-lg-3">
                         <label class="fw-bold mb-2 ">Actual Amount <span class="text-danger">*</span></label>
-                        <input type="number" id="price" name="price" class="form-control py-2 rounded-3 shadow-sm"
-                            placeholder="Actual Amount" value="{{$package_details->price}}" required>
+                        <div class="position-relative">
+                            <span class="position-absolute top-50 start-0 translate-middle-y ps-3">₹</span>
+                            <input type="number" id="price" name="price" class="form-control py-2 ps-5 rounded-3 shadow-sm"
+                                placeholder="Actual Amount" value="{{$package_details->price}}" required>
+                        </div>
                     </div>
                     <div class="col-lg-3">
                         <label class="fw-bold mb-2">Discount Amount <span class="text-danger">*</span></label>
-                        <input type="number" id="actual_price" name="actual_price"
-                            class="form-control py-2 rounded-3 shadow-sm" placeholder="Discount Amount"
-                            value="{{$package_details->actual_price}}" required>
+                        <div class="position-relative">
+                            <span class="position-absolute top-50 start-0 translate-middle-y ps-3">₹</span>
+                            <input type="number" id="actual_price" name="actual_price"
+                                class="form-control py-2 ps-5 rounded-3 shadow-sm" placeholder="Discount Amount"
+                                value="{{$package_details->actual_price}}" required>
+                        </div>
                     </div>
-
                 </div>
             </div>
         </div>
@@ -727,26 +732,26 @@
                     <!-- Google Map Input -->
                     <div class="col-lg-6">
                         <label for="google_map" class="fw-bold mb-3">Google Map<span class="text-danger">*</span></label>
-                        <input 
-                            type="text" 
-                            id="google_map" 
-                            name="google_map" 
+                        <input
+                            type="text"
+                            id="google_map"
+                            name="google_map"
                             class="form-control py-3 rounded-3 shadow-sm"
-                            placeholder="Enter Google Map Embed Iframe" 
-                            required 
+                            placeholder="Enter Google Map Embed Iframe"
+                            required
                             value="{{$package_details->google_map}}">
                     </div>
                     <!-- Map Preview Iframe -->
                     <div class="col-lg-6">
                         <label class="fw-bold mb-3">Map Preview</label>
-                        <iframe 
-                            id="map_preview" 
-                            width="100%" 
-                            height="250" 
-                            frameborder="0" 
-                            style="border:0;" 
-                            allowfullscreen 
-                            aria-hidden="false" 
+                        <iframe
+                            id="map_preview"
+                            width="100%"
+                            height="250"
+                            frameborder="0"
+                            style="border:0;"
+                            allowfullscreen
+                            aria-hidden="false"
                             tabindex="0">
                         </iframe>
                     </div>
@@ -764,7 +769,7 @@
     }
 
     // Populate the iframe on page load
-    document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function() {
         const googleMapInput = document.getElementById('google_map');
         const mapPreviewIframe = document.getElementById('map_preview');
         const iframeSrc = extractIframeSrc(googleMapInput.value);
@@ -775,7 +780,7 @@
     });
 
     // Update iframe dynamically as user changes input
-    document.getElementById('google_map').addEventListener('input', function () {
+    document.getElementById('google_map').addEventListener('input', function() {
         const iframeSrc = extractIframeSrc(this.value);
         const mapPreviewIframe = document.getElementById('map_preview');
 
@@ -789,11 +794,11 @@
 
 
 <script>
-    document.getElementById('google_map').addEventListener('input', function () {
+    document.getElementById('google_map').addEventListener('input', function() {
         const inputValue = this.value;
         const iframeSrcMatch = inputValue.match(/src=["']([^"']+)["']/); // Extract the src attribute value
         const mapPreviewIframe = document.getElementById('map_preview');
-        
+
         if (iframeSrcMatch && iframeSrcMatch[1]) {
             mapPreviewIframe.src = iframeSrcMatch[1]; // Set the extracted src to the iframe
         } else {

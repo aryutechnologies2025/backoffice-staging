@@ -35,18 +35,18 @@
             <!-- Button to Download Excel -->
             <button id="downloadExcel" class="btn btn-success mb-3">Download List</button>
 
-            <table id="cityTable" class="table pt-2">
+            <table id="cityTable" class="table pt-2 " style="width: 100%;">
                 <thead>
                     <tr class="rounded-top-4">
                         <th class="text-center"><span>S.No</span></th>
                         <th class="text-center"><span>Name</span></th>
-                        <th class="text-center"><span>Email</span></th>
+                        <!-- <th class="text-center"><span>Email</span></th> -->
                         <th class="text-center"><span>Phone</span></th>
                         <th class="text-center"><span>Program Name</span></th>
                         <th class="text-center"><span>Refered By</span></th>
                         <th class="text-center"><span>Next Follow Up</span></th>
                         <th class="text-center"><span>Assigned To</span></th>
-                        <th class="text-center"><span>Time&Date</span></th>
+                        
                         <th class="text-center"><span>Action</span></th>
                     </tr>
                 </thead>
@@ -60,7 +60,7 @@
                         <tr>
                             <td class="text-center">{{ $loop->iteration }}</td>
                             <td class="text-center">{{ $row->name }}</td>
-                            <td class="text-center">{{ $row->email }}</td>
+                            <!-- <td class="text-center">{{ $row->email }}</td> -->
                             <td class="text-center">{{ $row->phone }}</td>
                             <td class="text-center">{{ $row->program_title }}</td>
                             <td class="text-center">{{$row->reference_id}}</td>
@@ -71,7 +71,6 @@
                                 <td class="text-center">N/A</td>
                                 <td class="text-center">N/A</td>
                             @endif
-                            <td class="text-center">{{ $row->created_at }}</td>
                             <td class="text-center">
                                 <button class="btn btn-warning view-btn" 
                                     data-id="{{ $row->id }}"

@@ -176,3 +176,8 @@ class AmenitiesController extends Controller
         return response()->json($response);
     }
 }
+
+
+
+
+

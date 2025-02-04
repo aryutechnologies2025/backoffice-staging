@@ -55,7 +55,7 @@
                     <tr>
                     <td class="text-center">{{ $loop->iteration }}</td>
                         <td class="text-center">
-                            <img src="{{ asset($row->cities_pic) }}" alt="{{ $row->alternate_name ?? 'Default Alt Text' }}" style="max-width: 56px; max-height: 56px; object-fit: cover;">
+                            <img src="{{ asset($row->cities_pic) }}" alt="{{ $row->alternate_name ?? 'Default Alt Text' }}" style="max-width: 35px; max-height: 56px; object-fit: cover;">
                         </td>
                         <td class="text-center">{{ $row->city_name }}</td>
                         <td class="text-center">{{ $row->created_at }}</td>
