@@ -30,6 +30,7 @@ class EnquiryDetail extends Model
         'child_count',
         'child_age',
         'image',
+        'follow_up'
        
     ];
     public function package()

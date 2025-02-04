@@ -408,6 +408,7 @@ Route::get('/admin/influencer/{influencerId}/affiliate-links', [InfluencersContr
                 Route::get('/', 'list')->name('admin.enquiry_list');
             });
         });
+        Route::post('/enquiry/followup', [EnquiryController::class, 'markFollowUp']);
 
         Route::get('admin/enquiry/followups/{id}', [EnquiryController::class, 'viewFollowUps'])->name('admin.enquiry.followups');
         Route::post('/admin/enquiry/{id}/add-follow-up', [EnquiryController::class, 'addFollowUp'])->name('admin.enquiry.addFollowUp');

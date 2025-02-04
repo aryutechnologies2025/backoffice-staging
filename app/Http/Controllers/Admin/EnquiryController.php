@@ -52,5 +52,30 @@ class EnquiryController extends Controller
 
         return view('admin.enquiry.form', compact('enquiry')); // Pass the enquiry to the view
     }
+
+
+    public function markFollowUp(Request $request)
+    {
+        // Validate the incoming request to ensure the 'id' is provided
+        $request->validate([
+            'id' => 'required|integer|exists:enquiry_details,id', // Ensure the ID exists in the enquiry_details table
+        ]);
     
+        // Find the enquiry by ID
+        $enquiry = EnquiryDetail::find($request->id);
+    
+        if ($enquiry) {
+            // Update the follow-up status
+            $enquiry->follow_up = true; // Assuming 'follow_up' is a boolean column
+            $enquiry->save();
+            
+            // Return success response
+            return response()->json(['message' => 'Enquiry updated successfully.'], 200);
+           
+        }
+    
+        // Return error response if the enquiry was not found
+        return response()->json(['message' => 'Enquiry not found.'], 404);
+    }
+       
 }

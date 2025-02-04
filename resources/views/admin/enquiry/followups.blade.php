@@ -81,101 +81,115 @@
     </div>
 </div>
 
-<div class="col-lg-6 ">
+<div class="col-lg-6">
     <div class="d-flex justify-content-start">
-        <button class="mt-5 btn btn-primary">Add Follow-up data</button>
+        <button class="mt-5 btn btn-primary" id="openFormButton">Add Follow-up data</button>
     </div>
 </div>
-<form id="form_valid" method="POST" action="{{ route('admin.enquiry.addFollowUp', $enquiry->id) }}" >
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            document.querySelector('form').style.display = 'none';
 
-            document.querySelector('button.mt-5').addEventListener('click', function(e) {
-                e.preventDefault(); // Prevent default button behavior
-                document.querySelector('form').style.display = 'block';
-            });
-        });
-        document.querySelector('button.mt-5').addEventListener('click', function(e) {
-            document.querySelector('form').style.display = 'block';
-            e.preventDefault();
-        });
-
-        document.addEventListener('DOMConten   tLoaded', function() {
-            document.querySelector('form').style.display = 'none';
-            e.preventDefault();
-            
-        });
-    </script>
-    @csrf
-    <div class="row mb-3">
-        <div class="col-md-4">
-            <strong> <label  class="form-label">Follow-up Date <span class="text-danger">*</span></label></strong>
-            
-            <input type="date" id="follow_up_date" name="follow_up_date" class="form-control"  >
-        </div>
-        <div class="col-md-4">
-            <strong><label for="lead_source" class="form-label">Lead Source <span class="text-danger">*</span> </label></strong>
-            <select id="lead_source" name="lead_source" class="form-control" >
-                <option value="Facebook">Facebook</option>
-                <option value="Instagram">Instagram</option>
-                <option value="Website">Website</option>
-                <option value="Whatsapp">Whatsapp</option>
-                <option value="Influencer">Influencer</option>
-            </select>
-        </div>
-        <div class="col-md-4">
-            <strong> <label for="lead_status" class="form-label">Lead Status <span class="text-danger">*</span></label></strong>
-            <select id="lead_status" name="lead_status" class="form-control" >
-                <option value="No Response-Initial">No Response-Initial</option>
-                <option value="⁠No Response-In Process">⁠No Response-In Process</option>
-                <option value="No Service">No Service</option>
-                <option value="⁠In Enquiry Process">⁠In Enquiry Process</option>
-                <option value="⁠⁠In Booking Process">⁠⁠In Booking Process</option>
-                <option value="⁠⁠⁠Booking Confirmed">⁠⁠⁠Booking Confirmed</option>
-                <option value="⁠⁠Trip Completed">⁠⁠Trip Completed</option>
-            </select>
+<!-- Modal -->
+<div class="modals fades" id="followUpModals" tabindex="-1" aria-labelledby="followUpModalLabels" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="followUpModalLabel">Add Follow-up Data</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="form_valid" method="POST" action="{{ route('admin.enquiry.addFollowUp', $enquiry->id) }}">
+                    @csrf
+                    <div class="row mb-3">
+                        <div class="col-md-12">
+                            <strong><label class="form-label">Follow-up Date <span class="text-danger">*</span></label></strong>
+                            <input type="date" id="follow_up_date" name="follow_up_date" class="form-control">
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-12">
+                            <strong><label for="lead_source" class="form-label">Lead Source <span class="text-danger">*</span></label></strong>
+                            <select id="lead_source" name="lead_source" class="form-control">
+                                <option value="Facebook">Facebook</option>
+                                <option value="Instagram">Instagram</option>
+                                <option value="Website">Website</option>
+                                <option value="Whatsapp">Whatsapp</option>
+                                <option value="Influencer">Influencer</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-12">
+                            <strong><label for="lead_status" class="form-label">Lead Status <span class="text-danger">*</span></label></strong>
+                            <select id="lead_status" name="lead_status" class="form-control">
+                                <option value="No Response-Initial">No Response-Initial</option>
+                                <option value="⁠No Response-In Process">⁠No Response-In Process</option>
+                                <option value="No Service">No Service</option>
+                                <option value="⁠In Enquiry Process">⁠In Enquiry Process</option>
+                                <option value="⁠⁠In Booking Process">⁠⁠In Booking Process</option>
+                                <option value="⁠⁠⁠Booking Confirmed">⁠⁠⁠Booking Confirmed</option>
+                                <option value="⁠⁠Trip Completed">⁠⁠Trip Completed</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-12">
+                            <strong><label for="follow_up_notes" class="form-label">Follow-up Notes <span class="text-danger">*</span></label></strong>
+                            <textarea id="follow_up_notes" name="follow_up_notes" class="form-control"></textarea>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-12">
+                            <strong><label for="action_required" class="form-label">Action Required <span class="text-danger">*</span></label></strong>
+                            <select id="action_required" name="action_required" class="form-control">
+                                <option value="Opened">Opened</option>
+                                <option value="Closed">Closed</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-12">
+                            <strong><label for="deal_value" class="form-label">Deal Value <span class="text-danger">*</span></label></strong>
+                            <input type="number" step="0.01" id="deal_value" name="deal_value" class="form-control">
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-12">
+                            <strong><label for="interest_prospect" class="form-label">Accepted Or Rejected <span class="text-danger">*</span></label></strong>
+                            <select id="interest_prospect" name="interest_prospect" class="form-control">
+                                <option value="accepted">Accepted</option>
+                                <option value="rejected">Rejected</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-12">
+                            <strong><label for="assigned_to" class="form-label">Assigned To <span class="text-danger">*</span></label></strong>
+                            <input type="text" id="assigned_to" name="assigned_to" class="form-control">
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-12">
+                            <strong><label for="next_follow_up_date" class="form-label">Next FollowUp Date <span class="text-danger">*</span></label></strong>
+                            <input type="date" id="next_follow_up_date" name="next_follow_up_date" class="form-control">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-add">Submit</button>
+                </form>
+            </div>
         </div>
     </div>
-    <div class="row mb-3">
-        <div class="col-md-4">
-            <strong><label for="follow_up_notes" class="form-label">Follow-up Notes <span class="text-danger">*</span></label></strong>
-            <textarea id="follow_up_notes" name="follow_up_notes" class="form-control" ></textarea>
-        </div>
+</div>
 
-        <div class="col-md-4">
-            <strong> <label for="action_required" class="form-label">Action Required <span class="text-danger">*</span></label></strong>
-            <select id="action_required" name="action_required" class="form-control" >
-                <option value="Opened">Opened</option>
-                <option value="Closed">Closed</option>
-            </select>
-        </div>
-        <div class="col-md-4">
-            <strong><label for="deal_value" class="form-label">Deal Value <span class="text-danger">*</span></label></strong>
-            <input type="number" step="0.01" id="deal_value" name="deal_value" class="form-control" >
-        </div>
-    </div>
-    <div class="row mb-3 ">
-        <div class="col-md-4">
-            <strong> <label for="interest_prospect" class="form-label">Accepted Or Rejected</label> <span class="text-danger">*</span></strong>
-            <select id="interest_prospect" name="interest_prospect" class="form-control" >
-                <!-- <option disabled></option> -->
-                <option value="accepted">Accepted</option>
-                <option value="rejected">Rejected</option>
-            </select>
-            <!-- <input type="text" id="interest_prospect" name="interest_prospect" class="form-control"> -->
-        </div>
-        <div class="col-md-4">
-            <strong><label for="assigned_to" class="form-label">Assigned To</label> <span class="text-danger">*</span></strong>
-            <input type="text" id="assigned_to" name="assigned_to" class="form-control" >
-        </div>
-        <div class="col-md-4">
-            <strong> <label for="interest_prospect" class="form-label">Next FollowUp Date</label><span class="text-danger">*</span></strong>
-            <input type="date" id="next_follow_up_date" name="next_follow_up_date" class="form-control" >
-        </div>
-    </div>
-    <button type="submit" class="btn btn-add">Submit</button>
-</form>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var myModal = new bootstrap.Modal(document.getElementById('followUpModals'), {
+            keyboard: false
+        });
+
+        document.getElementById('openFormButton').addEventListener('click', function() {
+            myModal.show();
+        });
+    });
+</script>
 
 <h4 class="mt-5">Follow-up History</h4>
 <table class="table mb-5" id="followUpTable">

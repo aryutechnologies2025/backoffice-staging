@@ -60,7 +60,7 @@
                                 </label>
                                 <input type="file" id="file-ip-1" name="image_1" accept="image/png, image/jpeg" onchange="validateImage(this)" required>
                                 <div id="file-ip-1-error" class="error-message"></div>
-                                <label class="fw-bold mb-5 text-danger border-0"><small>* Upload size [600x120] *</small></label>
+                                <label class="fw-bold mb-5 text-danger border-0"><small>* Upload size [56x56] *</small></label>
                             </div>
                         </div>
                         <div class="col-lg-8">
@@ -129,7 +129,7 @@
 
                 img.onload = function () {
                     // Check dimensions
-                    if (img.width > 600 && img.height > 120) {
+                    if (img.width > 56 && img.height > 56) {
                         showSweetError('Image size must not exceed 600x120 pixels.');
                         input.value = ''; // Clear the input
                     } else {
