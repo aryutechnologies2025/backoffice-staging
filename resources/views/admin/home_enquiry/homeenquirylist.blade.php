@@ -41,18 +41,19 @@
             <table id="cityTable" class="table pt-2">
                 <thead>
                     <tr class="rounded-top-4">
-                        <th class="text-center"><span>S.No</span></th>
-                        <th class="text-center"><span>Name</span></th>
-                        <th class="text-center"><span>Email</span></th>
-                        <th class="text-center"><span>Phone</span></th>
-                        <th class="text-center"><span>Time&Date</span></th>
-                        <th class="text-center"><span>Action</span></th>
+                        <th class="text-center">S.No</th>
+                        <th class="text-center">Name</th>
+                        <th class="text-center">Email</th>
+                        <th class="text-center">Phone</th>
+                        <th class="text-center">Time & Date</th>
+                        <th class="text-center">Status</th>
+                        <th class="text-center">Action</th>
                     </tr>
                 </thead>
                 <tbody>
                     @if($enquiry_dts->isEmpty())
                     <tr>
-                        <td colspan="6" class="text-center">No records</td>
+                        <td colspan="7" class="text-center">No records</td>
                     </tr>
                     @else
                     @foreach ($enquiry_dts as $row)
@@ -62,6 +63,16 @@
                         <td class="text-center">{{ $row->email }}</td>
                         <td class="text-center">{{ $row->phone }}</td>
                         <td class="text-center">{{ $row->created_at }}</td>
+                        <td class="text-center">
+                            <label for="followUpStatus_{{ $row->id }}" class="form-label"><strong>Follow-Up Status:</strong></label>
+                            <select class="form-select followUpStatus" data-enquiry-id="{{ $row->id }}">
+                                <option value="unfollowup" {{ $row->followup == 'unfollowup' ? 'selected' : '' }}>Unfollow-Up</option>
+                                <option value="followup" {{ $row->followup == 'followup' ? 'selected' : '' }}>Follow-Up</option>
+                            </select>
+                            <button class="btn btn-success btn-sm markFollowUpBtn" data-enquiry-id="{{ $row->id }}">
+                                Mark Follow-Up
+                            </button>
+                        </td>
                         <td class="text-center">
                             <button class="btn btn-warning view-btn"
                                 data-name="{{ $row->name }}"
@@ -117,18 +128,8 @@
                 <p><strong>Rooms Count:</strong> <span id="modalRoomsCount"></span></p>
                 <p><strong>Comments:</strong> <span id="modalComments"></span></p>
                 <p><strong>Date & Time:</strong> <span id="modalDate"></span></p>
-                <div class="mt-3">
-                    <label for="followUpStatus" class="form-label"><strong>Follow-Up Status:</strong></label>
-                    <select id="followUpStatus" class="form-select">
-                        <option value="unfollowup">Unfollow-Up</option>
-                        <option value="followup">Follow-Up</option>
-                    </select>
-                </div>
             </div>
             <div class="modal-footer">
-                <button onclick="markFollowUp({{ $row->id }})" class="btn btn-success btn-sm">
-                    Mark Follow-Up
-                </button>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
@@ -139,56 +140,34 @@
 
 @section('scripts')
 <script>
-    $(document).ready(function () {
-        $('#cityTable').DataTable({
-            pageLength: 10,
-            lengthChange: true,
-            ordering: true,
-            searching: true,
-            language: { emptyTable: "No records found" },
-            columnDefs: [{ orderable: false, targets: [5] }]
-        });
+    $(document).ready(function() {
+        $('#cityTable').DataTable();
 
-        // Populate modal
-        $('.view-btn').on('click', function () {
-            $('#modalName').text($(this).data('name'));
-            $('#modalEmail').text($(this).data('email'));
-            $('#modalPhone').text($(this).data('phone'));
-            $('#modalLocation').text($(this).data('location'));
-            $('#modalDays').text($(this).data('days'));
-            $('#modalTravelDestination').text($(this).data('travel_destination'));
-            $('#modalBudgetPerHead').text($(this).data('budget_per_head'));
-            $('#modalCabNeed').text($(this).data('cab_need'));
-            $('#modalTotalCount').text($(this).data('total_count'));
-            $('#modalMaleCount').text($(this).data('male_count'));
-            $('#modalFemaleCount').text($(this).data('female_count'));
-            $('#modalTravelDate').text($(this).data('travel_date'));
-            $('#modalRoomsCount').text($(this).data('rooms_count'));
-            $('#modalComments').text($(this).data('comments'));
-            $('#modalDate').text($(this).data('date'));
-        });
+        $('.markFollowUpBtn').on('click', function() {
+            let enquiryId = $(this).data('enquiry-id');
+            let status = $(this).siblings('.followUpStatus').val();
 
-        // Mark follow-up
-        window.markFollowUp = function (enquiryId) {
-            $.ajax({
-                url: '/enquiry/followup',
-                type: 'POST',
-                data: {
-                    id: enquiryId,
-                    _token: $('meta[name="csrf-token"]').attr('content'),
+            fetch(`/mark-followup/${enquiryId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
                 },
-                success: function (response) {
-                    alert(response.message);
+                body: JSON.stringify({ followup: status })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert("Follow-up status updated successfully!");
                     location.reload();
-                },
-                error: function (xhr) {
-                    alert(xhr.responseJSON.message || 'An error occurred.');
+                } else {
+                    alert("Failed to update follow-up status.");
                 }
-            });
-        };
+            })
+            .catch(error => console.error('Error:', error));
+        });
 
-        // Download Excel
-        $('#downloadExcel').on('click', function () {
+        $('#downloadExcel').on('click', function() {
             const wb = XLSX.utils.table_to_book(document.getElementById('cityTable'), { sheet: "Enquiries" });
             XLSX.writeFile(wb, 'Enquiries_Data.xlsx');
         });

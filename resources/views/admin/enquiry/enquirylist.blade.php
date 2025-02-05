@@ -62,8 +62,8 @@
                             <td class="text-center">{{ $row->name }}</td>
                             <!-- <td class="text-center">{{ $row->email }}</td> -->
                             <td class="text-center">{{ $row->phone }}</td>
-                            <td class="text-center">{{ $row->program_title }}</td>
-                            <td class="text-center">{{$row->reference_id}}</td>
+                            <td class="text-center">{{ $row->program_title ?? 'null' }}</td>
+                            <td class="text-center">{{$row->reference_id ?? 'null'}}</td>
                             @if($row->followUps->isNotEmpty())
                                 <td class="text-center">{{ $row->followUps->last()->next_follow_up_date }}</td>
                                 <td class="text-center">{{ $row->followUps->last()->assigned_to }}</td>

@@ -21,6 +21,10 @@
     .enquiry {
         color: blue;
     }
+    .modal {
+        width: 100%!important;
+        padding-top: 10%!important;
+    }
 </style>
 
 <div class="row body-sec py-4 justify-content-around">
@@ -41,43 +45,34 @@
 
 <div class="row mb-12">
     <div class="col-md-4">
-        <strong><label for="name" class="form-label">Name</label></strong>
-        <input type="text" id="name" name="name" class="form-control" value="{{ $enquiry->name }}" disabled>
+        <strong><label for="name" class="form-label">Name:</strong>{{ $enquiry->name }}</label>
     </div>
     <div class="col-md-4">
-        <strong><label for="email" class="form-label">Email</label></strong>
-        <input type="email" id="email" name="email" class="form-control" value="{{ $enquiry->email }}" disabled>
+        <strong><label for="email" class="form-label">Email:{{ $enquiry->email }}</strong></label>
     </div>
     <div class="col-md-4">
-        <strong><label for="Phone" class="form-label">Phone</label></strong>
-        <input type="number" id="Phone" name="Phone" class="form-control" value="{{ $enquiry->phone }}" disabled>
+        <strong><label for="Phone" class="form-label">Phone:</strong>{{ $enquiry->phone }}</label>
     </div>
 
 </div>
 <div class="row mb-3">
+    
     <div class="col-md-4">
-        <strong><label for="phone" class="form-label">Phone</label></strong>
-        <input type="text" id="phone" name="phone" class="form-control" value="{{ $enquiry->phone }}" disabled>
+        <strong><label for="program_title" class="form-label">Program Title: </strong>{{ $enquiry->program_title ?? 'null' }}</label>
     </div>
     <div class="col-md-4">
-        <strong><label for="program_title" class="form-label">Program Title</label></strong>
-        <input type="text" id="program_title" name="program_title" class="form-control" value="{{ $enquiry->program_title }}" disabled>
+        <strong><label for="travel_date" class="form-label">Travel Date: </strong>{{ $enquiry->travel_date }} </label>
     </div>
     <div class="col-md-4">
-        <strong><label for="travel_date" class="form-label">Travel Date</label></strong>
-        <input type="text" id="travel_date" name="travel_date" class="form-control" value="{{ $enquiry->travel_date }}" disabled>
+        <strong><label for="budget_per_head" class="form-label">Budget: </strong>{{ $enquiry->budget_per_head }}</label>
     </div>
 </div>
 
 <div class="row mb-3">
-    <div class="col-md-4">
-        <strong><label for="budget_per_head" class="form-label">Budget</label></strong>
-        <input type="text" id="budget_per_head" name="budget_per_head" class="form-control" value="{{ $enquiry->budget_per_head }}" disabled>
-    </div>
+    
 
     <div class="col-md-4">
-        <strong><label for="comments" class="form-label">Notes</label></strong>
-        <textarea id="comments" name="comments" class="form-control" disabled>{{ $enquiry->comments }}</textarea>
+        <strong><label for="comments" class="form-label">Notes: </strong>{{ $enquiry->comments }}</label>
     </div>
 </div>
 
@@ -88,24 +83,22 @@
 </div>
 
 <!-- Modal -->
-<div class="modals fades" id="followUpModals" tabindex="-1" aria-labelledby="followUpModalLabels" aria-hidden="true">
+<div class="modal fade" id="followUpModals" tabindex="-1" aria-labelledby="followUpModalLabels" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="followUpModalLabel">Add Follow-up Data</h5>
+                <h5 class="modal-title" id="followUpModalLabels">Add Follow-up Data</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <form id="form_valid" method="POST" action="{{ route('admin.enquiry.addFollowUp', $enquiry->id) }}">
                     @csrf
                     <div class="row mb-3">
-                        <div class="col-md-12">
+                        <div class="col-md-6">
                             <strong><label class="form-label">Follow-up Date <span class="text-danger">*</span></label></strong>
                             <input type="date" id="follow_up_date" name="follow_up_date" class="form-control">
                         </div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-md-12">
+                        <div class="col-md-6">
                             <strong><label for="lead_source" class="form-label">Lead Source <span class="text-danger">*</span></label></strong>
                             <select id="lead_source" name="lead_source" class="form-control">
                                 <option value="Facebook">Facebook</option>
@@ -117,7 +110,7 @@
                         </div>
                     </div>
                     <div class="row mb-3">
-                        <div class="col-md-12">
+                        <div class="col-md-6">
                             <strong><label for="lead_status" class="form-label">Lead Status <span class="text-danger">*</span></label></strong>
                             <select id="lead_status" name="lead_status" class="form-control">
                                 <option value="No Response-Initial">No Response-Initial</option>
@@ -129,45 +122,39 @@
                                 <option value="⁠⁠Trip Completed">⁠⁠Trip Completed</option>
                             </select>
                         </div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-md-12">
+                        <div class="col-md-6">
                             <strong><label for="follow_up_notes" class="form-label">Follow-up Notes <span class="text-danger">*</span></label></strong>
                             <textarea id="follow_up_notes" name="follow_up_notes" class="form-control"></textarea>
                         </div>
                     </div>
                     <div class="row mb-3">
-                        <div class="col-md-12">
+                        <div class="col-md-6">
                             <strong><label for="action_required" class="form-label">Action Required <span class="text-danger">*</span></label></strong>
                             <select id="action_required" name="action_required" class="form-control">
                                 <option value="Opened">Opened</option>
                                 <option value="Closed">Closed</option>
                             </select>
                         </div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-md-12">
+                        <div class="col-md-6">
                             <strong><label for="deal_value" class="form-label">Deal Value <span class="text-danger">*</span></label></strong>
                             <input type="number" step="0.01" id="deal_value" name="deal_value" class="form-control">
                         </div>
                     </div>
                     <div class="row mb-3">
-                        <div class="col-md-12">
+                        <div class="col-md-6">
                             <strong><label for="interest_prospect" class="form-label">Accepted Or Rejected <span class="text-danger">*</span></label></strong>
                             <select id="interest_prospect" name="interest_prospect" class="form-control">
                                 <option value="accepted">Accepted</option>
                                 <option value="rejected">Rejected</option>
                             </select>
                         </div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-md-12">
+                        <div class="col-md-6">
                             <strong><label for="assigned_to" class="form-label">Assigned To <span class="text-danger">*</span></label></strong>
                             <input type="text" id="assigned_to" name="assigned_to" class="form-control">
                         </div>
                     </div>
                     <div class="row mb-3">
-                        <div class="col-md-12">
+                        <div class="col-md-6">
                             <strong><label for="next_follow_up_date" class="form-label">Next FollowUp Date <span class="text-danger">*</span></label></strong>
                             <input type="date" id="next_follow_up_date" name="next_follow_up_date" class="form-control">
                         </div>
