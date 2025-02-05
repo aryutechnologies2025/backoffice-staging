@@ -421,7 +421,7 @@ Route::get('/admin/influencer/{influencerId}/affiliate-links', [InfluencersContr
             });
         });
 
-        Route::put('/mark-followup/{id}', [HomeEnquiryController::class, 'markFollowUp'])->name('mark.followup');
+        Route::post('/mark-followup/{id}', [HomeEnquiryController::class, 'markFollowUp'])->name('mark.followup');
 
         //settings features
         Route::controller(SettingController::class)->group(function () {

@@ -64,14 +64,21 @@
                         <td class="text-center">{{ $row->phone }}</td>
                         <td class="text-center">{{ $row->created_at }}</td>
                         <td class="text-center">
-                            <label for="followUpStatus_{{ $row->id }}" class="form-label"><strong>Follow-Up Status:</strong></label>
-                            <select class="form-select followUpStatus" data-enquiry-id="{{ $row->id }}">
-                                <option value="unfollowup" {{ $row->followup == 'unfollowup' ? 'selected' : '' }}>Unfollow-Up</option>
-                                <option value="followup" {{ $row->followup == 'followup' ? 'selected' : '' }}>Follow-Up</option>
+                            <select
+                                class="form-select followUpStatus"
+                                data-enquiry-id="{{ $row->id }}"
+                                data-previous-value="{{ $row->followup }}"
+                                onchange="handleFollowUpChange(this)">
+                                <option value="unfollowup" {{ $row->followup === 'unfollowup' ? 'selected' : '' }}>
+                                    Unfollow-Up
+                                </option>
+                                <option value="followup" {{ $row->followup === 'followup' ? 'selected' : '' }} >
+                                    Follow-Up
+                                </option>
                             </select>
-                            <button class="btn btn-success btn-sm markFollowUpBtn" data-enquiry-id="{{ $row->id }}">
-                                Mark Follow-Up
-                            </button>
+
+
+
                         </td>
                         <td class="text-center">
                             <button class="btn btn-warning view-btn"
@@ -140,37 +147,117 @@
 
 @section('scripts')
 <script>
-    $(document).ready(function() {
-        $('#cityTable').DataTable();
+function handleFollowUpChange(selectElement) {
+    let enquiryId = $(selectElement).data('enquiry-id');
+    let newStatus = $(selectElement).val();
+    let previousStatus = $(selectElement).data('previous-value');
 
-        $('.markFollowUpBtn').on('click', function() {
-            let enquiryId = $(this).data('enquiry-id');
-            let status = $(this).siblings('.followUpStatus').val();
+    // Target the container where the message should appear
+    let parentElement = $(selectElement).parent();
 
+    // Remove existing messages (if any)
+    parentElement.find('.unfollowup-message').remove();
+
+    // Show message if "Unfollow-Up" is selected
+    if (newStatus === 'unfollowup') {
+        parentElement.append(
+            `<p class="unfollowup-message" style="color: red; margin-top: 5px;">
+                Please note that you have chosen to unfollow this enquiry.
+            </p>`
+        );
+    }
+
+    // SweetAlert confirmation
+    Swal.fire({
+        title: 'Are you sure?',
+        text: `Do you want to change the follow-up status to "${newStatus}"?`,
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, update it!',
+        cancelButtonText: 'No, cancel',
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Make a PUT request if user confirms
             fetch(`/mark-followup/${enquiryId}`, {
-                method: 'PUT',
+                method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
                 },
-                body: JSON.stringify({ followup: status })
+                body: JSON.stringify({ followup: newStatus }),
             })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert("Follow-up status updated successfully!");
-                    location.reload();
-                } else {
-                    alert("Failed to update follow-up status.");
-                }
-            })
-            .catch(error => console.error('Error:', error));
-        });
+                .then((response) => response.json())
+                .then((data) => {
+                    if (data.success) {
+                        Swal.fire(
+                            'Updated!',
+                            'The follow-up status has been updated.',
+                            'success'
+                        );
 
-        $('#downloadExcel').on('click', function() {
-            const wb = XLSX.utils.table_to_book(document.getElementById('cityTable'), { sheet: "Enquiries" });
-            XLSX.writeFile(wb, 'Enquiries_Data.xlsx');
+                        // Save the current status as the new previous status
+                        $(selectElement).data('previous-value', newStatus);
+                    } else {
+                        Swal.fire(
+                            'Error',
+                            'Failed to update the follow-up status.',
+                            'error'
+                        );
+
+                        // Restore the previous option
+                        $(selectElement).val(previousStatus);
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                    Swal.fire('Error', 'An unexpected error occurred.', 'error');
+
+                    // Restore the previous option
+                    $(selectElement).val(previousStatus);
+                });
+        } else {
+            // Revert to the previous status if canceled
+            $(selectElement).val(previousStatus);
+        }
+    });
+}
+
+
+$(document).ready(function () {
+    $('#cityTable').DataTable();
+
+    // Save the initial value for each dropdown on page load
+    $('.followUpStatus').each(function () {
+        let initialValue = $(this).val();
+        $(this).data('previous-value', initialValue); // Store initial value
+    });
+
+     // Populate modal
+     $('.view-btn').on('click', function () {
+            $('#modalName').text($(this).data('name'));
+            $('#modalEmail').text($(this).data('email'));
+            $('#modalPhone').text($(this).data('phone'));
+            $('#modalLocation').text($(this).data('location'));
+            $('#modalDays').text($(this).data('days'));
+            $('#modalTravelDestination').text($(this).data('travel_destination'));
+            $('#modalBudgetPerHead').text($(this).data('budget_per_head'));
+            $('#modalCabNeed').text($(this).data('cab_need'));
+            $('#modalTotalCount').text($(this).data('total_count'));
+            $('#modalMaleCount').text($(this).data('male_count'));
+            $('#modalFemaleCount').text($(this).data('female_count'));
+            $('#modalTravelDate').text($(this).data('travel_date'));
+            $('#modalRoomsCount').text($(this).data('rooms_count'));
+            $('#modalComments').text($(this).data('comments'));
+            $('#modalDate').text($(this).data('date'));
         });
+});
+
+
+    $('#downloadExcel').on('click', function() {
+        const wb = XLSX.utils.table_to_book(document.getElementById('cityTable'), {
+            sheet: "Enquiries"
+        });
+        XLSX.writeFile(wb, 'Enquiries_Data.xlsx');
     });
 </script>
 @endsection
