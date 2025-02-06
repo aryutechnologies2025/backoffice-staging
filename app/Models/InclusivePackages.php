@@ -15,13 +15,14 @@ class InclusivePackages extends Authenticatable
     protected $fillable = [
         'title',
         'google_map',
-        'slug'
+        'slug',
+        'program_pdf'
     ];
 
 
     public function enquiries()
     {
-        return $this->hasMany(EnquiryDetail::class, 'package_id', 'id');
+        return $this->hasMany(EnquiryDetail::class, 'package_id');
     }
     
     public function destination()

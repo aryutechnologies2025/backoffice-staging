@@ -112,7 +112,7 @@ public function insert(Request $request)
         'camp_rule' => 'required',
         'important_info' => 'required',
         'google_map' => 'required',
-    
+        
         
     ]);
 
@@ -158,6 +158,8 @@ public function insert(Request $request)
         $filePath1 = '/uploads/events_package_images/' . $filename1;
     }
 
+    
+
     // Cache the tour planning data
     $tourPlanningJson = Cache::remember("tour_planning_{$validatedData['title']}", 3600, function () use ($validatedData) {
         return json_encode([
@@ -166,6 +168,18 @@ public function insert(Request $request)
             'plan_description' => $validatedData['plan_description']
         ]);
     });
+
+
+   
+
+    //storing the program_pdf file upload
+    if ($request->hasFile('program_pdf')) {
+        $file = $request->file('program_pdf');
+        $filename = time() . '_' . $file->getClientOriginalName();
+        $file->move(public_path('/uploads/program_pdf'), $filename);
+        $filePath = '/uploads/program_pdf/' . $filename;
+    }
+
 
     // Prepare other JSON fields
     $amenitiesJson = json_encode($request->input('amenity_services'));
@@ -176,6 +190,7 @@ public function insert(Request $request)
 
     // Insert into MySQL
     $inclusive_packages = new InclusivePackages();
+    $inclusive_packages->program_pdf = $filePath;
     $inclusive_packages->program_inclusion = $request->input('program_inclusion');
     $inclusive_packages->break_fast = $request->input('break_fast');
     $inclusive_packages->lunch = $request->input('lunch');
@@ -215,7 +230,7 @@ public function insert(Request $request)
     $inclusive_packages->status = $request->has('status') && $request->input('status') === 'on' ? '1' : '0';
     $inclusive_packages->updated_at = null;
     $inclusive_packages->save();
-
+    Log::info('Record inserted successfully:', ['id' => $inclusive_packages->id]);
     // Cache the inserted record
     Cache::put("inclusive_package_{$inclusive_packages->id}", $inclusive_packages, 3700);
 
@@ -390,6 +405,18 @@ public function insert(Request $request)
             'plan_subtitle' => $validatedData['plan_subtitle'],
             'plan_description' => $validatedData['plan_description']
         ]);
+
+
+         //storing the program_pdf file upload
+    if ($request->hasFile('program_pdf')) {
+        $file = $request->file('program_pdf');
+        $filename = time() . '_' . $file->getClientOriginalName();
+        $file->move(public_path('/uploads/program_pdf'), $filename);
+        $filePath = '/uploads/program_pdf/' . $filename;
+    }
+
+
+
         $amenitiesJson = json_encode($request->input('amenity_services', []));
         $foodBeveragesJson = json_encode($request->input('food_beverages', []));
         $activitiesJson = json_encode($request->input('activities', []));
@@ -397,6 +424,7 @@ public function insert(Request $request)
         $campRulesJson = json_encode($validatedData['camp_rule']);
     
         // Update the model fields
+        $inclusive_packages->program_pdf = $filePath;
         $inclusive_packages->upload_image_name = $request->input('upload_image_name');
     $inclusive_packages->alternate_name = $request->input('alternate_image_name');
         $inclusive_packages->theme_id = $request->input('themes_name');

@@ -25,12 +25,16 @@ class EnquiryDetail extends Model
         'travel_date',
         'rooms_count',
         'reference_id',
-        'package_id',
+        
         'program_title',
         'child_count',
         'child_age',
         'image',
-        'follow_up'
+        'follow_up',
+        
+        'engagement_date',
+        'birth_date'
+       
        
     ];
     public function package()
@@ -39,7 +43,7 @@ class EnquiryDetail extends Model
 }
 public function user()
 {
-    return $this->belongsTo(User::class);
+    return $this->belongsTo(User::class, 'user_id');
 }
 
     

@@ -16,6 +16,7 @@
         <li><strong>Phone Number:</strong> {{$details ['phone']}}</li>
         <li><strong>Travel Destination:</strong>{{$details ['travel_destination']}}</li>
         <li><strong>Message:</strong> {{$details ['comments'] }}</li>
+        <li><strong>Program_information:</strong>{{$details ['program_pdf']}}</li>
 
             <p>If you have any urgent inquiries, please contact us at bharath@innerpece.com or +91 6384131642  </p>
         </ul>

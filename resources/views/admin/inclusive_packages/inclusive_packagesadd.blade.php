@@ -670,6 +670,22 @@
                         </script>
 
 
+                        <div class="row mb-3">
+                            <div class="col">
+                                <div class="form-body px-5 rounded-4">
+                                    <h4 class="fw-bold mb-3">08. Upload PDF</h4>
+                                    <div class="mb-1">
+                                        <div class="row g-2 mb-2">
+                                            <div class="col">
+                                                <label class="form-label form-label-top form-label-auto mb-2">Upload PDF</label>
+                                                <input type="file" id="program_pdf" name="program_pdf" class="form-control py-2 rounded-3 shadow-sm" required>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="row mb-2">
                             <div class="col">
                                 <div class="form-body px-5 rounded-4">

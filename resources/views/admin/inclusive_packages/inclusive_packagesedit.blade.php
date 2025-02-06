@@ -807,6 +807,33 @@
     });
 </script>
 
+<div class="row mb-3">
+    <div class="col">
+        <div class="form-body px-5 rounded-4 shadow-sm">
+            <h4 class="fw-bold mb-3">08. Upload PDF</h4>
+            <div class="mb-3">
+                <label for="program_pdf" class="form-label fw-semibold">Upload PDF</label>
+                <input 
+                    type="file" 
+                    id="program_pdf" 
+                    name="program_pdf" 
+                    class="form-control py-2 rounded-3 shadow-sm" 
+                    accept="application/pdf"
+                >
+                @if(!empty($package_details->program_pdf))
+                    <a 
+                        href="{{ asset($package_details->program_pdf) }}" 
+                        target="_blank" 
+                        class="d-block mt-2 text-primary text-decoration-underline"
+                    >
+                        View Current PDF
+                    </a>
+                @endif
+            </div>
+        </div>
+    </div>
+</div>
+
 
 
 
