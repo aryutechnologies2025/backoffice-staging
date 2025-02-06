@@ -26,6 +26,7 @@ use App\Models\AffiliateLinkClick;
 use App\Models\HomeEnquiryDetail;
 use App\Mail\enquiryEmail;
 use App\Mail\adminEmail;
+use App\Models\program_pdf;
 
 class ProgramApiController extends Controller
 {
@@ -1087,7 +1088,16 @@ class ProgramApiController extends Controller
         $enquiryData['child_age'] = json_encode($request->input('child_age')); // Convert child_age to JSON
 
         $enquiry = EnquiryDetail::create($enquiryData);
+ // Find matching program PDF
+ $programPdf = program_pdf::where('is_deleted', '0')->where('program_name', $enquiry->program_title)->first();
 
+ if (!$programPdf) {
+     return response()->json([
+         'message' => 'No matching program found for the provided program title.',
+         'data' => $enquiry
+     ], 404);
+ }
+     
         // Send email notifications
         try {
             // Send email to the client
@@ -1097,6 +1107,8 @@ class ProgramApiController extends Controller
                 'phone' => $enquiry->phone,
                 'travel_destination' => $enquiry->travel_destination,
                 'comments' => $enquiry->comments,
+                'program_pdf' => $programPdf->program_pdf
+
             ]));
 
             // Send email to admin

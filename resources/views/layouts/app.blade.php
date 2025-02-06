@@ -119,6 +119,10 @@
                         <img src="/assets/image/dashboard/slider.svg" alt="">
                         <span class="nav_name"> Influencer </span>
                     </a>
+                    <a href="{{ route('admin.program_pdf_list') }}" class="nav_link {{ request()->routeIs(['admin.program_pdf_list','admin.program_pdf_add_form', 'admin.program_insert', 'admin.program_updates', 'admin.program_delete']) ? 'active' : '' }} mb-3 text-white">
+                        <img src="/assets/image/dashboard/slider.svg" alt="">
+                        <span class="nav_name"> pdf </span>
+                    </a>
                     <a href="{{ route('admin.slider_list') }}" class="nav_link {{ request()->routeIs(['admin.slider_list', 'admin.slider_add_form', 'admin.slider_edit_form']) ? 'active' : '' }} mb-3 text-white">
                         <img src="/assets/image/dashboard/slider.svg" alt="">
                         <span class="nav_name"> Slider </span>

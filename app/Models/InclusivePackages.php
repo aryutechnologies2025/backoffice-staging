@@ -62,6 +62,13 @@ class InclusivePackages extends Authenticatable
                     ->where('is_deleted', '0');
     }
 
+    public function pdf()
+    {
+        return $this->hasMany(program_pdf::class, 'program_id', 'id')
+                    ->where('status', '1')
+                    ->where('is_deleted', '0');
+    }
+
     public function wishlists()
     {
         return $this->hasMany(Program_wishlist::class, 'program_id', 'id','user_id');

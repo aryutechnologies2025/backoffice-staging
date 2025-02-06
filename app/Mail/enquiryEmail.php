@@ -23,12 +23,30 @@ class enquiryEmail extends Mailable
         $this->details = $details;
     }
 
+    // public function build()
+    // {
+    //     return $this->subject('Enquiry Notification')
+    //         ->view('emails.ClientNotification')
+    //         ->with('details', $this->details);
+    // }
+
     public function build()
-    {
-        return $this->subject('Enquiry Notification')
-            ->view('emails.ClientNotification')
-            ->with('details', $this->details);
+{
+    $email = $this->subject('Enquiry Notification')
+        ->view('emails.ClientNotification')
+        ->with('details', $this->details);
+
+    // Check if program_pdf exists and attach it
+    if (!empty($this->details['program_pdf'])) {
+        $filePath = public_path('uploads/program_pdfs/' . $this->details['program_pdf'] ?? null);
+        if (file_exists($filePath)) {
+            $email->attach($filePath);
+        }
     }
+
+    return $email;
+}
+
 
     /**
      * Get the message envelope.

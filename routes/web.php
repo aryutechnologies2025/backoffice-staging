@@ -33,6 +33,7 @@ use App\Http\Controllers\Admin\AddressController;
 use App\Http\Controllers\Admin\InfluencersController;
 // use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Admin\HomeEnquiryController;
+use App\Http\Controllers\Admin\PdfController;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 
@@ -149,6 +150,18 @@ Route::prefix('/')->group(function () {
                 Route::post('/change-status', 'change_status')->name('admin.program_status');
             });
         });
+
+        Route::controller(PdfController::class)->group(function () {
+            Route::prefix('pdf')->group(function () {
+                Route::get('/', 'index')->name('admin.program_pdf_list');
+                Route::get('/add', 'add_form')->name('admin.program_pdf_add_form');
+                Route::post('/insert', 'store')->name('admin.program_insert');
+                Route::get('/{id}/edit', 'edit')->name('admin.program_edit_form');
+                Route::match(['get', 'post'], '/{id}/update', 'update')->name('admin.program_updates');
+                Route::post('/delete/{id}', 'destroy')->name('admin.program_delete');
+            });
+        });
+
 
         //address
         Route::controller(AddressController::class)->group(function () {
