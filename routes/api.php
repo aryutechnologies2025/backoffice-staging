@@ -8,6 +8,8 @@ use App\Http\Controllers\Api\SiteApiController;
 use App\Http\Controllers\Api\HomeApiController;
 use App\Http\Controllers\Api\ProgramApiController;
 use App\Http\Controllers\Api\ReviewController;
+use App\Http\Controllers\GoogleAuthController;
+
 /*
 |----------------------------------------------------------------------
 | API Routes
@@ -99,5 +101,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/get-wishlist', [ProgramApiController::class, 'getWishlist']);
     Route::post('/add-remove-wishlist', [ProgramApiController::class, 'manage_wishlist']);
 
+
+
+    Route::get('/auth/google/redirect', [GoogleAuthController::class, 'redirectToGoogle']);
+Route::get('/auth/google/callback', [GoogleAuthController::class, 'handleGoogleCallback']);
 });
+
+
+
 
