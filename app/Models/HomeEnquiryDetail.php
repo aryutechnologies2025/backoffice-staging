@@ -30,4 +30,9 @@ class HomeEnquiryDetail extends Model
         'birth_date'
         
     ];
+
+    public function followUps()
+{
+    return $this->hasMany(FollowUp::class, 'home_id', 'id');
+}
 }

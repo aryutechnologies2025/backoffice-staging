@@ -20,6 +20,7 @@ class FollowUp extends Model
         'deal_value',
         'assigned_to',
         'next_follow_up_date',
+        'home_id',
     ];
 
     // Define relationship with EnquiryDetail (one-to-many)

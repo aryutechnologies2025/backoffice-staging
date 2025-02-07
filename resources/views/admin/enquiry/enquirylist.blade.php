@@ -94,7 +94,7 @@
                                     data-bs-target="#viewModal">
                                     <i class="bi bi-eye-fill"></i>
                                 </button>
-                                <a href="{{ route('admin.enquiry.followups', $row->id) }}" class="btn btn-primary"><i class="bi bi-list-check"></i></a>
+                                <!-- <a href="{{ route('admin.enquiry.followups', $row->id) }}" class="btn btn-primary"><i class="bi bi-list-check"></i></a> -->
                             </td>
                         </tr>
                         @endforeach

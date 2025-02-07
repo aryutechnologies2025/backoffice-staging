@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\EnquiryDetail;
 use App\Models\FollowUp;
+use App\Models\HomeEnquiryDetail;
 use Illuminate\Support\Facades\Log;
 
 class EnquiryController extends Controller
@@ -33,22 +34,22 @@ class EnquiryController extends Controller
             'next_follow_up_date' => 'required|date',
         ]);
     
-        $validated['enquiry_id'] = $enquiryId;
+        $validated['home_id'] = $enquiryId;
         FollowUp::create($validated);
     
-        return redirect()->route('admin.enquiry_list')->with('success', 'Follow-up added successfully!');
+        return redirect()->route('admin.home_enquiry_list')->with('success', 'Follow-up added successfully!');
     }
     
     public function viewFollowUps($enquiryId)
     {
-        $enquiry = EnquiryDetail::with('followUps')->findOrFail($enquiryId);
+        $enquiry = HomeEnquiryDetail::with('followUps')->findOrFail($enquiryId);
     
         return view('admin.enquiry.followups', compact('enquiry'));
     }
     
     public function showEnquiryForm($id)
     {
-        $enquiry = EnquiryDetail::findOrFail($id); // Retrieve the enquiry by ID
+        $enquiry = HomeEnquiryDetail::findOrFail($id); // Retrieve the enquiry by ID
 
         return view('admin.enquiry.form', compact('enquiry')); // Pass the enquiry to the view
     }
