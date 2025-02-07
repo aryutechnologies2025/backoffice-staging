@@ -1089,7 +1089,8 @@ class ProgramApiController extends Controller
 
         $enquiry = EnquiryDetail::create($enquiryData);
  // Find matching program PDF
- $programPdf = program_pdf::where('is_deleted', '0')->where('program_name', $enquiry->program_title)->first();
+//  $programPdf = program_pdf::where('is_deleted', '0')->where('program_name', $enquiry->program_title)->first();
+$programPdf = InclusivePackages::where('is_deleted', '0')->where('title', $enquiry->program_title)->first();
 
  if (!$programPdf) {
      return response()->json([
@@ -1108,7 +1109,6 @@ class ProgramApiController extends Controller
                 'travel_destination' => $enquiry->travel_destination,
                 'comments' => $enquiry->comments,
                 'program_pdf' => $programPdf->program_pdf
-
             ]));
 
             // Send email to admin

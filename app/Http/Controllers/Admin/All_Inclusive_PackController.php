@@ -112,6 +112,8 @@ public function insert(Request $request)
         'camp_rule' => 'required',
         'important_info' => 'required',
         'google_map' => 'required',
+        'program_pdf' => 'file|max:10240'
+
         
         
     ]);
@@ -176,9 +178,17 @@ public function insert(Request $request)
     if ($request->hasFile('program_pdf')) {
         $file = $request->file('program_pdf');
         $filename = time() . '_' . $file->getClientOriginalName();
-        $file->move(public_path('/uploads/program_pdf'), $filename);
-        $filePath = '/uploads/program_pdf/' . $filename;
+        $file->move(public_path('/uploads/program_pdfs'), $filename);
+        $filePath = '/uploads/program_pdfs/' . $filename;
     }
+
+    // if ($request->hasFile('program_pdf')) {
+    //     $file = $request->file('program_pdf');
+    //     $extension = $file->getClientOriginalExtension();
+    //     $filename = time() . '.' . $extension;
+    //     $file->move('uploads/program_pdfs/', $filename);
+    //     $filePath->program_pdf = $filename;
+    // }
 
 
     // Prepare other JSON fields
@@ -309,6 +319,7 @@ public function insert(Request $request)
             'bath_room' => 'required',
             'bed_room' => 'required',
             'hall' => 'required',
+            'program_pdf' => 'file|max:10240'
         ]);
     
         // Find the record to update
@@ -410,9 +421,11 @@ public function insert(Request $request)
          //storing the program_pdf file upload
     if ($request->hasFile('program_pdf')) {
         $file = $request->file('program_pdf');
-        $filename = time() . '_' . $file->getClientOriginalName();
-        $file->move(public_path('/uploads/program_pdf'), $filename);
-        $filePath = '/uploads/program_pdf/' . $filename;
+        $extension = $file->getClientOriginalExtension();
+        $filename = time() . '.' . $extension;
+
+        $file->move(public_path('uploads/program_pdfs'), $filename);
+        $inclusive_packages->program_pdf = $filename;
     }
 
 
@@ -424,7 +437,7 @@ public function insert(Request $request)
         $campRulesJson = json_encode($validatedData['camp_rule']);
     
         // Update the model fields
-        $inclusive_packages->program_pdf = $filePath;
+        // $inclusive_packages->program_pdf = $filePath;
         $inclusive_packages->upload_image_name = $request->input('upload_image_name');
     $inclusive_packages->alternate_name = $request->input('alternate_image_name');
         $inclusive_packages->theme_id = $request->input('themes_name');
