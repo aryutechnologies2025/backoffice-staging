@@ -20,14 +20,14 @@
     }
 </style>
 
-<div class="container">
+<div class="container-wrapper pt-5">
     <div class="row">
         <div class="col-md-12 mt-5 mb-6">
             <b><a href="/dashboard">Dashboard</a> > <a class="city" href="">Program PDF</a></b>
             <br>
             <br>
-            <h3>Program PDF</h3>
-            <form method="POST" action="{{ route('admin.program_insert') }}" enctype="multipart/form-data">
+            <h3 class="mb-3">Program PDF</h3>
+            <form method="POST" action="{{ route('admin.program_pdf_insert') }}" enctype="multipart/form-data">
                 @csrf
                 <div class="row g-2 mb-4">
                     <div class="col-md-6 mb-2">
@@ -44,7 +44,7 @@
                         <input type="file" name="program_pdf" id="program_pdf" class="form-control py-2 rounded-3 shadow-sm">
                     </div>
                 </div>
-                <button type="submit" class="btn btn-primary">Add Program PDF</button>
+                <button type="submit" class="btn btn-success text-white">Add Program PDF</button>
             </form>
             <hr>
             <table class="table table-striped" id="programPdfTable">
@@ -62,7 +62,7 @@
                         <td>{{ $program_pdf->program_pdf }}</td>
                         <td>
                             <a href="#" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editModal{{ $program_pdf->id }}">
-                            <i class="bi bi-pencil-square"></i></a>
+                                <i class="bi bi-pencil-square"></i></a>
 
                             <!-- Edit Modal -->
                             <div class="modal fade py-5" id="editModal{{ $program_pdf->id }}" tabindex="-1" aria-labelledby="editModalLabel{{ $program_pdf->id }}" aria-hidden="true">
@@ -73,7 +73,7 @@
                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                         </div>
                                         <div class="modal-body">
-                                            <form method="POST" action="{{ route('admin.program_updates', $program_pdf->id) }}" enctype="multipart/form-data">
+                                            <form method="POST" action="{{ route('admin.program_pdf_updates', $program_pdf->id) }}" enctype="multipart/form-data">
                                                 @csrf
                                                 @method('POST')
                                                 <div class="row g-2 mb-4">
@@ -97,13 +97,14 @@
                                     </div>
                                 </div>
                             </div>
-                            <form id="delete-form-{{ $program_pdf->id }}" method="POST" action="{{ route('admin.program_delete', $program_pdf->id) }}" class="delete-form">
+                            <form id="delete-form-{{ $program_pdf->id }}" method="POST" action="{{ route('admin.program_pdf_delete', $program_pdf->id) }}" class="delete-form">
                                 @csrf
                                 @method('POST')
                                 <button type="button" class="btn btn-danger" onclick="confirmDelete({{ $program_pdf->id }})">
-                                <i class="bi bi-trash"></i>
-                            </button>                            </form>
-                            
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </form>
+
                         </td>
                     </tr>
                     @endforeach

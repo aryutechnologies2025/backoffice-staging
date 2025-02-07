@@ -132,7 +132,7 @@ table>thead {
 .table thead>tr>th {
     border-bottom: 1px solid #C2C2C2;
     padding-bottom: 0;
-    background-color: #021B32 !important;
+    background-color: #ddd !important;
     padding: 1%;
 }
 

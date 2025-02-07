@@ -155,10 +155,10 @@ Route::prefix('/')->group(function () {
             Route::prefix('pdf')->group(function () {
                 Route::get('/', 'index')->name('admin.program_pdf_list');
                 Route::get('/add', 'add_form')->name('admin.program_pdf_add_form');
-                Route::post('/insert', 'store')->name('admin.program_insert');
-                Route::get('/{id}/edit', 'edit')->name('admin.program_edit_form');
-                Route::match(['get', 'post'], '/{id}/update', 'update')->name('admin.program_updates');
-                Route::post('/delete/{id}', 'destroy')->name('admin.program_delete');
+                Route::post('/insert', 'store')->name('admin.program_pdf_insert');
+                Route::get('/{id}/edit', 'edit')->name('admin.program_pdf_edit_form');
+                Route::match(['get', 'post'], '/{id}/update', 'update')->name('admin.program_pdf_updates');
+                Route::post('/delete/{id}', 'destroy')->name('admin.program_pdf_delete');
             });
         });
 
