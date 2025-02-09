@@ -60,7 +60,11 @@ public function followUps()
 {
     return $this->hasMany(FollowUp::class, 'enquiry_id', 'id');
 }
+public function enquiryFollowUps()
+{
+    return $this->hasMany(EnquiryFollow_up::class, 'enquiry_id', 'id');
+
 
 }
 
-?>
+}

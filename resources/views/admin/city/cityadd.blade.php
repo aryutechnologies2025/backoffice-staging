@@ -130,7 +130,7 @@
                 img.onload = function () {
                     // Check dimensions
                     if (img.width > 56 && img.height > 56) {
-                        showSweetError('Image size must not exceed 600x120 pixels.');
+                        showSweetError('Image size must not exceed 56x56 pixels.');
                         input.value = ''; // Clear the input
                     } else {
                         previewElement.src = e.target.result; // Set the preview

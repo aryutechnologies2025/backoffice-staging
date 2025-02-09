@@ -423,9 +423,18 @@ Route::get('/admin/influencer/{influencerId}/affiliate-links', [InfluencersContr
         });
         Route::post('/enquiry/followup', [EnquiryController::class, 'markFollowUp']);
 
-        Route::get('admin/enquiry/followups/{id}', [EnquiryController::class, 'viewFollowUps'])->name('admin.enquiry.followups');
-        Route::post('/admin/enquiry/{id}/add-follow-up', [EnquiryController::class, 'addFollowUp'])->name('admin.enquiry.addFollowUp');
+        Route::get('admin/home-enquiry/followups/{id}', [EnquiryController::class, 'viewFollowUps'])->name('admin.enquiry.followups');
+        Route::post('/admin/home-enquiry/{id}/add-follow-up', [EnquiryController::class, 'addFollowUp'])->name('admin.enquiry.addFollowUp');
         Route::get('/admin/enquiry/{id}/form', [EnquiryController::class, 'showEnquiryForm'])->name('admin.enquiry.form');
+
+
+
+        //enquiryFollowup 
+        Route::get('admin/enquiry/followups/{id}', [EnquiryController::class, 'viewEnquiryFollowUps'])->name('admin.enquiry.enquiryfollowups');
+        Route::post('/admin/enquiry/{id}/add-follow-up', [EnquiryController::class, 'addEnquiryFollowUp'])->name('admin.enquiry.enquiryaddFollowUp');
+        Route::get('/admin/enquiry/{id}/form', [EnquiryController::class, 'showEnquiryFollowUpForm'])->name('admin.enquiry.enquiryform');
+
+
 
         //Home Enquiry Details
         Route::controller(HomeEnquiryController::class)->group(function () {

@@ -178,7 +178,7 @@ function validateImage(input) {
             img.onload = function() {
                 // Check image dimensions
                 if (img.width > 56 && img.height > 56) {
-                    showError('Image size must not exceed 600x120 pixels.');
+                    showError('Image size must not exceed 56x56 pixels.');
                     input.value = ''; // Clear the input
                 } else {
                     // Valid image, update preview

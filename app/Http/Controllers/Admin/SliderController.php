@@ -89,6 +89,8 @@ class SliderController extends Controller
                 ->with('error', 'Slider not found.');
         }
 
+        $filePath1 = $slider->slider_image; // Initialize $filePath1 with existing image path
+
         if ($request->hasFile('image_1')) {
             $file1 = $request->file('image_1');
            
@@ -101,7 +103,7 @@ class SliderController extends Controller
 
 
         $slider->slider_name = $request->input('slider_name');
-        $slider->slider_image = $filePath1 ?? null;
+        $slider->slider_image = $filePath1;
         $slider->alternate_name = $request->input('alternate_image_name'); // Save alternate name
         $slider->subtitle = $request->input('sub_title');
         $slider->list_order = $request->input('list_order');

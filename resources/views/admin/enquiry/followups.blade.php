@@ -43,7 +43,7 @@
 </div>
 
 
-<div class="row mb-12">
+<div class="row mb-3">
     <div class="col-md-4">
         <strong><label for="name" class="form-label">Name:</strong>{{ $enquiry->name }}</label>
     </div>
