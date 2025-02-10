@@ -12,7 +12,7 @@ class ThemesController extends Controller
     public function list(Request $request)
     {
         $title = 'Themes List';
-        $themes = Themes::where('is_deleted', '0')->paginate(10);
+        $themes = Themes::where('is_deleted', '0')->get();
         return view('admin.themes.themeslist', compact('title', 'themes'));
     }
 

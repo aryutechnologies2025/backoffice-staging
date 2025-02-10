@@ -16,7 +16,7 @@ class ClientreviewController extends Controller
         $title = 'Client Review List';
         $review_dts = Clientreview::with('program_dts') // Eager load the related theme
             ->where('is_deleted', '0')
-            ->paginate(10);
+            ->get();
        
             return view('admin.client_review.client_reviewlist', compact('title', 'review_dts'));
     }

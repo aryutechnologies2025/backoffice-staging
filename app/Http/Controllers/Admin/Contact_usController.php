@@ -11,7 +11,7 @@ class Contact_usController extends Controller
     public function list(Request $request)
     {
         $title = 'Contact-Us List';
-        $contact_dts = ContactUs::with('user')->orderBy('created_at', 'desc')->paginate(10);
+        $contact_dts = ContactUs::with('user')->orderBy('created_at', 'desc')->get();
 
         return view('admin.contact_us.contactlist', compact('title', 'contact_dts'));
     }

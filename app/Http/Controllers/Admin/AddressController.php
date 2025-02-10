@@ -12,7 +12,7 @@ class AddressController extends Controller
     public function list(Request $request)
     {
         $title = 'Address List';
-        $user_dts = Address::where('is_deleted', '0')->orderBy('created_at', 'desc')->paginate(10);
+        $user_dts = Address::where('is_deleted', '0')->orderBy('created_at', 'desc')->get();
         return view('admin.address.addresslist', compact('title', 'user_dts'));
     }
 

@@ -12,7 +12,7 @@ class CityController extends Controller
     public function list(Request $request)
     {
         $title = 'Destination List';
-        $city_dts = City::where('is_deleted', '0')->paginate(10);
+        $city_dts = City::where('is_deleted', '0')->get();
         return view('admin.city.citylist', compact('title', 'city_dts'));
     }
 

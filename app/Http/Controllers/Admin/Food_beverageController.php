@@ -11,7 +11,7 @@ class Food_beverageController extends Controller
     public function list(Request $request)
     {
         $title = 'Food&Beverage List';
-        $food_beverage = FoodBeverage::where('is_deleted', '0')->paginate(10);
+        $food_beverage = FoodBeverage::where('is_deleted', '0')->get();
         return view('admin.food_beverage.food_beveragelist', compact('title', 'food_beverage'));
     }
 

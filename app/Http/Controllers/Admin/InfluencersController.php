@@ -13,7 +13,7 @@ class InfluencersController extends Controller
     public function list(Request $request)
     {
         $title = 'Influencers List';
-        $influencers = Influencers::where('is_deleted', '0')->where('status', "1")->paginate(10);
+        $influencers = Influencers::where('is_deleted', '0')->where('status', "1")->get();
     
         // Fetch affiliate links for each influencer
         foreach ($influencers as $influencer) {

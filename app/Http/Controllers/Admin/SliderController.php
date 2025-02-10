@@ -12,7 +12,7 @@ class SliderController extends Controller
     public function list(Request $request)
     {
         $title = 'Slider List';
-        $slider_dts = Slider::where('is_deleted', '0')->paginate(10);
+        $slider_dts = Slider::where('is_deleted', '0')->get();
     //   dd($slider_dts);
         return view('admin.slider.sliderlist', compact('title', 'slider_dts'));
     }

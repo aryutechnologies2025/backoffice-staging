@@ -11,7 +11,7 @@ class FAQController extends Controller
     public function list(Request $request)
     {
         $title = 'FAQ List';
-        $faq_dts = FAQ::where('is_deleted', '0')->paginate(10);
+        $faq_dts = FAQ::where('is_deleted', '0')->get();
         return view('admin.faq.faqlist', compact('title', 'faq_dts'));
     }
 

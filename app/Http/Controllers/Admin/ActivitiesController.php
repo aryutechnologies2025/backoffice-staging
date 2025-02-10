@@ -11,7 +11,7 @@ class ActivitiesController extends Controller
     public function list(Request $request)
     {
         $title = 'Activities List';
-        $activities = Activities::where('is_deleted', '0')->paginate(10);
+        $activities = Activities::where('is_deleted', '0')->get();
         return view('admin.activities.activitieslist', compact('title', 'activities'));
     }
 
