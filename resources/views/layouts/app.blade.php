@@ -105,6 +105,10 @@
                         <img src="/assets/image/dashboard/contact-us.svg" alt="">
                         <span class="nav_name">contact-Us</span>
                     </a>
+                    <a href="{{ route('admin.assistance_form_list') }}" class="nav_link {{ request()->routeIs(['admin.assistance_form_list']) ? 'active' : '' }} mb-3 text-white">
+                    <i class="bi bi-info-square"></i>
+                        <span class="nav_name">Assitance Form</span>
+                    </a>
                     <a href="{{ route('admin.enquiry_list') }}" class="nav_link {{ request()->routeIs(['admin.enquiry_list']) ? 'active' : '' }} mb-3 text-white">
                         <img src="/assets/image/dashboard/enquiry.svg" alt="">
                         <span class="nav_name"> Booking </span>

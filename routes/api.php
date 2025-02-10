@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\ApiController;
+use App\Http\Controllers\Api\AssitanceController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\SiteApiController;
 use App\Http\Controllers\Api\HomeApiController;
@@ -34,6 +35,9 @@ Route::prefix('v1')->group(function () {
         Route::post('/update-profile/{id}', [AuthController::class, 'user_update']);
         Route::post('/login', [AuthController::class, 'login']);
         Route::post('/contact', [AuthController::class, 'store_contact']); // Contact Form
+
+        //assistance form
+        Route::post('/assistance', [AssitanceController ::class, 'store']);
         
         //header enquiry form
         Route::post('/home-enquiry-form', [ProgramApiController::class, 'home_enquiry_form_insert']);

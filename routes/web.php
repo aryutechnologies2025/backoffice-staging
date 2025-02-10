@@ -30,6 +30,7 @@ use App\Http\Controllers\Admin\GroupTourController;
 use App\Http\Controllers\Admin\ClientreviewController;
 use App\Http\Controllers\Admin\WishlistController;
 use App\Http\Controllers\Admin\AddressController;
+use App\Http\Controllers\Admin\AssitanceFormController;
 use App\Http\Controllers\Admin\InfluencersController;
 // use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Admin\HomeEnquiryController;
@@ -412,6 +413,14 @@ Route::get('/admin/influencer/{influencerId}/affiliate-links', [InfluencersContr
          Route::controller(Contact_usController::class)->group(function () {
             Route::prefix('contact-us')->group(function () {
                 Route::get('/', 'list')->name('admin.contact_list');
+            });
+        });
+
+
+
+        Route::controller(AssitanceFormController::class)->group(function () {
+            Route::prefix('assistance-form')->group(function () {
+                Route::get('/', 'list')->name('admin.assistance_form_list');
             });
         });
 
