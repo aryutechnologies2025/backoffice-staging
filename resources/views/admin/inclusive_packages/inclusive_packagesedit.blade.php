@@ -806,7 +806,6 @@
         }
     });
 </script>
-
 <div class="row mb-3">
     <div class="col">
         <div class="form-body px-5 rounded-4 shadow-sm">
@@ -819,6 +818,8 @@
                     name="program_pdf" 
                     class="form-control py-2 rounded-3 shadow-sm" 
                     accept="application/pdf"
+                    value="{{$package_details->program_pdf}}"
+
                 >
                 @if(!empty($package_details->program_pdf))
                     <a 

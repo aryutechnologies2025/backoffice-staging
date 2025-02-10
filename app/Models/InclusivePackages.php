@@ -151,3 +151,11 @@ public function safetyFeatures()
 
 }
 
+// if ($request->hasFile('program_pdf')) {
+//     $file = $request->file('program_pdf');
+//     $extension = $file->getClientOriginalExtension();
+//     $filename = time() . '.' . $extension;
+
+//     $file->move(public_path('uploads/program_pdfs'), $filename);
+//     $inclusive_packages->program_pdf = $filename;
+// }

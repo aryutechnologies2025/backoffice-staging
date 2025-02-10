@@ -171,16 +171,22 @@ public function insert(Request $request)
         ]);
     });
 
+    if ($request->hasFile('program_pdf')) {
+        $file = $request->file('program_pdf');
+        $extension = $file->getClientOriginalExtension();
+        $filename = time() . '.' . $extension;
 
+        $file->move(public_path('uploads/program_pdfs'), $filename);
+    }
    
 
     //storing the program_pdf file upload
-    if ($request->hasFile('program_pdf')) {
-        $file = $request->file('program_pdf');
-        $filename = time() . '_' . $file->getClientOriginalName();
-        $file->move(public_path('/uploads/program_pdfs'), $filename);
-        $filePath = '/uploads/program_pdfs/' . $filename;
-    }
+    // if ($request->hasFile('program_pdf')) {
+    //     $file = $request->file('program_pdf');
+    //     $filename = time() . '_' . $file->getClientOriginalName();
+    //     $file->move(public_path('/uploads/program_pdfs'), $filename);
+    //     $filePath = '/uploads/program_pdfs/' . $filename;
+    // }
 
     // if ($request->hasFile('program_pdf')) {
     //     $file = $request->file('program_pdf');
@@ -200,7 +206,7 @@ public function insert(Request $request)
 
     // Insert into MySQL
     $inclusive_packages = new InclusivePackages();
-    $inclusive_packages->program_pdf = $filePath;
+    $inclusive_packages->program_pdf = $filename;
     $inclusive_packages->program_inclusion = $request->input('program_inclusion');
     $inclusive_packages->break_fast = $request->input('break_fast');
     $inclusive_packages->lunch = $request->input('lunch');
@@ -419,6 +425,7 @@ public function insert(Request $request)
 
 
          //storing the program_pdf file upload
+    $filename = null;
     if ($request->hasFile('program_pdf')) {
         $file = $request->file('program_pdf');
         $extension = $file->getClientOriginalExtension();
