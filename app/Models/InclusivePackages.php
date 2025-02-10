@@ -130,24 +130,24 @@ public function safetyFeatures()
         }
     }
     
-    public static function boot()
-    {
-        parent::boot();
+    // public static function boot()
+    // {
+    //     parent::boot();
 
-        static::creating(function ($model) {
-            // Automatically generate slug if not provided
-            if (empty($model->slug)) {
-                $model->slug = Str::slug($model->title);  // Generate slug from the title
-            }
-        });
+    //     static::creating(function ($model) {
+    //         // Automatically generate slug if not provided
+    //         if (empty($model->slug)) {
+    //             $model->slug = Str::slug($model->title);  // Generate slug from the title
+    //         }
+    //     });
 
-        static::updating(function ($model) {
-            // Ensure slug is updated when the title changes
-            if (empty($model->slug)) {
-                $model->slug = Str::slug($model->title);
-            }
-        });
-    }
+    //     static::updating(function ($model) {
+    //         // Ensure slug is updated when the title changes
+    //         if (empty($model->slug)) {
+    //             $model->slug = Str::slug($model->title);
+    //         }
+    //     });
+    // }
 
 }
 
