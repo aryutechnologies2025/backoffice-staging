@@ -18,3 +18,4 @@ class ApiController extends Controller
         return response()->json($data);
     }
 }
+                                                             

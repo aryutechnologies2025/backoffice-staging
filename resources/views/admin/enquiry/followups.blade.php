@@ -21,13 +21,14 @@
     .enquiry {
         color: blue;
     }
+
     .modal {
-        width: 100%!important;
-        padding-top: 10%!important;
+        width: 100% !important;
+        padding-top: 10% !important;
     }
 </style>
 
-<div class="row body-sec py-4 justify-content-around">
+<div class="row body-sec py-4 justify-content-around ">
     <div class="col-lg-6">
         <b><a href="/dashboard">Dashboard</a> > <a class="" href="/enquiry">Enquiry List</a> >
             <a class="enquiry" href="">FollowUp</a>
@@ -43,7 +44,7 @@
 </div>
 
 
-<div class="row mb-3">
+<div class="row mb-3 ">
     <div class="col-md-4">
         <strong><label for="name" class="form-label">Name:</strong>{{ $enquiry->name }}</label>
     </div>
@@ -56,7 +57,7 @@
 
 </div>
 <div class="row mb-3">
-    
+
     <div class="col-md-4">
         <strong><label for="program_title" class="form-label">Program Title: </strong>{{ $enquiry->program_title ?? 'null' }}</label>
     </div>
@@ -69,7 +70,7 @@
 </div>
 
 <div class="row mb-3">
-    
+
 
     <div class="col-md-4">
         <strong><label for="comments" class="form-label">Notes: </strong>{{ $enquiry->comments }}</label>
@@ -78,7 +79,7 @@
 
 <div class="col-lg-6">
     <div class="d-flex justify-content-start">
-        <button class="mt-5 btn btn-primary" id="openFormButton">Add Follow-up data</button>
+        <button class="mt-5 btn btn-primary text-white" id="openFormButton">Add Follow-up data</button>
     </div>
 </div>
 
@@ -106,6 +107,12 @@
                                 <option value="Website">Website</option>
                                 <option value="Whatsapp">Whatsapp</option>
                                 <option value="Influencer">Influencer</option>
+                                <option value="Social Media">Social Media</option>
+                                <option value="Travel Agents">Travel Agents</option>
+                                <option value="Freelancers">Freelancers</option>
+                                <option value="Affiliate">Affiliate</option>
+                                <option value="Referal">Referal</option>
+                                <option value="other">Other</option>
                             </select>
                         </div>
                     </div>
@@ -128,31 +135,17 @@
                         </div>
                     </div>
                     <div class="row mb-3">
-                        <div class="col-md-6">
-                            <strong><label for="action_required" class="form-label">Action Required <span class="text-danger">*</span></label></strong>
-                            <select id="action_required" name="action_required" class="form-control">
-                                <option value="Opened">Opened</option>
-                                <option value="Closed">Closed</option>
-                            </select>
-                        </div>
+
                         <div class="col-md-6">
                             <strong><label for="deal_value" class="form-label">Deal Value <span class="text-danger">*</span></label></strong>
                             <input type="number" step="0.01" id="deal_value" name="deal_value" class="form-control">
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <strong><label for="interest_prospect" class="form-label">Accepted Or Rejected <span class="text-danger">*</span></label></strong>
-                            <select id="interest_prospect" name="interest_prospect" class="form-control">
-                                <option value="accepted">Accepted</option>
-                                <option value="rejected">Rejected</option>
-                            </select>
                         </div>
                         <div class="col-md-6">
                             <strong><label for="assigned_to" class="form-label">Assigned To <span class="text-danger">*</span></label></strong>
                             <input type="text" id="assigned_to" name="assigned_to" class="form-control">
                         </div>
                     </div>
+
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <strong><label for="next_follow_up_date" class="form-label">Next FollowUp Date <span class="text-danger">*</span></label></strong>
@@ -183,11 +176,9 @@
     <thead>
         <tr>
             <th>Date</th>
-            <th>Interest</th>
             <th>Lead Source</th>
             <th>Lead Status</th>
             <th>Notes</th>
-            <th>Action Required</th>
             <th>Deal Value</th>
             <th>Next FollowUp</th>
             <th>Assigned To</th>
@@ -197,11 +188,9 @@
         @foreach($enquiry->followUps as $followUp)
         <tr>
             <td>{{ $followUp->follow_up_date }}</td>
-            <td>{{ $followUp->interest_prospect }}</td>
             <td>{{ $followUp->lead_source }}</td>
             <td>{{ $followUp->lead_status }}</td>
             <td>{{ $followUp->follow_up_notes }}</td>
-            <td>{{ $followUp->action_required }}</td>
             <td>{{ $followUp->deal_value }}</td>
             <td>{{$followUp->next_follow_up_date }}</td>
             <td>{{ $followUp->assigned_to }}</td>

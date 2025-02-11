@@ -28,10 +28,8 @@ class EnquiryController extends Controller
             'lead_source' => 'required|string',
             'lead_status' => 'required|string',
             'follow_up_notes' => 'required|string',
-            'action_required' => 'required|string',
             'deal_value' => 'required|numeric',
             'assigned_to' => 'required|string',
-            'interest_prospect' => 'required|string',
             'next_follow_up_date' => 'required|date',
         ]);
     

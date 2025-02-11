@@ -1090,14 +1090,8 @@ class ProgramApiController extends Controller
         $enquiry = EnquiryDetail::create($enquiryData);
  // Find matching program PDF
 //  $programPdf = program_pdf::where('is_deleted', '0')->where('program_name', $enquiry->program_title)->first();
-$programPdf = InclusivePackages::where('is_deleted', '0')->where('title', $enquiry->program_title)->first();
+ $programPdf = InclusivePackages::where('is_deleted', '0')->where('title', $enquiry->program_title)->first();
 
- if (!$programPdf) {
-     return response()->json([
-         'message' => 'No matching program found for the provided program title.',
-         'data' => $enquiry
-     ], 404);
- }
      
         // Send email notifications
         try {
@@ -1108,11 +1102,11 @@ $programPdf = InclusivePackages::where('is_deleted', '0')->where('title', $enqui
                 'phone' => $enquiry->phone,
                 'travel_destination' => $enquiry->travel_destination,
                 'comments' => $enquiry->comments,
-                'program_pdf' => $programPdf->program_pdf
+                'program_pdf' => $programPdf->program_pdf ?? null
             ]));
 
             // Send email to admin
-            Mail::to('bharath@innerpece.com')->send(new adminEmail([
+            Mail::to('contact@innerpece.com')->send(new adminEmail([
                 'name' => $enquiry->name,
                 'email' => $enquiry->email,
                 'phone' => $enquiry->phone,
@@ -1135,83 +1129,6 @@ $programPdf = InclusivePackages::where('is_deleted', '0')->where('title', $enqui
         ], 201);
     }
 
-//     public function enquiry_form_insert(Request $request)
-// {
-//     $validator = Validator::make($request->all(), [
-//         'name' => 'required|string|max:255',
-//         'email' => 'required|email|max:255',
-//         'phone' => ['required', 'regex:/^\+?[0-9]{10,15}$/'],
-//         'comments' => 'required|string',
-//         'location' => 'required|string',
-//         'days' => 'required|integer',
-//         'travel_destination' => 'string|nullable',
-//         'budget_per_head' => 'required|string',
-//         'cab_need' => 'required|string',
-//         'total_count' => 'required|integer',
-//         'male_count' => 'required|integer',
-//         'female_count' => 'required|integer',
-//         'travel_date' => 'required|date',
-//         'rooms_count' => 'required|integer',
-//         'child_count' => 'required|integer|min:0',
-//         'child_age' => 'required_if:child_count,<,1|array|min:' . ($request->input('child_count') > 0 ? $request->input('child_count') : 0),
-
-//         // 'child_age.*' => 'integer|min:0', // Validate each age
-//         // 'child_age' => 'required|min:' . $request->child_count, // Validate as array
-//         'child_age.*' => 'min:0', // Validate each age
-//     ]);
-
-//     if ($validator->fails()) {
-//         return response()->json(['errors' => $validator->errors()], 422);
-//     }
-
-//     // Fetch data from InclusivePackages
-//     $inclusivePackage = InclusivePackages::where('id', $request->input('program_pdf'))->first();
-//     if (!$inclusivePackage) {
-//         return response()->json(['error' => 'Invalid program ID. Program not found.'], 404);
-//     }
-//     $program_pdf = $inclusivePackage->program_pdf;
-
-//     // Prepare enquiry data
-//     $enquiryData = $request->all();
-//     $enquiryData['child_age'] = json_encode($request->input('child_age')); // Convert child_age to JSON
-
-//     $enquiry = EnquiryDetail::create($enquiryData);
-
-//     // Send email notifications
-//     try {
-//         // Email to client
-//         Mail::to($enquiry->email)->send(new enquiryEmail([
-//             'name' => $enquiry->name,
-//             'email' => $enquiry->email,
-//             'phone' => $enquiry->phone,
-//             'travel_destination' => $enquiry->travel_destination,
-//             'Program_information' => $program_pdf,
-//             'comments' => $enquiry->comments,
-//         ]));
-
-//         // Email to admin
-//         Mail::to('bharath@innerpece.com')->send(new adminEmail([
-//             'name' => $enquiry->name,
-//             'email' => $enquiry->email,
-//             'phone' => $enquiry->phone,
-//             'comments' => $enquiry->comments,
-//             'location' => $enquiry->location,
-//             'days' => $enquiry->days,
-//             'travel_destination' => $enquiry->travel_destination,
-//             'cab_need' => $enquiry->cab_need,
-//             'total_count' => $enquiry->total_count,
-//             'child_count' => $enquiry->child_count,
-//         ]));
-//     } catch (\Exception $e) {
-//         Log::error('Mail failed: ' . $e->getMessage());
-//         return response()->json(['error' => 'Enquiry saved, but failed to send email notifications.'], 500);
-//     }
-
-//     return response()->json([
-//         'message' => 'Enquiry submitted successfully. Emails sent if applicable.',
-//         'data' => $enquiry,
-//     ], 201);
-// }
 
     //getting the enquiry details by user email to match the enquiry details email
     public function getEnquiryDetailsByEmail(Request $request)
@@ -1368,7 +1285,7 @@ $programPdf = InclusivePackages::where('is_deleted', '0')->where('title', $enqui
             ]));
 
             // Send email to admin
-            Mail::to('bharath@innerpece.com')->send(new adminEmail([
+            Mail::to('contact@innerpece.com')->send(new adminEmail([
                 'name' => $enquiry->name,
                 'email' => $enquiry->email,
                 'phone' => $enquiry->phone,
@@ -1410,7 +1327,7 @@ $programPdf = InclusivePackages::where('is_deleted', '0')->where('title', $enqui
                     ]));
 
                     // Send email to admin
-                    Mail::to('barathkrishnamoorthy17@gmail.com')->send(new adminEmail([
+                    Mail::to('contact@innerpece.com')->send(new adminEmail([
                         'name' => $projectDetails->name,
                         'email' => $projectDetails->email,
                         'phone' => $projectDetails->phone,

@@ -250,6 +250,11 @@ class AuthController extends Controller
         ], 200);
     }
 
+    
+
+
+
+
 
     // public function getToken(): JsonResponse
     // {
@@ -344,7 +349,6 @@ class AuthController extends Controller
 
             // Get the logged-in user ID if authenticated, otherwise null
             $userId = Auth::check() ? Auth::id() : null;
-
             // Log userId for debugging
             //\Log::info('User ID:', ['user_id' => $userId]);
 
@@ -421,7 +425,7 @@ class AuthController extends Controller
             ]));
 
             // Send email to admin
-            Mail::to('barathkrishnamoorthy17@gmail.com')->send(new ContactAdminEmail([
+            Mail::to('contact@innerpece.com')->send(new ContactAdminEmail([
                 'name' => $contact->first_name,
                 'email' => $contact->email,
                 'phone' => $contact->phone,
