@@ -60,7 +60,7 @@
             </div>
         </div>
 
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#travelDetailsModal">
+        <button type="button" class="btn btn-primary text-white" data-bs-toggle="modal" data-bs-target="#travelDetailsModal">
             Open Form
         </button>
     </div>
@@ -78,44 +78,67 @@
                         @csrf
 
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <label>Customer Name</label>
                                 <input type="text" name="customer_name" class="form-control" required>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <label>Customer Location</label>
                                 <input type="text" name="customer_location" class="form-control" required>
                             </div>
+                            <div class="col-md-4">
+                                <label>Booking Date</label>
+                                <input type="date" name="booking_date" class="form-control" required>
+                            </div>
                         </div>
 
                         <div class="row mt-3">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <label>Event Name</label>
                                 <input type="text" name="event_name" class="form-control" required>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <label>No. of Persons</label>
                                 <input type="number" name="no_of_persons" class="form-control" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label>Travel Start Date</label>
+                                <input type="date" name="travel_start_date" class="form-control" required>
                             </div>
                         </div>
 
                         <div class="row mt-3">
-                            <div class="col-md-6">
-                                <label>Customer native to Delhi transportation</label>
+                            <div class="col-md-4">
+                                <label>Travel End date</label>
+                                <input type="date" name="travel_end_date" class="form-control" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label>Native to Transport</label>
                                 <select name="transportation_mode" class="form-control">
                                     <option value="Flight">Flight</option>
                                     <option value="Train">Train</option>
                                 </select>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <label>Travel Date & Timing</label>
                                 <input type="datetime-local" name="travel_date_time" class="form-control">
                             </div>
                         </div>
 
                         <div class="row mt-3">
-                            <div class="col-md-6">
-                                <label>Delhi to Manali Bus Service</label>
+                            <div class="col-md-4">
+                                <label>Return To Native</label>
+                                <select name="return_to_native" class="form-control">
+                                    <option value="Flight">Flight</option>
+                                    <option value="Train">Train</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label>Return Date & Timing</label>
+                                <input type="datetime-local" name="return_date_time" class="form-control">
+                            </div>
+                            <div class="col-md-4">
+                                <label>Bus Service</label>
                                 <select name="bus_service" class="form-control" id="bus_service" onchange="toggleBusDetails()">
                                     <option value="Yes">Yes</option>
                                     <option value="No">No</option>
@@ -154,7 +177,6 @@
                             </div>
                         </div>
 
-
                         <div class="row mt-3">
                             <!-- Additional Program Details -->
                             <div class="col-md-6">
@@ -179,9 +201,6 @@
                             </div>
                         </div>
 
-
-
-
                         <div class="row mt-3">
                             <div class="col-md-6">
                                 <label>Cab Service Details</label>
@@ -197,7 +216,6 @@
                                 </select>
                             </div>
                         </div>
-
 
                         <div class="text-end mt-4">
                             <button type="submit" class="btn btn-primary">Submit</button>

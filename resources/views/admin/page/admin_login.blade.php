@@ -37,11 +37,7 @@
                         <input type="password" class="form-control shadow-sm p-2" id="password" name="password"
                             placeholder="password" required>
                     </div>
-                    <div class="login-btn rounded text-center mb-5">
-                        <a href="{{ url('auth/facebook') }}" class="btn btn-primary border-0 in-btn w-100">
-                            <i class="fab fa-facebook-f"></i> LOGIN WITH FACEBOOK
-                        </a>
-                    </div>
+                    
 
                     <div class="mt-4">
                         <!-- <label class="text-white" ><input type="checkbox" id="cb" name="" value="">Keep me signed in</label> -->
