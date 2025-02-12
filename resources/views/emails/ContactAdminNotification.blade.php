@@ -7,7 +7,6 @@
 </head>
 <body>
 
-     <img src="{{ asset('uploads/settings/fav_icon/innerpece_logo.svg') }}" alt="">
      <p>Hello Jay,</p>
      <p>You have received a new Contact Form submission. Below are the details:</p>
     <ul>

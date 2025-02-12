@@ -62,7 +62,7 @@
                     </div>
                     <div class="col-md-3 mb-3">
                         <label for="whatsapp" class="form-label">WhatsApp <span class="text-danger">*</span></label>
-                        <input type="number" class="form-control  rounded-3 shadow-sm" id="whatsapp" name="whatsapp" value="{{ old('whatsapp') }}">
+                        <input type="number" class="form-control  rounded-3 shadow-sm" id="whatsapp" name="whatsapp" value="{{ old('whatsapp') }}" required>
                     </div>
                     <div class="col-md-3 mb-3">
                         <label for="gender" class="form-label ">Gender <span class="text-danger">*</span></label>

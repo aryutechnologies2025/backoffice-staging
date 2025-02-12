@@ -1,19 +1,24 @@
+
 @extends('layouts.app')
 @section('content')
 <style>
     a:hover {
         color: red;
     }
+
     a {
-        color:rgb(37, 150, 190);
+        color: rgb(37, 150, 190);
     }
+
     .enquiry {
-        color:blue;
+        color: blue;
     }
+
     .modal {
-        width: 100%!important;
-        padding-top: 10%!important;
+        width: 100% !important;
+        padding-top: 10% !important;
     }
+
     .btn {
         border-radius: 6px !important;
         color: #FFF !important;
@@ -22,10 +27,18 @@
 </style>
 
 <div class="row body-sec py-5 px-5 justify-content-around">
-    <div class="col-lg-12">
-        <b><a href="/dashboard" >Dashboard</a> > <a class="enquiry" href="" >Booking</a></b>
+    <div class="col-lg-6">
+        <b><a href="/dashboard">Dashboard</a> > <a class="enquiry" href="">Booking</a></b>
         <br><br>
         <h3 class="fw-bold">{{$title}}</h3>
+    </div>
+    <div class="col-lg-6">
+
+        <div class="d-flex justify-content-end">
+            <a href="{{ route('admin.enquiry_add_form') }}">
+                <button class="btn btn-add px-5" type="button">Add Booking</button>
+            </a>
+        </div>
     </div>
 </div>
 
@@ -40,64 +53,56 @@
                     <tr class="rounded-top-4">
                         <th class="text-center"><span>S.No</span></th>
                         <th class="text-center"><span>Name</span></th>
-                        <!-- <th class="text-center"><span>Email</span></th> -->
+                        <th class="text-center"><span>Email</span></th>
                         <th class="text-center"><span>Phone</span></th>
                         <th class="text-center"><span>Program Name</span></th>
                         <th class="text-center"><span>Refered By</span></th>
-                        <th class="text-center"><span>Next Follow Up</span></th>
-                        <th class="text-center"><span>Assigned To</span></th>
-                        
+
                         <th class="text-center"><span>Action</span></th>
                     </tr>
                 </thead>
                 <tbody>
                     @if($enquiry_dts->isEmpty())
-                        <tr>
-                            <td colspan="9" class="text-center">No records</td>
-                        </tr>
+                    <tr>
+                        <td colspan="7" class="text-center">No records</td>
+                    </tr>
                     @else
-                        @foreach ($enquiry_dts as $row)
-                        <tr>
-                            <td class="text-center">{{ $loop->iteration }}</td>
-                            <td class="text-center">{{ $row->name }}</td>
-                            <!-- <td class="text-center">{{ $row->email }}</td> -->
-                            <td class="text-center">{{ $row->phone }}</td>
-                            <td class="text-center">{{ $row->program_title ?? 'null' }}</td>
-                            <td class="text-center">{{$row->reference_id ?? 'null'}}</td>
-                            @if($row->followUps->isNotEmpty())
-                                <td class="text-center">{{ $row->followUps->last()->next_follow_up_date }}</td>
-                                <td class="text-center">{{ $row->followUps->last()->assigned_to }}</td>
-                            @else
-                                <td class="text-center">N/A</td>
-                                <td class="text-center">N/A</td>
-                            @endif
-                            <td class="text-center">
-                                <button class="btn btn-warning view-btn" 
-                                    data-id="{{ $row->id }}"
-                                    data-name="{{ $row->name }}"
-                                    data-email="{{ $row->email }}"
-                                    data-phone="{{ $row->phone }}"
-                                    data-comments="{{ $row->comments }}" 
-                                    data-location="{{ $row->location }}"
-                                    data-days="{{ $row->days }}"
-                                    data-travel_destination="{{ $row->travel_destination }}"
-                                    data-budget_per_head="{{ $row->budget_per_head }}"
-                                    data-cab_need="{{ $row->cab_need }}"
-                                    data-total_count="{{ $row->total_count }}"
-                                    data-male_count="{{ $row->male_count }}"
-                                    data-female_count="{{ $row->female_count }}"
-                                    data-child_count="{{ $row->child_count }}"
-                                    data-travel_date="{{ $row->travel_date }}"
-                                    data-rooms_count="{{ $row->rooms_count }}"
-                                    data-date="{{ $row->created_at->format('d/m/Y h:i:s') }}"
-                                    data-bs-toggle="modal" 
-                                    data-bs-target="#viewModal">
-                                    <i class="bi bi-eye-fill"></i>
-                                </button>
-                                <a href="{{ route('admin.enquiry.enquiryfollowups', $row->id) }}" class="btn btn-primary"><i class="bi bi-list-check"></i></a>
-                                </td>
-                        </tr>
-                        @endforeach
+                    @foreach ($enquiry_dts as $row)
+                    <tr>
+                        <td class="text-center">{{ $loop->iteration }}</td>
+                        <td class="text-center">{{ $row->name }}</td>
+                        <td class="text-center">{{ $row->email }}</td>
+                        <td class="text-center">{{ $row->phone }}</td>
+                        <td class="text-center">{{ $row->program_title ?? 'null' }}</td>
+                        <td class="text-center">{{$row->reference_id ?? '-'}}</td>
+                       
+                        <td class="text-center">
+                            <button class="btn btn-warning view-btn"
+                                data-id="{{ $row->id }}"
+                                data-name="{{ $row->name }}"
+                                data-email="{{ $row->email }}"
+                                data-phone="{{ $row->phone }}"
+                                data-comments="{{ $row->comments }}"
+                                data-location="{{ $row->location }}"
+                                data-days="{{ $row->days }}"
+                                data-travel_destination="{{ $row->travel_destination }}"
+                                data-budget_per_head="{{ $row->budget_per_head }}"
+                                data-cab_need="{{ $row->cab_need }}"
+                                data-total_count="{{ $row->total_count }}"
+                                data-male_count="{{ $row->male_count }}"
+                                data-female_count="{{ $row->female_count }}"
+                                data-child_count="{{ $row->child_count }}"
+                                data-travel_date="{{ $row->travel_date }}"
+                                data-rooms_count="{{ $row->rooms_count }}"
+                                data-date="{{ $row->created_at->format('d/m/Y h:i:s') }}"
+                                data-bs-toggle="modal"
+                                data-bs-target="#viewModal">
+                                <i class="bi bi-eye-fill"></i>
+                            </button>
+                            <a href="{{ route('admin.enquiry.enquiryfollowups', $row->id) }}" class="btn btn-primary"><i class="bi bi-list-check"></i></a>
+                        </td>
+                    </tr>
+                    @endforeach
                     @endif
                 </tbody>
             </table>
@@ -152,8 +157,10 @@
             "language": {
                 "emptyTable": "No records found",
             },
-            "columnDefs": [
-                { "orderable": true, "targets": [0, 7] } // Disable ordering on specific columns
+            "columnDefs": [{
+                    "orderable": true,
+                    "targets": [0, 6]
+                } // Disable ordering on specific columns
             ]
         });
 
@@ -180,7 +187,9 @@
         // Download Excel
         $('#downloadExcel').on('click', function() {
             // First, capture the main table data
-            var wb = XLSX.utils.table_to_book(document.getElementById('cityTable'), { sheet: "Enquiries" });
+            var wb = XLSX.utils.table_to_book(document.getElementById('cityTable'), {
+                sheet: "Enquiries"
+            });
 
             // Now, capture modal data for all rows
             var modalData = [

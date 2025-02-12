@@ -78,6 +78,19 @@ class EnquiryController extends Controller
         return view('admin.enquiry.form', compact('enquiry')); // Pass the enquiry to the view
     }
 
+    //add store function for enquirydetails
+    public function insert(Request $request){
+        $enquirydetails = new EnquiryDetail();
+        $enquirydetails->fill($request->all());
+        $enquirydetails->save();
+        return redirect()->route('admin.enquiry_list')->with('success', 'Enquiry added successfully!');
+    } 
+
+    //add add_form function for enquirydetails
+    public function add_form(){
+        $title = 'Add Book Enquiry';
+        return view('admin.enquiry.add_enquiry', compact('title'));
+    }
        
 }
 

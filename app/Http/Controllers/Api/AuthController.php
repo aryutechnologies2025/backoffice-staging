@@ -429,7 +429,7 @@ class AuthController extends Controller
                 'name' => $contact->first_name,
                 'email' => $contact->email,
                 'phone' => $contact->phone,
-                'comments' => $contact->message,
+                 'comments' => $contact->message,
 
             ]));
         } catch (\Exception $e) {

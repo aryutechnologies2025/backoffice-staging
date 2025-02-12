@@ -31,6 +31,7 @@ use App\Http\Controllers\Admin\ClientreviewController;
 use App\Http\Controllers\Admin\WishlistController;
 use App\Http\Controllers\Admin\AddressController;
 use App\Http\Controllers\Admin\AssitanceFormController;
+use App\Http\Controllers\Admin\FacebookController;
 use App\Http\Controllers\Admin\InfluencersController;
 // use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Admin\HomeEnquiryController;
@@ -88,11 +89,13 @@ Route::prefix('/')->group(function () {
 
     Route::post('/register', [AdminController::class, 'register'])->name('admin.register');
     Route::post('/do-login', [AdminController::class, 'check_login'])->name('admin.doLogin');
+    Route::get('auth/facebook', [FacebookController::class, 'redirectToFacebook']);
+        Route::get('auth/facebook/callback', [FacebookController::class, 'handleFacebookCallback']);
     Route::middleware(['auth:admin'])->group(function () {
         Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
         Route::get('/logout', [AdminController::class, 'logout'])->name('admin.logout');
         // Route::get('/dashboard', [AdminController::class, 'getInclusivePackagesCount'])->name('admin.dashboard');
-
+        
 
         //Events
         Route::controller(EventController::class)->group(function () {
@@ -428,6 +431,8 @@ Route::get('/admin/influencer/{influencerId}/affiliate-links', [InfluencersContr
         Route::controller(EnquiryController::class)->group(function () {
             Route::prefix('enquiry')->group(function () {
                 Route::get('/', 'list')->name('admin.enquiry_list');
+                Route::post('/store', 'insert')->name('admin.enquiry_store');
+                Route::get('/add', 'add_form')->name('admin.enquiry_add_form');
             });
         });
         Route::post('/enquiry/followup', [EnquiryController::class, 'markFollowUp']);
@@ -449,6 +454,8 @@ Route::get('/admin/influencer/{influencerId}/affiliate-links', [InfluencersContr
         Route::controller(HomeEnquiryController::class)->group(function () {
             Route::prefix('home-enquiry')->group(function () {
                 Route::get('/', 'list')->name('admin.home_enquiry_list');
+                Route::get('/add', 'add_form')->name('admin.home_enquiry_add_form');
+                Route::post('/insert/enquiry', 'insert')->name('admin.home_enquiry_store_form');
             });
         });
 
@@ -520,5 +527,4 @@ Route::get('/admin/influencer/{influencerId}/affiliate-links', [InfluencersContr
        
     });
 });
-
 

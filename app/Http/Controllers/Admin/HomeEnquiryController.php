@@ -60,5 +60,20 @@ class HomeEnquiryController extends Controller
     
         return response()->json(['success' => false, 'message' => 'Invalid follow-up status selected.']);
     }
+
+
+    public function insert(Request $request){
+        $enquirydetails = new HomeEnquiryDetail();
+        $enquirydetails->fill($request->all());
+        $enquirydetails->save();
+        return redirect()->route('admin.home_enquiry_list')->with('success', 'Enquiry added successfully!');
+    } 
+
+    //add add_form function for enquirydetails
+    public function add_form(){
+        $title = 'Add Enquiry Form';
+        return view('admin.home_enquiry.home_enquiryform', compact('title'));
+    }
+       
     
 }

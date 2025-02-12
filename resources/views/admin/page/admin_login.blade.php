@@ -13,40 +13,47 @@
     <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
 </head>
+
 <body>
-  <section>
+    <section>
         <div class="row  register-sec ">
             <video src="/assets/image/login/innerpece_login_bg.mp4" autoplay loop playsinline muted></video>
-        
-                
-                <div class="col-lg-3 regiter-form px-5 py-4 rounded-5">
-                    <div class="logo fw-bolder text-center  ">
-                        <img class="mb-4" src="/assets/image/login/inner_peace_logo_blue.png" style="width: 60%" alt="" loading="lazy">
-                        <h3 class=" hedings fw-bolder text-center text-white ">Welcome {{$title}}</h3>
-                        <h6 class=" hedings text-center text-white mb-3">Log in to continue</h6>
-                    </div>
-                    
-                    <form id="login_form" method="post" action="{{ route('admin.doLogin') }}" autocomplete="off">
-                            @csrf
-                        <div class="mt-4">
-                            <input type="text" class="form-control shadow-sm p-2" id="email" name="email"
-                                placeholder="Enter your Email" required>
-                        </div>
-                        <div class="mt-4">
-                            <input type="password" class="form-control shadow-sm p-2" id="password" name="password"
-                                placeholder="password" required>
-                        </div>
-                        <div class="mt-4">
-                            <!-- <label class="text-white" ><input type="checkbox" id="cb" name="" value="">Keep me signed in</label> -->
-                        </div>
-                        <div class=" login-btn rounded text-center mb-5">
-                            <button type="submit" class="btn btn-primary  border-0 in-btn w-100">LOGIN</button>
-                        </div>
-                        
-                    </form>
 
+
+            <div class="col-lg-3 regiter-form px-5 py-4 rounded-5">
+                <div class="logo fw-bolder text-center  ">
+                    <img class="mb-4" src="/assets/image/login/inner_peace_logo_blue.png" style="width: 60%" alt="" loading="lazy">
+                    <h3 class=" hedings fw-bolder text-center text-white ">Welcome {{$title}}</h3>
+                    <h6 class=" hedings text-center text-white mb-3">Log in to continue</h6>
                 </div>
+
+                <form id="login_form" method="post" action="{{ route('admin.doLogin') }}" autocomplete="off">
+                    @csrf
+                    <div class="mt-4">
+                        <input type="text" class="form-control shadow-sm p-2" id="email" name="email"
+                            placeholder="Enter your Email" required>
+                    </div>
+                    <div class="mt-4">
+                        <input type="password" class="form-control shadow-sm p-2" id="password" name="password"
+                            placeholder="password" required>
+                    </div>
+                    <div class="login-btn rounded text-center mb-5">
+                        <a href="{{ url('auth/facebook') }}" class="btn btn-primary border-0 in-btn w-100">
+                            <i class="fab fa-facebook-f"></i> LOGIN WITH FACEBOOK
+                        </a>
+                    </div>
+
+                    <div class="mt-4">
+                        <!-- <label class="text-white" ><input type="checkbox" id="cb" name="" value="">Keep me signed in</label> -->
+                    </div>
+                    <div class=" login-btn rounded text-center mb-5">
+                        <button type="submit" class="btn btn-primary  border-0 in-btn w-100">LOGIN</button>
+                    </div>
+
+                </form>
+
             </div>
+        </div>
 
         </div>
     </section>

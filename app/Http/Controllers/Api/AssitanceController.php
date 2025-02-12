@@ -38,12 +38,12 @@ class AssitanceController extends Controller
             'name' => $assitanceForm->name,
             'email' => $assitanceForm->email,
             'phone' => $assitanceForm->phone,
-            'comments' => $assitanceForm->comments,
+             'comments' => $assitanceForm->comments,
             ]));
             Log::info('Email sent to client: ' . $assitanceForm->email);
 
             // Send email to admin
-            Mail::to('barathkrishnamoorthy17@gmail.com')->send(new ContactAdminEmail([
+            Mail::to('contact@innerpece.com')->send(new ContactAdminEmail([
             'name' => $assitanceForm->name,
             'email' => $assitanceForm->email,
             'phone' => $assitanceForm->phone,

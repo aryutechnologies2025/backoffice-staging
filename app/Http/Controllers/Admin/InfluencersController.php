@@ -5,8 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Influencers;
-use App\Models\InclusivePackageDetail;
-use App\Models\InclusivePackages;
 
 class InfluencersController extends Controller
 {
@@ -53,7 +51,7 @@ class InfluencersController extends Controller
             'email' => 'required|email|unique:influencers,email',
             'phone' => 'required|string|max:15',
             'whatsapp' => 'nullable|string|max:15',
-            'gender' => 'required|string|in:male,female,other',
+            'gender' => 'required|string',
             'age' => 'required|integer|min:18|max:100',
             'city' => 'required|string|max:255',
             'state' => 'required|string|max:255',

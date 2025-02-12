@@ -12,20 +12,19 @@ use Illuminate\Queue\SerializesModels;
 class ContactAdminEmail extends Mailable
 {
     use Queueable, SerializesModels;
+    public $details;
 
     /**
      * Create a new message instance.
      */
-    public $details;
-
     public function __construct(array $details)
     {
         $this->details = $details;
-    }
 
+    }
     public function build()
     {
-        return $this->subject('Admin Notification')
+        return $this->subject('Admin Notification from Client')
             ->view('emails.ContactAdminNotification')
             ->with('details', $this->details);
     }
@@ -36,9 +35,19 @@ class ContactAdminEmail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'New Contact Form Received',
+            subject: 'Contact Admin Email',
         );
     }
+
+    /**
+     * Get the message content definition.
+     */
+    // public function content(): Content
+    // {
+    //     return new Content(
+    //         view: 'view.name',
+    //     );
+    // }
 
     /**
      * Get the attachments for the message.
