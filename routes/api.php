@@ -107,8 +107,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
 
 
-    Route::get('/auth/google/redirect', [GoogleAuthController::class, 'redirectToGoogle']);
-Route::get('/auth/google/callback', [GoogleAuthController::class, 'handleGoogleCallback']);
+    Route::get('/auth/facebook/redirect', [GoogleAuthController::class, 'redirectToGoogle']);
+Route::get('/auth/facebook/callback', [GoogleAuthController::class, 'handleGoogleCallback']);
 });
 
 
