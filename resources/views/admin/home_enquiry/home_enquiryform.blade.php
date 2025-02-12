@@ -13,7 +13,7 @@
 </style>
     <div class="container mt-5 mb-5">
     <div class="col-lg-12">
-        <b><a href="/dashboard" >Dashboard</a> > <a class="" href="/enquiry" >Booking</a></b> > <a class="enquiry" href="" >Add Booking</a>
+        <b><a href="/dashboard" >Dashboard</a> > <a class="" href="/enquiry" >Booking</a></b> > <a class="enquiry" href="" >Add Enquiry</a>
         <br><br>
         <h3 class="fw-bold">{{$title}}</h3>
     </div>

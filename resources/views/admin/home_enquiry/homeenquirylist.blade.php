@@ -35,7 +35,7 @@
 
         <div class="d-flex justify-content-end">
             <a href="{{ route('admin.home_enquiry_add_form') }}">
-                <button class="btn btn-add px-5" type="button">Add Booking</button>
+                <button class="btn btn-add px-5" type="button">Add Enquiry Form</button>
             </a>
         </div>
     </div>
