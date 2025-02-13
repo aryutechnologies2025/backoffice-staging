@@ -11,7 +11,9 @@ class InfluencersController extends Controller
     public function list(Request $request)
     {
         $title = 'Influencers List';
-        $influencers = Influencers::where('is_deleted', '0')->where('status', "1")->get();
+        $influencers = Influencers::where('is_deleted', '0')
+        ->orderBy('created_at', 'desc')
+        ->get();
     
         // Fetch affiliate links for each influencer
         foreach ($influencers as $influencer) {
@@ -56,6 +58,7 @@ class InfluencersController extends Controller
             'city' => 'required|string|max:255',
             'state' => 'required|string|max:255',
             'country' => 'required|string|max:255',
+
         ]);
 
         $influencer = new Influencers;
@@ -150,7 +153,7 @@ class InfluencersController extends Controller
         }
 
         $influencer->fill($request->all());
-        $influencer->status = $request->has('status') && $request->input('status') === 'on' ? '1' : '0';
+        // $influencer->status = $request->has('status') && $request->input('status') === 'on' ? '1' : '0';
         $influencer->save();
 
         return redirect()->route('admin.influencer_list')

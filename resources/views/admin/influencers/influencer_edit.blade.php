@@ -170,14 +170,7 @@
 
         @endforeach
 
-        <div class="row g-2">
-            <div class="col">
-                <label class="fw-bold ">Status</label>
-                <div class="form-check form-switch">
-                    <input class="form-check-input check_bx" type="checkbox" id="status" name="status">
-                </div>
-            </div>
-        </div>
+       
 
         <!-- Submit Button -->
         <div class="text-end mt-4 py-5">
