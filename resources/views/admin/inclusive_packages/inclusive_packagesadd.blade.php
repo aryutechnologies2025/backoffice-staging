@@ -131,7 +131,7 @@
                                 <div class="col-md-4">
                                     <label class=" mb-2">Theme <span class="text-danger">*</span></label>
                                     <select id="themes_name" name="themes_name"
-                                        class="form-select py-2 rounded-3 shadow-sm" required>
+                                        class="form-select py-2 rounded-3 shadow-sm" >
                                         <option value="">Select Theme</option>
                                         @foreach($themes as $id => $name)
                                         <option value="{{ $id }}" @if(old('themes_name')=='{{ $id }}' ) selected @endif>
@@ -143,7 +143,7 @@
                                 <div class="col-md-4">
                                     <label class="mb-2">Destination <span class="text-danger">*</span></label>
                                     <select id="cities_name" name="cities_name"
-                                        class="form-select py-2 rounded-3 shadow-sm" required>
+                                        class="form-select py-2 rounded-3 shadow-sm" >
                                         <option value="">Select Destination</option>
                                         @foreach($cities as $id => $name)
                                         <option value="{{ $id }}" @if(old('cities_name')=='{{ $id }}' ) selected @endif>
@@ -155,7 +155,7 @@
                                 <div class="col-md-4">
                                     <label class="mb-2">Title <span class="text-danger">*</span></label>
                                     <input type="text" placeholder="Title" id="title" name="title"
-                                        class="form-control py-2 rounded-3 shadow-sm" required
+                                        class="form-control py-2 rounded-3 shadow-sm" 
                                         value="{{ old('title') }}">
 
                                 </div>
@@ -250,13 +250,13 @@
                                         <label class="">Upload Image Name <span class="text-danger">*</span></label>
                                         <input type="text" id="upload_image_name" name="upload_image_name"
                                             placeholder="Rename the Photo" value="{{ old('upload_image_name') }}"
-                                            class="form-control py-2 rounded-3 shadow-sm w-50" required>
+                                            class="form-control py-2 rounded-3 shadow-sm w-50" >
                                     </div>
                                     <div class="col-12 forms">
                                         <label class="">Alternate Image Name <span class="text-danger">*</span></label>
                                         <input type="text" id="alternate_image_name" name="alternate_image_name"
                                             placeholder="Alternate Name" value="{{ old('alternate_image_name') }}"
-                                            class="form-control py-2 rounded-3 shadow-sm w-50" required>
+                                            class="form-control py-2 rounded-3 shadow-sm w-50" >
                                     </div>
                                 </div>
                             </div>
@@ -336,7 +336,7 @@
 
                             <h4 class="fw-bold mb-2 py-2">2. Location</h4>
                             <div class="col-md-3 mb-3">
-                                <textarea class="form-control rounded-3 shadow-sm" id="location" name="location" placeholder=" Enter City & State & Country" required>{{ old('location') }}</textarea>
+                                <textarea class="form-control rounded-3 shadow-sm" id="location" name="location" placeholder=" Enter City & State & Country" >{{ old('location') }}</textarea>
                             </div>
 
                         </div>
@@ -358,13 +358,13 @@
                                                     <label class="form-label mb-2">Plan Title</label>
                                                     <input type="text" name="plan_title[]" id="plan_title"
                                                         class="form-control py-2 rounded-3 shadow-sm"
-                                                        placeholder="Plan Title" required>
+                                                        placeholder="Plan Title" >
                                                 </div>
                                                 <div class="col-lg-5">
                                                     <label class="form-label mb-2">Plan Subtitle</label>
                                                     <input type="text" name="plan_subtitle[]"
                                                         class="form-control py-2 rounded-3 shadow-sm"
-                                                        placeholder="Plan Subtitle" required>
+                                                        placeholder="Plan Subtitle" >
                                                 </div>
                                             </div>
                                             <!-- Description and Add Button in Second Row -->
@@ -423,14 +423,14 @@
                                                 <label class="mb-2">Start Date <span class="text-danger"></span></label>
                                                 <input type="date" class="form-control py-2 rounded-3 shadow-sm"
                                                     name="start_date" id="start_date" value="{{old('start_date')}}"
-                                                    required>
+                                                    >
                                             </div>
                                             <div class="col-md-4">
                                                 <label class=" mb-2">Return Date <span
                                                         class="text-danger"></span></label>
                                                 <input type="date" class="form-control py-2 rounded-3 shadow-sm"
                                                     name="return_date" id="return_date" value="{{old('return_date')}}"
-                                                    required>
+                                                    >
                                             </div>
                                             <div class="col-md-4">
                                                 <label class="mb-2">Total No. of Days</label>
@@ -455,23 +455,23 @@
                                                 <label class=" mb-2">Rooms<span class="text-danger"></span></label>
                                                 <input type="number" class="form-control py-2 rounded-3 shadow-sm"
                                                     name="total_room" id="total_room" value="{{old('total_room')}}"
-                                                    required>
+                                                    >
                                             </div>
                                             <div class="col-md-3">
                                                 <label class="mb-2">Bath Rooms<span class="text-danger"></span></label>
                                                 <input type="number" class="form-control py-2 rounded-3 shadow-sm"
                                                     name="bath_room" id="bath_room" value="{{old('bath_room')}}"
-                                                    required>
+                                                    >
                                             </div>
                                             <div class="col-md-3">
                                                 <label class=" mb-2">Bed Rooms</label>
                                                 <input type="number" class="form-control py-2 rounded-3 shadow-sm"
-                                                    id="bed_room" name="bed_room" value="{{old('bed_room')}}" required>
+                                                    id="bed_room" name="bed_room" value="{{old('bed_room')}}" >
                                             </div>
                                             <div class="col-md-3">
                                                 <label class=" mb-2">Hall</label>
                                                 <input type="number" class="form-control py-2 rounded-3 shadow-sm"
-                                                    id="hall" name="hall" value="{{old('hall')}}" required>
+                                                    id="hall" name="hall" value="{{old('hall')}}" >
                                             </div>
                                         </div>
                                     </div>
@@ -493,13 +493,13 @@
                                                         class="text-danger">*</span></label>
                                                 <input type="number" id="member_capacity" name="member_capacity"
                                                     class="form-control py-2 rounded-3 shadow-sm"
-                                                    placeholder="Member Capacity" required
+                                                    placeholder="Member Capacity" 
                                                     value="{{old('member_capacity')}}">
                                             </div>
                                             <div class="col-md-3 py-4">
                                                 <label class="pb-2">Sprit Amount</label>
                                                 <select id="mem_type" name="mem_type"
-                                                    class="form-select py-2 rounded-3 shadow-sm" required>
+                                                    class="form-select py-2 rounded-3 shadow-sm" >
                                                     <option value="">Select</option>
                                                     <option value="perhead" @if(old('mem_type')=='perhead' ) selected
                                                         @endif>Perhead
@@ -514,7 +514,7 @@
                                                     <span class="position-absolute top-50 start-0 translate-middle-y ps-3">₹</span>
                                                     <input type="number" id="price" name="price"
                                                         class="form-control py-2 ps-5 rounded-3 shadow-sm"
-                                                        placeholder="Actual Amount" value="{{old('price')}}" required>
+                                                        placeholder="Actual Amount" value="{{old('price')}}" >
                                                 </div>
                                             </div>
 
@@ -524,7 +524,7 @@
                                                     <span class="position-absolute top-50 start-0 translate-middle-y ps-3">₹</span>
                                                     <input type="number" id="actual_price" name="actual_price"
                                                         class="form-control py-2 ps-5 rounded-3 shadow-sm"
-                                                        placeholder="Actual Price" value="{{old('actual_price')}}" required>
+                                                        placeholder="Actual Price" value="{{old('actual_price')}}" >
                                                 </div>
                                             </div>
 
@@ -548,7 +548,7 @@
                                             <div class="col-md-11">
                                                 <input type="text" name="camp_rule[]" id="camp_rule"
                                                     class="form-control py-2 rounded-3 shadow-sm"
-                                                    placeholder="Payment Policy" required>
+                                                    placeholder="Payment Policy" >
                                             </div>
                                             <!-- Add Button -->
                                             <div class="col-md-1">
@@ -633,7 +633,7 @@
                                                     name="google_map"
                                                     class="form-control py-3 rounded-3 shadow-sm"
                                                     placeholder="Enter Google Map Embed Iframe"
-                                                    required>
+                                                    >
                                             </div>
                                             <!-- Map Preview Iframe -->
                                             <div class="col-lg-6">
@@ -678,7 +678,7 @@
                                         <div class="row g-2 mb-2">
                                             <div class="col">
                                                 <label class="form-label form-label-top form-label-auto mb-2">Upload PDF</label>
-                                                <input type="file" id="program_pdf" name="program_pdf" class="form-control py-2 rounded-3 shadow-sm" required>
+                                                <input type="file" id="program_pdf" name="program_pdf" class="form-control py-2 rounded-3 shadow-sm" >
                                             </div>
                                         </div>
                                     </div>
@@ -1183,7 +1183,7 @@
             var newField = document.createElement('div');
             newField.className = 'row g-2 mb-4 camp-rule-field';
             newField.innerHTML = `<div class="col">
-                <input type="text" name="camp_rule[]" class="form-control py-3 rounded-3 shadow-sm" placeholder="Payment Policy" required>
+                <input type="text" name="camp_rule[]" class="form-control py-3 rounded-3 shadow-sm" placeholder="Payment Policy" >
             </div>
             <div class="col-lg-1 mt-5 text-end">
                 <a class="table-link danger remove-plan" onclick="removeField(this)">
