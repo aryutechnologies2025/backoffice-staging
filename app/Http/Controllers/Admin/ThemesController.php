@@ -38,7 +38,7 @@ class ThemesController extends Controller
             $file1 = $request->file('image_1');
             $customFileName = preg_replace('/[^A-Za-z0-9_\-]/', '_', $request->input('upload_image_name'));
             $filename1 = $customFileName . '.' . $file1->getClientOriginalExtension();
-            $file1->move( $themesPath, $filename1);
+            $file1->move($themesPath, $filename1);
             $filePath1 = 'uploads/themes_pic/' . $filename1;
         }
 
@@ -91,12 +91,13 @@ class ThemesController extends Controller
             $file1 = $request->file('image_1');
             $customFileName = preg_replace('/[^A-Za-z0-9_\-]/', '_', $request->input('upload_image_name'));
             $filename1 = $customFileName . '.' . $file1->getClientOriginalExtension();
-            $file1->move( $themesPath, $filename1);
+            $file1->move($themesPath, $filename1);
             $filePath1 = 'uploads/themes_pic/' . $filename1;
+            $themes->theme_pic = $filePath1;
         }
 
+
         $themes->themes_name = $request->input('theme_name');
-        $themes->theme_pic= $filePath1 ?? null;
         $themes->updated_date = date('Y-m-d H:i:s');
         $themes->list_order = $request->input('list_order');
         $themes->alternate_name = $request->input('alternate_image_name'); // Save alternate name
