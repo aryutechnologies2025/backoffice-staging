@@ -58,7 +58,7 @@
 
                                     <p class="text-center fw-light mt-3">Add Pic</p>
                                 </label>
-                                <input type="file" id="file-ip-1" name="image_1" accept="image/png, image/jpeg" onchange="validateImage(this)" required>
+                                <input type="file" id="file-ip-1" name="image_1" accept="image/png, image/jpeg" required>
                                 <div id="file-ip-1-error" class="error-message"></div>
                                 <label class="fw-bold mb-5 text-danger border-0"><small>* Upload size [56x56] *</small></label>
                             </div>
@@ -112,43 +112,43 @@
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-    function validateImage(input) {
-        const file = input.files[0];
-        const errorElement = document.getElementById('file-ip-1-error');
-        const previewElement = document.getElementById('file-ip-1-preview');
+    // function validateImage(input) {
+    //     const file = input.files[0];
+    //     const errorElement = document.getElementById('file-ip-1-error');
+    //     const previewElement = document.getElementById('file-ip-1-preview');
 
-        // Clear previous error messages and reset preview
-        errorElement.textContent = '';
-        previewElement.src = '/assets/image/dashboard/innerpece_addpic_icon.svg';
+    //     // Clear previous error messages and reset preview
+    //     errorElement.textContent = '';
+    //     previewElement.src = '/assets/image/dashboard/innerpece_addpic_icon.svg';
 
-        if (file) {
-            const reader = new FileReader();
+    //     if (file) {
+    //         const reader = new FileReader();
 
-            reader.onload = function (e) {
-                const img = new Image();
+    //         reader.onload = function (e) {
+    //             const img = new Image();
 
-                img.onload = function () {
-                    // Check dimensions
-                    if (img.width > 56 && img.height > 56) {
-                        showSweetError('Image size must not exceed 56x56 pixels.');
-                        input.value = ''; // Clear the input
-                    } else {
-                        previewElement.src = e.target.result; // Set the preview
-                    }
-                };
+    //             img.onload = function () {
+    //                 // Check dimensions
+    //                 if (img.width > 56 && img.height > 56) {
+    //                     showSweetError('Image size must not exceed 56x56 pixels.');
+    //                     input.value = ''; // Clear the input
+    //                 } else {
+    //                     previewElement.src = e.target.result; // Set the preview
+    //                 }
+    //             };
 
-                img.onerror = function () {
-                    showSweetError('Error loading the image file. It might be corrupted or not a valid image.');
-                };
+    //             img.onerror = function () {
+    //                 showSweetError('Error loading the image file. It might be corrupted or not a valid image.');
+    //             };
 
-                img.src = e.target.result; // Trigger the onload/onerror handlers
-            };
+    //             img.src = e.target.result; // Trigger the onload/onerror handlers
+    //         };
 
-            reader.readAsDataURL(file); // Read the file as a data URL
-        } else {
-            showSweetError('No file selected.');
-        }
-    }
+    //         reader.readAsDataURL(file); // Read the file as a data URL
+    //     } else {
+    //         showSweetError('No file selected.');
+    //     }
+    // }
 
     function showSweetError(message) {
         Swal.fire({
