@@ -124,14 +124,14 @@
             <div class="row mb-3">
                 <div class="col">
                     <div class="form-body px-5 rounded-4">
-                        <h4 class="fw-bold mb-5">01. Information</h4>
+                        <h4 class="fw-bold mb-5">1. Information</h4>
                         <!-- Theme and Destination -->
                         <div class="mb-3">
                             <div class="row g-4">
                                 <div class="col-md-4">
                                     <label class=" mb-2">Theme <span class="text-danger">*</span></label>
                                     <select id="themes_name" name="themes_name"
-                                        class="form-select py-2 rounded-3 shadow-sm" >
+                                        class="form-select py-2 rounded-3 shadow-sm">
                                         <option value="">Select Theme</option>
                                         @foreach($themes as $id => $name)
                                         <option value="{{ $id }}" @if(old('themes_name')=='{{ $id }}' ) selected @endif>
@@ -143,7 +143,7 @@
                                 <div class="col-md-4">
                                     <label class="mb-2">Destination <span class="text-danger">*</span></label>
                                     <select id="cities_name" name="cities_name"
-                                        class="form-select py-2 rounded-3 shadow-sm" >
+                                        class="form-select py-2 rounded-3 shadow-sm">
                                         <option value="">Select Destination</option>
                                         @foreach($cities as $id => $name)
                                         <option value="{{ $id }}" @if(old('cities_name')=='{{ $id }}' ) selected @endif>
@@ -155,7 +155,7 @@
                                 <div class="col-md-4">
                                     <label class="mb-2">Title <span class="text-danger">*</span></label>
                                     <input type="text" placeholder="Title" id="title" name="title"
-                                        class="form-control py-2 rounded-3 shadow-sm" 
+                                        class="form-control py-2 rounded-3 shadow-sm"
                                         value="{{ old('title') }}">
 
                                 </div>
@@ -223,11 +223,11 @@
                                     <label for="file-ip-1" class="d-block pt-4">
                                         <img id="file-ip-1-preview"
                                             src="/assets/image/dashboard/innerpece_addpic_icon.svg"
-                                            class="img-thumbnail" onchange="validateImage(this)">
+                                            class="img-thumbnail">
                                         <p class="mt-2">Add Pic</p>
                                     </label>
                                     <input type="file" id="file-ip-1" name="cover_img" class="form-control"
-                                        accept="image/png, image/jpeg, image/svg+xml" onchange="validateImage(this)">
+                                        accept="image/png, image/jpeg, image/svg+xml" >
                                     <div id="file-ip-1-error" class="text-danger"></div>
 
                                     <small class="text-danger d-block mt-2 text-center">* Upload size [1200x120]</small>
@@ -250,13 +250,13 @@
                                         <label class="">Upload Image Name <span class="text-danger">*</span></label>
                                         <input type="text" id="upload_image_name" name="upload_image_name"
                                             placeholder="Rename the Photo" value="{{ old('upload_image_name') }}"
-                                            class="form-control py-2 rounded-3 shadow-sm w-50" >
+                                            class="form-control py-2 rounded-3 shadow-sm w-50">
                                     </div>
                                     <div class="col-12 forms">
                                         <label class="">Alternate Image Name <span class="text-danger">*</span></label>
                                         <input type="text" id="alternate_image_name" name="alternate_image_name"
                                             placeholder="Alternate Name" value="{{ old('alternate_image_name') }}"
-                                            class="form-control py-2 rounded-3 shadow-sm w-50" >
+                                            class="form-control py-2 rounded-3 shadow-sm w-50">
                                     </div>
                                 </div>
                             </div>
@@ -290,18 +290,18 @@
                                 photoField.classList.add('col-lg-2', 'photo-upload-field');
 
                                 photoField.innerHTML = `
-                        <div class="form-input">
-                            <label for="file-ip-${photoCount}" class="px-4 py-2 text-center">
-                                <img class="text-center mt-3" id="file-ip-${photoCount}-preview" src="/assets/image/dashboard/innerpece_addpic_icon.svg">
-                                <p class="text-center fw-light mt-3"> Add Pic</p>
-                            </label>
-                            <input type="file" name="img_${photoCount}" id="file-ip-${photoCount}" data-number="${photoCount}" accept="image/png, image/jpeg, image/svg+xml" onchange="previewImage(event, this)">
-                            <label class="mb-4 text-danger d-block w-100 text-center">
-                                * Upload size [640*120] *
-                            </label>
-                            <button type="button" class="btn btn-danger mt-2" onclick="deletePhoto(this)">Delete</button>
-                        </div>
-                    `;
+                                    <div class="form-input">
+                                        <label for="file-ip-${photoCount}" class="px-4 py-2 text-center">
+                                            <img class="text-center mt-3" id="file-ip-${photoCount}-preview" src="/assets/image/dashboard/innerpece_addpic_icon.svg">
+                                            <p class="text-center fw-light mt-3"> Add Pic</p>
+                                        </label>
+                                        <input type="file" name="img_${photoCount}" id="file-ip-${photoCount}" data-number="${photoCount}" accept="image/png, image/jpeg, image/svg+xml" onchange="previewImage(event, this)">
+                                        <label class="mb-4 text-danger d-block w-100 text-center">
+                                            * Upload size [640*120] *
+                                        </label>
+                                        <button type="button" class="btn btn-danger mt-2" onclick="deletePhoto(this)">Delete</button>
+                                    </div>
+                                `;
 
                                 // Append the new photo field to the container
                                 container.appendChild(photoField);
@@ -332,18 +332,31 @@
 
 
                         <!-- 2. LOCATION -->
-                        <div class="row mb-3">
 
-                            <h4 class="fw-bold mb-2 py-2">2. Location</h4>
-                            <div class="col-md-3 mb-3">
-                                <textarea class="form-control rounded-3 shadow-sm" id="location" name="location" placeholder=" Enter City & State & Country" >{{ old('location') }}</textarea>
+                        <div class="row mb-2">
+                            <div class="col">
+                                <div class="form-body px-5  rounded-4">
+                                    <h4 class="fw-bold mb-3">2.Location</h4>
+                                    <div class="mb-1">
+                                        <div class="row g-2 mb-1">
+                                            <div class="col">
+                                                <input type="hidden" id="location" name="location">
+                                                <div class=" mt-1">
+                                                    <div class="row">
+                                                        <div class="col-lg-12 ">
+                                                            <div id="summernote10" style="height: 200px;"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-
                         </div>
 
 
 
-                        <!-- 3. TOUR PLANNING -->
                         <!-- 3. TOUR PLANNING -->
                         <div class="row mb-3">
                             <div class="col">
@@ -353,20 +366,20 @@
                                         <!-- Plan Item -->
                                         <div class="plan-item">
                                             <!-- Title and Subtitle in One Row -->
-                                            <div class="row g-2 mt-2">
+                                            <!-- <div class="row g-2 mt-2">
                                                 <div class="col-lg-5">
                                                     <label class="form-label mb-2">Plan Title</label>
                                                     <input type="text" name="plan_title[]" id="plan_title"
                                                         class="form-control py-2 rounded-3 shadow-sm"
-                                                        placeholder="Plan Title" >
+                                                        placeholder="Plan Title">
                                                 </div>
                                                 <div class="col-lg-5">
                                                     <label class="form-label mb-2">Plan Subtitle</label>
                                                     <input type="text" name="plan_subtitle[]"
                                                         class="form-control py-2 rounded-3 shadow-sm"
-                                                        placeholder="Plan Subtitle" >
+                                                        placeholder="Plan Subtitle">
                                                 </div>
-                                            </div>
+                                            </div> -->
                                             <!-- Description and Add Button in Second Row -->
                                             <div class="row g-2 mt-3 align-items-center">
                                                 <div class="col-lg-10">
@@ -376,36 +389,9 @@
                                                         name="plan_description[]">
                                                     <div id="summernote3" style="height: 200px;"></div>
                                                 </div>
-                                                <div class="col-lg-1 ">
-                                                    <button type="button" id="add-plan-btn"
-                                                        class="btn-add rounded-3 border-0 px-3 py-2 text-white">
-                                                        <!-- <button type="button" class="btn-add rounded border-0 px-1 py-3 text-white" -->
-
-                                                        <i class="fa fa-plus" aria-hidden="true"></i> Add
-                                                    </button>
-                                                    <div class="row g-2 mt-3 text-end">
-                                                        <div class="col-lg-1">
-                                                            <a href="#" class="table-link danger remove-plan">
-                                                                <span class="fa-stack">
-                                                                    <i class="fa fa-square fa-stack-2x"></i>
-                                                                    <i class="fa fa-trash-o fa-stack-1x fa-inverse"></i>
-                                                                </span>
-                                                            </a>
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                               
                                             </div>
-                                            <!-- Delete Button -->
-                                            <!-- <div class="row g-2 mt-3 text-end">
-                        <div class="col">
-                            <a href="#" class="table-link danger remove-plan">
-                                <span class="fa-stack">
-                                    <i class="fa fa-square fa-stack-2x"></i>
-                                    <i class="fa fa-trash-o fa-stack-1x fa-inverse"></i>
-                                </span>
-                            </a>
-                        </div>
-                    </div> -->
+
                                         </div>
                                     </div>
                                 </div>
@@ -413,7 +399,7 @@
                         </div>
 
 
-                        <div class="row mb-2">
+                        <!-- <div class="row mb-2">
                             <div class="col">
                                 <div class="form-body px-5 rounded-4">
                                     <h4 class="fw-bold mb-2">04.Tour Date & Time</h4>
@@ -442,10 +428,10 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
 
                         <!-- 4. Needed -->
-                        <div class="row mb-2">
+                        <!-- <div class="row mb-2">
                             <div class="col">
                                 <div class="form-body px-5 rounded-4">
                                     <h4 class="fw-bold mb-2">04.Rooms and Beds</h4>
@@ -477,58 +463,86 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
 
 
 
                         <!-- 5.PRICING -->
-                        <div class="row mb-3 ">
+                        <div class="row mb-3">
                             <div class="col">
-                                <div class="form-body px-5  rounded-4">
-                                    <h4 class="fw-bold mb-1">05. Pricing</h4>
-                                    <div class="mb-1">
+                                <div class="form-body px-5  rounded-4 ">
+                                    <h4 class="fw-bold mb-3">4. Pricing</h4>
+                                    <div class="mb-2">
+
                                         <div class="row mb-2">
-                                            <div class="col-md-3 py-4">
-                                                <label class="pb-2">Member Capacity <span
-                                                        class="text-danger">*</span></label>
-                                                <input type="number" id="member_capacity" name="member_capacity"
-                                                    class="form-control py-2 rounded-3 shadow-sm"
-                                                    placeholder="Member Capacity" 
-                                                    value="{{old('member_capacity')}}">
+                                            <div class="col-lg-6">
+                                                <label class="form-label form-label-top form-label-auto fw-bold mb-2">
+                                                    Title
+                                                </label>
+                                                <input type="text" name="price_title[]" class="form-control py-2 rounded-3 shadow-sm"
+                                                    placeholder="Title">
                                             </div>
-                                            <div class="col-md-3 py-4">
-                                                <label class="pb-2">Sprit Amount</label>
-                                                <select id="mem_type" name="mem_type"
-                                                    class="form-select py-2 rounded-3 shadow-sm" >
-                                                    <option value="">Select</option>
-                                                    <option value="perhead" @if(old('mem_type')=='perhead' ) selected
-                                                        @endif>Perhead
-                                                    </option>
-                                                    <option value="full" @if(old('mem_type')=='full' ) selected @endif>
-                                                        Full</option>
-                                                </select>
-                                            </div>
-                                            <div class="col-md-3 py-4">
-                                                <label class="pb-2">Actual Amount <span class="text-danger">*</span></label>
+                                            <div class="col-lg-6">
+                                                <label class="fw-bold mb-2">Amount <span class="text-danger">*</span></label>
                                                 <div class="position-relative">
                                                     <span class="position-absolute top-50 start-0 translate-middle-y ps-3">₹</span>
-                                                    <input type="number" id="price" name="price"
-                                                        class="form-control py-2 ps-5 rounded-3 shadow-sm"
-                                                        placeholder="Actual Amount" value="{{old('price')}}" >
+                                                    <input type="number" name="price_amount[]" class="form-control py-2 ps-5 rounded-3 shadow-sm"
+                                                        placeholder="Actual Amount">
                                                 </div>
                                             </div>
-
-                                            <div class="col-md-3 py-4">
-                                                <label class="pb-2">Discount Amount <span class="text-danger">*</span></label>
-                                                <div class="position-relative">
-                                                    <span class="position-absolute top-50 start-0 translate-middle-y ps-3">₹</span>
-                                                    <input type="number" id="actual_price" name="actual_price"
-                                                        class="form-control py-2 ps-5 rounded-3 shadow-sm"
-                                                        placeholder="Actual Price" value="{{old('actual_price')}}" >
-                                                </div>
-                                            </div>
-
                                         </div>
+                                        <div class="row mb-2">
+                                            <div class="col-lg-6">
+                                                <label class="form-label form-label-top form-label-auto fw-bold mb-2">
+                                                    Title
+                                                </label>
+                                                <input type="text" name="price_title[]" class="form-control py-2 rounded-3 shadow-sm"
+                                                    placeholder="Title">
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <label class="fw-bold mb-2">Amount <span class="text-danger">*</span></label>
+                                                <div class="position-relative">
+                                                    <span class="position-absolute top-50 start-0 translate-middle-y ps-3">₹</span>
+                                                    <input type="number" name="price_amount[]" class="form-control py-2 ps-5 rounded-3 shadow-sm"
+                                                        placeholder="Actual Amount">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-2">
+                                            <div class="col-lg-6">
+                                                <label class="form-label form-label-top form-label-auto fw-bold mb-2">
+                                                    Title
+                                                </label>
+                                                <input type="text" name="price_title[]" class="form-control py-2 rounded-3 shadow-sm"
+                                                    placeholder="Title">
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <label class="fw-bold mb-2">Amount <span class="text-danger">*</span></label>
+                                                <div class="position-relative">
+                                                    <span class="position-absolute top-50 start-0 translate-middle-y ps-3">₹</span>
+                                                    <input type="number" name="price_amount[]" class="form-control py-2 ps-5 rounded-3 shadow-sm"
+                                                        placeholder="Actual Amount">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-2">
+                                            <div class="col-lg-6">
+                                                <label class="form-label form-label-top form-label-auto fw-bold mb-2">
+                                                    Title
+                                                </label>
+                                                <input type="text" name="price_title[]" class="form-control py-2 rounded-3 shadow-sm"
+                                                    placeholder="Title">
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <label class="fw-bold mb-2">Amount <span class="text-danger">*</span></label>
+                                                <div class="position-relative">
+                                                    <span class="position-absolute top-50 start-0 translate-middle-y ps-3">₹</span>
+                                                    <input type="number" name="price_amount[]" class="form-control py-2 ps-5 rounded-3 shadow-sm"
+                                                        placeholder="Actual Amount">
+                                                </div>
+                                            </div>
+                                        </div>
+
                                     </div>
                                 </div>
                             </div>
@@ -538,7 +552,7 @@
                         <div class="row mb-3">
                             <div class="col">
                                 <div class="form-body px-5 rounded-4">
-                                    <h4 class="fw-bold mb-4 ps-0">6. Payment Policy</h4>
+                                    <h4 class="fw-bold mb-4 ps-0">5. Payment Policy</h4>
                                     <div id="camp-rule-container">
                                         <div class="row g-2 mb-1 align-items-center camp-rule-field">
                                             <!-- Payment Policy Field -->
@@ -548,7 +562,7 @@
                                             <div class="col-md-11">
                                                 <input type="text" name="camp_rule[]" id="camp_rule"
                                                     class="form-control py-2 rounded-3 shadow-sm"
-                                                    placeholder="Payment Policy" >
+                                                    placeholder="Payment Policy">
                                             </div>
                                             <!-- Add Button -->
                                             <div class="col-md-1">
@@ -569,15 +583,11 @@
                         <div class="row mb-2">
                             <div class="col">
                                 <div class="form-body px-5  rounded-4">
-                                    <h4 class="fw-bold mb-3">06.Important info <span class="text-danger">*</span></h4>
+                                    <h4 class="fw-bold mb-3">6.Notes <span class="text-danger">*</span></h4>
                                     <div class="mb-1">
                                         <div class="row g-2 mb-1">
                                             <div class="col">
                                                 <input type="hidden" id="important_info" name="important_info">
-                                                <!-- <textarea id="important_info" class="container__textarea p-5 textarea-feild" name="important_info" value="{{old('important_info')}}" required></textarea> -->
-                                                <!-- <div class="mb-3">
-                                    <div id="commentEditor4" class="form-control" style="height: 200px;"></div>
-                                </div> -->
                                                 <div class=" mt-1">
                                                     <div class="row">
                                                         <div class="col-lg-12 ">
@@ -595,7 +605,7 @@
                         <div class="row mb-1">
                             <div class="col">
                                 <div class="form-body px-5  rounded-4">
-                                    <h4 class="fw-bold mb-2">07.Program Inclusion </h4>
+                                    <h4 class="fw-bold mb-2">7.Package Inclusion </h4>
                                     <div class="mb-2">
                                         <div class="row g-2 mb-2">
                                             <div class="col">
@@ -618,13 +628,34 @@
                             </div>
                         </div>
 
-                        <div class="row mb-3">
+                        <div class="row mb-1">
+                            <div class="col">
+                                <div class="form-body px-5  rounded-4">
+                                    <h4 class="fw-bold mb-2">8.Package Exclusion </h4>
+                                    <div class="mb-2">
+                                        <div class="row g-2 mb-2">
+                                            <div class="col">
+                                                <input type="hidden" id="program_exclusion" name="program_exclusion">
+                                                <div class=" mt-2">
+                                                    <div class="row">
+                                                        <div class="col-lg-12 ">
+                                                            <div id="summernote9" style="height: 200px;"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- <div class="row mb-3">
                             <div class="col">
                                 <div class="form-body px-1 py-3 rounded-4">
                                     <h4 class="fw-bold mb-3">9. Location</h4>
                                     <div>
                                         <div class="row align-items-start">
-                                            <!-- Google Map Input -->
                                             <div class="col-lg-6">
                                                 <label for="google_map" class="fw-bold mb-3">Google Map<span class="text-danger">*</span></label>
                                                 <input
@@ -632,10 +663,8 @@
                                                     id="google_map"
                                                     name="google_map"
                                                     class="form-control py-3 rounded-3 shadow-sm"
-                                                    placeholder="Enter Google Map Embed Iframe"
-                                                    >
+                                                    placeholder="Enter Google Map Embed Iframe">
                                             </div>
-                                            <!-- Map Preview Iframe -->
                                             <div class="col-lg-6">
                                                 <label class="fw-bold mb-3">Map Preview</label>
                                                 <iframe
@@ -653,7 +682,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
 
                         <script>
                             document.getElementById('google_map').addEventListener('input', function() {
@@ -670,7 +699,7 @@
                         </script>
 
 
-                        <div class="row mb-3">
+                        <!-- <div class="row mb-3">
                             <div class="col">
                                 <div class="form-body px-5 rounded-4">
                                     <h4 class="fw-bold mb-3">08. Upload PDF</h4>
@@ -684,16 +713,14 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
 
-                        <div class="row mb-2">
+                        <!-- <div class="row mb-2">
                             <div class="col">
                                 <div class="form-body px-5 rounded-4">
                                     <h4 class="fw-bold mb-3">09. Food Menu</h4>
                                     <div class="mb-1">
-                                        <!-- Food Menu Inputs in One Row -->
                                         <div class="row g-2">
-                                            <!-- Breakfast -->
                                             <div class="col-lg-4">
                                                 <label
                                                     class="form-label form-label-top form-label-auto mb-2">Breakfast</label>
@@ -706,7 +733,6 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <!-- Lunch -->
                                             <div class="col-lg-4">
                                                 <label
                                                     class="form-label form-label-top form-label-auto  mb-2">Lunch</label>
@@ -719,7 +745,6 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <!-- Dinner -->
                                             <div class="col-lg-4">
                                                 <label
                                                     class="form-label form-label-top form-label-auto mb-2">Dinner</label>
@@ -736,12 +761,12 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
                         <!-- 8. AMENITIES -->
                         <div class="row mb-2">
                             <div class="col">
                                 <div class="form-body px-5 py-3 rounded-4">
-                                    <h4 class="fw-bold mb-3">10. Amenities</h4>
+                                    <h4 class="fw-bold mb-3">9. Amenities</h4>
                                     <div class="d-flex flex-wrap">
                                         @foreach($amenities as $index => $amenity)
                                         <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
@@ -766,7 +791,7 @@
                         <div class="row mb-2">
                             <div class="col">
                                 <div class="form-body px-5 py-3 rounded-4">
-                                    <h4 class="fw-bold mb-3">11. Food and Beverages</h4>
+                                    <h4 class="fw-bold mb-3">10. Food and Beverages</h4>
                                     <div class="d-flex flex-wrap">
                                         @foreach($foodBeverages as $index => $item)
                                         <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
@@ -791,7 +816,7 @@
                         <div class="row mb-2">
                             <div class="col">
                                 <div class="form-body px-5 py-3 rounded-4">
-                                    <h4 class="fw-bold mb-3">12. Activities</h4>
+                                    <h4 class="fw-bold mb-3">11. Activities</h4>
                                     <div class="d-flex flex-wrap">
                                         @foreach($activities as $index => $item)
                                         <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
@@ -816,7 +841,7 @@
                         <div class="row mb-2">
                             <div class="col">
                                 <div class="form-body px-5 py-3 rounded-4">
-                                    <h4 class="fw-bold mb-3">13. Safety Features</h4>
+                                    <h4 class="fw-bold mb-3">12. Safety Features</h4>
                                     <div class="d-flex flex-wrap">
                                         @foreach($safety_features as $index => $item)
                                         <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
@@ -909,7 +934,7 @@
 
     <script>
         $(document).ready(function() {
-            $('#summernote1,#summernote2,#summernote3,#summernote4,#summernote5,#summernote6,#summernote7,#summernote8')
+            $('#summernote1,#summernote2,#summernote3,#summernote4,#summernote5,#summernote6,#summernote7,#summernote8,#summernote9,#summernote10')
                 .summernote({
                     height: 200 // Set the height of the editor
                 });
@@ -984,6 +1009,20 @@
                     ['view', ['fullscreen', 'codeview', 'help']]
                 ]
             });
+            $('#summernote9').summernote({
+                placeholder: 'Hello stand alone ui',
+                tabsize: 2,
+                height: 100,
+                toolbar: [
+                    ['style', ['style']],
+                    ['font', ['bold', 'underline', 'clear']],
+                    ['color', ['color']],
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    ['table', ['table']],
+                    ['insert', ['link', 'picture', 'video']],
+                    ['view', ['fullscreen', 'codeview', 'help']]
+                ]
+            });
             $('#summernote6').summernote({
                 placeholder: 'Hello stand alone ui',
                 tabsize: 2,
@@ -1026,7 +1065,20 @@
                     ['view', ['fullscreen', 'codeview', 'help']]
                 ]
             });
-
+            $('#summernote10').summernote({
+                placeholder: 'Hello stand alone ui',
+                tabsize: 2,
+                height: 100,
+                toolbar: [
+                    ['style', ['style']],
+                    ['font', ['bold', 'underline', 'clear']],
+                    ['color', ['color']],
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    ['table', ['table']],
+                    ['insert', ['link', 'picture', 'video']],
+                    ['view', ['fullscreen', 'codeview', 'help']]
+                ]
+            });
 
 
 
@@ -1092,44 +1144,6 @@
             });
         });
 
-
-        // document.addEventListener('DOMContentLoaded', function() {
-        //     let planCount = 1; // Initialize with existing plan count
-
-        //     // Function to clone the existing plan item
-        //     function createPlanFields() {
-        //         planCount++; // Increment plan count
-        //         const container = document.getElementById('plan-container');
-        //         const template = container.querySelector('.plan-item');
-
-        //         // Clone the template
-        //         const newPlan = template.cloneNode(true);
-
-        //         // Update IDs and Names for new plan items
-        //         newPlan.querySelectorAll('input, textarea').forEach((field) => {
-        //             // Ensure name is array-style and IDs are unique
-        //             field.name = field.name.replace(/\[\]$/, []);
-        //             field.id = field.id + '-' + planCount;
-        //         });
-
-        //         container.appendChild(newPlan);
-        //     }
-
-        //     // Event listener for the "Add" button
-        //     document.getElementById('add-plan-btn').addEventListener('click', function() {
-        //         createPlanFields();
-        //     });
-
-        //     // Event delegation to handle removal of plan items
-        //     document.getElementById('plan-container').addEventListener('click', function(event) {
-        //         if (event.target.closest('.remove-plan')) {
-        //             event.preventDefault();
-        //             const planItem = event.target.closest('.plan-item');
-        //             planItem.remove();
-        //         }
-        //     });
-        // });
-
         document.addEventListener('DOMContentLoaded', function() {
             let planCount = 1; // Initialize with existing plan count
 
@@ -1143,17 +1157,38 @@
                 const newPlan = template.cloneNode(true);
 
                 // Update IDs and Names for new plan items
-                newPlan.querySelectorAll('input, textarea').forEach((field) => {
-                    // Ensure name is array-style and IDs are unique
-                    field.name = field.name.replace(/\[\]$/, []);
-                    field.id = field.id + '-' + planCount;
+                newPlan.querySelectorAll('input, textarea, div').forEach((field) => {
+                    if (field.id) {
+                        field.id = field.id + '-' + planCount;
+                    }
+                    if (field.name) {
+                        field.name = field.name.replace(/\[\]$/, '[]');
+                    }
                 });
 
+                // Remove previous Summernote instance (if any)
+                const summernoteDiv = newPlan.querySelector('[id^="summernote3"]');
+                const hiddenInput = newPlan.querySelector('[id^="plan_description"]');
+
+                // Give unique IDs
+                const uniqueEditorId = `summernote3-${planCount}`;
+                const uniqueInputId = `plan_description-${planCount}`;
+
+                summernoteDiv.id = uniqueEditorId;
+                hiddenInput.id = uniqueInputId;
+
+                // Append the cloned item
                 container.appendChild(newPlan);
 
-                // Re-initialize Summernote for newly added fields
-                $('#summernote3').summernote({
-                    height: 200
+                // Initialize Summernote for the new div
+                $('#' + uniqueEditorId).summernote({
+                    height: 200,
+                    callbacks: {
+                        onChange: function(contents) {
+                            // Sync to hidden input on change
+                            document.getElementById(uniqueInputId).value = contents;
+                        }
+                    }
                 });
             }
 

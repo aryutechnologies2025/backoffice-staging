@@ -94,6 +94,12 @@ class ProgramApiController extends Controller
             $tourPlanning = json_decode($package->tour_planning, true) ?? [];
             $campRule = json_decode($package->camp_rule, true) ?? [];
 
+            $price_title = json_decode($package->price_tilte, true) ?? [];
+            $price_amount = json_decode($package->price_amount, true) ?? [];
+
+
+
+
             $amenities = Amenities::whereIn('id', $amenityIds)
                 ->get(['id', 'amenity_name', 'amenity_pic'])
                 ->keyBy('id')
@@ -103,6 +109,18 @@ class ProgramApiController extends Controller
                         'amenity_pic' => $item->amenity_pic,
                     ];
                 });
+
+            // $pricing = Amenities::whereIn('id', $amenityIds)
+            // ->get(['id', 'amenity_name', 'amenity_pic'])
+            // ->keyBy('id')
+            // ->map(function ($item) {
+            //     return [
+            //         'price_title' => $item->amenity_name,
+            //         'price_amount' => $item->amenity_pic,
+            //     ];
+            // });
+
+
             $foodBeverages = FoodBeverage::whereIn('id', $foodBeverageIds)
                 ->get(['id', 'food_beverage', 'food_beverage_pic'])
                 ->keyBy('id')
@@ -162,11 +180,19 @@ class ProgramApiController extends Controller
             $importantInfoPlainText = strip_tags(html_entity_decode($package->important_info, ENT_QUOTES, 'UTF-8'));
             $importantInfoPlainText = str_replace(["<br>", "<br/>", "<br />"], "\n", $importantInfoPlainText);
 
-            $program_inclusionPlainText = strip_tags(html_entity_decode($package->program_inclusion, ENT_QUOTES, 'UTF-8'));
+            $program_inclusionPlainText = strip_tags($package->program_inclusion);
             $program_inclusionPlainText = str_replace(["<br>", "<br/>", "<br />"], "\n", $program_inclusionPlainText);
 
             $break_fastPlainText = strip_tags(html_entity_decode($package->break_fast, ENT_QUOTES, 'UTF-8'));
             $break_fastPlainText = str_replace(["<br>", "<br/>", "<br />"], "\n", $break_fastPlainText);
+
+            $importantInfoPlainText = $package->important_info;
+            $program_inclusionPlainText = $package->program_inclusion;
+            $program_exclusionPlainText = $package->program_exclusion;
+
+            // $program_exclusionPlainText = strip_tags(html_entity_decode($package->program_exclusion, ENT_QUOTES, 'UTF-8'));
+            // $program_exclusionPlainText = str_replace(["<br>", "<br/>", "<br />"], "\n", $program_exclusionPlainText);
+
 
             $responseData = [
                 'id' => $package->id,
@@ -192,6 +218,7 @@ class ProgramApiController extends Controller
                 'payment_policy' => $campRule,
                 'important_info' => $importantInfoPlainText,
                 'program_inclusion' => $program_inclusionPlainText,
+                'program_exclusion' => $program_exclusionPlainText,
                 'break_fast' => $break_fastPlainText,
                 'location' => $formattedLocation,
                 'lunch' => $package->lunch,
@@ -207,9 +234,13 @@ class ProgramApiController extends Controller
                 'google_map' => $package->google_map,
                 'average_rating' => number_format($averageRating, 1),
                 'created_date' => $package->created_date,
-                'current_location' => $package->location
+                'current_location' => $package->location,
+                'price_title'=> $price_title,
+                'price_amount' =>$price_amount
+              
 
             ];
+            
             if ($user_id) {
                 $wishlist = Program_wishlist::where('user_id', $user_id)
                     ->where('program_id', $programId)
