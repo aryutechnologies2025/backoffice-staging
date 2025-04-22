@@ -117,10 +117,10 @@
                         <img src="/assets/image/dashboard/enquiry.svg" alt="">
                         <span class="nav_name"> Enquiry  </span>
                     </a>
-                    <a href="{{ route('admin.review_review_list') }}" class="nav_link {{ request()->routeIs(['admin.review_review_list', 'admin.client_review_add_form', 'admin.client_review_edit_form']) ? 'active' : ''}} mb-3 text-white">
+                    <!-- <a href="{{ route('admin.review_review_list') }}" class="nav_link {{ request()->routeIs(['admin.review_review_list', 'admin.client_review_add_form', 'admin.client_review_edit_form']) ? 'active' : ''}} mb-3 text-white">
                         <img src="/assets/image/dashboard/review.svg" alt="">
                         <span class="nav_name"> Client Review </span>
-                    </a>
+                    </a> -->
                     <a href="{{ route('admin.influencer_list') }}" class="nav_link {{ request()->routeIs(['admin.influencer_list', 'admin.influencer_add_form', 'admin.influencer_edit_form']) ? 'active' : '' }} mb-3 text-white">
                         <img src="/assets/image/dashboard/slider.svg" alt="">
                         <span class="nav_name"> Influencer </span>
@@ -151,7 +151,7 @@
                     </a> -->
                     <a href="{{ route('admin.client_review_list') }}" class="nav_link {{ request()->routeIs(['admin.client_review_list', 'admin.client_review_add_form', 'admin.client_review_edit_form']) ? 'active' : ''}} mb-3 text-white">
                         <img src="/assets/image/dashboard/review.svg" alt="">
-                        <span class="nav_name"> Add Review </span>
+                        <span class="nav_name"> Review </span>
                     </a>
                    
                     <a href="{{ route('admin.wish_list') }}" class="nav_link {{ request()->routeIs(['admin.wish_list', 'admin.wishlist_add_form', 'admin.wishlist_edit_form']) ? 'active' : '' }} mb-3 text-white">
@@ -393,6 +393,8 @@
                     $('#lunch').val($('#summernote7').summernote('code'));
                     $('#dinner').val($('#summernote8').summernote('code'));
                     $('#client_review').val($('#summernote').summernote('code'));
+                    $('#location').val($('#summernote10').summernote('code'));
+                    $('#program_exclusion').val($('#summernote9').summernote('code'));
 
                     $('#form_valid').submit();
                 }

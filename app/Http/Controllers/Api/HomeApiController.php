@@ -144,7 +144,7 @@ class HomeApiController extends Controller
             }
     
             // Execute the query
-            $packages = $query->with(['theme', 'destination', 'clientReviews'])->paginate(10);
+            $packages = $query->with(['theme', 'destination', 'clientReviews'])->get();
             
             // Check if any packages were found
             if ($packages->isEmpty()) {
@@ -174,6 +174,11 @@ class HomeApiController extends Controller
                 $amenityDetails = json_decode($package->amenity_details, true);
                 $activities = json_decode($package->activities, true);
                 $safetyFeatures = json_decode($package->safety_features, true);
+
+                $price_title = json_decode($package->price_tilte, true);
+
+                $price_amount = json_decode($package->price_amount, true);
+
                 // Process reviews and attach user data
             $reviews = $package->reviews->map(function ($review) {
                 $user = $review->user; // Get the related user (reviewer's name and image)
@@ -208,8 +213,8 @@ class HomeApiController extends Controller
                     // 'location' => $formattedLocation,
                     'total_days' => $package->total_days,
                     'member_capacity' => $package->member_capacity,
-                    'price' => $package->price,
-                    'actual_price' => $package->actual_price,
+                   // 'price' => $package->price,
+                  //  'actual_price' => $package->actual_price,
                     'cover_img' => $package->cover_img,
                     'start_date' => $formattedStartDate,
                     'end_date' => $formattedendDate,
@@ -227,6 +232,8 @@ class HomeApiController extends Controller
                     'reviews' => $reviews,
 
                     // Adding the fetched details
+                    'price_tilte' => $price_title,
+                    'pricing' => $price_amount,
                     'amenities' => $details['amenities'] ?? [],
                     'foodBeverages' => $details['foodBeverages'] ?? [],
                     'activities' => $details['activities'] ?? [],

@@ -20,8 +20,6 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
 
 
-
-
 class All_Inclusive_PackController extends Controller
 {
 
@@ -92,6 +90,8 @@ class All_Inclusive_PackController extends Controller
 
     public function insert(Request $request)
     {
+
+        // dd($request->all());
         // Handle dynamic image uploads
         $imagePaths = [];
         $fileInputs = $request->file();
@@ -135,11 +135,22 @@ class All_Inclusive_PackController extends Controller
         }
 
         // Cache the tour planning data
+        // $tourPlanningJson = Cache::remember("tour_planning_{$request->input('title')}", 3600, function () use ($request) {
+        //     return json_encode([
+        //         'plan_description' => $request->input('plan_description')
+        //     ]);
+        // });
+
         $tourPlanningJson = Cache::remember("tour_planning_{$request->input('title')}", 3600, function () use ($request) {
+            $planDescription = $request->input('plan_description');
+        
+            // If plan_description is null or empty, return an empty JSON array
+            if (empty($planDescription)) {
+                return json_encode([]);
+            }
+        
             return json_encode([
-                'plan_title' => $request->input('plan_title'),
-                'plan_subtitle' => $request->input('plan_subtitle'),
-                'plan_description' => $request->input('plan_description')
+                'plan_description' => $planDescription
             ]);
         });
 
@@ -162,6 +173,8 @@ class All_Inclusive_PackController extends Controller
         $inclusive_packages = new InclusivePackages();
         $inclusive_packages->program_pdf = $filename;
         $inclusive_packages->program_inclusion = $request->input('program_inclusion');
+        $inclusive_packages->program_exclusion = $request->input('program_exclusion');
+
         $inclusive_packages->break_fast = $request->input('break_fast');
         $inclusive_packages->lunch = $request->input('lunch');
         $inclusive_packages->dinner = $request->input('dinner');
@@ -174,7 +187,7 @@ class All_Inclusive_PackController extends Controller
         $inclusive_packages->address = $request->input('address') ?? '';
         $inclusive_packages->category = json_encode($request->input('prop_cat'));
         $inclusive_packages->location = $request->input('location');
-        $inclusive_packages->tour_planning = $tourPlanningJson;
+       $inclusive_packages->tour_planning = $tourPlanningJson;
         $inclusive_packages->start_date = $request->input('start_date');
         $inclusive_packages->return_date = $request->input('return_date');
         $inclusive_packages->total_days = $request->input('total_days');
@@ -190,6 +203,8 @@ class All_Inclusive_PackController extends Controller
         $inclusive_packages->bath_room = $request->input('bath_room');
         $inclusive_packages->bed_room = $request->input('bed_room');
         $inclusive_packages->hall = $request->input('hall');
+        $inclusive_packages->price_tilte = json_encode($request->input('price_title', []));
+        $inclusive_packages->price_amount = json_encode($request->input('price_amount', []));
         $inclusive_packages->amenity_details = $amenitiesJson;
         $inclusive_packages->food_beverages = $foodBeveragesJson;
         $inclusive_packages->activities = $activitiesJson;
@@ -260,6 +275,8 @@ class All_Inclusive_PackController extends Controller
 
     public function update(Request $request, $id)
     {
+
+        // dd($request->all());
         // Validate the incoming data
         // $validatedData = $request->validate([
         //     'themes_name' => 'required',
@@ -373,9 +390,9 @@ class All_Inclusive_PackController extends Controller
 
         // JSON encode complex fields
         $tourPlanningJson = json_encode([
-            'plan_title' => $request->input['plan_title'],
-            'plan_subtitle' => $request->input['plan_subtitle'],
-            'plan_description' => $request->input['plan_description']
+            // 'plan_title' => $request->input['plan_title'],
+            // 'plan_subtitle' => $request->input['plan_subtitle'],
+            'plan_description' => $request->input('plan_description')
         ]);
 
 
@@ -396,33 +413,35 @@ class All_Inclusive_PackController extends Controller
         $foodBeveragesJson = json_encode($request->input('food_beverages', []));
         $activitiesJson = json_encode($request->input('activities', []));
         $safetyFeaturesJson = json_encode($request->input('safety_features', []));
-        $campRulesJson = json_encode($request->input['camp_rule']);
+        $campRulesJson = json_encode($request->input('camp_rule'));
 
         // Update the model fields
         // $inclusive_packages->program_pdf = $filePath;
         $inclusive_packages->upload_image_name = $request->input('upload_image_name');
         $inclusive_packages->alternate_name = $request->input('alternate_image_name');
+        $inclusive_packages->program_inclusion = $request->input('program_inclusion');
+        $inclusive_packages->program_exclusion = $request->input('program_exclusion');
         $inclusive_packages->theme_id = $request->input('themes_name');
         $inclusive_packages->location = $request->input('location');
-        $inclusive_packages->city_details = $request->input['cities_name'];
-        $inclusive_packages->title = $request->input['title'];
-        $inclusive_packages->program_description = $request->input['program_description'];
+        $inclusive_packages->city_details = $request->input('cities_name');
+        $inclusive_packages->title = $request->input('title');
+        $inclusive_packages->program_description = $request->input('program_description');
         $inclusive_packages->category = json_encode($request->input('prop_cat', []));
-        $inclusive_packages->tour_planning = $tourPlanningJson;
+        //$inclusive_packages->tour_planning = $tourPlanningJson;
         $inclusive_packages->start_date = $request->input('start_date');
         $inclusive_packages->return_date = $request->input('return_date');
-        $inclusive_packages->total_days = $request->input['total_days'];
-        $inclusive_packages->member_capacity = $request->input['member_capacity'];
-        $inclusive_packages->price = $request->input['price'];
-        $inclusive_packages->actual_price = $request->input['actual_price'];
+        $inclusive_packages->total_days = $request->input('total_days');
+        //$inclusive_packages->member_capacity = $request->input['member_capacity'];
+        $inclusive_packages->price_tilte = json_encode($request->input('price_title', []));
+        $inclusive_packages->price_amount = json_encode($request->input('price_amount', []));
         $inclusive_packages->camp_rule = $campRulesJson;
-        $inclusive_packages->important_info = $request->input['important_info'];
-        $inclusive_packages->google_map = $request->input['google_map'];
-        $inclusive_packages->events_package_images = json_encode(array_values($imagePaths));
-        $inclusive_packages->total_room = $request->input['total_room'];
-        $inclusive_packages->bath_room = $request->input['bath_room'];
-        $inclusive_packages->bed_room = $request->input['bed_room'];
-        $inclusive_packages->hall = $request->input['hall'];
+        $inclusive_packages->important_info = $request->input('important_info');
+        //$inclusive_packages->google_map = $request->input['google_map'];
+       // $inclusive_packages->events_package_images = json_encode(array_values($imagePaths));
+       // $inclusive_packages->total_room = $request->input['total_room'];
+       // $inclusive_packages->bath_room = $request->input['bath_room'];
+       // $inclusive_packages->bed_room = $request->input['bed_room'];
+      //  $inclusive_packages->hall = $request->input['hall'];
         $inclusive_packages->amenity_details = $amenitiesJson;
         $inclusive_packages->food_beverages = $foodBeveragesJson;
         $inclusive_packages->activities = $activitiesJson;
