@@ -36,7 +36,6 @@
                 <thead>
                     <tr class="rounded-top-4">
                         <th class="text-center"><span> S.No </span></th>
-                        <th class="text-center"><span> Client Pic </span></th>
                         <th class="text-center"><span> Client Name </span></th>
                         <th class="text-center"><span> Program Name </span></th>
                         <th class="text-center"><span> Rating </span></th>
@@ -55,9 +54,8 @@
                     <tr>
                     <td class="text-center">{{ $loop->iteration }}</td>
 
-                    <td class="text-center"><img src="{{ asset($row->client_pic) }}" alt="Thumbnail" style="max-width: 100px; max-height: 100px; object-fit: cover;"></td>
-                        <td class="text-center">{{ $row->client_name }}</td>
-                        <td class="text-center">{{ $row->program_dts ? $row->program_dts->title : 'N/A' }}</td>
+                        <td class="text-center">{{ $row->user->first_name }} {{ $row->user->last_name }}</td>
+                        <td class="text-center">{{ $row->package ? $row->package->title : 'N/A' }}</td>
                         <td class="text-center">{{ $row->rating }}</td>
                         @php
                         $disp_status = 'In Active';

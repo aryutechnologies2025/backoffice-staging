@@ -82,12 +82,12 @@
                                         <!-- First Input: Upload Image Name -->
                                         <div class="col-lg-6">
                                             <label class="fw-bold">Upload Image Name <span class="text-danger">*</span></label>
-                                            <input type="text" placeholder="Rename the Photo" id="upload_image_name" name="upload_image_name" value="{{ old('upload_image_name') }}" class="form-control py-2 rounded-3 shadow-sm" required>
+                                            <input type="text" placeholder="Rename the Photo" id="upload_image_name" name="upload_image_name" value="{{ old('upload_image_name') }}" class="form-control py-2 rounded-3 shadow-sm">
                                         </div>
                                         <!-- Second Input: Alternate Image Name -->
                                         <div class="col-lg-6">
                                             <label class="fw-bold">Alternate Image Name <span class="text-danger">*</span></label>
-                                            <input type="text" placeholder="Alternate Name" id="alternate_image_name" name="alternate_image_name" value="{{ old('alternate_image_name') }}" class="form-control py-2 rounded-3 shadow-sm" required>
+                                            <input type="text" placeholder="Alternate Name" id="alternate_image_name" name="alternate_image_name" value="{{ old('alternate_image_name') }}" class="form-control py-2 rounded-3 shadow-sm">
                                         </div>
                                     </div>
                                 </div>
@@ -106,7 +106,14 @@
                             </div>
                             <div class="col-md-6">
                                 <label class="fw-bold mb-2" id="label_textarea"> Client Name <span class="text-danger">*</span></label>
-                                <input type="text" placeholder="Client Name" id="client_name" name="client_name" value="{{old('client_name')}}" class="form-control py-2 rounded-3 shadow-sm" required>
+                                <!-- <input type="text" placeholder="Client Name" id="client_name" name="client_name" value="{{old('client_name')}}" class="form-control py-2 rounded-3 shadow-sm" required> -->
+
+                                <select id="client_name" name="client_name" class="form-control py-2 rounded-3 shadow-sm" required>
+                                    <option value="">Select User</option>
+                                    @foreach($users as $id => $name)
+                                    <option value="{{ $name->id }}" @if(old('client_name')==$name->id) selected @endif>{{ $name->first_name }} {{ $name->last_name }}</option>
+                                    @endforeach
+                                </select>
                             </div>
 
                             <div class="g-2 mb-2">

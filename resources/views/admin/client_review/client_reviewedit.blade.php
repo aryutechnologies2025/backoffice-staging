@@ -86,11 +86,11 @@ width: 80%;
                                 </script>   
                                         <div class="col-lg-6">
                                             <label class="fw-bold mt-4">Upload Image Name <span class="text-danger">*</span></label>
-                                            <input type="text" placeholder="Rename the Photo" id="upload_image_name" name="upload_image_name" value="{{ old('upload_image_name', $client_details->upload_image_name) }}" class="form-control py-2 rounded-3 shadow-sm" required>
+                                            <input type="text" placeholder="Rename the Photo" id="upload_image_name" name="upload_image_name" value="{{ old('upload_image_name', $client_details->upload_image_name) }}" class="form-control py-2 rounded-3 shadow-sm">
                                         </div>
                                         <div class="col-lg-6 px-4">
                                             <label class="fw-bold mt-4">Alternate Image Name <span class="text-danger">*</span></label>
-                                            <input type="text" placeholder="Alternate Name" id="alternate_image_name" name="alternate_image_name" value="{{ old('alternate_image_name', $client_details->alternate_name) }}" class="form-control py-2 rounded-3 shadow-sm" required>
+                                            <input type="text" placeholder="Alternate Name" id="alternate_image_name" name="alternate_image_name" value="{{ old('alternate_image_name', $client_details->alternate_name) }}" class="form-control py-2 rounded-3 shadow-sm" >
                                         </div>
                                     </div>
                                 </div>
@@ -103,7 +103,7 @@ width: 80%;
                             <select id="program_name" name="program_name" class="form-control py-2 rounded-3 shadow-sm" required>
                                 <option value="">Select Program</option>
                                 @foreach($program_dts as $id => $name)
-                                <option value="{{ $id }}" {{ old('program_name', $client_details->program_id) == $id ? 'selected' : '' }}>
+                                <option value="{{ $id }}" {{ old('program_name', $client_details->package_id) == $id ? 'selected' : '' }}>
                                     {{ $name }}
                                 </option>
                                 @endforeach
@@ -111,7 +111,12 @@ width: 80%;
                         </div>
                         <div class="col-lg-6">
                             <label class="fw-bold mb-4">Client Name <span class="text-danger">*</span></label>
-                            <input type="text" placeholder="Client Name" id="client_name" name="client_name" value="{{ old('client_name', $client_details->client_name) }}" class="form-control py-2 rounded-3 shadow-sm" required>
+                            <select id="client_name" name="client_name" class="form-control py-2 rounded-3 shadow-sm" required>
+                                    <option value="">Select User</option>
+                                    @foreach($users as $id => $name)
+                                    <option value="{{ $name->id }}" @if($name->id==$client_details->user_id) selected @endif>{{ $name->first_name }} {{ $name->last_name }}</option>
+                                    @endforeach
+                                </select>
                         </div>
                     </div>
 
@@ -125,7 +130,7 @@ width: 80%;
                             <input type="hidden" id="client_review" name="client_review" value="{{ old('client_review', strip_tags($client_details->client_review)) }}">
                             <div class="row">
                                 <div class="col-lg-12">
-                                    <div id="summernote">{{ strip_tags($client_details->client_review) }}</div>
+                                    <div id="summernote">{!! $client_details->comment !!}</div>
                                 </div>
                             </div>
                         </div>

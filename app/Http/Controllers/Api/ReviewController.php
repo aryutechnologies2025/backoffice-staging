@@ -26,12 +26,26 @@ class ReviewController extends Controller
         }
     
         // Create the review record
-        $review = Review::create($request->only(['user_id', 'package_id', 'comment', 'rating']))->orderBy('created_at', 'desc')->get();
+        // $review = Review::create($request->only(['user_id', 'package_id', 'comment', 'rating']))->orderBy('created_at', 'desc')->get();
     
+
+        $client_review = new Review;
+        $client_review->package_id = $request->input('package_id');
+        $client_review->user_id = $request->input('user_id');
+        $client_review->comment = $request->input('comment');
+        $client_review->review_dt = $request->input('review_dt');
+        $client_review->rating = $request->input('rating');
+        $client_review->status = '1';
+        $client_review->created_date = date('Y-m-d H:i:s');
+        $client_review->created_by = $request->input('user_id');
+        $client_review->is_deleted = '0';
+        $client_review->updated_at = null;
+        $client_review->save();
+
         // Return response
         return response()->json([
             'message' => 'Review added successfully!',
-            'review' => $review,
+            'review' => $client_review,
         ], 201);
     }
     
