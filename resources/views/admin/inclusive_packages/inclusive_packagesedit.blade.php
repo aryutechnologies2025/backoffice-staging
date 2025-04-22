@@ -247,20 +247,20 @@
                         <!-- Cover Image -->
                         <div class="row mt-4">
                             <div class="col-md-2 h-25">
-                                <label for="file-ip-1-cover" class="form-label">Cover Image</label>
+                                <label for="file-cover" class="form-label">Cover Image</label>
                                 <div class="form-input text-start pt-2 pb-0">
-                                    <label for="file-ip-1-cover" class="d-block pt-4">
+                                    <label for="file-cover" class="d-block pt-4">
                                         @if ($package_details->cover_img)
-                                        <img id="file-ip-1-cover-preview" src="{{ asset($package_details->cover_img) }}" alt="Cover Image"
+                                        <img id="file-cover-preview" src="{{ asset($package_details->cover_img) }}" alt="Cover Image"
                                             class="rounded-3 shadow-sm" style="max-width: 250px; max-height: 250px; object-fit: cover;">
                                         @else
-                                        <img id="file-ip-1-cover-preview" src="/assets/image/dashboard/innerpece_addpic_icon.svg" alt="Add Pic"
+                                        <img id="file-cover-preview" src="/assets/image/dashboard/innerpece_addpic_icon.svg" alt="Add Pic"
                                             class="rounded-3 shadow-sm" style="max-width: 250px; max-height: 250px;">
                                         @endif
                                         <p class="mt-2">Add Pic</p>
                                     </label>
-                                    <input type="file" id="file-ip-1-cover" name="cover_img" class="form-control" accept="image/png, image/jpeg, image/svg+xml" onchange="previewCoverImage(event)">
-                                    <div id="file-ip-1-error" class="text-danger"></div>
+                                    <input type="file" id="file-cover" name="cover_img" class="form-control" accept="image/png, image/jpeg, image/svg+xml" onchange="previewCoverImage(event)">
+                                    <div id="file-cover-error" class="text-danger"></div>
                                     <small class="text-danger d-block mt-2 text-center">* Upload size [1200x120]</small>
                                 </div>
                             </div>
@@ -295,7 +295,7 @@
                             <p>No images uploaded yet.</p>
                             @endif
                         </div>
-
+                        
                         <!-- Hidden input to store deleted images -->
                         <input type="hidden" name="deleted_images" id="deleted-images" value="[]">
 
@@ -327,7 +327,7 @@
 
                             // Function to preview the cover image after file selection
                             function previewCoverImage(event) {
-                                const preview = document.getElementById('file-ip-1-cover-preview'); // Updated to preview the image element
+                                const preview = document.getElementById('file-cover-preview'); // Updated to preview the image element
                                 const file = event.target.files[0];
                                 const reader = new FileReader();
 
