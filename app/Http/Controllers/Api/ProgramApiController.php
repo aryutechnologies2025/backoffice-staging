@@ -1087,13 +1087,10 @@ class ProgramApiController extends Controller
             'phone' => ['required', 'regex:/^\+?[0-9]{10,15}$/'],
             'comments' => 'required|string',
             'location' => 'required|string',
-
-
-
             
             'days' => 'required|integer',
             'travel_destination' => 'string|nullable',
-            'budget_per_head' => 'required|string',
+            // 'budget_per_head' => 'required|string',
             'cab_need' => 'required|string',
             'total_count' => 'required|integer',
             'male_count' => 'required|integer',
