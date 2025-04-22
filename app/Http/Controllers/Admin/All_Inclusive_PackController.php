@@ -333,6 +333,7 @@ class All_Inclusive_PackController extends Controller
         }
 
 
+        // dd($fileInputs);
 
         // Handle new image uploads
         foreach ($fileInputs as $key => $files) {
@@ -442,7 +443,7 @@ class All_Inclusive_PackController extends Controller
         $inclusive_packages->camp_rule = $campRulesJson;
         $inclusive_packages->important_info = $request->input('important_info');
         //$inclusive_packages->google_map = $request->input['google_map'];
-       // $inclusive_packages->events_package_images = json_encode(array_values($imagePaths));
+       $inclusive_packages->events_package_images = json_encode(array_values($imagePaths));
        // $inclusive_packages->total_room = $request->input['total_room'];
        // $inclusive_packages->bath_room = $request->input['bath_room'];
        // $inclusive_packages->bed_room = $request->input['bed_room'];
