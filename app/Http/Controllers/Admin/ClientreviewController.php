@@ -8,13 +8,15 @@ use Illuminate\Http\Request;
 use App\Models\Clientreview;
 use App\Models\InclusivePackages;
 use App\Models\Review;
+use App\Models\User;
+
 class ClientreviewController extends Controller
 {
     public function list(Request $request)
     {
         
         $title = 'Client Review List';
-        $review_dts = Clientreview::with('program_dts') // Eager load the related theme
+        $review_dts = Review::with('package','user') // Eager load the related theme
             ->where('is_deleted', '0')
             ->get();
        
@@ -65,14 +67,17 @@ class ClientreviewController extends Controller
     public function add_form()
     {
         $title = 'Add ClientReview';
+        $users = User::where('status', "1")->where('is_deleted', "0")->get();
         $program_dts = InclusivePackages::where('status', "1")->where('is_deleted', "0")->pluck('title', 'id');
-        return view('admin.client_review.client_reviewadd', compact('title','program_dts'));
+        return view('admin.client_review.client_reviewadd', compact('title','program_dts','users'));
     }
 
     public function insert(Request $request)
     {
        
-    //    print_r($_POST);die;
+        //    print_r($_POST);die;
+
+        // dd($request->all());
         $credentials = $request->validate([
             'program_name' => 'required',
             'client_name' => 'required',
@@ -87,6 +92,7 @@ class ClientreviewController extends Controller
             mkdir($client_picPath, 0755, true);
         }
 
+        $filePath1 = null;
         if ($request->hasFile('image_1')) {
             $file1 = $request->file('image_1');
             $customFileName = preg_replace('/[^A-Za-z0-9_\-]/', '_', $request->input('upload_image_name'));
@@ -94,14 +100,14 @@ class ClientreviewController extends Controller
             $file1->move( $client_picPath, $filename1);
             $filePath1 = 'uploads/client_pic/' . $filename1;
         }
-        $client_review = new Clientreview;
-        $client_review->program_id = $request->input('program_name');
-        $client_review->client_name = $request->input('client_name');
+        $client_review = new Review;
+        $client_review->package_id = $request->input('program_name');
+        $client_review->user_id = $request->input('client_name');
         // $client_review->client_role = $request->input('client_role');
-        $client_review->alternate_name = $request->input('alternate_image_name'); // Save alternate name
-        $client_review->upload_image_name = $request->input('upload_image_name');
+        $client_review->alternate_name = $request->input('alternate_image_name') ?? '';
+        $client_review->upload_image_name = $request->input('upload_image_name') ?? '';
 
-        $client_review->client_review = $request->input('client_review');
+        $client_review->comment = $request->input('client_review');
         $client_review->review_dt = $request->input('review_dt');
         $client_review->rating = $request->input('rating');
         $client_review->client_pic = $filePath1;
@@ -118,11 +124,13 @@ class ClientreviewController extends Controller
 
     public function edit_form(Request $request, $id)
     {
-        $client_details = Clientreview::find($id);
+        $client_details = Review::find($id);
         $program_dts = InclusivePackages::where('status', "1")->where('is_deleted', "0")->pluck('title', 'id');
         $selectedprogramId = $client_details->program_id;
+        $users = User::where('status', "1")->where('is_deleted', "0")->get();
+
         $title = 'Destination Edit';
-        return view('admin.client_review.client_reviewedit', compact('client_details', 'title','selectedprogramId','program_dts'));
+        return view('admin.client_review.client_reviewedit', compact('client_details', 'title','selectedprogramId','program_dts','users'));
     }
 
     public function update(Request $request, $id)
@@ -141,7 +149,7 @@ class ClientreviewController extends Controller
             mkdir($client_picPath, 0755, true);
         }
 
-        $client_review = Clientreview::find($id);
+        $client_review = Review::find($id);
         if (!$client_review) {
             return redirect()->route('admin.client_review_list')
                 ->with('error', 'Client Review not found.');
@@ -158,13 +166,13 @@ class ClientreviewController extends Controller
         
 
 
-        $client_review->program_id = $request->input('program_name');
-        $client_review->client_name = $request->input('client_name');
+        $client_review->package_id = $request->input('program_name');
+        $client_review->user_id = $request->input('client_name');
         // $client_review->client_role = $request->input('client_role');
         $client_review->alternate_name = $request->input('alternate_image_name'); // Save alternate name
         $client_review->upload_image_name = $request->input('upload_image_name');
     
-        $client_review->client_review = $request->input('client_review');
+        $client_review->comment = $request->input('client_review');
         $client_review->review_dt = $request->input('review_dt');
         $client_review->rating = $request->input('rating');
         $client_review->updated_date = date('Y-m-d H:i:s');
@@ -184,7 +192,7 @@ class ClientreviewController extends Controller
         $mode = $request->input('mode');
 
         // Find the admin record by ID
-        $client_review = Clientreview::find($record_id);
+        $client_review = Review::find($record_id);
 
         if ($client_review) {
             // Update the status based on the mode value
@@ -221,7 +229,7 @@ class ClientreviewController extends Controller
         $record_id = $request->input('record_id');
 
         // Find the admin record by ID
-        $client_review = Clientreview::find($record_id);
+        $client_review = Review::find($record_id);
         if ($client_review) {
             // Update the is_deleted field to 1
             $client_review->is_deleted = "1";

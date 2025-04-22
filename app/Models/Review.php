@@ -10,7 +10,19 @@ class Review extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id', 'package_id', 'comment', 'rating' , 'is_deleted',
+       'package_id',
+        'user_id',
+        'alternate_name',
+        'upload_image_name',
+        'comment',
+        'review_dt',
+        'rating',
+        'client_pic',
+        'status',
+        'created_date',
+        'created_by',
+        'is_deleted',
+        'updated_at',
     ];
 
    // Relationship with the User model
@@ -24,4 +36,6 @@ class Review extends Model
    {
        return $this->belongsTo(InclusivePackages::class, 'package_id');
    }
+
+   
 }
