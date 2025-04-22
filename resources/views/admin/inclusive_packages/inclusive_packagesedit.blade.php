@@ -463,12 +463,12 @@
                                         </div>
                                     </div>
                                     <!-- Add New Plan Button -->
-                                    <div class="text-end ">
+                                    <!-- <div class="text-end ">
                                         <button type="button" id="add-plan-btn"
                                             class="btn-add rounded-3 border-0 px-3 py-2 text-white">
                                             <i class="fa fa-plus" aria-hidden="true"></i> Add
                                         </button>
-                                    </div>
+                                    </div> -->
                                 </div>
                             </div>
                         </div>
