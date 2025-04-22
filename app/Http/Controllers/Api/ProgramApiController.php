@@ -163,7 +163,7 @@ class ProgramApiController extends Controller
                     'rating' => $review->rating,
                 ];
             });
-            $reviews = $package->reviews->map(function ($review) {
+            $reviews = $package->reviews->sortByDesc('id')->map(function ($review) {
                 $user = $review->user;
                 return [
                     'first_name' => $user->first_name ?? null,
