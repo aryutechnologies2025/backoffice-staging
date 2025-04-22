@@ -373,12 +373,17 @@ class All_Inclusive_PackController extends Controller
 
             // Sanitize the file name
             $customFileName = preg_replace('/[^A-Za-z0-9_\-]/', '_', $request->input('upload_image_name', 'default_image_name'));
-
+            $customFileName = rand(1000, 9999) . '_' . time();
+            // $customFileName = $customFileName . '_' . $randomSuffix;
             // Generate the final file name with extension
             $coverImageName = $customFileName . '_cover.' . $coverImage->getClientOriginalExtension();
 
             // Define the upload path
             $coverImagePath = 'uploads/events_package_images/';
+
+            // dump($coverImagePath);
+            // dd($coverImageName);
+
 
             // Move the file to the desired location
             $coverImage->move(public_path($coverImagePath), $coverImageName);
