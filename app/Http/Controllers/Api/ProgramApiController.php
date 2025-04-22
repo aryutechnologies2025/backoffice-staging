@@ -76,7 +76,7 @@ class ProgramApiController extends Controller
             }
 
             // Fetch the program details using the provided ID
-            $package = InclusivePackages::with('destination', 'theme', 'clientReviews')->find($programId);
+            $package = InclusivePackages::with('destination', 'theme', 'clientReviews','reviews')->find($programId);
 
             if (!$package) {
                 return response()->json([
@@ -96,8 +96,6 @@ class ProgramApiController extends Controller
 
             $price_title = json_decode($package->price_tilte, true) ?? [];
             $price_amount = json_decode($package->price_amount, true) ?? [];
-
-
 
 
             $amenities = Amenities::whereIn('id', $amenityIds)
@@ -163,7 +161,7 @@ class ProgramApiController extends Controller
                     'rating' => $review->rating,
                 ];
             });
-            $reviews = $package->reviews->sortByDesc('id')->map(function ($review) {
+            $reviews = $package->reviews->map(function ($review) {
                 $user = $review->user;
                 return [
                     'first_name' => $user->first_name ?? null,
@@ -174,6 +172,8 @@ class ProgramApiController extends Controller
                 ];
             });
 
+            // dd($reviews);
+            // $reviews = $package->reviews;
             $reviewCount = $package->reviews->count();
             $totalReviews = $package->clientReviews->count();
             $averageRating = $package->reviews->avg('rating');
