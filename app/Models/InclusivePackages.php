@@ -76,7 +76,8 @@ class InclusivePackages extends Authenticatable
     }
     public function reviews()
     {
-        return $this->hasMany(Review::class, 'package_id');
+        return $this->hasMany(Review::class, 'package_id')->where('status', '1')
+        ->where('is_deleted', '0')->with('user');
     }
     public function themes()
 {
