@@ -13,25 +13,7 @@
         
         <!-- Dashboard Cards -->
         <div class="row">
-            <div class="col-12 col-sm-6 col-md-3 mb-4">
-                <div class="card shadow bg-white rounded d-flex align-items-center h-100">
-                    <div class="card-body d-flex align-items-center w-100">
-                        <!-- Icon on the left -->
-                        <div class="px-2">
-                            <a href="all-inclusive-package"> <img src="/assets/image/dashboard/innerpece_earning_icon.svg" alt="" class="img-fluid" style="height: 60px;" />
-                            </a>
-                            <!-- <img src="/assets/image/dashboard/innerpece_earning_icon.svg" alt="" class="img-fluid" style="height: 60px;" /> -->
-                        </div>
-                        <!-- Text on the right -->
-                        <div class="text-center">
-                            <p class="mb-0 text-muted">Total Program</p>
-                            <a href="all-inclusive-package">
-                                <h4 class="font-weight-bold text-dark">{{ $programCount }}</h4>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        
 
             <div class="col-12 col-sm-6 col-md-3 mb-4">
                 <div class="card shadow bg-white rounded d-flex align-items-center h-100">
