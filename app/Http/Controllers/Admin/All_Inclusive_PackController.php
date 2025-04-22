@@ -433,7 +433,7 @@ class All_Inclusive_PackController extends Controller
         $inclusive_packages->title = $request->input('title');
         $inclusive_packages->program_description = $request->input('program_description');
         $inclusive_packages->category = json_encode($request->input('prop_cat', []));
-        //$inclusive_packages->tour_planning = $tourPlanningJson;
+        $inclusive_packages->tour_planning = $tourPlanningJson;
         $inclusive_packages->start_date = $request->input('start_date');
         $inclusive_packages->return_date = $request->input('return_date');
         $inclusive_packages->total_days = $request->input('total_days');
