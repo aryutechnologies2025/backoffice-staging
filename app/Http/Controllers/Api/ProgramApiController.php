@@ -165,6 +165,7 @@ class ProgramApiController extends Controller
                 $user = $review->user;
                 return [
                     'first_name' => $user->first_name ?? null,
+                    'last_name' => $user->last_name ?? null,
                     'profile_image' => $user->profile_image ?? null,
                     'comment' => $review->comment,
                     'rating' => $review->rating,
