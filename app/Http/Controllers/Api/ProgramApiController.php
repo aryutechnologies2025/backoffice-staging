@@ -238,7 +238,6 @@ class ProgramApiController extends Controller
                 'price_title'=> $price_title,
                 'price_amount' =>$price_amount
               
-
             ];
             
             if ($user_id) {
