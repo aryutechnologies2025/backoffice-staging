@@ -66,6 +66,8 @@ class Safety_featuresController extends Controller
 
     public function update(Request $request, $id)
     {
+
+        // dd($request->all());
         $validatedData = $request->validate([
             'safety_features' => 'required',
         ]);
@@ -79,7 +81,7 @@ class Safety_featuresController extends Controller
             return redirect()->route('admin.safety_features_list')
                 ->with('error', 'Safety Features not found.');
         }
-        $filePath1 = $safety_feature->safety_features_pic; // Initialize with existing value
+        // $filePath1 = $safety_feature->safety_features_pic; // Initialize with existing value
         if ($request->hasFile('image_1')) {
             $file1 = $request->file('image_1');
            
@@ -87,10 +89,11 @@ class Safety_featuresController extends Controller
             $filename1 = $customFileName . '.' . $file1->getClientOriginalExtension();
             $file1->move($safety_featuresPath , $filename1);
             $filePath1 = 'uploads/safety_features_pic/' . $filename1;
+            $safety_feature->safety_features_pic = $filePath1; // Only update if a new file is uploaded
         }
     
         $safety_feature->safety_features = $request->input('safety_features');
-        $safety_feature->safety_features_pic = $filePath1;
+        // $safety_feature->safety_features_pic = $filePath1;
         $safety_feature->alternate_name = $request->input('alternate_image_name'); // Save alternate name
         $safety_feature->upload_image_name = $request->input('upload_image_name');
 
