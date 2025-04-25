@@ -90,9 +90,6 @@
                         <label class="fw-bold mb-2 "> Title <span class="text-danger">*</span></label>
                         <input type="text" placeholder="Title" id="theme_name" name="theme_name" value="{{ $themes_details->themes_name }}" class="form-control py-2 rounded-3 shadow-sm" required>
                     </div>
-
-
-
                     <div class="col-md-6">
                         <label class="fw-bold mb-2 ">Order <span class="text-danger">*</span></label>
                         <input type="number" placeholder="Order" id="list_order" name="list_order" value="{{ $themes_details->list_order }}" class="form-control py-2 rounded-3 shadow-sm" required>

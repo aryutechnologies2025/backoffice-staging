@@ -909,6 +909,14 @@
                             </div>
                         </div>
 
+                        <div class="row g-3">
+                            <div class="col-lg-3">
+                                <label class="fw-bold mb-3 ">Order <span class="text-danger">*</span></label>
+                                <input type="number" placeholder="Order" id="list_order" name="list_order"
+                                    value="{{old('order')}}" class="form-control py-2 rounded-3 shadow-sm" required>
+                            </div>
+                        </div>
+
                         <style>
                             .form-check-input {
                                 transform: scale(1.5);

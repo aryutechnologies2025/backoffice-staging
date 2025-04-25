@@ -295,7 +295,7 @@
                             <p>No images uploaded yet.</p>
                             @endif
                         </div>
-                        
+
                         <!-- Hidden input to store deleted images -->
                         <input type="hidden" name="deleted_images" id="deleted-images" value="[]">
 
@@ -780,6 +780,14 @@
                                                 type="checkbox" id="status"
                                                 {{ $package_details->status ? 'checked' : '' }}>
                                         </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="row g-3">
+                                    <div class="col-lg-3">
+                                        <label class="fw-bold mb-3 ">Order <span class="text-danger">*</span></label>
+                                            <input type="number" placeholder="Order" id="list_order" name="list_order" value="{{ $package_details->list_order }}" class="form-control py-2 rounded-3 shadow-sm" required>
                                     </div>
                                 </div>
 

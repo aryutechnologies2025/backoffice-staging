@@ -105,8 +105,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/get-wishlist', [ProgramApiController::class, 'getWishlist']);
     Route::post('/add-remove-wishlist', [ProgramApiController::class, 'manage_wishlist']);
 
-
-
     Route::get('/auth/facebook/redirect', [GoogleAuthController::class, 'redirectToGoogle']);
 Route::get('/auth/facebook/callback', [GoogleAuthController::class, 'handleGoogleCallback']);
 });
