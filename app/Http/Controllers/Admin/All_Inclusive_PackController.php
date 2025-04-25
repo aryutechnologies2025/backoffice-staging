@@ -187,7 +187,7 @@ class All_Inclusive_PackController extends Controller
         $inclusive_packages->address = $request->input('address') ?? '';
         $inclusive_packages->category = json_encode($request->input('prop_cat'));
         $inclusive_packages->location = $request->input('location');
-       $inclusive_packages->tour_planning = $tourPlanningJson;
+        $inclusive_packages->tour_planning = $tourPlanningJson;
         $inclusive_packages->start_date = $request->input('start_date');
         $inclusive_packages->return_date = $request->input('return_date');
         $inclusive_packages->total_days = $request->input('total_days');
@@ -209,6 +209,7 @@ class All_Inclusive_PackController extends Controller
         $inclusive_packages->food_beverages = $foodBeveragesJson;
         $inclusive_packages->activities = $activitiesJson;
         $inclusive_packages->safety_features = $safetyFeaturesJson;
+        $inclusive_packages->list_order = $request->input('list_order');
         $inclusive_packages->is_deleted = '0';
         $inclusive_packages->created_date = now();
         $inclusive_packages->created_by = 'admin';
@@ -452,6 +453,7 @@ class All_Inclusive_PackController extends Controller
         $inclusive_packages->food_beverages = $foodBeveragesJson;
         $inclusive_packages->activities = $activitiesJson;
         $inclusive_packages->safety_features = $safetyFeaturesJson;
+        $inclusive_packages->list_order = $request->input('list_order');
         $inclusive_packages->is_deleted = '0';
         $inclusive_packages->updated_at = now();
         $inclusive_packages->created_by = 'admin';
@@ -464,10 +466,6 @@ class All_Inclusive_PackController extends Controller
         return redirect()->route('admin.inclusive_package_list')
             ->with('success', 'Record updated successfully');
     }
-
-
-
-
 
     public function change_status(Request $request)
     {
