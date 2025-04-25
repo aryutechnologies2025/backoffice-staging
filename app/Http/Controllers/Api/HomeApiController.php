@@ -144,7 +144,7 @@ class HomeApiController extends Controller
             }
     
             // Execute the query
-            $packages = $query->with(['theme', 'destination', 'clientReviews'])->get();
+            $packages = $query->with(['theme', 'destination', 'clientReviews'])->orderBy('list_order', 'asc')->get();
             
             // Check if any packages were found
             if ($packages->isEmpty()) {
