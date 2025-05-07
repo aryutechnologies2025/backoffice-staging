@@ -27,17 +27,17 @@
             <div class="row d-flex gap-5">
                 <div class="col-md-5 mb-3">
                     <label for="name" class="form-label">Full Name</label>
-                    <input id="name" type="text" class="form-control" name="name" required>
+                    <input id="name" type="text" class="form-control" name="name" >
                 </div>
 
                 <div class="col-md-5 mb-3">
                     <label for="phone" class="form-label">Phone Number</label>
-                    <input id="phone" type="text" class="form-control" name="phone_number" required>
+                    <input id="phone" type="number" class="form-control" name="phone_number" >
                 </div>
 
                 <div class="col-md-5 mb-3">
                     <label for="email" class="form-label">Email Address</label>
-                    <input id="email" type="email" class="form-control" name="email" required>
+                    <input id="email" type="email" class="form-control" name="email" >
                 </div>
 
                 <!-- <div class="col-md-5 mb-3">
@@ -47,7 +47,7 @@
                 </div> -->
                 <div class="col-md-5 mb-3">
                 <label for="title_id" class="form-label">Select Package Type</label>
-                <select name="package_type" id="title_id" class="form-control"  required>
+                <select name="package_type" id="title_id" class="form-control"  >
                     <option disabled selected>Select Package Type</option>
                         @foreach($titles as $id => $name)
                             <option value="{{ json_encode(['id' => $id, 'name' => $name]) }}">{{ $name }}</option>

@@ -21,7 +21,7 @@ class CustomerPackage extends Controller
     public function add_form()
     {
         $title = 'Add Customer Package';
-        $titles = DB::table('inclusive_package_details')->pluck('title', 'id'); 
+        $titles = DB::table('inclusive_package_details')->where('is_deleted','0')->pluck('title', 'id'); 
         return view('admin.customer_package.customerpackageadd', compact('title','titles'));
     }
 
@@ -31,8 +31,8 @@ class CustomerPackage extends Controller
        
         $request->validate([
             'name' => 'required|string',
-            'phone_number' => 'required|string|max:10',
-            'email' => 'required|email',
+            // 'phone_number' => 'string|max:10',
+            // 'email' => 'email',
             'package_type' => 'required|string',
         ]);
        

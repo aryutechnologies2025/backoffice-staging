@@ -17,7 +17,7 @@
 
 body {
     overflow-x: hidden;
-
+    background: #29292910;
     font-family: "Plus Jakarta Sans", sans-serif !important;
     position: relative;
     margin: var(--header-height) 0 0 0;
@@ -26,7 +26,7 @@ body {
     transition: .5s
 }
 .header{
-    background-color: #1562c2 !important  ;
+    background-color: #29292900;
     width: 100%;
     position: sticky;
     padding: 3%;
@@ -38,7 +38,7 @@ body {
 }
 
 .l-navbar {
-    background-color: #1562c2 !important;
+    background-color: #005fc4 !important;
     color: #FFF;
     /* padding-top: 5%; */
 }
@@ -78,7 +78,7 @@ a {
 
 
 .footer{
-    background-color: #1562c2;
+    /* background-color: #005fc4; */
     padding: 27px;
     color: #D1D1D1;
     position:fixed;

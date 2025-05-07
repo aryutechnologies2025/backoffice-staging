@@ -44,7 +44,8 @@
         <header class="header py-5 ps-0 " id="header">
             <div class="col-lg-3 text-start" id="navbarNav">
                 <div class="header_toggle mt-2">
-                    <img id="header-toggle" src="/assets/image/dashboard/innerpece_toogle_icon.svg" alt="">
+                    <!-- <img id="header-toggle" src="/assets/image/dashboard/innerpece_toogle_icon.svg" alt=""> -->
+                    <div id="header-toggle" class="text-dark"><i class="bi bi-list"></i></div>
                 </div>
             </div>
            
@@ -52,13 +53,47 @@
                 <a href="#"><i class="fa fa-bell text-white px-4 mt-3" style="font-size:30px"></i></a>
                 <img class="" style="width: 20%;" src="/assets/image/dashboard/innerpece_admin_img.png" alt="">
             </div> -->
-            <div class="col-lg-3 text-end pt-3">
+            <div class="d-flex gap-2   p-2 justify-content-center align-items-center ">
+                    <div id="liveTime" class=" text-secondary"></div>
+                    <script>
+    function updateTime() {
+        const now = new Date();
+
+        const options = {
+            weekday: 'short',   // Short day like "Mon", "Tue"
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric',
+            hour: 'numeric',
+            minute: 'numeric',
+            hour12: true
+        };
+
+        const timeString = now.toLocaleString('en-US', options);
+        document.getElementById('liveTime').textContent = timeString;
+    }
+
+    setInterval(updateTime, 1000);
+    updateTime();
+</script>
+                    <div class="bg-white rounded-5 py-2 px-4 d-none d-lg-flex gap-2  ">  
+                       
+                        <div>
+                            <p class="fs-6 p-0 m-0 d-flex text-secondary">Welcome 👋  <span class="fs-6 text-start fw-bold text-dark ms-1">Admin</span></p>
+                            <b class="rounded-circle " style="width: 10%; height: auto;" src="{{ session('admin_email') ? asset(session('admin_email')) : '/assets/image/dashboard/innerpece_admin_img.png' }}" alt="admin_email"></b>
+                            <span class="text-secondary ">{{ session('admin_email') }}</span>
+                           
+                        </div>
+                    </div>
+                   
+                </div>
+            <!-- <div class="col-lg-3 text-end pt-3">
             <b class="rounded-circle" style="width: 10%; height: auto;" src="{{ session('admin_name') ? asset(session('admin_name')) : '/assets/image/dashboard/innerpece_admin_img.png' }}" alt="admin_name"></b>
             <span class="text-white">{{ session('admin_name') }}</span> 
             <br>   
             <b class="rounded-circle" style="width: 10%; height: auto;" src="{{ session('admin_email') ? asset(session('admin_email')) : '/assets/image/dashboard/innerpece_admin_img.png' }}" alt="admin_email"></b>
                 <span class="text-white">{{ session('admin_email') }}</span>
-            </div>
+            </div> -->
             </div>
             <!-- Modal -->
             <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -445,6 +480,26 @@
         document.getElementById('filterInactive').addEventListener('click', () => {
             filterTable('Inactive');
         });
+
+    //     function updateTime() {
+    //     const now = new Date();
+
+    //     const options = {
+    //         weekday: 'short',   // Short day like "Mon", "Tue"
+    //         year: 'numeric',
+    //         month: 'short',
+    //         day: 'numeric',
+    //         hour: 'numeric',
+    //         minute: 'numeric',
+    //         hour12: true
+    //     };
+
+    //     const timeString = now.toLocaleString('en-US', options);
+    //     document.getElementById('liveTime').textContent = timeString;
+    // }
+
+    // setInterval(updateTime, 1000);
+    // updateTime();
     </script>
       <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 
