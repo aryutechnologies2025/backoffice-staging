@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\CustomerPackage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\ApiController;
@@ -75,6 +76,8 @@ Route::prefix('v1')->group(function () {
 Route::get('/get-title', [HomeApiController::class, 'get_title']);
 Route::post('/enquiry-mail/{id}', [ProgramApiController::class, 'getClientNotification']);
 Route::post('/home-enquiry-mail/{id}', [ProgramApiController::class, 'getHomeNotification']);
+
+Route::get('/customername/{id}', [CustomerPackage::class, 'getNameById']);
     });
 });
 

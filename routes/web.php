@@ -31,11 +31,13 @@ use App\Http\Controllers\Admin\ClientreviewController;
 use App\Http\Controllers\Admin\WishlistController;
 use App\Http\Controllers\Admin\AddressController;
 use App\Http\Controllers\Admin\AssitanceFormController;
+use App\Http\Controllers\Admin\CustomerPackage as AdminCustomerPackage;
 use App\Http\Controllers\Admin\FacebookController;
 use App\Http\Controllers\Admin\InfluencersController;
 // use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Admin\HomeEnquiryController;
 use App\Http\Controllers\Admin\PdfController;
+use App\Http\Controllers\Admin\CustomerPackage;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 
@@ -141,6 +143,17 @@ Route::prefix('/')->group(function () {
             });
           });
         //   Route::get('/dashboard', [All_Inclusive_PackController::class, 'showDashboard'])->name('dashboard');
+
+        //CustomerPackage
+        Route::controller(CustomerPackage::class)->group(function () {
+            Route::prefix('customer-package')->group(function () {
+                Route::get('/', 'list')->name('admin.CustomerPackage_list');
+                Route::get('/add', 'add_form')->name('admin.CustomerPackage_form');
+                Route::post('/insert', 'insert')->name('admin.CustomerPackage_insert');
+                Route::post('/delete', 'delete')->name('admin.CustomerPackage_delete');
+                Route::post('/change-status', 'change_status')->name('admin.CustomerPackage_status');
+            });
+        });
 
          //Program
          Route::controller(ProgramController::class)->group(function () {

@@ -137,10 +137,17 @@
                         <img src="/assets/image/dashboard/themes.svg" alt="">
                         <span class="nav_name">Theme</span>
                     </a>
+
                     <a href="{{ route('admin.citylist') }}" class="nav_link {{ request()->routeIs(['admin.citylist', 'admin.city_add_form', 'admin.city_edit_form']) ? 'active' : '' }} mb-3 text-white">
                         <img src="/assets/image/dashboard/location-pin.svg" alt="">
                         <span class="nav_name"> Destination </span>
                     </a>
+
+                    <a href="{{ route('admin.CustomerPackage_list') }}" class="nav_link {{ request()->routeIs(['admin.CustomerPackage_list', 'admin.CustomerPackage_insert']) ? 'active' : '' }} mb-3 text-white">
+                        <img src="/assets/image/dashboard/program.svg" alt="">
+                        <span class="nav_name"> Customer Package </span>
+                    </a>
+
                     <a href="{{ route('admin.inclusive_package_list') }}" class="nav_link {{ request()->routeIs(['admin.inclusive_package_list', 'admin.inclusive_package_add_form', 'admin.inclusive_package_edit_form']) ? 'active' : '' }} mb-3 text-white">
                         <img src="/assets/image/dashboard/program.svg" alt="">
                         <span class="nav_name"> Programs </span>
