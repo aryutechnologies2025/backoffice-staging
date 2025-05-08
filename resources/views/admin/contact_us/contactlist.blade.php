@@ -57,7 +57,7 @@
                         <td class="text-center">{{ $row->phone }}</td>
                         <td class="text-center">{{ $row->created_at }}</td>
                         <td class="text-center">
-                            <button class="btn-add btn-warning view-message-btn" data-message="{{ $row->message }}" data-bs-toggle="modal" data-bs-target="#customMessageModal">
+                            <button class="btn-add btn-warning  view-message-btn" style="font-size:14px !important;"  data-message="{{ $row->message }}" data-bs-toggle="modal" data-bs-target="#customMessageModal">
                                 View Message
                             </button>
                         </td>

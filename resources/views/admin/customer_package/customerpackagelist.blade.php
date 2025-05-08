@@ -84,7 +84,7 @@
                         <td class="text-center text-primary">
                             <a href="#" 
                             class="copy-link text-dark" 
-                            data-link="https://innerpece.com/{{ $row->package_id }}/{{ $row->package_type }}#{{ $row->id }}"
+                            data-link="https://innerpece.com/{{ $row->package_id }}/{{ str_replace(' ', '-', $row->package_type) }}#{{ $row->id }}"
                             title="Click to copy link">
                             <i class="fa fa-clone" aria-hidden="true"></i> copy
                             </a>
@@ -100,8 +100,8 @@
 
                             <a href="javascript:void(0);" class="table-link danger delconfirm" data-row_id="{{ $row->id }}" data-act_url="{{ route('admin.CustomerPackage_delete') }}" data-csrf_token="{{ csrf_token() }}">
                                 <span class="fa-stack">
-                                    <i class="fa fa-square fa-stack-2x"></i>
-                                    <i class="fa fa-trash-o fa-stack-1x fa-inverse"></i>
+                                    <!-- <i class="fa fa-square fa-stack-2x"></i> -->
+                                    <i class="fa fa-trash-o fa-stack-1x fa-inverse text-danger" style="color: red !important;"></i>
                                 </span>
                             </a>
                         </td>

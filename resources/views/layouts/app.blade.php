@@ -317,8 +317,8 @@
                         <img src="/assets/image/dashboard/settings.svg" alt="">
                         <span class="nav_name" style="color: #fff;"> General Setting </span>
                     </a>
-                    <div class="profile-content">
-                    <a href="{{ route('admin.logout') }}" class="nav_link mb-3 ">
+                    <div class="profile-content mb-4">
+                    <a href="{{ route('admin.logout') }}" class="nav_link mb-5 ">
                         <img src="/assets/image/dashboard/turn-off.svg" alt="">
                         <span class="nav_name logout-menu"   >Logout</span>
                     </a>

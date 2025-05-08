@@ -38,8 +38,9 @@ body {
 }
 
 .l-navbar {
-    background-color: #005fc4 !important;
+    background-color: #075985 !important;
     color: #FFF;
+  
     /* padding-top: 5%; */
 }
 .nav{
@@ -325,15 +326,23 @@ thead {
     padding-right: 5px !important;
 }
 .btn-add {
-    background-color: #000 !important;
-    border-radius: 6px !important;
+    background: linear-gradient(to left,#0c4a6e,#0369a1 ) !important;
+    border-radius: 20px !important;
      color: #FFF !important;
     font-size: 15px !important;
+    padding: 8px;
+    transition: all 0.3s ease-in-out;
+    border: none;
     }
+   
+.btn-add:hover {
+    background: linear-gradient(to right,#0c4a6e,#0369a1 ) !important;
+    transform: scale(1.05);
+}
 
     .btn{
         /* background-color: #000 !important; */
-        border-radius: 6px !important;
+        /* border-radius: 6px !important; */
         color: #021b32;
         font-size: 15px !important;
         }
@@ -391,10 +400,10 @@ body {
     margin-top: 0px;
 }
 
-.fa-stack {
+/* .fa-stack {
     border: 1px solid #E9E8E8;
     border-radius: 10px;
-}
+} */
 
 .fa-inverse {
     color: #0F5B92 !important;
@@ -536,15 +545,11 @@ p {
     color: #7F888C;
 }
 
-.fa-stack {
 
-
-    border: 1px solid #E9E8E8;
-    border-radius: 10px;
-}
 .fa-inverse {
     color: #000!important;
 }
+
 
 .table-link {
     color: transparent;
@@ -636,11 +641,14 @@ cursor: pointer;
      color:#000 !important;
      background-color: #fff;
     }
-    .profile-content{
+    .profile-content .nav_link{
         background: #fff!important;
         color: #FFF!important;
-        border: 1px solid #00B4F6!important;
         font-weight: bolder!important;
+        border-radius: 20px;
+        padding: 8px auto !important;
+        margin: 20px  !important;
+        box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
     }
 
     
