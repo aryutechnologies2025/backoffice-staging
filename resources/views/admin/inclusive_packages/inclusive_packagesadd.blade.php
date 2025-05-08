@@ -32,10 +32,6 @@
         margin-bottom: .5rem !important;
     }
 
-    .px-5 {
-
-        padding-left: 0rem !important;
-    }
 
     .form-control {
         width: 80%;
@@ -117,13 +113,13 @@
         </div>
 
         <!-- FORM -->
-        <form id="form_valid" action="{{ route('admin.inclusive_package_insert') }}" method="POST" autocomplete="off"
+        <form class="" id="form_valid" action="{{ route('admin.inclusive_package_insert') }}" method="POST" autocomplete="off"
             enctype="multipart/form-data">
             @csrf
             <!-- 1.INFORMATION -->
             <div class="row mb-3">
                 <div class="col">
-                    <div class="form-body px-5 rounded-4">
+                    <div class="form-body p-4 rounded-4">
                         <h4 class="fw-bold mb-5">1. Information</h4>
                         <!-- Theme and Destination -->
                         <div class="mb-3">
@@ -820,7 +816,7 @@
                                     <div class="d-flex flex-wrap">
                                         @foreach($activities as $index => $item)
                                         <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
-                                            <div class="form-check d-flex align-items-center">
+                                            <div class="form-check d-flex align-items-center ">
                                                 <input type="checkbox" class="me-2 custom-checkbox"
                                                     id="activities-{{ $item->id }}" name="activities[]"
                                                     value="{{ $item->id }}">
@@ -862,15 +858,15 @@
                         <!-- Add custom CSS -->
                         <style>
                             .custom-checkbox {
-                                width: 25px;
-                                height: 25px;
+                                width: 18px;
+                                height: 18px;
                             }
 
                             /* Ensure responsiveness on all screen sizes */
                             @media (max-width: 768px) {
                                 .custom-checkbox {
-                                    width: 20px;
-                                    height: 20px;
+                                    width: 18px;
+                                    height: 18px;
                                 }
                             }
                         </style>

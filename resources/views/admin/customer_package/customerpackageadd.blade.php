@@ -21,7 +21,7 @@
             <div class="alert alert-success">{{ session('success') }}</div>
         @endif
 
-        <form action="{{ route('admin.CustomerPackage_insert') }}" method="POST" enctype="multipart/form-data">
+        <form class="bg-white p-4 rounded-3" action="{{ route('admin.CustomerPackage_insert') }}" method="POST" enctype="multipart/form-data">
             @csrf
 
             <div class="row d-flex gap-5">
@@ -57,8 +57,8 @@
 
             </div>
 
-            <div class="d-flex justify-content-end">
-                <button type="submit" class="btn btn-primary mb-5">Submit</button>
+            <div class="d-flex">
+                <button type="submit" class="btn btn-primary my-5">Submit</button>
             </div>
         </form>
     </div>

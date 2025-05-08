@@ -47,9 +47,9 @@
 <div class="row mb-5">
     <div class="col-lg-12">
         <div class="form-body px-4 mb-5 rounded-4">
-            <form id="form_valid" action="{{ route('admin.city_insert') }}" method="POST" autocomplete="off" enctype="multipart/form-data">
+            <form class=" px-4" id="form_valid" action="{{ route('admin.city_insert') }}" method="POST" autocomplete="off" enctype="multipart/form-data">
                 @csrf
-                <div class="mb-3">
+                <div class="mb-3 ">
                     <div class="row align-items-center">
                         <div class="col-lg-2 photo-upload-field">
                             <div class="form-input text-center">

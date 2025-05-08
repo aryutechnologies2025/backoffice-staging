@@ -37,7 +37,7 @@ class CustomerPackage extends Controller
         ]);
        
         $customer_package = new customer_package();
-        $customer_package->name = $request->name;
+        $customer_package->name = ucfirst($request->name);
         $customer_package->phone_number = $request->phone_number;
         $customer_package->email = $request->email;
         $packageData = json_decode($request->package_type, true);
