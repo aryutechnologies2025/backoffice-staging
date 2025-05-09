@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\HomeApiController;
 use App\Http\Controllers\Api\ProgramApiController;
 use App\Http\Controllers\Api\ReviewController;
 use App\Http\Controllers\GoogleAuthController;
+use App\Models\customer_package;
 
 /*
 |----------------------------------------------------------------------
@@ -114,4 +115,4 @@ Route::get('/auth/facebook/callback', [GoogleAuthController::class, 'handleGoogl
 
 
 
-
+Route::get('/package-details/{id}', [CustomerPackage::class, 'getPackageDetails']);

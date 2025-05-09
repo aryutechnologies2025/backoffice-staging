@@ -152,6 +152,8 @@ Route::prefix('/')->group(function () {
                 Route::post('/insert', 'insert')->name('admin.CustomerPackage_insert');
                 Route::post('/delete', 'delete')->name('admin.CustomerPackage_delete');
                 Route::post('/change-status', 'change_status')->name('admin.CustomerPackage_status');
+
+                Route::post('/package-details', 'package_details')->name('admin.CustomerPackage_details');
             });
         });
 
