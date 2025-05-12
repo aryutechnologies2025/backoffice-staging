@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Admin\CustomerPackage;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\ClientReview;
@@ -26,6 +27,7 @@ use App\Models\AffiliateLinkClick;
 use App\Models\HomeEnquiryDetail;
 use App\Mail\enquiryEmail;
 use App\Mail\adminEmail;
+use App\Models\customer_package;
 use App\Models\program_pdf;
 
 class ProgramApiController extends Controller
@@ -1660,6 +1662,207 @@ class ProgramApiController extends Controller
                 'addressDetails' => $addressDetails,
             ],
         ], 200);
+    }
+
+     public function specific_program_details(Request $request)
+    {
+        try {
+            // Step 1: Validate the request (Ensure program_id is present)
+            $request->validate([
+                'program_id' => 'required',
+            ]);
+
+            // Step 2: Retrieve the program_id and reference_id from the request
+            $programId = $request->input('program_id'); // e.g., 36
+            $referenceId = $request->input('reference_id'); // e.g., INPC001
+            $user_id = $request->input('user_id'); // Optional user_id
+
+            // Step 3: Find the program by ID
+            $program = customer_package::find($programId);
+
+            if (!$program) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Program not found',
+                ], 404);
+            }
+
+           
+
+            // Check if the program details are already cached
+            $cacheKey = "program_details_{$programId}";
+            $cachedData = \Cache::get($cacheKey);
+
+            if ($cachedData) {
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Program details retrieved successfully from cache.',
+                    'data' => $cachedData
+                ], 200);
+            }
+
+            // Fetch the program details using the provided ID
+            $package = customer_package::find($programId);
+
+            if (!$package) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Program not found.',
+                    'data' => null
+                ], 404);
+            }
+
+            $amenityIds = json_decode($package->amenity_details, true) ?? [];
+            $foodBeverageIds = json_decode($package->food_beverages, true) ?? [];
+            $activityIds = json_decode($package->activities, true) ?? [];
+            $safetyFeatureIds = json_decode($package->safety_features, true) ?? [];
+            // $eventsPackageImages = json_decode($package->events_package_images, true) ?? [];
+            $tourPlanning = json_decode($package->tour_planning, true) ?? [];
+            $campRule = json_decode($package->camp_rule, true) ?? [];
+
+            $price_title = json_decode($package->price_title, true) ?? [];
+            $price_amount = json_decode($package->price_amount, true) ?? [];
+
+
+            $amenities = Amenities::whereIn('id', $amenityIds)
+                ->get(['id', 'amenity_name', 'amenity_pic'])
+                ->keyBy('id')
+                ->map(function ($item) {
+                    return [
+                        'amenity_name' => $item->amenity_name,
+                        'amenity_pic' => $item->amenity_pic,
+                    ];
+                });
+
+            // $pricing = Amenities::whereIn('id', $amenityIds)
+            // ->get(['id', 'amenity_name', 'amenity_pic'])
+            // ->keyBy('id')
+            // ->map(function ($item) {
+            //     return [
+            //         'price_title' => $item->amenity_name,
+            //         'price_amount' => $item->amenity_pic,
+            //     ];
+            // });
+
+
+            $foodBeverages = FoodBeverage::whereIn('id', $foodBeverageIds)
+                ->get(['id', 'food_beverage', 'food_beverage_pic'])
+                ->keyBy('id')
+                ->map(function ($item) {
+                    return [
+                        'food_beverage' => $item->food_beverage,
+                        'food_beverage_pic'  => $item->food_beverage_pic,
+                    ];
+                });
+            $activities = Activities::whereIn('id', $activityIds)
+                ->get(['id', 'activities', 'activities_pic'])
+                ->keyBy('id')
+                ->map(function ($item) {
+                    return [
+                        'activities' => $item->activities,
+                        'activities_pic' => $item->activities_pic,
+                    ];
+                });
+            $safetyFeatures = Safetyfeatures::whereIn('id', $safetyFeatureIds)
+                ->get(['id', 'safety_features', 'safety_features_pic'])
+                ->keyBy('id')
+                ->map(function ($item) {
+                    return [
+                        'safety_features' => $item->safety_features,
+                        'safety_features_pic' => $item->safety_features_pic,
+                    ];
+                });
+
+           
+          
+           
+            $importantInfoPlainText = strip_tags(html_entity_decode($package->important_info, ENT_QUOTES, 'UTF-8'));
+            $importantInfoPlainText = str_replace(["<br>", "<br/>", "<br />"], "\n", $importantInfoPlainText);
+
+            $program_inclusionPlainText = strip_tags($package->program_inclusion);
+            $program_inclusionPlainText = str_replace(["<br>", "<br/>", "<br />"], "\n", $program_inclusionPlainText);
+
+
+            $importantInfoPlainText = $package->important_info;
+            $program_inclusionPlainText = json_decode($package->package_inclusion, true) ?? [];
+            $program_exclusionPlainText = json_decode($package->package_exclusion, true) ?? [];
+
+            // $program_exclusionPlainText = strip_tags(html_entity_decode($package->program_exclusion, ENT_QUOTES, 'UTF-8'));
+            // $program_exclusionPlainText = str_replace(["<br>", "<br/>", "<br />"], "\n", $program_exclusionPlainText);
+
+
+            $responseData = [
+                'id' => $package->id,
+                'name' => $package->name,
+                'title' => $package->package_type,
+                // 'program_desc' => $package->program_description,
+               
+                // 'destination' => $package->destination->city_name,
+                // 'theme' => $package->theme->themes_name,
+                // 'state' => $package->state,
+                // 'city' => $package->city,
+                // 'address' => $package->address,
+                // 'country' => $package->country,
+                'tour_planning' => $tourPlanning,
+                // 'cover_img' => $package->cover_img,
+                // 'gallery_img' => $eventsPackageImages,
+                
+                // 'total_days' => $package->total_days,
+                // 'member_capacity' => $package->member_capacity,
+                // 'member_type' => $package->member_type,
+                // 'actual_price' => $package->price,
+                // 'discount_price' => $package->actual_price,
+                'payment_policy' => $campRule,
+                'important_info' => $importantInfoPlainText,
+                'program_inclusion' => $program_inclusionPlainText,
+                'program_exclusion' => $program_exclusionPlainText,
+               
+                // 'lunch' => $package->lunch,
+                // 'dinner' => $package->dinner,
+                'amenity_details' => $amenities,
+                'foodBeverages' => $foodBeverages,
+                'activities' => $activities,
+                'safety_features' => $safetyFeatures,
+               
+                
+                // 'google_map' => $package->google_map,
+                
+                // 'created_date' => $package->created_date,
+                // 'current_location' => $package->location,
+                'price_title'=> $price_title,
+                'price_amount' =>$price_amount
+              
+            ];
+            
+            if ($user_id) {
+                $wishlist = Program_wishlist::where('user_id', $user_id)
+                    ->where('program_id', $programId)
+                    ->exists();
+
+                $responseData['wishlists'] = $wishlist;
+            }
+
+            // Cache the response data for 60 minutes
+            \Cache::put($cacheKey, $responseData, 60);
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Program details retrieved successfully.',
+                'data' => $responseData
+            ], 200);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Validation error.',
+                'errors' => $e->errors()
+            ], 422);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'An error occurred while fetching program details.',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 }
 

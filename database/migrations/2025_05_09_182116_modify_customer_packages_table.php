@@ -32,7 +32,7 @@ return new class extends Migration
         Schema::table('customer_packages', function (Blueprint $table) {
             $table->renameColumn('important_info', 'notes');
             $table->dropColumn('camp_rule');
-            $table->string('price_title');
+            $table->dropColumn('price_title');
         });
     }
 };

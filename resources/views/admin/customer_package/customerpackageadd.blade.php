@@ -114,7 +114,7 @@
                                                     $plainTextDescription = html_entity_decode(strip_tags($rawDescription));
                                                     @endphp
 
-                                                    <input type="hidden" name="tour_planning[]" value="{{ $plainTextDescription }}">
+                                                    <input type="hidden" name="plan_description[]" id="plan_description" value="{{ $plainTextDescription }}">
 
                                                     <div id="summernote3" class="border rounded p-2 shadow-sm bg-light">
                                                         {!! $rawDescription !!}
@@ -1041,6 +1041,7 @@
 
                         if (response.package_details.location) {
                             $('#summernote10').summernote('code', response.package_details.location);
+                           
                             $('#summernote3').summernote('code', tourVal);
                         }
 
@@ -1176,6 +1177,17 @@
                         if (response.package_details.list_order !== null && response.package_details.list_order !== undefined) {
                             $('input[name="list_order"]').val(response.package_details.list_order);
                         }
+
+                        // Update hidden input on form submission
+                        $('form').on('submit', function() {
+                        
+                          $('#plan_description').val( $('#summernote3').summernote('code'));
+                        $('#location').val($('#summernote10').summernote('code'));
+                         $('#important_info').val($('#summernote4').summernote('code'));
+                        $('#program_inclusion').val($('#summernote5').summernote('code'));
+                        $('#program_exclusion').val($('#summernote9').summernote('code'));
+                    });
+
 
                     }
                 } catch (e) {

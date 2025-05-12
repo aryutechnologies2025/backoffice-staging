@@ -79,6 +79,8 @@ Route::post('/enquiry-mail/{id}', [ProgramApiController::class, 'getClientNotifi
 Route::post('/home-enquiry-mail/{id}', [ProgramApiController::class, 'getHomeNotification']);
 
 Route::get('/customername/{id}', [CustomerPackage::class, 'getNameById']);
+
+Route::post('/specific-program-details', [ProgramApiController::class, 'specific_program_details']);
     });
 });
 
