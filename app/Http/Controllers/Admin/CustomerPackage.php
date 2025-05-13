@@ -283,4 +283,108 @@ class CustomerPackage extends Controller
 
         return json_encode($data);
     }
+
+      public function edit_form(Request $request, $id)
+    {
+         $title = 'Edit Customer Package';
+        $cities = City::where('status', "1")->where('is_deleted', "0")->pluck('city_name', 'id');
+        $themes = Themes::where('status', "1")->where('is_deleted', "0")->pluck('themes_name', 'id');
+        $amenities = Amenities::where('status', "1")->where('is_deleted', "0")->get();
+        $foodBeverages = FoodBeverage::where('status', "1")->where('is_deleted', "0")->get();
+        $activities = Activities::where('status', "1")->where('is_deleted', "0")->get();
+        $safety_features = Safetyfeatures::where('status', "1")->where('is_deleted', "0")->get();
+
+
+        $titles = DB::table('inclusive_package_details')->where('is_deleted', '0')->pluck('title', 'id');
+
+        $customer = customer_package::find($id);
+        if (!$customer) {
+            return redirect()->route('admin.influencers.list')
+                ->with('error', 'Influencer not found.');
+        }
+
+        return view('admin.customer_package.customerpackageedit', compact(
+            'title','customer',
+            'titles',
+            'cities',
+            'themes',
+            'amenities',
+            'foodBeverages',
+            'activities',
+            'safety_features'
+        ));
+      
+    }
+
+
+      public function update(Request $request,$id)
+    {
+        Log::info("test",$request->all());
+        $customer_package = customer_package::find($id);
+        $customer_package->name = ucfirst($request->name);
+        $customer_package->phone_number = $request->phone_number;
+        $customer_package->email = $request->email;
+        $customer_package->package_id = $customer_package->package_id;
+        $customer_package->package_type = $request->title;
+
+
+        $customer_package->important_info = $request->input('important_info');
+        $customer_package->package_inclusion = json_encode($request->input('program_inclusion')) ?? $request->input('program_inclusion') ;
+
+        $customer_package->package_exclusion = json_encode($request->input('program_exclusion'));
+
+
+
+
+        $amenitiesJson = json_encode($request->input('amenity_services', []));
+        $foodBeveragesJson = json_encode($request->input('food_beverages', []));
+        $activitiesJson = json_encode($request->input('activities', []));
+        $safetyFeaturesJson = json_encode($request->input('safety_features', []));
+        $campRulesJson = json_encode($request->input('camp_rule'));
+
+        $customer_package->camp_rule = $campRulesJson;
+
+        $tourPlanningJson = json_encode([
+            // 'plan_title' => $request->input['plan_title'],
+            // 'plan_subtitle' => $request->input['plan_subtitle'],
+            'plan_description' => $request->input('plan_description')
+        ]);
+
+        $customer_package->tour_planning = $tourPlanningJson;
+
+
+        $customer_package->price_title = json_encode($request->input('price_title', []));
+        $customer_package->price_amount = json_encode($request->input('price_amount', []));
+        $customer_package->amenities = $amenitiesJson;
+        $customer_package->food_beverages = $foodBeveragesJson;
+        $customer_package->activities = $activitiesJson;
+        $customer_package->safety_features = $safetyFeaturesJson;
+        $customer_package->list_order = $request->input('list_order');
+
+        $customer_package->status = $request->has('status') && $request->input('status') === 'on' ? '1' : '0';
+
+        // dd($request->location);
+
+        // $location = $request->location ?? '';
+        // $location = trim($location);
+        // $location = str_replace('&nbsp;', ' ', $location); // Replace HTML spaces
+        // $location = html_entity_decode($location);
+        $location = $request->input('location');
+
+        $customer_package->location =  json_encode($location);
+        $customer_package->save();
+
+        // Mail::to($customer_package->email) // or use a different recipient
+        // ->send(new CustomerPackageNotification([
+        //     'name'=> $customer_package->name,
+        //     'phone_number'=> $customer_package->phone_number,
+        //     'email'=> $customer_package->email,
+        //     'package_type'=> $customer_package->package_type,
+        //     'package_id'=> $customer_package->package_id
+        // ]));
+
+        return redirect()->route('admin.CustomerPackage_list')
+            ->with('success', 'customer Updated successfully');
+    }
+
 }

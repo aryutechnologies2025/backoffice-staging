@@ -91,12 +91,12 @@
                             <span class="copy-feedback text-success small ms-2" style="display:none">Copied!</span>
                         </td>
                         <td class="text-center" >
-                            <!-- <a href="{{ route('admin.inclusive_package_edit_form',$row->id) }}" class="table-edit-link">
+                            <a href="{{ route('admin.CustomerPackage_edit_form',$row->id) }}" class="table-edit-link">
                                 <span class="fa-stack">
                                     <i class="fa fa-square fa-stack-2x"></i>
                                     <i class="fa fa-pencil fa-stack-1x fa-inverse"></i>
                                 </span>
-                            </a> -->
+                            </a>
 
                             <a href="javascript:void(0);" class="table-link danger delconfirm" data-row_id="{{ $row->id }}" data-act_url="{{ route('admin.CustomerPackage_delete') }}" data-csrf_token="{{ csrf_token() }}">
                                 <span class="fa-stack">

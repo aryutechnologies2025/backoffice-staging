@@ -153,6 +153,10 @@ Route::prefix('/')->group(function () {
                 Route::post('/delete', 'delete')->name('admin.CustomerPackage_delete');
                 Route::post('/change-status', 'change_status')->name('admin.CustomerPackage_status');
 
+                Route::get('/{id}/edit', 'edit_form')->name('admin.CustomerPackage_edit_form');
+                Route::post('/{id}/update', 'update')->name('admin.CustomerPackage_update');
+ 
+
                 Route::post('/package-details', 'package_details')->name('admin.CustomerPackage_details');
             });
         });
