@@ -1667,18 +1667,17 @@ class ProgramApiController extends Controller
      public function specific_program_details(Request $request)
     {
         try {
-            // Step 1: Validate the request (Ensure program_id is present)
+    
             $request->validate([
                 'program_id' => 'required',
             ]);
 
-            // Step 2: Retrieve the program_id and reference_id from the request
-            $programId = $request->input('program_id'); // e.g., 36
-            $referenceId = $request->input('reference_id'); // e.g., INPC001
-            $user_id = $request->input('user_id'); // Optional user_id
+            $programId = $request->input('program_id'); 
+           
 
-            // Step 3: Find the program by ID
+      
             $program = customer_package::find($programId);
+             $Inclusivepackage = InclusivePackages::with('destination', 'theme', 'clientReviews','reviews')->find($program->package_id);
 
             if (!$program) {
                 return response()->json([
@@ -1789,7 +1788,22 @@ class ProgramApiController extends Controller
 
             // $program_exclusionPlainText = strip_tags(html_entity_decode($package->program_exclusion, ENT_QUOTES, 'UTF-8'));
             // $program_exclusionPlainText = str_replace(["<br>", "<br/>", "<br />"], "\n", $program_exclusionPlainText);
+            $eventsPackageImages = json_decode($Inclusivepackage->events_package_images, true) ?? [];
 
+              $reviews = $Inclusivepackage->reviews->map(function ($review) {
+                $user = $review->user;
+                return [
+                    'first_name' => $user->first_name ?? null,
+                    'last_name' => $user->last_name ?? null,
+                    'profile_image' => $user->profile_image ?? null,
+                    'comment' => $review->comment,
+                    'rating' => $review->rating,
+                    'date' => $review->created_at->format('M d, Y'),
+                ];
+            });
+
+        
+            $reviewCount = $Inclusivepackage->reviews->count();
 
             $responseData = [
                 'id' => $package->id,
@@ -1804,8 +1818,8 @@ class ProgramApiController extends Controller
                 // 'address' => $package->address,
                 // 'country' => $package->country,
                 'tour_planning' => $tourPlanning,
-                // 'cover_img' => $package->cover_img,
-                // 'gallery_img' => $eventsPackageImages,
+                'cover_img' => $Inclusivepackage->cover_img,
+                'gallery_img' => $eventsPackageImages,
                 
                 // 'total_days' => $package->total_days,
                 // 'member_capacity' => $package->member_capacity,
@@ -1829,18 +1843,22 @@ class ProgramApiController extends Controller
                 
                 // 'created_date' => $package->created_date,
                 // 'current_location' => $package->location,
+                //  'client_reviews' => $clientReviews,
+                // 'total_reviews' => $totalReviews,
+                'reviews' => $reviews,
+                'review_count' => $reviewCount,
                 'price_title'=> $price_title,
                 'price_amount' =>$price_amount
               
             ];
             
-            if ($user_id) {
-                $wishlist = Program_wishlist::where('user_id', $user_id)
-                    ->where('program_id', $programId)
-                    ->exists();
+            // if ($user_id) {
+            //     $wishlist = Program_wishlist::where('user_id', $user_id)
+            //         ->where('program_id', $programId)
+            //         ->exists();
 
-                $responseData['wishlists'] = $wishlist;
-            }
+            //     $responseData['wishlists'] = $wishlist;
+            // }
 
             // Cache the response data for 60 minutes
             \Cache::put($cacheKey, $responseData, 60);
