@@ -1711,7 +1711,7 @@ class ProgramApiController extends Controller
                 ], 404);
             }
 
-            $amenityIds = json_decode($package->amenity_details, true) ?? [];
+            $amenityIds = json_decode($package->amenities, true) ?? [];
             $foodBeverageIds = json_decode($package->food_beverages, true) ?? [];
             $activityIds = json_decode($package->activities, true) ?? [];
             $safetyFeatureIds = json_decode($package->safety_features, true) ?? [];
@@ -1809,7 +1809,7 @@ class ProgramApiController extends Controller
                 'id' => $package->id,
                 'name' => $package->name,
                 'title' => $package->package_type,
-                // 'program_desc' => $package->program_description,
+                'program_desc' => $Inclusivepackage->program_description,
                
                 // 'destination' => $package->destination->city_name,
                 // 'theme' => $package->theme->themes_name,
@@ -1834,6 +1834,7 @@ class ProgramApiController extends Controller
                 // 'lunch' => $package->lunch,
                 // 'dinner' => $package->dinner,
                 'amenity_details' => $amenities,
+          
                 'foodBeverages' => $foodBeverages,
                 'activities' => $activities,
                 'safety_features' => $safetyFeatures,

@@ -60,8 +60,14 @@
             </div>
 
             <div class="test">
+                <h2>Package Details</h2>
                 <!-- 1.INFORMATION -->
                 <div class="row mb-3">
+                    <div class="col-lg-4">
+                                <label class="fw-bold mb-2">Title </label>
+                                <input type="text" placeholder="Title" id="title" name="title"
+                                    class="form-control py-2 rounded-3 shadow-sm" >
+                            </div>
 
 
 
@@ -70,7 +76,7 @@
                     <div class="row mb-2">
                         <div class="col">
                             <div class="form-body px-5  rounded-4">
-                                <h4 class="fw-bold mb-3">Location</h4>
+                                <h4 class="fw-bold mb-3">01. Location</h4>
                                 <div class="mb-1">
                                     <div class="row g-2 mb-1">
                                         <div class="col">
@@ -207,7 +213,7 @@
                     <div class="row mb-3">
                         <div class="col">
                             <div class="form-body px-5  rounded-4 ">
-                                <h4 class="fw-bold mb-3">Pricing</h4>
+                                <h4 class="fw-bold mb-3">03. Pricing</h4>
                                 <div id="price-fields-container" class="mb-2">
                                     <!-- 
                                     <div class="row mb-2">
@@ -288,7 +294,7 @@
                     <div class="row mb-3">
                         <div class="col">
                             <div class="form-body px-5 rounded-4">
-                                <h4 class="fw-bold mb-4 ps-0">Payment Policy</h4>
+                                <h4 class="fw-bold mb-4 ps-0">04. Payment Policy</h4>
                                 <div id="camp-rule-container">
                                     <!-- <div class="row g-2 mb-1 align-items-center camp-rule-field">
                                     
@@ -326,7 +332,7 @@
                     <div class="row mb-2">
                         <div class="col">
                             <div class="form-body px-5  rounded-4">
-                                <h4 class="fw-bold mb-3">Notes <span class="text-danger">*</span></h4>
+                                <h4 class="fw-bold mb-3">05. Notes <span class="text-danger">*</span></h4>
                                 <div class="mb-1">
                                     <div class="row g-2 mb-1">
                                         <div class="col">
@@ -348,7 +354,7 @@
                     <div class="row mb-1">
                         <div class="col">
                             <div class="form-body px-5  rounded-4">
-                                <h4 class="fw-bold mb-2">Package Inclusion </h4>
+                                <h4 class="fw-bold mb-2">06. Package Inclusion </h4>
                                 <div class="mb-2">
                                     <div class="row g-2 mb-2">
                                         <div class="col">
@@ -374,7 +380,7 @@
                     <div class="row mb-1">
                         <div class="col">
                             <div class="form-body px-5  rounded-4">
-                                <h4 class="fw-bold mb-2">Package Exclusion </h4>
+                                <h4 class="fw-bold mb-2">07. Package Exclusion </h4>
                                 <div class="mb-2">
                                     <div class="row g-2 mb-2">
                                         <div class="col">
@@ -509,7 +515,7 @@
                     <div class="row mb-2">
                         <div class="col">
                             <div class="form-body px-5 py-3 rounded-4">
-                                <h4 class="fw-bold mb-3">9. Amenities</h4>
+                                <h4 class="fw-bold mb-3">08. Amenities</h4>
                                 <div class="d-flex flex-wrap">
                                     @foreach($amenities as $index => $amenity)
                                     <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
@@ -534,7 +540,7 @@
                     <div class="row mb-2">
                         <div class="col">
                             <div class="form-body px-5 py-3 rounded-4">
-                                <h4 class="fw-bold mb-3">10. Food and Beverages</h4>
+                                <h4 class="fw-bold mb-3">09. Food and Beverages</h4>
                                 <div class="d-flex flex-wrap">
                                     @foreach($foodBeverages as $index => $item)
                                     <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
@@ -559,7 +565,7 @@
                     <div class="row mb-2">
                         <div class="col">
                             <div class="form-body px-5 py-3 rounded-4">
-                                <h4 class="fw-bold mb-3">11. Activities</h4>
+                                <h4 class="fw-bold mb-3">10. Activities</h4>
                                 <div class="d-flex flex-wrap">
                                     @foreach($activities as $index => $item)
                                     <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
@@ -584,7 +590,7 @@
                     <div class="row mb-2">
                         <div class="col">
                             <div class="form-body px-5 py-3 rounded-4">
-                                <h4 class="fw-bold mb-3">12. Safety Features</h4>
+                                <h4 class="fw-bold mb-3">11. Safety Features</h4>
                                 <div class="d-flex flex-wrap">
                                     @foreach($safety_features as $index => $item)
                                     <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
@@ -654,9 +660,9 @@
 
                     <div class="row g-3">
                         <div class="col-lg-3">
-                            <label class="fw-bold mb-3 ">Order <span class="text-danger">*</span></label>
+                            <label class="fw-bold mb-3 ">Order</label>
                             <input type="number" placeholder="Order" id="list_order" name="list_order"
-                                value="{{old('order')}}" class="form-control py-2 rounded-3 shadow-sm" required>
+                                value="{{old('order')}}" class="form-control py-2 rounded-3 shadow-sm" >
                         </div>
                     </div>
 
@@ -1040,6 +1046,7 @@
                             response.package_details.tour_planning.plan_description;
 
                         if (response.package_details.location) {
+                            $('#title').val(response.package_details.title)
                             $('#summernote10').summernote('code', response.package_details.location);
                            
                             $('#summernote3').summernote('code', tourVal);

@@ -69,7 +69,7 @@ class CustomerPackage extends Controller
         $customer_package->email = $request->email;
         $packageData = json_decode($request->package_type, true);
         $customer_package->package_id = $packageData['id'];
-        $customer_package->package_type = $packageData['name'];
+        $customer_package->package_type = $request->title;
 
 
         $customer_package->important_info = $request->input('important_info');
