@@ -1842,7 +1842,7 @@ class ProgramApiController extends Controller
                 // 'google_map' => $package->google_map,
                 
                 // 'created_date' => $package->created_date,
-                // 'current_location' => $package->location,
+                'current_location' => json_decode($package->location),
                 //  'client_reviews' => $clientReviews,
                 // 'total_reviews' => $totalReviews,
                 'reviews' => $reviews,
