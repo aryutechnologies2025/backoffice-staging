@@ -33,7 +33,8 @@ class EnquiryDetail extends Model
         'follow_up',
         
         'engagement_date',
-        'birth_date'
+        'birth_date',
+        'pricing'
        
        
     ];

@@ -1,4 +1,3 @@
-
 @extends('layouts.app')
 @section('content')
 <style>
@@ -55,6 +54,7 @@
                         <th class="text-center"><span>Name</span></th>
                         <th class="text-center"><span>Email</span></th>
                         <th class="text-center"><span>Phone</span></th>
+                        <th class="text-center"><span>Budget</span></th>
                         <th class="text-center"><span>Program Name</span></th>
                         <th class="text-center"><span>Refered By</span></th>
 
@@ -73,9 +73,10 @@
                         <td class="text-center">{{ $row->name }}</td>
                         <td class="text-center">{{ $row->email }}</td>
                         <td class="text-center">{{ $row->phone }}</td>
+                        <td class="text-center">{{ $row->pricing }}</td>
                         <td class="text-center">{{ $row->program_title ?? 'null' }}</td>
                         <td class="text-center">{{$row->reference_id ?? '-'}}</td>
-                       
+
                         <td class="text-center">
                             <button class="btn btn-warning view-btn"
                                 data-id="{{ $row->id }}"
@@ -86,7 +87,7 @@
                                 data-location="{{ $row->location }}"
                                 data-days="{{ $row->days }}"
                                 data-travel_destination="{{ $row->travel_destination }}"
-                                data-budget_per_head="{{ $row->budget_per_head }}"
+                                data-pricing="{{ $row->pricing }}"
                                 data-cab_need="{{ $row->cab_need }}"
                                 data-total_count="{{ $row->total_count }}"
                                 data-male_count="{{ $row->male_count }}"
@@ -126,7 +127,7 @@
                 <p><strong>Days:</strong> <span id="modalDays"></span></p>
                 <p><strong>No.of.child:</strong> <span id="modelChild"></span></p>
                 <p><strong>Travel Destination:</strong> <span id="modalTravelDestination"></span></p>
-                <p><strong>Budget Per Head:</strong> <span id="modalBudgetPerHead"></span></p>
+                <p><strong>Budget:</strong> <span id="modalBudgetPerHead"></span></p>
                 <p><strong>Cab Need:</strong> <span id="modalCabNeed"></span></p>
                 <p><strong>Total Count:</strong> <span id="modalTotalCount"></span></p>
                 <p><strong>Male Count:</strong> <span id="modalMaleCount"></span></p>
@@ -165,7 +166,8 @@
         });
 
         // Populate modal with data
-        $('.view-btn').on('click', function() {
+        $(document).on('click', '.view-btn', function() {
+        // $('.view-btn').on('click', function() {
             $('#modalName').text($(this).data('name'));
             $('#modalEmail').text($(this).data('email'));
             $('#modalPhone').text($(this).data('phone'));
@@ -173,7 +175,7 @@
             $('#modalLocation').text($(this).data('location'));
             $('#modalDays').text($(this).data('days'));
             $('#modalTravelDestination').text($(this).data('travel_destination'));
-            $('#modalBudgetPerHead').text($(this).data('budget_per_head'));
+            $('#modalBudgetPerHead').text($(this).data('pricing'));
             $('#modalCabNeed').text($(this).data('cab_need'));
             $('#modalTotalCount').text($(this).data('total_count'));
             $('#modelChild').text($(this).data('child_count'));
@@ -182,6 +184,7 @@
             $('#modalTravelDate').text($(this).data('travel_date'));
             $('#modalRoomsCount').text($(this).data('rooms_count'));
             $('#modalDate').text($(this).data('date'));
+            console.log($(this).data());
         });
 
         // Download Excel
@@ -193,7 +196,7 @@
 
             // Now, capture modal data for all rows
             var modalData = [
-                ["Name", "Email", "Phone", "Location", "Days", "Travel Destination", "Budget Per Head", "Cab Need", "Total Count", "Male Count", "Female Count", "Travel Date", "Rooms Count", "Comments", "Date & Time"]
+                ["Name", "Email", "Phone", "Location", "Days", "Travel Destination", "Budget", "Cab Need", "Total Count", "Male Count", "Female Count", "Travel Date", "Rooms Count", "Comments", "Date & Time"]
             ];
 
             // Loop through all rows to get their modal data
@@ -207,7 +210,7 @@
                     row.find('.view-btn').data('days'),
                     row.find('.view-btn').data('child_count'),
                     row.find('.view-btn').data('travel_destination'),
-                    row.find('.view-btn').data('budget_per_head'),
+                    row.find('.view-btn').data('pricing'),
                     row.find('.view-btn').data('cab_need'),
                     row.find('.view-btn').data('total_count'),
                     row.find('.view-btn').data('male_count'),

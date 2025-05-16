@@ -28,7 +28,7 @@ class HomeEnquiryDetail extends Model
         'child_age',
         'engagement_date',
         'birth_date'
-        
+       
     ];
 
     public function followUps()
