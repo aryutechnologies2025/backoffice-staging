@@ -49,9 +49,10 @@ class Handler extends ExceptionHandler
     public function render($request, Throwable $exception)
 {
     if ($exception instanceof AuthenticationException) {
-        return response()->json([
-            'message' => 'Unauthorized. Please provide a valid access token.'
-        ], 401);
+        // return response()->json([
+        //     'message' => 'Unauthorized. Please provide a valid access token.'
+        // ], 401);
+         return redirect()->guest(route('admin.login'));
     }
 
     return parent::render($request, $exception);

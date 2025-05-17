@@ -184,7 +184,7 @@
             $('#modalTravelDate').text($(this).data('travel_date'));
             $('#modalRoomsCount').text($(this).data('rooms_count'));
             $('#modalDate').text($(this).data('date'));
-            console.log($(this).data());
+           
         });
 
         // Download Excel
