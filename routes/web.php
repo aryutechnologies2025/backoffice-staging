@@ -38,6 +38,7 @@ use App\Http\Controllers\Admin\InfluencersController;
 use App\Http\Controllers\Admin\HomeEnquiryController;
 use App\Http\Controllers\Admin\PdfController;
 use App\Http\Controllers\Admin\CustomerPackage;
+use App\Http\Controllers\Admin\StayController;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 
@@ -539,6 +540,14 @@ Route::get('/admin/influencer/{influencerId}/affiliate-links', [InfluencersContr
                 Route::post('/{id}/update', 'update')->name('admin.wishlist_update');
                 Route::post('/delete', 'delete')->name('admin.wishlist_delete');
                 Route::post('/change-status', 'change_status')->name('admin.wishlist_status');
+            });
+        });
+
+         //client Review
+        Route::controller(StayController::class)->group(function () {
+            Route::prefix('stay_list')->group(function () {
+                Route::get('/', 'list')->name('admin.staylist');
+               
             });
         });
         

@@ -2,13 +2,14 @@
 @section('content')
 <style>
     a:hover {
-        color: red;
+        color: rgb(27, 108, 138);
     }
-    a {
-        color: rgb(37, 150, 190);
+    a{
+        color:rgb(37, 150, 190);
     }
+   
     .Activities {
-        color: blue;
+      color: rgb(27, 108, 138);
     }
 </style>
 <div class="row body-sec py-5 px-5 justify-content-around">

@@ -7,7 +7,7 @@
         <!-- Dashboard Title Section -->
         <div class="col-12 mb-4">
             <h3>{{ $title }}</h3>
-            <h5>Welcome, <b>{{ Session::get('admin_name') }}</b></h5>
+            <h5 class="mt-4">Welcome, <b>{{ Session::get('admin_name') }}</b></h5>
             <p>More Travel, More Peace</p>
         </div>
         

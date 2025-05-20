@@ -1,16 +1,15 @@
 @extends('layouts.app')
 @section('content')
 <style>
-    a:hover {
-        color: red;
+   a:hover {
+        color: rgb(27, 108, 138);
     }
-
-    a {
-        color: rgb(37, 150, 190);
+    a{
+        color:rgb(37, 150, 190);
     }
-
+  
     .enquiry {
-        color: blue;
+       color: rgb(27, 108, 138);
     }
 
     .modal {
@@ -22,6 +21,11 @@
         border-radius: 6px !important;
         color: #FFF !important;
         font-size: 15px !important;
+    }
+
+    .custom-message-modal{
+        width: 100% !important;
+        background: #29292960;
     }
 </style>
 
@@ -77,7 +81,7 @@
                         <td class="text-center">{{ $row->program_title ?? 'null' }}</td>
                         <td class="text-center">{{$row->reference_id ?? '-'}}</td>
 
-                        <td class="text-center">
+                        <td class="text-center d-flex gap-1">
                             <button class="btn btn-warning view-btn"
                                 data-id="{{ $row->id }}"
                                 data-name="{{ $row->name }}"
@@ -112,7 +116,7 @@
 </div>
 
 <!-- Modal -->
-<div class="modal fade" id="viewModal" tabindex="-1" aria-labelledby="viewModalLabel" aria-hidden="true">
+<div class="modal fade custom-message-modal" id="viewModal" tabindex="-1" aria-labelledby="viewModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">

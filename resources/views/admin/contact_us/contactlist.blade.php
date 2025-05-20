@@ -1,19 +1,19 @@
 @extends('layouts.app')
 @section('content')
 <style>
-    a:hover {
-        color: red;
+     a:hover {
+        color: rgb(27, 108, 138);
+    }
+    a{
+        color:rgb(37, 150, 190);
+    }
+    .contact{
+       color: rgb(27, 108, 138);
     }
 
-    a {
-        color: rgb(37, 150, 190);
-    }
-
-    .contact {
-        color: blue;
-    }
     .custom-message-modal{
-        width: 100%!important;
+        width: 100% !important;
+        background: #29292960;
     }
 
 </style>
@@ -71,18 +71,18 @@
 </div>
 
 <!-- Modal placed outside of navbar -->
-<div class="custom-message-modal modal fade" id="customMessageModal" tabindex="-1" aria-labelledby="customMessageModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
+<div class="custom-message-modal modal fade " id="customMessageModal" tabindex="-1" aria-labelledby="customMessageModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered ">
+        <div class="modal-content shadow-lg">
             <div class="modal-header">
                 <h5 class="modal-title" id="customMessageModalLabel">Message Details</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <p id="messageContent"></p>
+                <p class="" id="messageContent"></p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary text-white" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
     </div>

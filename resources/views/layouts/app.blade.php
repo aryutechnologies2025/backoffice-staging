@@ -178,6 +178,11 @@
                         <span class="nav_name"> Destination </span>
                     </a>
 
+                     <a href="{{ route('admin.staylist') }}" class="nav_link {{ request()->routeIs(['admin.staylist', 'admin.city_add_form', 'admin.city_edit_form']) ? 'active' : '' }} mb-3 text-white">
+                        <img src="/assets/image/dashboard/location-pin.svg" alt="">
+                        <span class="nav_name"> Stays </span>
+                    </a>
+
                     <a href="{{ route('admin.CustomerPackage_list') }}" class="nav_link {{ request()->routeIs(['admin.CustomerPackage_list', 'admin.CustomerPackage_insert']) ? 'active' : '' }} mb-3 text-white">
                         <img src="/assets/image/dashboard/program.svg" alt="">
                         <span class="nav_name"> Customer Package </span>
@@ -319,7 +324,7 @@
                     </a>
                     <div class="profile-content mb-4">
                     <a href="{{ route('admin.logout') }}" class="nav_link mb-5 ">
-                        <img src="/assets/image/dashboard/turn-off.svg" alt="">
+                        <img class="" src="/assets/image/dashboard/turn-off.svg" alt="">
                         <span class="nav_name logout-menu"   >Logout</span>
                     </a>
                 </div>

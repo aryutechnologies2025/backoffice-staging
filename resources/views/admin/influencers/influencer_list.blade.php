@@ -2,21 +2,24 @@
 
 @section('content')
 <style>
-    a:hover {
-        color: red;
+     a:hover {
+        color: rgb(27, 108, 138);
     }
-    a {
-        color: rgb(37, 150, 190);
+    a{
+        color:rgb(37, 150, 190);
     }
+
+
     .city {
-        color: blue;
+       color: rgb(27, 108, 138);
     }
     .custom-message-modal {
         width: 100%;
+        background: #29292960;
     }
 </style>
 
-<div class="row body-sec py-5 px-8 justify-content-around">
+<div class="row body-sec px-5 py-5 px-8 justify-content-around">
     <div class="col-lg-6">
         <b><a href="/dashboard">Dashboard</a> > <a class="city" href="/address">Address</a></b>
         <br><br>
@@ -32,7 +35,7 @@
 </div>
 
 <!-- EVENT LIST -->
-<div class="row body-sec px-8">
+<div class="row body-sec px-5">
     <div class="col-lg-12">
         <div class="table-sec rounded-bottom-4 mb-5">
             <table id="cityTable" class="table pt-2">
@@ -58,7 +61,7 @@
                         <td class="text-center">{{ $row->email }}</td>
                         <td class="text-center">{{ $row->created_at }}</td>
                         <td class="text-center">
-                            <button class="btn btn-warning view-btn" 
+                            <button class="btn btn-warning view-btn text-white" 
                                 data-full_name="{{ $row->full_name }}"
                                 data-email="{{ $row->email }}"
                                 data-phone="{{ $row->phone }}"
@@ -83,8 +86,8 @@
                             </button>
                         </td>
                         <!-- <td class="text-center" style="font-size: small;">{{ $row->referral_code }}</td> -->
-                        <td class="text-center" style="width: 10%;">
-                            <button class="btn btn-sm btn-info view-links" data-id="{{ $row->id }}" data-name="{{ $row->full_name }}"
+                        <td class="text-center " style="width: 10%;">
+                            <button class="btn text-white btn-sm btn-info view-links" data-id="{{ $row->id }}" data-name="{{ $row->full_name }}"
                             data-signup-url="https://innerpece.com/signup?ref={{ $row->reference_id }}-{{ substr($row->full_name, 0, 4) }}"
                            > 
                                 View Affiliate Links
@@ -125,17 +128,12 @@
 </div>
 
 <!-- Modal -->
-<div class="custom-message-modal modal fade px-10
-
-
-
-
-" id="viewModal" tabindex="-1" aria-labelledby="viewModalLabel" aria-hidden="true" >
+<div class="custom-message-modal modal fade px-10" id="viewModal" tabindex="-1" aria-labelledby="viewModalLabel" aria-hidden="true" >
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header ">
                 <h5 class="modal-title" id="viewModalLabel">Influencer Details</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close text-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <p><strong>Name:</strong> <span id="modalName"></span></p>

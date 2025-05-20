@@ -2,18 +2,18 @@
 @Section('content')
 <style>
     a:hover {
-        color: red;
+        color: rgb(27, 108, 138);
     }
     a{
         color:rgb(37, 150, 190);
     }
     .user{
-        color:blue;
+       color: rgb(27, 108, 138);
     }
 
 </style>
 <div class="row body-sec py-5  px-5 justify-content-around">
-    <div class="col-lg-6">
+    <div class="col-lg-6 m-0 p-0">
     <b><a href="/dashboard" >Dashboard</a> > <a class="user" href="/user" >User</a></b>
         <br>
         <br>
