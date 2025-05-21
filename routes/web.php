@@ -93,12 +93,12 @@ Route::prefix('/')->group(function () {
     Route::post('/register', [AdminController::class, 'register'])->name('admin.register');
     Route::post('/do-login', [AdminController::class, 'check_login'])->name('admin.doLogin');
     Route::get('auth/facebook', [FacebookController::class, 'redirectToFacebook']);
-        Route::get('auth/facebook/callback', [FacebookController::class, 'handleFacebookCallback']);
+    Route::get('auth/facebook/callback', [FacebookController::class, 'handleFacebookCallback']);
     Route::middleware(['auth:admin'])->group(function () {
         Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
         Route::get('/logout', [AdminController::class, 'logout'])->name('admin.logout');
         // Route::get('/dashboard', [AdminController::class, 'getInclusivePackagesCount'])->name('admin.dashboard');
-        
+
 
         //Events
         Route::controller(EventController::class)->group(function () {
@@ -140,9 +140,8 @@ Route::prefix('/')->group(function () {
                 Route::post('/change-status', 'change_status')->name('admin.inclusive_package_status');
                 Route::get('/theme-categories/{themeId}', 'getThemeCategories')->name('admin.theme_categories');
                 Route::get('/destination-categories',  'getDestinationCategories')->name('admin.destination_categories');
-
             });
-          });
+        });
         //   Route::get('/dashboard', [All_Inclusive_PackController::class, 'showDashboard'])->name('dashboard');
 
         //CustomerPackage
@@ -156,14 +155,14 @@ Route::prefix('/')->group(function () {
 
                 Route::get('/{id}/edit', 'edit_form')->name('admin.CustomerPackage_edit_form');
                 Route::post('/{id}/update', 'update')->name('admin.CustomerPackage_update');
- 
+
 
                 Route::post('/package-details', 'package_details')->name('admin.CustomerPackage_details');
             });
         });
 
-         //Program
-         Route::controller(ProgramController::class)->group(function () {
+        //Program
+        Route::controller(ProgramController::class)->group(function () {
             Route::prefix('program')->group(function () {
                 Route::get('/', 'list')->name('admin.program_list');
                 Route::get('/add', 'add_form')->name('admin.program_add_form');
@@ -190,9 +189,9 @@ Route::prefix('/')->group(function () {
         //address
         Route::controller(AddressController::class)->group(function () {
             Route::prefix('address')->group(function () {
-                Route::get('/','list')->name('admin.address_list');
-                Route::get('/add','add_form')->name('admin.address_add_form');
-                Route::get('/{id}/edit','edit_form')->name('admin.address_edit_form');
+                Route::get('/', 'list')->name('admin.address_list');
+                Route::get('/add', 'add_form')->name('admin.address_add_form');
+                Route::get('/{id}/edit', 'edit_form')->name('admin.address_edit_form');
                 Route::post('/insert', 'insert')->name('admin.address_insert');
                 Route::post('/{id}/update', 'update')->name('admin.address_update');
                 Route::post('/delete', 'delete')->name('admin.address_delete');
@@ -200,7 +199,7 @@ Route::prefix('/')->group(function () {
             });
         });
 
-        
+
         //Property
         // Route::controller(PropertyController::class)->group(function () {
         //     Route::prefix('property')->group(function () {
@@ -255,8 +254,8 @@ Route::prefix('/')->group(function () {
             });
         });
 
-         //FAQ
-         Route::controller(InfluencersController::class)->group(function () {
+        //FAQ
+        Route::controller(InfluencersController::class)->group(function () {
             Route::prefix('influencer')->group(function () {
                 Route::get('/', 'list')->name('admin.influencer_list');
                 Route::get('/add', 'add_form')->name('admin.influencer_add_form');
@@ -267,15 +266,15 @@ Route::prefix('/')->group(function () {
                 Route::post('/change-status', 'change_status')->name('admin.influencer_status');
             });
         });
-       // web.php
-       Route::get('/track-click/{id}', [InfluencersController::class, 'trackClick'])->name('affiliate.link.track');
+        // web.php
+        Route::get('/track-click/{id}', [InfluencersController::class, 'trackClick'])->name('affiliate.link.track');
 
-Route::get('/admin/influencer/{influencerId}/affiliate-links', [InfluencersController::class, 'getAffiliateLinks']);
-// routes/web.php
+        Route::get('/admin/influencer/{influencerId}/affiliate-links', [InfluencersController::class, 'getAffiliateLinks']);
+        // routes/web.php
 
-// Route::get('/{program_slug}', [InfluencersController::class, 'showProgramWithReferral']);
+        // Route::get('/{program_slug}', [InfluencersController::class, 'showProgramWithReferral']);
 
-    
+
         //Podcast
         Route::controller(PodcastController::class)->group(function () {
             Route::prefix('podcast')->group(function () {
@@ -380,8 +379,8 @@ Route::get('/admin/influencer/{influencerId}/affiliate-links', [InfluencersContr
             });
         });
 
-         //themes
-         Route::controller(ThemesController::class)->group(function () {
+        //themes
+        Route::controller(ThemesController::class)->group(function () {
             Route::prefix('themes')->group(function () {
                 Route::get('/', 'list')->name('admin.themes_list');
                 Route::get('/add', 'add_form')->name('admin.themes_add_form');
@@ -406,8 +405,8 @@ Route::get('/admin/influencer/{influencerId}/affiliate-links', [InfluencersContr
             });
         });
 
-         //profile
-         Route::controller(ProfileController::class)->group(function () {
+        //profile
+        Route::controller(ProfileController::class)->group(function () {
             Route::prefix('profile')->group(function () {
                 Route::get('/', 'list')->name('admin.profile_list');
                 Route::get('/add', 'add_form')->name('admin.profile_add_form');
@@ -419,8 +418,8 @@ Route::get('/admin/influencer/{influencerId}/affiliate-links', [InfluencersContr
             });
         });
 
-         //User Details
-         Route::controller(UserController::class)->group(function () {
+        //User Details
+        Route::controller(UserController::class)->group(function () {
             Route::prefix('user')->group(function () {
                 Route::get('/', 'list')->name('admin.user_list');
                 Route::get('/add', 'add_form')->name('admin.user_add_form');
@@ -432,8 +431,8 @@ Route::get('/admin/influencer/{influencerId}/affiliate-links', [InfluencersContr
             });
         });
 
-         //Contat-us Details
-         Route::controller(Contact_usController::class)->group(function () {
+        //Contat-us Details
+        Route::controller(Contact_usController::class)->group(function () {
             Route::prefix('contact-us')->group(function () {
                 Route::get('/', 'list')->name('admin.contact_list');
             });
@@ -519,7 +518,7 @@ Route::get('/admin/influencer/{influencerId}/affiliate-links', [InfluencersContr
         Route::controller(ClientreviewController::class)->group(function () {
             Route::prefix('client_review')->group(function () {
                 Route::get('/', 'list')->name('admin.client_review_list');
-                Route::get('/review_list' , 'review_list')->name('admin.review_review_list');
+                Route::get('/review_list', 'review_list')->name('admin.review_review_list');
                 Route::get('/add', 'add_form')->name('admin.client_review_add_form');
                 Route::get('/{id}/edit', 'edit_form')->name('admin.client_review_edit_form');
                 Route::post('/insert', 'insert')->name('admin.client_review_insert');
@@ -543,16 +542,17 @@ Route::get('/admin/influencer/{influencerId}/affiliate-links', [InfluencersContr
             });
         });
 
-         //client Review
+        //stays module
         Route::controller(StayController::class)->group(function () {
             Route::prefix('stay_list')->group(function () {
                 Route::get('/', 'list')->name('admin.staylist');
-               
+                Route::get('/add', 'add_form')->name('admin.stays_add_form');
+                Route::post('/insert', 'insert')->name('admin.stay_details_insert');
+                Route::post('/delete', 'delete')->name('admin.stay_details_delete');
+                Route::get('/{id}/edit', 'edit_form')->name('admin.stay_details_edit_form');
+                Route::post('/{id}/update', 'update')->name('admin.stay_details_update');
+                Route::post('/change-status', 'change_status')->name('admin.stay_change_status');
             });
         });
-        
-
-       
     });
 });
-

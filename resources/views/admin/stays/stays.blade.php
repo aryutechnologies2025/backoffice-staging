@@ -21,11 +21,11 @@
     <b><a href="/dashboard" >Dashboard</a> > <a class="city" href="/stay_list" >Stays</a></b>
         <br>
         <br>
-      
+       <h3 class="fw-bold pb-2">Stays List</h3>
     </div>
     <div class="col-lg-6">
         <div class="d-flex justify-content-end">
-            <a href="{{ route('admin.themes_add_form') }}">
+            <a href="{{ route('admin.stays_add_form') }}">
                 <button class="btn btn-add px-5" type="button">Add Stay</button>
             </a>
         </div>
@@ -39,14 +39,65 @@
         <table id="cityTable" class="table pt-2">                
             <thead>
                     <tr class="rounded-top-4">
-                        <th class="text-center"><span>S.No</span></th>
-                        <th class="text-center"><span>  Image </span></th>
+                        <th class="text-center"><span> S.No</span></th>
+                        <th class="text-center"><span> Destination </span></th>
                         <th class="text-center"><span> Title </span></th>
-                        <th class="text-center"><span>Time&Date </span></th>
+                        <th class="text-center"><span> Stay Location </span></th>    
+                         <th class="text-center"><span> Description </span></th>               
                         <th class="text-center"><span> Status </span></th>
                         <th class="text-center"><span> Action </span></th>
                     </tr>
                 </thead>
+
+                 <tbody>
+                    @if($stay_details->isEmpty())
+                    <tr>
+                        <td colspan="9" class="text-center">No records</td>
+                    </tr>
+                    @else
+                    @foreach ($stay_details as $row)
+
+                    <tr>
+                    <td class="text-center">{{ $loop->iteration }}</td>
+
+                        <td class="text-center">{{ $row->destination }}</td>
+                        <td class="text-center">{{ $row->stay_title }}</td>
+                        <td class="text-center">{{ $row->stay_location }}</td>
+                        <td class="text-center">{{ $row->stay_description }}</td>
+                      
+                        @php
+                        $disp_status = 'In Active';
+                        $actTitle = 'Click to activate';
+                        $mode = 1;
+                        $btnColr = 'btn-hold';
+
+                        if (isset($row->status) && $row->status == '1') {
+                        $disp_status = 'Active';
+                        $mode = 0;
+                        $btnColr = 'btn-live';
+                        $actTitle = 'Click to deactivate';
+                        }
+                        @endphp
+                        <td class="text-center"><a data-toggle="tooltip" data-csrf_token="{{ csrf_token() }}" data-original-title="{{ $actTitle }}" class="stsconfirm" href="javascript:void(0);" data-row_id="{{ $row->id }}" data-act_url="{{ route('admin.stay_change_status') }}" data-stsmode="{{ $mode }}"><button type="button" class="btn {{ $btnColr }} px-5">{{ $disp_status }}</button></a></td>
+                        <td class="text-center" style="width: 20%;">
+                            <!-- <a href="{{ route('admin.stay_details_edit_form',$row->id) }}" class="table-edit-link">
+                                <span class="fa-stack">
+                                    <i class="fa fa-pencil fa-stack-1x fa-inverse"></i>
+                                </span>
+                            </a> -->
+
+                            <a href="javascript:void(0);" class="table-link danger delconfirm" data-row_id="{{ $row->id }}" data-act_url="{{ route('admin.stay_details_delete') }}" data-csrf_token="{{ csrf_token() }}">
+                                <span class="fa-stack">
+                                    <!-- <i class="fa fa-square fa-stack-2x"></i> -->
+                                    <i class="fa fa-trash-o fa-stack-1x fa-inverse" style="color: red !important;"></i>
+                                </span>
+                            </a>
+                        </td>
+                    </tr>
+                    @endforeach
+                    @endif
+
+                </tbody>
              
             </table>
            
