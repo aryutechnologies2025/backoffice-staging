@@ -10,12 +10,13 @@ use App\Models\FoodBeverage;
 use App\Models\Safetyfeatures;
 use App\Models\stays_destination_details;
 use Illuminate\Http\Request;
+use MongoDB\Operation\Find;
 
 class StayController extends Controller
 {
     public function list()
     {
-        $stay_details = stays_destination_details::where('is_deleted','0')->orderBy('created_at', 'desc')->get();;
+        $stay_details = stays_destination_details::where('is_deleted','0')->orderBy('created_at', 'desc')->get();
         return view('admin.stays.stays',compact('stay_details'));
     }   
 
@@ -167,7 +168,7 @@ class StayController extends Controller
         $selecteddesCategoryId = $stay_details->destination_cat;
        
       
-        return view('admin.stay.stayedit', compact('package_details','cities_dts', 'themes', 'amenities_dts', 'foodBeverages_dts', 'activities_dts', 'safety_features_dts', 'selectedCityId', 'selectedAmenities', 'selectedthemeId', 'selectedfood_beverages', 'selectedactivities', 'selectedsafety_features', 'geo_feature_dts', 'selectedgeo_featureId', 'categories', 'dest_categories', 'selecteddesCategoryId', 'selectedCategoryId', 'selectedprogram'));
+        return view('admin.stays.stayedit', compact('stay_details','cities_dts', 'amenities_dts', 'foodBeverages_dts', 'activities_dts', 'safety_features_dts', 'selectedCityId', 'selectedAmenities', 'selectedthemeId', 'selectedfood_beverages', 'selectedactivities', 'selectedsafety_features', 'selectedgeo_featureId',    'selecteddesCategoryId', 'selectedCategoryId', 'selectedprogram'));
     }
 
     public function change_status(Request $request)
@@ -208,5 +209,99 @@ class StayController extends Controller
         // Return the response as JSON
         return response()->json($response);
     }
+
+
+    public function get_stays(Request $request){
+        $stays = stays_destination_details::where('is_deleted','0')
+        ->select('id','destination','stay_title','gallery_image','price','no_of_days')->orderBy('created_at', 'desc')->get();
+
+        return response()->json([
+                    'status' => 'success',
+                    'message' => 'stays successfully retrived.',
+                    'data' => $stays
+                ], 200);
+    }
+
+    public function get_stay_details(Request $request)
+{
+    $programId = $request->input('program_id'); // Example: 36
+
+    $stay_details = stays_destination_details
+         ::where('is_deleted', '0')
+        ->find($programId);
+       
+
+    if (!$stay_details) {
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Stay details not found.',
+            'data' => null
+        ], 404);
+    }
+
+    $stags = $stay_details
+      ->get()
+      ->map(function($items){
+        return[
+            'images'=>json_decode($items->gallery_image),
+            'destination'=>$items->destination,
+            'stay_title'=>$items->stay_title,
+            'stay_description'=>$items->stay_description,
+            'stay_location'=>$items->stay_location,
+            'stay_title'=>$items->stay_title,
+            'price'=>$items->price,
+            'no_of_days'=>$items->no_of_days,
+        ];
+      });
+
+    $amenityIds = json_decode($stay_details->amenity_details, true) ?? [];
+
+    $amenities = Amenities::whereIn('id', $amenityIds)
+        ->get(['id', 'amenity_name', 'amenity_pic'])
+        ->keyBy('id')
+        ->map(function ($item) {
+            return [
+                'amenity_name' => $item->amenity_name,
+                'amenity_pic' => $item->amenity_pic,
+            ];
+        })->values();
+
+        $activitiesIds = json_decode($stay_details->activities, true) ?? [];
+
+    $activities =Activities ::whereIn('id', $activitiesIds)
+        ->get(['id', 'activities', 'activities_pic'])
+        ->keyBy('id')
+        ->map(function ($item) {
+            return [
+                'activities' => $item->activities,
+                'activities_pic' => $item->activities_pic,
+            ];
+        })->values();
+
+         $safetyIds = json_decode($stay_details->safety_features, true) ?? [];
+
+    $safety =Safetyfeatures ::whereIn('id', $safetyIds)
+        ->get(['id', 'safety_features', 'safety_features_pic'])
+        ->keyBy('id')
+        ->map(function ($item) {
+            return [
+                'safety_features' => $item->safety_features,
+                'safety_features_pic' => $item->safety_features_pic,
+            ];
+        })->values();
+
+        
+
+
+    // Return response
+    return response()->json([
+        'status' => 'success',
+        'message' => 'Stays successfully retrieved.',
+        'data' => $stags,
+        'amenities' => $amenities,
+        'activities'=> $activities,
+        'safety'=> $safety,
+    ], 200);
+}
 
 }

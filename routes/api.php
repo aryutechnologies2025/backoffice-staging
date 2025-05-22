@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\CustomerPackage;
+use App\Http\Controllers\Admin\StayController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\ApiController;
@@ -81,6 +82,8 @@ Route::post('/home-enquiry-mail/{id}', [ProgramApiController::class, 'getHomeNot
 Route::get('/customername/{id}', [CustomerPackage::class, 'getNameById']);
 
 Route::post('/specific-program-details', [ProgramApiController::class, 'specific_program_details']);
+Route::get('/get-stays', [StayController::class, 'get_stays']);
+Route::get('/get-stay-details', [StayController::class, 'get_stay_details']);
     });
 });
 
