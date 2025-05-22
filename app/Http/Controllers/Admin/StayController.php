@@ -16,9 +16,9 @@ class StayController extends Controller
 {
     public function list()
     {
-        $stay_details = stays_destination_details::where('is_deleted','0')->orderBy('created_at', 'desc')->get();
-        return view('admin.stays.stays',compact('stay_details'));
-    }   
+        $stay_details = stays_destination_details::where('is_deleted', '0')->orderBy('created_at', 'desc')->get();
+        return view('admin.stays.stays', compact('stay_details'));
+    }
 
     public function add_form()
     {
@@ -36,7 +36,7 @@ class StayController extends Controller
     public function insert(Request $request)
     {
 
-         $imagePaths = [];
+        $imagePaths = [];
         $fileInputs = $request->file();
 
         foreach ($fileInputs as $key => $files) {
@@ -79,7 +79,7 @@ class StayController extends Controller
         $stay_details->stay_description = $request->input('program_description');
         $stay_details->stay_location = $request->input('stay_location');
 
-         $stay_details->gallery_image = json_encode($imagePaths);
+        $stay_details->gallery_image = json_encode($imagePaths);
 
         $stay_details->price = $request->input('price_title');
         $stay_details->no_of_days = $request->input('price_amount');
@@ -99,11 +99,85 @@ class StayController extends Controller
 
 
         if ($stay_details) {
-            return redirect()->route('admin.stays')
+            return redirect()->route('admin.staylist')
                 ->with('success', 'Record inserted successfully');
         } else {
-            return redirect()->route('admin.stays')
+            return redirect()->route('admin.staylist')
                 ->with('error', 'Error inserting record');
+        }
+    }
+
+    public function update(Request $request,$id)
+    {
+
+        $imagePaths = [];
+        $fileInputs = $request->file();
+
+        foreach ($fileInputs as $key => $files) {
+            if (strpos($key, 'img_') === 0) {
+                if (is_array($files)) {
+                    foreach ($files as $file) {
+                        if ($file->isValid()) {
+                            $fileName = time() . '_' . $file->getClientOriginalName();
+                            $destinationPath = public_path('/uploads/stays_module_img');
+                            if (!file_exists($destinationPath)) {
+                                mkdir($destinationPath, 0755, true);
+                            }
+                            $file->move($destinationPath, $fileName);
+                            $imagePaths[] = '/uploads/stays_module_img/' . $fileName;
+                        }
+                    }
+                } else {
+                    if ($files->isValid()) {
+                        $fileName = time() . '_' . $files->getClientOriginalName();
+                        $destinationPath = public_path('/uploads/stays_module_img');
+                        if (!file_exists($destinationPath)) {
+                            mkdir($destinationPath, 0755, true);
+                        }
+                        $files->move($destinationPath, $fileName);
+                        $imagePaths[] = '/uploads/stays_module_img/' . $fileName;
+                    }
+                }
+            }
+        }
+
+        $amenitiesJson = json_encode($request->input('amenity_services'));
+        $foodBeveragesJson = json_encode($request->input('food_beverages'));
+        $activitiesJson = json_encode($request->input('activities'));
+        $safetyFeaturesJson = json_encode($request->input('safety_features'));
+
+        $stay_details = stays_destination_details::find($id);
+
+        $stay_details->destination = $request->input('cities_name');
+        $stay_details->stay_title = $request->input('title');
+        $stay_details->stay_description = $request->input('description');
+        $stay_details->stay_location = $request->input('stay_location');
+
+        $stay_details->gallery_image = json_encode($imagePaths);
+
+        $stay_details->price = $request->input('price_title');
+        $stay_details->no_of_days = $request->input('price_amount');
+
+        $stay_details->amenity_details = $amenitiesJson;
+        $stay_details->food_beverages = $foodBeveragesJson;
+        $stay_details->activities = $activitiesJson;
+        $stay_details->safety_features = $safetyFeaturesJson;
+
+        $stay_details->order = $request->input('list_order');
+        $stay_details->is_deleted = '0';
+        $stay_details->status = $request->has('status') && $request->input('status') === 'on' ? '1' : '0';
+        $stay_details->created_date = now();
+        $stay_details->created_by = 'admin';
+
+        $stay_details->save();
+
+
+        if ($stay_details) {
+            return redirect()->route('admin.staylist')
+                ->with('success', 'Record updated successfully');
+        } else {
+            return redirect()->route('admin.staylist')
+                ->with('error', 'Error updating record');
         }
     }
 
@@ -118,8 +192,8 @@ class StayController extends Controller
             // Update the is_deleted field to 1
             $stay_details->is_deleted = "1";
 
-           
-         
+
+
             $stay_details->save();
 
             // Prepare the response
@@ -140,7 +214,7 @@ class StayController extends Controller
     }
 
 
-      public function edit_form(Request $request, $id)
+    public function edit_form(Request $request, $id)
     {
         $stay_details = stays_destination_details::find($id);
         $cities_dts = City::where('status', "1")->where('is_deleted', "0")->pluck('city_name', 'id');
@@ -148,8 +222,8 @@ class StayController extends Controller
         $foodBeverages_dts = FoodBeverage::where('status', "1")->where('is_deleted', "0")->get();
         $activities_dts = Activities::where('status', "1")->where('is_deleted', "0")->get();
         $safety_features_dts = Safetyfeatures::where('status', "1")->where('is_deleted', "0")->get();
-       
-        
+
+
         if (!$stay_details) {
             return redirect()->route('admin.inclusive_package_list')->with('error', 'Package not found');
         }
@@ -166,9 +240,9 @@ class StayController extends Controller
         $selectedthemeId = $stay_details->theme_id;
         $selectedCategoryId = $stay_details->theme_cat_id;
         $selecteddesCategoryId = $stay_details->destination_cat;
-       
-      
-        return view('admin.stays.stayedit', compact('stay_details','cities_dts', 'amenities_dts', 'foodBeverages_dts', 'activities_dts', 'safety_features_dts', 'selectedCityId', 'selectedAmenities', 'selectedthemeId', 'selectedfood_beverages', 'selectedactivities', 'selectedsafety_features', 'selectedgeo_featureId',    'selecteddesCategoryId', 'selectedCategoryId', 'selectedprogram'));
+
+
+        return view('admin.stays.stayedit', compact('stay_details', 'cities_dts', 'amenities_dts', 'foodBeverages_dts', 'activities_dts', 'safety_features_dts', 'selectedCityId', 'selectedAmenities', 'selectedthemeId', 'selectedfood_beverages', 'selectedactivities', 'selectedsafety_features', 'selectedgeo_featureId',    'selecteddesCategoryId', 'selectedCategoryId', 'selectedprogram'));
     }
 
     public function change_status(Request $request)
@@ -189,8 +263,8 @@ class StayController extends Controller
                 $stay_details->status = "1";
             }
 
-            
-          
+
+
             $stay_details->save();
 
             // Prepare the response
@@ -211,112 +285,112 @@ class StayController extends Controller
     }
 
 
-    public function get_stays(Request $request){
+    public function get_stays(Request $request)
+    {
         $destination = $request->destination;
-        
-        $stays = stays_destination_details::where('is_deleted','0')
-        ->where('destination',$destination)->orderBy('created_at', 'desc')->get()
-         ->map(function($items){
-        return[
-            'id'=> $items->id,
-            'images'=>json_decode($items->gallery_image),
-            'destination'=>$items->destination,
-            'stay_title'=>$items->stay_title,
-            'stay_description'=>$items->stay_description,
-            'stay_location'=>$items->stay_location,
-            'stay_title'=>$items->stay_title,
-            'price'=>$items->price,
-            'no_of_days'=>$items->no_of_days,
-        ];
-    });
+
+        $stays = stays_destination_details::where('is_deleted', '0')
+            ->where('destination', $destination)->orderBy('created_at', 'desc')->get()
+            ->map(function ($items) {
+                return [
+                    'id' => $items->id,
+                    'images' => json_decode($items->gallery_image),
+                    'destination' => $items->destination,
+                    'stay_title' => $items->stay_title,
+                    'stay_description' => $items->stay_description,
+                    'stay_location' => $items->stay_location,
+                    'stay_title' => $items->stay_title,
+                    'price' => $items->price,
+                    'no_of_days' => $items->no_of_days,
+                ];
+            });
         return response()->json([
-                    'status' => 'success',
-                    'message' => 'stays successfully retrived.',
-                    'data' => $stays
-                ], 200);
+            'status' => 'success',
+            'message' => 'stays successfully retrived.',
+            'data' => $stays
+        ], 200);
     }
 
 
     public function get_stay_details(Request $request)
-{
-    $programId = $request->input('program_id'); // Example: 36
+    {
+        $programId = $request->input('program_id'); // Example: 36
 
-    $stay_details = stays_destination_details
-         ::where('is_deleted', '0')
-        ->find($programId);
-       
+        $stay_details = stays_destination_details
+            ::where('is_deleted', '0')
+            ->find($programId);
 
-    if (!$stay_details) {
-        return response()->json([
-            'status' => 'error',
-            'message' => 'Stay details not found.',
-            'data' => null
-        ], 404);
-    }
 
-    $stags = $stay_details
-      ->get()
-      ->map(function($items){
-        return[
-            'images'=>json_decode($items->gallery_image),
-            'destination'=>$items->destination,
-            'stay_title'=>$items->stay_title,
-            'stay_description'=>$items->stay_description,
-            'stay_location'=>$items->stay_location,
-            'stay_title'=>$items->stay_title,
-            'price'=>$items->price,
-            'no_of_days'=>$items->no_of_days,
-        ];
-      });
+        if (!$stay_details) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Stay details not found.',
+                'data' => null
+            ], 404);
+        }
 
-    $amenityIds = json_decode($stay_details->amenity_details, true) ?? [];
+        $stags = $stay_details
+            ->get()
+            ->map(function ($items) {
+                return [
+                    'images' => json_decode($items->gallery_image),
+                    'destination' => $items->destination,
+                    'stay_title' => $items->stay_title,
+                    'stay_description' => $items->stay_description,
+                    'stay_location' => $items->stay_location,
+                    'stay_title' => $items->stay_title,
+                    'price' => $items->price,
+                    'no_of_days' => $items->no_of_days,
+                ];
+            });
 
-    $amenities = Amenities::whereIn('id', $amenityIds)
-        ->get(['id', 'amenity_name', 'amenity_pic'])
-        ->keyBy('id')
-        ->map(function ($item) {
-            return [
-                'amenity_name' => $item->amenity_name,
-                'amenity_pic' => $item->amenity_pic,
-            ];
-        })->values();
+        $amenityIds = json_decode($stay_details->amenity_details, true) ?? [];
+
+        $amenities = Amenities::whereIn('id', $amenityIds)
+            ->get(['id', 'amenity_name', 'amenity_pic'])
+            ->keyBy('id')
+            ->map(function ($item) {
+                return [
+                    'amenity_name' => $item->amenity_name,
+                    'amenity_pic' => $item->amenity_pic,
+                ];
+            })->values();
 
         $activitiesIds = json_decode($stay_details->activities, true) ?? [];
 
-    $activities =Activities ::whereIn('id', $activitiesIds)
-        ->get(['id', 'activities', 'activities_pic'])
-        ->keyBy('id')
-        ->map(function ($item) {
-            return [
-                'activities' => $item->activities,
-                'activities_pic' => $item->activities_pic,
-            ];
-        })->values();
+        $activities = Activities::whereIn('id', $activitiesIds)
+            ->get(['id', 'activities', 'activities_pic'])
+            ->keyBy('id')
+            ->map(function ($item) {
+                return [
+                    'activities' => $item->activities,
+                    'activities_pic' => $item->activities_pic,
+                ];
+            })->values();
 
-         $safetyIds = json_decode($stay_details->safety_features, true) ?? [];
+        $safetyIds = json_decode($stay_details->safety_features, true) ?? [];
 
-    $safety =Safetyfeatures ::whereIn('id', $safetyIds)
-        ->get(['id', 'safety_features', 'safety_features_pic'])
-        ->keyBy('id')
-        ->map(function ($item) {
-            return [
-                'safety_features' => $item->safety_features,
-                'safety_features_pic' => $item->safety_features_pic,
-            ];
-        })->values();
-
-        
+        $safety = Safetyfeatures::whereIn('id', $safetyIds)
+            ->get(['id', 'safety_features', 'safety_features_pic'])
+            ->keyBy('id')
+            ->map(function ($item) {
+                return [
+                    'safety_features' => $item->safety_features,
+                    'safety_features_pic' => $item->safety_features_pic,
+                ];
+            })->values();
 
 
-    // Return response
-    return response()->json([
-        'status' => 'success',
-        'message' => 'Stays successfully retrieved.',
-        'data' => $stags,
-        'amenities' => $amenities,
-        'activities'=> $activities,
-        'safety'=> $safety,
-    ], 200);
-}
 
+
+        // Return response
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Stays successfully retrieved.',
+            'data' => $stags,
+            'amenities' => $amenities,
+            'activities' => $activities,
+            'safety' => $safety,
+        ], 200);
+    }
 }

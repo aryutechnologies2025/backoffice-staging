@@ -6,20 +6,20 @@
     </div>
 
     <!-- FORM -->
-    <form id="form_valid" action="{{ route('admin.inclusive_package_update', $stay_details->id) }}" method="POST" autocomplete="off" enctype="multipart/form-data">
+    <form id="form_valid" action="{{ route('admin.stay_details_update', $stay_details->id) }}" method="POST" autocomplete="off" enctype="multipart/form-data">
         @csrf
         <!-- 1.INFORMATION -->
         <div class="row mb-5">
             <div class="col">
-                <div class="form-body px-5  rounded-4 m-auto ">
+                <div class="form-body rounded-4 px-5 ">
                     <h4 class="fw-bold mb-5">Information</h4>
                     <div class="mb-3">
-                        <div class="row g-2 mb-4">
-                            <div class="col">
+                        <div class="row gap-4 mb-4">
+                           
                                 <div class="col-md-4 ">
-                                    <label class="mb-2">Destination <span class="text-danger">*</span></label>
+                                    <label class="mb-2 fw-bold">Destination <span class="text-danger">*</span></label>
                                     <select id="cities_name" name="cities_name"
-                                        class="form-select py-2 rounded-3 shadow-sm">
+                                        class="form-select py-3 rounded-3 shadow-sm">
                                         <option value="">Select Destination</option>
                                         @foreach($cities_dts as $id => $name)
                                         <option value="{{ $name }}"
@@ -30,15 +30,20 @@
                                     </select>
                                 </div>
                                 <div class="col-md-4">
-                                    <label class="fw-bold mb-4 "> Title <span class="text-danger">*</span></label>
+                                    <label class="fw-bold mb-2 "> Title <span class="text-danger">*</span></label>
                                     <input type="text" placeholder="Title" id="title" name="title" class="form-control py-3 rounded-3 shadow-sm" required value="{{$stay_details->stay_title}}">
                                 </div>
-                            </div>
+
+                                <div class="col-md-4">
+                                    <label class="fw-bold mb-2 "> Stay Location <span class="text-danger">*</span></label>
+                                    <input type="text" placeholder="Location" id="title" name="stay_location" class="form-control py-3 rounded-3 shadow-sm" required value="{{$stay_details->stay_location}}">
+                                </div>
+                            
                             <div class="mt-5">
                                 <div class="row">
                                     <div class="col-lg-12">
                                         <label class="form-label form-label-top form-label-auto fw-bold mb-4">Program Description <span class="text-danger">*</span></label>
-                                        <textarea id="program_description" class="container__textarea p-5 textarea-feild" name="program_description" required>{{$stay_details->stay_description}}</textarea>
+                                        <textarea id="description" class="container__textarea p-5 textarea-feild" name="description" required>{{$stay_details->stay_description}}</textarea>
                                     </div>
                                 </div>
                             </div>
@@ -126,16 +131,16 @@
         <!-- 8.AMENITIES -->
         <div class="row mb-5">
             <div class="col">
-                <div class="form-body px-5 rounded-4 m-auto">
-                    <h4 class="fw-bold mb-5">8. Amenities </h4>
+                <div class="form-body px-5 rounded-4">
+                    <h4 class="fw-bold mb-5">Amenities </h4>
                     <div class="row mb-4">
                         @foreach($amenities_dts->chunk(4) as $chunk)
                         <div class="row mb-3">
                             @foreach($chunk as $amenity)
                             <div class="col-lg-3 col-md-3 col-sm-4 mb-2">
                                 <div class="form-check">
-                                    <input type="checkbox" class="form-check-input" id="amenity-{{ $amenity->id }}" name="amenity_services[]" value="{{ $amenity->id }}" @if(in_array((string) $amenity->id, $selectedAmenities)) checked @endif>
-                                    <label class="form-check-label" for="amenity-{{ $amenity->id }}">{{ $amenity->amenity_name }}</label>
+                                    <input type="checkbox" class="me-2 custom-checkbox" id="amenity-{{ $amenity->id }}" name="amenity_services[]" value="{{ $amenity->id }}" @if(in_array((string) $amenity->id, $selectedAmenities)) checked @endif>
+                                    <label class="mb-0" for="amenity-{{ $amenity->id }}">{{ $amenity->amenity_name }}</label>
                                 </div>
                             </div>
                             @endforeach
@@ -152,17 +157,17 @@
         <!-- 9.FOOD & BEVERAGES -->
         <div class="row mb-5">
             <div class="col">
-                <div class="form-body px-5 rounded-4 m-auto">
-                    <h4 class="fw-bold mb-5">9. Food and Beverages</h4>
+                <div class="form-body px-5 rounded-4 ">
+                    <h4 class="fw-bold mb-5"> Food and Beverages</h4>
                     <div class="row mb-4">
                         @foreach($foodBeverages_dts->chunk(6) as $chunk)
                         <div class="row mb-3">
                             @foreach($chunk as $item)
                             <div class="col-lg-3 col-md-3 col-sm-4 mb-2">
                                 <div class="form-check">
-                                    <input type="checkbox" class="form-check-input" id="food-beverage-{{ $item->id }}" name="food_beverages[]" value="{{ $item->id }}" @if(in_array((string) $item->id, $selectedfood_beverages)) checked @endif>
+                                    <input type="checkbox" class="custom-checkbox me-2" id="food-beverage-{{ $item->id }}" name="food_beverages[]" value="{{ $item->id }}" @if(in_array((string) $item->id, $selectedfood_beverages)) checked @endif>
 
-                                    <label class="form-check-label" for="food-beverage-{{ $item->id }}">{{ $item->food_beverage }}</label>
+                                    <label class="mb-0" for="food-beverage-{{ $item->id }}">{{ $item->food_beverage }}</label>
                                 </div>
                             </div>
                             @endforeach
@@ -176,16 +181,16 @@
         <!--10. ACTIVITIES -->
         <div class="row mb-5">
             <div class="col">
-                <div class="form-body px-5  rounded-4 m-auto ">
-                    <h4 class="fw-bold mb-5">10.Activities</h4>
+                <div class="form-body px-5  rounded-4  ">
+                    <h4 class="fw-bold mb-5">Activities</h4>
                     <div class="row mb-4">
                         @foreach($activities_dts->chunk(6) as $chunk)
                         <div class="row mb-3">
                             @foreach($chunk as $item)
                             <div class="col-lg-3 col-md-3 col-sm-4 mb-2">
                                 <div class="form-check">
-                                    <input type="checkbox" class="form-check-input" id="activities-{{ $item->id }}" name="activities[]" value="{{ $item->id }}" @if(in_array((string) $item->id, $selectedactivities)) checked @endif>
-                                    <label class="form-check-label" for="activities-{{ $item->id }}">{{ $item->activities }}</label>
+                                    <input type="checkbox" class="custom-checkbox me-2" id="activities-{{ $item->id }}" name="activities[]" value="{{ $item->id }}" @if(in_array((string) $item->id, $selectedactivities)) checked @endif>
+                                    <label class="mb-0" for="activities-{{ $item->id }}">{{ $item->activities }}</label>
                                 </div>
                             </div>
                             @endforeach
@@ -200,16 +205,16 @@
         <!-- 11.SAFETY FEATURES  -->
         <div class="row mb-5">
             <div class="col">
-                <div class="form-body px-5  rounded-4 m-auto ">
-                    <h4 class="fw-bold mb-5">11.Safety Features</h4>
+                <div class="form-body px-5  rounded-4  ">
+                    <h4 class="fw-bold mb-5">Safety Features</h4>
                     <div class="row mb-4">
                         @foreach($safety_features_dts->chunk(6) as $chunk)
                         <div class="row mb-3">
                             @foreach($chunk as $item)
                             <div class="col-lg-3 col-md-3 col-sm-4 mb-2">
                                 <div class="form-check">
-                                    <input type="checkbox" class="form-check-input" id="safety_features-{{ $item->id }}" name="safety_features[]" value="{{ $item->id }}" @if(in_array((string) $item->id, $selectedsafety_features)) checked @endif>
-                                    <label class="form-check-label" for="safety_features-{{ $item->id }}">{{ $item->safety_features }}</label>
+                                    <input type="checkbox" class="custom-checkbox me-2" id="safety_features-{{ $item->id }}" name="safety_features[]" value="{{ $item->id }}" @if(in_array((string) $item->id, $selectedsafety_features)) checked @endif>
+                                    <label class="mb-0" for="safety_features-{{ $item->id }}">{{ $item->safety_features }}</label>
                                 </div>
                             </div>
                             @endforeach
