@@ -99,10 +99,10 @@ class StayController extends Controller
 
 
         if ($stay_details) {
-            return redirect()->route('admin.staylist')
+            return redirect()->route('admin.stays.stays')
                 ->with('success', 'Record inserted successfully');
         } else {
-            return redirect()->route('admin.staylist')
+            return redirect()->route('admin.stays.stays')
                 ->with('error', 'Error inserting record');
         }
     }
