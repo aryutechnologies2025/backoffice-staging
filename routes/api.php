@@ -40,11 +40,11 @@ Route::prefix('v1')->group(function () {
         Route::post('/contact', [AuthController::class, 'store_contact']); // Contact Form
 
         //assistance form
-        Route::post('/assistance', [AssitanceController ::class, 'store']);
-        
+        Route::post('/assistance', [AssitanceController::class, 'store']);
+
         //header enquiry form
         Route::post('/home-enquiry-form', [ProgramApiController::class, 'home_enquiry_form_insert']);
-       
+
         // Route::post('/getEnquiryDetailsByEmail', [ProgramApiController::class, 'getEnquiryDetailsByEmail']);
         // Site Content Routes
         Route::get('/settings', [SiteApiController::class, 'getSettings']);
@@ -75,15 +75,15 @@ Route::prefix('v1')->group(function () {
         Route::post('/search-destination', [HomeApiController::class, 'search_destination']);
         Route::post('/get-program-details', [ProgramApiController::class, 'get_program_details']);
 
-Route::get('/get-title', [HomeApiController::class, 'get_title']);
-Route::post('/enquiry-mail/{id}', [ProgramApiController::class, 'getClientNotification']);
-Route::post('/home-enquiry-mail/{id}', [ProgramApiController::class, 'getHomeNotification']);
+        Route::get('/get-title', [HomeApiController::class, 'get_title']);
+        Route::post('/enquiry-mail/{id}', [ProgramApiController::class, 'getClientNotification']);
+        Route::post('/home-enquiry-mail/{id}', [ProgramApiController::class, 'getHomeNotification']);
 
-Route::get('/customername/{id}', [CustomerPackage::class, 'getNameById']);
+        Route::get('/customername/{id}', [CustomerPackage::class, 'getNameById']);
 
-Route::post('/specific-program-details', [ProgramApiController::class, 'specific_program_details']);
-Route::get('/get-stays', [StayController::class, 'get_stays']);
-Route::get('/get-stay-details', [StayController::class, 'get_stay_details']);
+        Route::post('/specific-program-details', [ProgramApiController::class, 'specific_program_details']);
+        Route::get('/get-stays', [StayController::class, 'get_stays']);
+        Route::get('/get-stay-details', [StayController::class, 'get_stay_details']);
     });
 });
 
@@ -100,7 +100,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Wishlist Management
     Route::post('/add-remove-wishlist', [ProgramApiController::class, 'manage_wishlist']);
-    
+
     // Program Details
     Route::post('/getEnquiryDetailsByEmail', [ProgramApiController::class, 'getEnquiryDetailsByEmail']);
 
@@ -115,7 +115,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/add-remove-wishlist', [ProgramApiController::class, 'manage_wishlist']);
 
     Route::get('/auth/facebook/redirect', [GoogleAuthController::class, 'redirectToGoogle']);
-Route::get('/auth/facebook/callback', [GoogleAuthController::class, 'handleGoogleCallback']);
+    Route::get('/auth/facebook/callback', [GoogleAuthController::class, 'handleGoogleCallback']);
 });
 
 

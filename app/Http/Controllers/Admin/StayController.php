@@ -212,8 +212,10 @@ class StayController extends Controller
 
 
     public function get_stays(Request $request){
+        $destination = $request->destination;
+
         $stays = stays_destination_details::where('is_deleted','0')
-        ->select('id','destination','stay_title','gallery_image','price','no_of_days')->orderBy('created_at', 'desc')->get();
+        ->select('id','destination','stay_title','gallery_image','price','no_of_days')->where('destination',$destination)->orderBy('created_at', 'desc')->get();
 
         return response()->json([
                     'status' => 'success',
