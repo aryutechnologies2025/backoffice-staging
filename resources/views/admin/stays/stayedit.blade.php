@@ -164,7 +164,8 @@
                                     <div class="row">
                                         <div class="col-lg-12">
                                             <label class="form-label form-label-top form-label-auto mb-2">Program Description <span class="text-danger">*</span></label>
-                                            <textarea id="description" class="container__textarea px-3 py-2 textarea-feild" name="description" required>{{$stay_details->stay_description}}</textarea>
+                                            <textarea id="description" class="container__textarea px-3 py-2 textarea-feild" name="description" style="display:none;">{{$stay_details->stay_description}}</textarea>
+                                             <div id="summernote1" style="height: 200px;">{{$stay_details->stay_description}}</div>
                                         </div>
                                     </div>
                                 </div>
@@ -376,6 +377,29 @@
 </div>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
+     $(document).ready(function() {
+            $('#summernote1')
+                .summernote({
+                    height: 200 // Set the height of the editor
+                });
+            $('#summernote1').summernote({
+                placeholder: 'Hello stand alone ui',
+                tabsize: 2,
+                height: 100,
+                toolbar: [
+                    ['style', ['style']],
+                    ['font', ['bold', 'underline', 'clear']],
+                    ['color', ['color']],
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    ['table', ['table']],
+                    ['insert', ['link', 'picture', 'video']],
+                    ['view', ['fullscreen', 'codeview', 'help']]
+                ]
+            });
+
+        });
+
+
     document.addEventListener('DOMContentLoaded', function() {
         // updateTypeOptions(); // Call function to prepopulate the "Types" dropdown on page load
     });
