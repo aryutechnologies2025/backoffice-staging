@@ -105,7 +105,7 @@
 <div class="container-wrapper py-5">
     <div class="row">
         <div class="col-lg-12">
-            <b><a href="/dashboard">Dashboard</a> > <a href="/all-inclusive-package">Stay</a> > <a
+            <b><a href="/dashboard">Dashboard</a> > <a href="/stay_list">Stay</a> > <a
                     class="add">Add</a></b>
             <br>
             <br>

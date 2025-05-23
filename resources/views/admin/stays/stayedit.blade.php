@@ -122,7 +122,11 @@
 </style>
 <div class="container-wrapper py-5">
     <div class="row ">
-        <div class="col-lg-12">
+        <div class="col-lg-12 gap-2">
+             <b "><a href="/dashboard">Dashboard</a> > <a href="/stay_list">Stay</a> > <a
+                    class="add">Edit</a></b>
+</br>
+</br>
             <h3 class="fw-bold pb-2">Edit Stay Details</h3>
         </div>
 

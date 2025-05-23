@@ -314,7 +314,7 @@ class StayController extends Controller
 
     public function get_stay_details(Request $request)
     {
-        $programId = $request->input('program_id'); // Example: 36
+        $programId = $request->program_id; // Example: 36
 
         $stay_details = stays_destination_details
             ::where('is_deleted', '0')
@@ -329,8 +329,9 @@ class StayController extends Controller
             ], 404);
         }
 
-        $stags = $stay_details
-            ->get()
+        $stags = stays_destination_details
+            ::where('is_deleted', '0')
+            ->where('id',$programId)->get()
             ->map(function ($items) {
                 return [
                     'images' => json_decode($items->gallery_image),
