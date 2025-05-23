@@ -76,6 +76,12 @@
     setInterval(updateTime, 1000);
     updateTime();
 </script>
+
+<style>
+    .stay-img,.customer-package{
+        width: 20px;
+    }
+</style>
                     <div class="bg-white rounded-5 py-2 px-4 d-none d-lg-flex gap-2  ">  
                        
                         <div>
@@ -178,13 +184,13 @@
                         <span class="nav_name"> Destination </span>
                     </a>
 
-                     <a href="{{ route('admin.staylist') }}" class="nav_link {{ request()->routeIs(['admin.staylist', 'admin.city_add_form', 'admin.city_edit_form']) ? 'active' : '' }} mb-3 text-white">
-                        <img src="/assets/image/dashboard/location-pin.svg" alt="">
+                     <a href="{{ route('admin.staylist') }}" class="nav_link {{ request()->routeIs(['admin.staylist', 'admin.stays_add_form', 'admin.stay_details_edit_form']) ? 'active' : '' }} mb-3 text-white">
+                        <img src="/assets/image/dashboard/stay.png" alt="" class="stay-img">
                         <span class="nav_name"> Stays </span>
                     </a>
 
                     <a href="{{ route('admin.CustomerPackage_list') }}" class="nav_link {{ request()->routeIs(['admin.CustomerPackage_list', 'admin.CustomerPackage_insert']) ? 'active' : '' }} mb-3 text-white">
-                        <img src="/assets/image/dashboard/program.svg" alt="">
+                        <img class="customer-package" src="/assets/image/dashboard/customer_package.png" alt="">
                         <span class="nav_name"> Customer Package </span>
                     </a>
 
