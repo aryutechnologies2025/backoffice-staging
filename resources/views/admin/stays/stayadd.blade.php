@@ -402,7 +402,7 @@
 
 
 
-                       
+
 
                         <br>
 
@@ -431,7 +431,7 @@
                         </style>
 
                         <div class="col-lg-12 text-end mt-5">
-                            <a href="{{ route('admin.inclusive_package_list') }}">
+                            <a href="{{ route('admin.staylist') }}">
                                 <button type="button" class="cancel-btn"> Cancel </button>
                             </a>
                             <button class="submit-btn sbmtBtn ms-4 mb-5"> Submit </button>
