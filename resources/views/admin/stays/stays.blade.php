@@ -43,7 +43,7 @@
                         <th class="text-center"><span> Destination </span></th>
                         <th class="text-center"><span> Title </span></th>
                         <th class="text-center"><span> Stay Location </span></th>    
-                         <th class="text-center"><span> Description </span></th>               
+                         <!-- <th class="text-center"><span> Description </span></th>                -->
                         <th class="text-center"><span> Status </span></th>
                         <th class="text-center"><span> Action </span></th>
                     </tr>
@@ -63,7 +63,7 @@
                         <td class="text-center">{{ $row->destination }}</td>
                         <td class="text-center">{{ $row->stay_title }}</td>
                         <td class="text-center">{{ $row->stay_location }}</td>
-                        <td class="text-center">{{ $row->stay_description }}</td>
+                        <!-- <td class="text-center">{{ $row->stay_description }}</td> -->
                       
                         @php
                         $disp_status = 'In Active';
