@@ -109,7 +109,7 @@ class StayController extends Controller
         }
     }
 
-    public function update(Request $request,$id)
+    public function update(Request $request, $id)
     {
 
         $imagePaths = [];
@@ -154,9 +154,9 @@ class StayController extends Controller
         $stay_details->stay_title = $request->input('title');
         $stay_details->stay_description = $request->input('description');
         $stay_details->stay_location = $request->input('stay_location');
-         $stay_details->tag_line = $request->input('tag_line');
+        $stay_details->tag_line = $request->input('tag_line');
 
-       
+
 
         $stay_details->discount_price = $request->input('price_amount');
         $stay_details->actual_price = $request->input('actual_price_amount');
@@ -164,7 +164,7 @@ class StayController extends Controller
 
         $stay_details->gallery_image = json_encode($imagePaths);
 
-        
+
 
         $stay_details->amenity_details = $amenitiesJson;
         $stay_details->food_beverages = $foodBeveragesJson;
@@ -308,8 +308,10 @@ class StayController extends Controller
                     'stay_description' => $items->stay_description,
                     'stay_location' => $items->stay_location,
                     'stay_title' => $items->stay_title,
-                    'price' => $items->price,
+                    'actual_price' => $items->actual_price,
+                    'discount_price' => $items->discount_price,
                     'no_of_days' => $items->no_of_days,
+                    'tag_line' => $items->tag_line,
                 ];
             });
         return response()->json([
@@ -339,7 +341,7 @@ class StayController extends Controller
 
         $stags = stays_destination_details
             ::where('is_deleted', '0')
-            ->where('id',$programId)->get()
+            ->where('id', $programId)->get()
             ->map(function ($items) {
                 return [
                     'images' => json_decode($items->gallery_image),
@@ -348,8 +350,10 @@ class StayController extends Controller
                     'stay_description' => $items->stay_description,
                     'stay_location' => $items->stay_location,
                     'stay_title' => $items->stay_title,
-                    'price' => $items->price,
+                    'actual_price' => $items->actual_price,
+                    'discount_price' => $items->discount_price,
                     'no_of_days' => $items->no_of_days,
+                    'tag_line' => $items->tag_line,
                 ];
             });
 
