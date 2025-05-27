@@ -148,6 +148,13 @@
 
                                 </div>
                                 <div class="col-md-4 mt-2">
+                                    <label class="mb-2">Tag Line <span class="text-danger">*</span></label>
+                                    <input type="text" placeholder="Tag Line" id="tag_line" name="tag_line"
+                                        class="form-control py-2 rounded-3 shadow-sm"
+                                        value="{{ old('tag_line') }}">
+
+                                </div>
+                                <div class="col-md-4 mt-2">
                                     <label class=" mb-2">Stay Location <span class="text-danger">*</span></label>
                                     <input type="text" placeholder="Location" id="stay_location" name="stay_location"
                                         class="form-control py-2 rounded-3 shadow-sm"
@@ -258,14 +265,22 @@
                                                     Days
                                                 </label>
                                                 <input type="number" name="price_title" class="form-control py-2 rounded-3 shadow-sm"
-                                                    placeholder="Title">
+                                                    placeholder="number of days">
                                             </div>
-                                            <div class="col-lg-6">
-                                                <label class="fw-bold mb-2">Amount <span class="text-danger">*</span></label>
+                                            <div class="col-lg-6 ">
+                                                <label class="fw-bold mb-2">Actual Price <span class="text-danger">*</span></label>
+                                                <div class="position-relative">
+                                                    <span class="position-absolute top-50 start-0 translate-middle-y ps-3">₹</span>
+                                                    <input type="number" name="actual_price_amount" class="form-control py-2 ps-5 rounded-3 shadow-sm"
+                                                        placeholder="Actual Amount">
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6 mt-2">
+                                                <label class="fw-bold mb-2">Discount Price <span class="text-danger">*</span></label>
                                                 <div class="position-relative">
                                                     <span class="position-absolute top-50 start-0 translate-middle-y ps-3">₹</span>
                                                     <input type="number" name="price_amount" class="form-control py-2 ps-5 rounded-3 shadow-sm"
-                                                        placeholder="Actual Amount">
+                                                        placeholder="Discount Amount">
                                                 </div>
                                             </div>
                                         </div>

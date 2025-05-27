@@ -123,10 +123,10 @@
 <div class="container-wrapper py-5">
     <div class="row ">
         <div class="col-lg-12 gap-2">
-             <b "><a href="/dashboard">Dashboard</a> > <a href="/stay_list">Stay</a> > <a
+            <b "><a href=" /dashboard">Dashboard</a> > <a href="/stay_list">Stay</a> > <a
                     class="add">Edit</a></b>
-</br>
-</br>
+            </br>
+            </br>
             <h3 class="fw-bold pb-2">Edit Stay Details</h3>
         </div>
 
@@ -157,6 +157,13 @@
                                 <div class="col-md-4">
                                     <label class=" mb-2 "> Title <span class="text-danger">*</span></label>
                                     <input type="text" placeholder="Title" id="title" name="title" class="form-control py-2 rounded-3 shadow-sm" required value="{{$stay_details->stay_title}}">
+                                </div>
+                                <div class="col-md-4 mt-2">
+                                    <label class="mb-2">Tag Line <span class="text-danger">*</span></label>
+                                    <input type="text" placeholder="Tag Line" id="tag_line" name="tag_line"
+                                        class="form-control py-2 rounded-3 shadow-sm"
+                                        value="{{$stay_details->tag_line}}">
+
                                 </div>
 
                                 <div class="col-md-4 mt-2">
@@ -231,14 +238,23 @@
                                                     Days
                                                 </label>
                                                 <input type="number" name="price_title" class="form-control py-2 rounded-3 shadow-sm"
-                                                    placeholder="Title" value="{{$stay_details->no_of_days}}">
+                                                    placeholder="number of days" value="{{$stay_details->no_of_days}}">
                                             </div>
-                                            <div class="col-lg-6">
-                                                <label class="fw-bold mb-2">Amount <span class="text-danger">*</span></label>
+                                             <div class="col-lg-6 ">
+                                                <label class="fw-bold mb-2">Actual Price <span class="text-danger">*</span></label>
+                                                <div class="position-relative">
+                                                    <span class="position-absolute top-50 start-0 translate-middle-y ps-3">₹</span>
+                                                    <input type="number" name="actual_price_amount" class="form-control py-2 ps-5 rounded-3 shadow-sm"
+                                                        placeholder="Actual Amount"
+                                                        value="{{$stay_details->actual_price}}">
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6 mt-2">
+                                                <label class="fw-bold mb-2">Discount Price <span class="text-danger">*</span></label>
                                                 <div class="position-relative">
                                                     <span class="position-absolute top-50 start-0 translate-middle-y ps-3">₹</span>
                                                     <input type="number" name="price_amount" class="form-control py-2 ps-5 rounded-3 shadow-sm"
-                                                        placeholder="Actual Amount" value="{{$stay_details->price}}">
+                                                        placeholder="Discount Amount" value="{{$stay_details->discount_price}}">
                                                 </div>
                                             </div>
                                         </div>

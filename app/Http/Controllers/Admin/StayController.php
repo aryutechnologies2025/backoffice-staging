@@ -78,11 +78,13 @@ class StayController extends Controller
         $stay_details->stay_title = $request->input('title');
         $stay_details->stay_description = $request->input('program_description');
         $stay_details->stay_location = $request->input('stay_location');
+        $stay_details->tag_line = $request->input('tag_line');
 
         $stay_details->gallery_image = json_encode($imagePaths);
 
-        $stay_details->price = $request->input('price_title');
-        $stay_details->no_of_days = $request->input('price_amount');
+        $stay_details->discount_price = $request->input('price_amount');
+        $stay_details->actual_price = $request->input('actual_price_amount');
+        $stay_details->no_of_days = $request->input('price_title');
 
         $stay_details->amenity_details = $amenitiesJson;
         $stay_details->food_beverages = $foodBeveragesJson;
@@ -152,11 +154,17 @@ class StayController extends Controller
         $stay_details->stay_title = $request->input('title');
         $stay_details->stay_description = $request->input('description');
         $stay_details->stay_location = $request->input('stay_location');
+         $stay_details->tag_line = $request->input('tag_line');
+
+       
+
+        $stay_details->discount_price = $request->input('price_amount');
+        $stay_details->actual_price = $request->input('actual_price_amount');
+        $stay_details->no_of_days = $request->input('price_title');
 
         $stay_details->gallery_image = json_encode($imagePaths);
 
-        $stay_details->price = $request->input('price_title');
-        $stay_details->no_of_days = $request->input('price_amount');
+        
 
         $stay_details->amenity_details = $amenitiesJson;
         $stay_details->food_beverages = $foodBeveragesJson;
