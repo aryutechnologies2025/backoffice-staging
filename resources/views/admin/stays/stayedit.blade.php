@@ -158,13 +158,6 @@
                                     <label class=" mb-2 "> Title <span class="text-danger">*</span></label>
                                     <input type="text" placeholder="Title" id="title" name="title" class="form-control py-2 rounded-3 shadow-sm" required value="{{$stay_details->stay_title}}">
                                 </div>
-                                <div class="col-md-4 mt-2">
-                                    <label class="mb-2">Tag Line <span class="text-danger">*</span></label>
-                                    <input type="text" placeholder="Tag Line" id="tag_line" name="tag_line"
-                                        class="form-control py-2 rounded-3 shadow-sm"
-                                        value="{{$stay_details->tag_line}}">
-
-                                </div>
 
                                 <div class="col-md-4 mt-2">
                                     <label class=" mb-2 "> Stay Location <span class="text-danger">*</span></label>
@@ -212,6 +205,7 @@
                                     </label>
                                     <input type="file" name="img_{{ $key }}" id="file-ip-{{ $key }}" data-number="{{ $key }}" accept="image/*">
                                 </div>
+                                <button type="button" class="btn btn-danger mt-2" onclick="deletePhoto(this)">Delete</button>
                             </div>
                             @endforeach
                             @else
@@ -238,23 +232,14 @@
                                                     Days
                                                 </label>
                                                 <input type="number" name="price_title" class="form-control py-2 rounded-3 shadow-sm"
-                                                    placeholder="number of days" value="{{$stay_details->no_of_days}}">
+                                                    placeholder="Title" value="{{$stay_details->no_of_days}}">
                                             </div>
-                                             <div class="col-lg-6 ">
-                                                <label class="fw-bold mb-2">Actual Price <span class="text-danger">*</span></label>
-                                                <div class="position-relative">
-                                                    <span class="position-absolute top-50 start-0 translate-middle-y ps-3">₹</span>
-                                                    <input type="number" name="actual_price_amount" class="form-control py-2 ps-5 rounded-3 shadow-sm"
-                                                        placeholder="Actual Amount"
-                                                        value="{{$stay_details->actual_price}}">
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-6 mt-2">
-                                                <label class="fw-bold mb-2">Discount Price <span class="text-danger">*</span></label>
+                                            <div class="col-lg-6">
+                                                <label class="fw-bold mb-2">Amount <span class="text-danger">*</span></label>
                                                 <div class="position-relative">
                                                     <span class="position-absolute top-50 start-0 translate-middle-y ps-3">₹</span>
                                                     <input type="number" name="price_amount" class="form-control py-2 ps-5 rounded-3 shadow-sm"
-                                                        placeholder="Discount Amount" value="{{$stay_details->discount_price}}">
+                                                        placeholder="Actual Amount" value="{{$stay_details->price}}">
                                                 </div>
                                             </div>
                                         </div>
@@ -343,6 +328,8 @@
                         </div>
 
 
+
+
                         <!-- 11.SAFETY FEATURES  -->
                         <div class="row mb-3">
                             <div class="col">
@@ -403,6 +390,11 @@
 </div>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
+    function deletePhoto(button) {
+        const photoField = button.closest('.photo-upload-field');
+        photoField.remove();
+    }
+
     $(document).ready(function() {
         $('#summernote1')
             .summernote({
@@ -502,6 +494,7 @@
                     </label>
                     <input type="file" name="img_${count}" id="file-ip-${count}" data-number="${count}" accept="image/*">
                 </div>
+                   <button type="button" class="btn btn-danger mt-2" onclick="deletePhoto(this)">Delete</button>
             </div>
         `;
         }

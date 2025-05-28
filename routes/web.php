@@ -39,6 +39,8 @@ use App\Http\Controllers\Admin\HomeEnquiryController;
 use App\Http\Controllers\Admin\PdfController;
 use App\Http\Controllers\Admin\CustomerPackage;
 use App\Http\Controllers\Admin\StayController;
+use App\Http\Controllers\Admin\StayDestinationController;
+use App\Models\stay_desitination;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 
@@ -554,5 +556,17 @@ Route::prefix('/')->group(function () {
                 Route::post('/change-status', 'change_status')->name('admin.stay_change_status');
             });
         });
+         Route::controller(StayDestinationController::class)->group(function () {
+            Route::prefix('staydestination')->group(function () {
+                Route::get('/', 'list')->name('admin.staydestinationlist');
+                Route::get('/add', 'add_form')->name('admin.staydestination_add_form');
+                Route::get('/{id}/edit', 'edit_form')->name('admin.staydestination_edit_form');
+                Route::post('/insert', 'insert')->name('admin.staydestination_insert');
+                Route::post('/{id}/update', 'update')->name('admin.staydestination_update');
+                Route::post('/delete', 'delete')->name('admin.staydestination_delete');
+                Route::post('/change-status', 'change_status')->name('admin.staydestination_status');
+            });
+        });
+
     });
 });

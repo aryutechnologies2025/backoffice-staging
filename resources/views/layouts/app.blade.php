@@ -188,6 +188,10 @@
                         <img src="/assets/image/dashboard/stay.png" alt="" class="stay-img">
                         <span class="nav_name"> Stays </span>
                     </a>
+                     <a href="{{ route('admin.staydestinationlist') }}" class="nav_link {{ request()->routeIs(['admin.staylist', 'admin.staydestinationlist', 'admin.stay_details_edit_form']) ? 'active' : '' }} mb-3 text-white">
+                        <img src="/assets/image/dashboard/stay.png" alt="" class="stay-img">
+                        <span class="nav_name"> Stays Destination </span>
+                    </a>
 
                     <a href="{{ route('admin.CustomerPackage_list') }}" class="nav_link {{ request()->routeIs(['admin.CustomerPackage_list', 'admin.CustomerPackage_insert']) ? 'active' : '' }} mb-3 text-white">
                         <img class="customer-package" src="/assets/image/dashboard/customer_package.png" alt="">

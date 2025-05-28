@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\CustomerPackage;
 use App\Http\Controllers\Admin\StayController;
+use App\Http\Controllers\Admin\StayDestinationController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\ApiController;
@@ -84,6 +85,8 @@ Route::prefix('v1')->group(function () {
         Route::post('/specific-program-details', [ProgramApiController::class, 'specific_program_details']);
         Route::get('/get-stays', [StayController::class, 'get_stays']);
         Route::get('/get-stay-details', [StayController::class, 'get_stay_details']);
+
+        Route::get('/get-stay-destination', [StayDestinationController::class, 'get_stay_destination']);
     });
 });
 
