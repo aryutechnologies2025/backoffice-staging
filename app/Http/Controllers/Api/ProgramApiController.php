@@ -29,6 +29,7 @@ use App\Mail\enquiryEmail;
 use App\Mail\adminEmail;
 use App\Models\customer_package;
 use App\Models\program_pdf;
+use App\Models\stays_whishlist;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
@@ -2078,8 +2079,8 @@ class ProgramApiController extends Controller
 
         if ($action === 'add') {
             // Check if the entry already exists
-            $existingWishlist = Program_wishlist::where('user_id', $userId)
-                ->where('program_id', $programId)
+            $existingWishlist = stays_whishlist::where('user_id', $userId)
+                ->where('stay_id', $programId)
                 ->first();
 
             if ($existingWishlist) {
@@ -2091,9 +2092,9 @@ class ProgramApiController extends Controller
             }
 
             // Create a new wishlist entry
-            $wishlist = Program_wishlist::create([
+            $wishlist = stays_whishlist::create([
                 'user_id' => $userId,
-                'program_id' => $programId
+                'stay_id' => $programId
             ]);
 
             // Return a success response
@@ -2105,7 +2106,7 @@ class ProgramApiController extends Controller
         } elseif ($action === 'remove') {
             // Check if the entry exists
             $wishlist = Program_wishlist::where('user_id', $userId)
-                ->where('program_id', $programId)
+                ->where('stay_id', $programId)
                 ->first();
 
             if (!$wishlist) {

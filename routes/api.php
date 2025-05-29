@@ -104,6 +104,9 @@ Route::middleware('auth:sanctum')->group(function () {
     // Wishlist Management
     Route::post('/add-remove-wishlist', [ProgramApiController::class, 'manage_wishlist']);
 
+    //stay wishlist
+     Route::post('/add-remove-staywishlist', [ProgramApiController::class, 'manage_wishlist_stay']);
+
     // Program Details
     Route::post('/getEnquiryDetailsByEmail', [ProgramApiController::class, 'getEnquiryDetailsByEmail']);
 
