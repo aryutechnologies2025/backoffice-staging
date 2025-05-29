@@ -156,7 +156,7 @@
                                 </div>
                                 <div class="col-md-4 mt-2">
                                     <label class=" mb-2">Stay Location <span class="text-danger">*</span></label>
-                                    <input type="url" placeholder="Add Google Map Link" id="stay_location" name="stay_location"
+                                    <input type="text" placeholder="Stay Location - iframe" id="stay_location" name="stay_location"
                                         class="form-control py-2 rounded-3 shadow-sm"
                                         value="{{ old('stay_location') }}" required>
 

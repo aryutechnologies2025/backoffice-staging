@@ -168,7 +168,7 @@
 
                                 <div class="col-md-6 mt-2">
                                     <label class=" mb-2 "> Stay Location <span class="text-danger">*</span></label>
-                                    <input type="url" placeholder="Location" id="stay_location" name="stay_location" class="form-control py-2 rounded-3 shadow-sm" required value="{{$stay_details->stay_location}}">
+                                    <input type="text" placeholder="Stay Location - iframe" id="stay_location" name="stay_location" class="form-control py-2 rounded-3 shadow-sm" required value="{{$stay_details->stay_location}}">
                                 </div>
 
                                 <div class="mt-5">
