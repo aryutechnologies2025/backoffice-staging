@@ -145,7 +145,7 @@
                                     <label class="mb-2 ">Destination <span class="text-danger">*</span></label>
                                     <select id="cities_name" name="cities_name"
                                         class="form-select py-2 rounded-3 shadow-sm">
-                                        <option value="">Select Destination</option>
+                                        <option value="" disabled>Select Destination</option>
                                         @foreach($cities_dts as $id => $name)
                                         <option value="{{ $name }}"
                                             @if(old('cities_name', $stay_details->destination ?? '') == $name) selected @endif>
@@ -158,10 +158,17 @@
                                     <label class=" mb-2 "> Title <span class="text-danger">*</span></label>
                                     <input type="text" placeholder="Title" id="title" name="title" class="form-control py-2 rounded-3 shadow-sm" required value="{{$stay_details->stay_title}}">
                                 </div>
+                                 <div class="col-md-4 mt-2">
+                                    <label class="mb-2">Tag Line <span class="text-danger">*</span></label>
+                                    <input type="text" placeholder="Tag Line" id="tag_line" name="tag_line"
+                                        class="form-control w-100 py-2 rounded-3 shadow-sm"
+                                        value="{{ $stay_details->tag_line }}" required>
 
-                                <div class="col-md-4 mt-2">
+                                </div>
+
+                                <div class="col-md-6 mt-2">
                                     <label class=" mb-2 "> Stay Location <span class="text-danger">*</span></label>
-                                    <input type="text" placeholder="Location" id="title" name="stay_location" class="form-control py-2 rounded-3 shadow-sm" required value="{{$stay_details->stay_location}}">
+                                    <input type="url" placeholder="Location" id="stay_location" name="stay_location" class="form-control py-2 rounded-3 shadow-sm" required value="{{$stay_details->stay_location}}">
                                 </div>
 
                                 <div class="mt-5">
@@ -234,12 +241,20 @@
                                                 <input type="number" name="price_title" class="form-control py-2 rounded-3 shadow-sm"
                                                     placeholder="Title" value="{{$stay_details->no_of_days}}">
                                             </div>
-                                            <div class="col-lg-6">
-                                                <label class="fw-bold mb-2">Amount <span class="text-danger">*</span></label>
+                                            <div class="col-lg-6 ">
+                                                <label class="fw-bold mb-2">Actual Amount <span class="text-danger">*</span></label>
+                                                <div class="position-relative">
+                                                    <span class="position-absolute top-50 start-0 translate-middle-y ps-3">₹</span>
+                                                    <input type="number" name="actual_price_amount" class="form-control py-2 ps-5 rounded-3 shadow-sm"
+                                                        placeholder="Actual Amount" value="{{$stay_details->actual_price}}">
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6 mt-2">
+                                                <label class="fw-bold mb-2">Discount Amount <span class="text-danger">*</span></label>
                                                 <div class="position-relative">
                                                     <span class="position-absolute top-50 start-0 translate-middle-y ps-3">₹</span>
                                                     <input type="number" name="price_amount" class="form-control py-2 ps-5 rounded-3 shadow-sm"
-                                                        placeholder="Actual Amount" value="{{$stay_details->price}}">
+                                                        placeholder="Discount Amount" value="{{$stay_details->discount_price}}">
                                                 </div>
                                             </div>
                                         </div>

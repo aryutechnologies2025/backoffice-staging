@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('destination', 150);
             $table->string('stay_title', 150);
-            $table->string('stay_description', 150);
-            $table->string('stay_location', 150);
+            $table->longText('stay_description');
+            $table->longText('stay_location');
             $table->longText('gallery_image');
             $table->integer('price');
             $table->integer('no_of_days');

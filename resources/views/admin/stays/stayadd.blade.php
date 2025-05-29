@@ -129,8 +129,8 @@
                                 <div class="col-md-4 ">
                                     <label class="mb-2">Destination <span class="text-danger">*</span></label>
                                     <select id="cities_name" name="cities_name"
-                                        class="form-select py-2 rounded-3 shadow-sm">
-                                        <option value="">Select Destination</option>
+                                        class="form-select py-2 rounded-3 shadow-sm" required>
+                                        <option value="" disabled>Select Destination</option>
                                         @foreach($cities as $id => $name)
                                         <option value="{{ $name }}" @if(old('cities_name')=='{{ $id }}' ) selected @endif>
                                             {{ $name }}
@@ -144,21 +144,21 @@
                                     <label class="mb-2">Title <span class="text-danger">*</span></label>
                                     <input type="text" placeholder="Title" id="title" name="title"
                                         class="form-control py-2 rounded-3 shadow-sm"
-                                        value="{{ old('title') }}">
+                                        value="{{ old('title') }}" required>
 
                                 </div>
                                 <div class="col-md-4 mt-2">
                                     <label class="mb-2">Tag Line <span class="text-danger">*</span></label>
                                     <input type="text" placeholder="Tag Line" id="tag_line" name="tag_line"
                                         class="form-control py-2 rounded-3 shadow-sm"
-                                        value="{{ old('tag_line') }}">
+                                        value="{{ old('tag_line') }}" required>
 
                                 </div>
                                 <div class="col-md-4 mt-2">
                                     <label class=" mb-2">Stay Location <span class="text-danger">*</span></label>
-                                    <input type="text" placeholder="Location" id="stay_location" name="stay_location"
+                                    <input type="url" placeholder="Add Google Map Link" id="stay_location" name="stay_location"
                                         class="form-control py-2 rounded-3 shadow-sm"
-                                        value="{{ old('stay_location') }}">
+                                        value="{{ old('stay_location') }}" required>
 
                                 </div>
                             </div>
@@ -170,7 +170,7 @@
                             <div class="col">
                                 <label class="mb-2">Program Description <span class="text-danger">*</span></label>
                                 <textarea id="program_description" name="program_description"
-                                    style="display:none;"></textarea>
+                                    style="display:none;" required></textarea>
                                 <div id="summernote1" style="height: 200px;"></div>
                             </div>
                         </div>
@@ -292,7 +292,7 @@
                         </div>
 
 
-
+                            
 
 
 
