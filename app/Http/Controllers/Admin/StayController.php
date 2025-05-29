@@ -109,85 +109,84 @@ class StayController extends Controller
         }
     }
 
-    public function update(Request $request, $id)
-    {
+   public function update(Request $request, $id)
+{
+    $stay_details = stays_destination_details::find($id);
 
-        $imagePaths = [];
-        $fileInputs = $request->file();
+    $existingImages = json_decode($stay_details->gallery_image, true) ?? [];
 
-        foreach ($fileInputs as $key => $files) {
-            if (strpos($key, 'img_') === 0) {
-                if (is_array($files)) {
-                    foreach ($files as $file) {
-                        if ($file->isValid()) {
-                            $fileName = time() . '_' . $file->getClientOriginalName();
-                            $destinationPath = public_path('/uploads/stays_module_img');
-                            if (!file_exists($destinationPath)) {
-                                mkdir($destinationPath, 0755, true);
-                            }
-                            $file->move($destinationPath, $fileName);
-                            $imagePaths[] = '/uploads/stays_module_img/' . $fileName;
-                        }
+    $imagePaths = [];
+    $fileInputs = $request->file();
+
+    foreach ($fileInputs as $key => $files) {
+        if (is_array($files)) {
+            foreach ($files as $file) {
+                if ($file->isValid()) {
+                    $fileName = time() . '_' . $file->getClientOriginalName();
+                    $destinationPath = public_path('/uploads/stays_module_img');
+                    if (!file_exists($destinationPath)) {
+                        mkdir($destinationPath, 0755, true);
                     }
-                } else {
-                    if ($files->isValid()) {
-                        $fileName = time() . '_' . $files->getClientOriginalName();
-                        $destinationPath = public_path('/uploads/stays_module_img');
-                        if (!file_exists($destinationPath)) {
-                            mkdir($destinationPath, 0755, true);
-                        }
-                        $files->move($destinationPath, $fileName);
-                        $imagePaths[] = '/uploads/stays_module_img/' . $fileName;
-                    }
+                    $file->move($destinationPath, $fileName);
+                    $imagePaths[] = '/uploads/stays_module_img/' . $fileName;
                 }
             }
-        }
-
-        $amenitiesJson = json_encode($request->input('amenity_services'));
-        $foodBeveragesJson = json_encode($request->input('food_beverages'));
-        $activitiesJson = json_encode($request->input('activities'));
-        $safetyFeaturesJson = json_encode($request->input('safety_features'));
-
-        $stay_details = stays_destination_details::find($id);
-
-        $stay_details->destination = $request->input('cities_name');
-        $stay_details->stay_title = $request->input('title');
-        $stay_details->stay_description = $request->input('description');
-        $stay_details->stay_location = $request->input('stay_location');
-        $stay_details->tag_line = $request->input('tag_line');
-
-
-
-        $stay_details->discount_price = $request->input('price_amount');
-        $stay_details->actual_price = $request->input('actual_price_amount');
-        $stay_details->no_of_days = $request->input('price_title');
-
-        $stay_details->gallery_image = json_encode($imagePaths);
-
-
-
-        $stay_details->amenity_details = $amenitiesJson;
-        $stay_details->food_beverages = $foodBeveragesJson;
-        $stay_details->activities = $activitiesJson;
-        $stay_details->safety_features = $safetyFeaturesJson;
-
-        $stay_details->order = $request->input('list_order');
-        $stay_details->is_deleted = '0';
-        $stay_details->status = $request->has('status') && $request->input('status') === 'on' ? '1' : '0';
-        $stay_details->created_date = now();
-        $stay_details->created_by = 'admin';
-
-        $stay_details->save();
-
-
-        if ($stay_details) {
-            return redirect()->route('admin.staylist')
-                ->with('success', 'Record updated successfully');
         } else {
-            return redirect()->route('admin.staylist')
-                ->with('error', 'Error updating record');
+            if ($files->isValid()) {
+                $fileName = time() . '_' . $files->getClientOriginalName();
+                $destinationPath = public_path('/uploads/stays_module_img');
+                if (!file_exists($destinationPath)) {
+                    mkdir($destinationPath, 0755, true);
+                }
+                $files->move($destinationPath, $fileName);
+                $imagePaths[] = '/uploads/stays_module_img/' . $fileName;
+            }
         }
     }
+
+    if (!empty($imagePaths)) {
+        $stay_details->gallery_image = json_encode($imagePaths);
+    } else {
+        $stay_details->gallery_image = json_encode($existingImages);
+    }
+
+    $amenitiesJson = json_encode($request->input('amenity_services'));
+    $foodBeveragesJson = json_encode($request->input('food_beverages'));
+    $activitiesJson = json_encode($request->input('activities'));
+    $safetyFeaturesJson = json_encode($request->input('safety_features'));
+
+    $stay_details->destination = $request->input('cities_name');
+    $stay_details->stay_title = $request->input('title');
+    $stay_details->stay_description = $request->input('description');
+    $stay_details->stay_location = $request->input('stay_location');
+    $stay_details->tag_line = $request->input('tag_line');
+
+    $stay_details->discount_price = $request->input('price_amount');
+    $stay_details->actual_price = $request->input('actual_price_amount');
+    $stay_details->no_of_days = $request->input('price_title');
+
+    $stay_details->amenity_details = $amenitiesJson;
+    $stay_details->food_beverages = $foodBeveragesJson;
+    $stay_details->activities = $activitiesJson;
+    $stay_details->safety_features = $safetyFeaturesJson;
+
+    $stay_details->order = $request->input('list_order');
+    $stay_details->is_deleted = '0';
+    $stay_details->status = $request->has('status') && $request->input('status') === 'on' ? '1' : '0';
+    $stay_details->created_date = now();
+    $stay_details->created_by = 'admin';
+
+    $stay_details->save();
+
+    if ($stay_details) {
+        return redirect()->route('admin.staylist')
+            ->with('success', 'Record updated successfully');
+    } else {
+        return redirect()->route('admin.staylist')
+            ->with('error', 'Error updating record');
+    }
+}
+
 
     public function delete(Request $request)
     {

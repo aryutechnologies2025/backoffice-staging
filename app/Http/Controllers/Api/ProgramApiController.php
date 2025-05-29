@@ -29,6 +29,8 @@ use App\Mail\enquiryEmail;
 use App\Mail\adminEmail;
 use App\Models\customer_package;
 use App\Models\program_pdf;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 
 class ProgramApiController extends Controller
 {
@@ -58,7 +60,7 @@ class ProgramApiController extends Controller
             // Step 4: Optional - Track the visit with reference_id
             if ($referenceId) {
                 // Log the visit into a database for tracking (Example)
-                \DB::table('program_visits')->insert([
+                DB::table('program_visits')->insert([
                     'program_id' => $programId,
                     'reference_id' => $referenceId,
                     'visited_at' => now(),
@@ -67,7 +69,7 @@ class ProgramApiController extends Controller
 
             // Check if the program details are already cached
             $cacheKey = "program_details_{$programId}";
-            $cachedData = \Cache::get($cacheKey);
+            $cachedData = Cache::get($cacheKey);
 
             if ($cachedData) {
                 return response()->json([
@@ -252,7 +254,7 @@ class ProgramApiController extends Controller
             }
 
             // Cache the response data for 60 minutes
-            \Cache::put($cacheKey, $responseData, 60);
+            Cache::put($cacheKey, $responseData, 60);
 
             return response()->json([
                 'status' => 'success',
@@ -1690,7 +1692,7 @@ class ProgramApiController extends Controller
 
             // Check if the program details are already cached
             $cacheKey = "program_details_{$programId}";
-            $cachedData = \Cache::get($cacheKey);
+            $cachedData = Cache::get($cacheKey);
 
             if ($cachedData) {
                 return response()->json([
@@ -1862,7 +1864,7 @@ class ProgramApiController extends Controller
             // }
 
             // Cache the response data for 60 minutes
-            \Cache::put($cacheKey, $responseData, 60);
+            Cache::put($cacheKey, $responseData, 60);
 
             return response()->json([
                 'status' => 'success',
@@ -1883,7 +1885,7 @@ class ProgramApiController extends Controller
             ], 500);
         }
     }
-}
+
 
 
 
@@ -2038,3 +2040,117 @@ class ProgramApiController extends Controller
 //         ], 500);
 //     }
 // } 
+
+
+
+    public function manage_wishlist_stay(Request $request)
+    {
+        // Validate the request
+        $validator = Validator::make($request->all(), [
+            'program_id' => 'required|exists:stays_destination_details,id',
+            'action' => 'required|in:add,remove' // Action parameter to determine add or remove
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Validation error.',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        // Get the authenticated user
+        $user = $request->user(); // This assumes you are using Laravel Sanctum or Passport
+
+        if (!$user) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Unauthorized. Please login to continue.',
+                'data' => null
+            ], 401);
+        }
+
+        
+
+        $userId = $user->id; // Get the authenticated user's ID
+        $programId = $request->input('program_id');
+        $action = $request->input('action');
+
+        if ($action === 'add') {
+            // Check if the entry already exists
+            $existingWishlist = Program_wishlist::where('user_id', $userId)
+                ->where('program_id', $programId)
+                ->first();
+
+            if ($existingWishlist) {
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Program already in wishlist.',
+                    'data' => $existingWishlist
+                ], 200);
+            }
+
+            // Create a new wishlist entry
+            $wishlist = Program_wishlist::create([
+                'user_id' => $userId,
+                'program_id' => $programId
+            ]);
+
+            // Return a success response
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Program added to wishlist successfully.',
+                'data' => $wishlist
+            ], 201);
+        } elseif ($action === 'remove') {
+            // Check if the entry exists
+            $wishlist = Program_wishlist::where('user_id', $userId)
+                ->where('program_id', $programId)
+                ->first();
+
+            if (!$wishlist) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Program not found in wishlist.',
+                    'data' => null
+                ], 404);
+            }
+
+            // Delete the wishlist entry
+            $wishlist->delete();
+
+            // Return a success response
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Program removed from wishlist successfully.',
+                'data' => null
+            ], 200);
+        }
+    }
+
+    //getting the wishlist list by id
+    public function getWishlists(Request $request)
+    {
+        // Retrieve user_id from the request query or fallback to the authenticated user
+        $userId = $request->query('user_id') ?? ($request->user() ? $request->user()->id : null);
+    
+        if (!$userId) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Unauthorized or missing user ID. Please provide a valid user ID or login to continue.',
+                'data' => null
+            ], 401);
+        }
+    
+        // Fetch the wishlist entries for the provided user ID
+        $wishlist = Program_wishlist::where('user_id', $userId)
+            ->with('program_dts') // Assuming the `program_dts` relationship is correctly defined
+            ->get();
+    
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Wishlist retrieved successfully.',
+            'data' => $wishlist
+        ], 200);
+    }
+}

@@ -58,7 +58,7 @@
                     @foreach ($stay_details as $row)
 
                     <tr>
-                    <td class="text-center">{{ $loop->iteration }}</td>
+                        <td class="text-center">{{ $loop->iteration }}</td>
 
                         <td class="text-center">{{ $row->destination }}</td>
                         <td class="text-center">{{ $row->stay_title }}</td>
