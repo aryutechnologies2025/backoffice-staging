@@ -8,5 +8,5 @@ use Illuminate\Database\Eloquent\Model;
 class stays_whishlist extends Model
 {
     use HasFactory;
-    Protected $table = 'stays_whishlists';
+   protected $fillable = ['user_id','stay_id'];
 }
