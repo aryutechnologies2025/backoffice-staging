@@ -9,6 +9,7 @@ use App\Models\City;
 use App\Models\FoodBeverage;
 use App\Models\Safetyfeatures;
 use App\Models\stays_destination_details;
+use App\Models\stays_whishlist;
 use Illuminate\Http\Request;
 use MongoDB\Operation\Find;
 
@@ -323,7 +324,8 @@ class StayController extends Controller
 
     public function get_stay_details(Request $request)
     {
-        $programId = $request->program_id; // Example: 36
+        $programId = $request->program_id; 
+        $userId = $request->user_id;
 
         $stay_details = stays_destination_details
             ::where('is_deleted', '0')
@@ -393,6 +395,12 @@ class StayController extends Controller
             })->values();
 
 
+        $stay_wishlist = stays_whishlist::where("stay_id",$programId)->where("user_id",$userId)->get();
+        $wishlist = false;
+        if($stay_wishlist){
+            $wishlist = true;
+        }
+
 
 
         // Return response
@@ -403,6 +411,7 @@ class StayController extends Controller
             'amenities' => $amenities,
             'activities' => $activities,
             'safety' => $safety,
+            'wishlist' => $wishlist
         ], 200);
     }
 }

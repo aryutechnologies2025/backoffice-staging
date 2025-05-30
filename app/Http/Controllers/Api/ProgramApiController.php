@@ -2105,7 +2105,7 @@ class ProgramApiController extends Controller
             ], 201);
         } elseif ($action === 'remove') {
             // Check if the entry exists
-            $wishlist = Program_wishlist::where('user_id', $userId)
+            $wishlist = stays_whishlist::where('user_id', $userId)
                 ->where('stay_id', $programId)
                 ->first();
 
