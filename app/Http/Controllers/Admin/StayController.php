@@ -395,7 +395,7 @@ class StayController extends Controller
             })->values();
 
 
-        $stay_wishlist = stays_whishlist::where("stay_id",$programId)->where("user_id",$userId)->get();
+        $stay_wishlist = stays_whishlist::where("stay_id",$programId)->where("user_id",$userId)->first();
         $wishlist = false;
         if($stay_wishlist){
             $wishlist = true;
