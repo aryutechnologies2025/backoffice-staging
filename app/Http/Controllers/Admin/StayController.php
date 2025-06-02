@@ -114,9 +114,10 @@ class StayController extends Controller
 {
     $stay_details = stays_destination_details::find($id);
 
-    $existingImages = json_decode($stay_details->gallery_image, true) ?? [];
-
-    $imagePaths = [];
+    // $existingImages = json_decode($stay_details->gallery_image, true) ?? [];
+    $existingImages = $request->input('existing_images', []);
+    $imagePaths = $existingImages; 
+    // $imagePaths = [];
     $fileInputs = $request->file();
 
     foreach ($fileInputs as $key => $files) {

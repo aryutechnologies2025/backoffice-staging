@@ -188,7 +188,7 @@
                         <img src="/assets/image/dashboard/stay.png" alt="" class="stay-img">
                         <span class="nav_name"> Stays </span>
                     </a>
-                     <a href="{{ route('admin.staydestinationlist') }}" class="nav_link {{ request()->routeIs(['admin.staylist', 'admin.staydestinationlist', 'admin.stay_details_edit_form']) ? 'active' : '' }} mb-3 text-white">
+                     <a href="{{ route('admin.staydestinationlist') }}" class="nav_link {{ request()->routeIs(['admin.staydestination_add_form', 'admin.staydestinationlist', 'admin.staydestination_edit_form']) ? 'active' : '' }} mb-3 text-white">
                         <img src="/assets/image/dashboard/stay.png" alt="" class="stay-img">
                         <span class="nav_name"> Stays Destination </span>
                     </a>

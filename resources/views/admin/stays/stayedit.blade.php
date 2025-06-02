@@ -158,7 +158,7 @@
                                     <label class=" mb-2 "> Title <span class="text-danger">*</span></label>
                                     <input type="text" placeholder="Title" id="title" name="title" class="form-control py-2 rounded-3 shadow-sm" required value="{{$stay_details->stay_title}}">
                                 </div>
-                                 <div class="col-md-4 mt-2">
+                                <div class="col-md-4 mt-2">
                                     <label class="mb-2">Tag Line <span class="text-danger">*</span></label>
                                     <input type="text" placeholder="Tag Line" id="tag_line" name="tag_line"
                                         class="form-control w-100 py-2 rounded-3 shadow-sm"
@@ -193,35 +193,90 @@
 
 
 
+                        <!-- Existing Gallery Images -->
+                        <div class="row mt-4 px-5 py-5">
+                            <div class="col">
+                                <h4 class="py-3 fw-bold">Gallery Image - Room</h4>
 
-                        <div id="photo-upload-container" class="row mt-4 px-5 py-5">
-                            <h4 class="py-3 fw-bold">Gallery Image - Room</h4>
-                            @php
-                            // Decode JSON if needed
-                            $images = json_decode($stay_details->gallery_image, true);
-                            $imageCount = is_array($images) ? count($images) : 0;
-                            @endphp
-                            @if(is_array($images))
-                            @foreach($images as $key => $image)
-                            <div class="col-lg-2 photo-upload-field">
+                                <div id="photo-upload-container" class="row g-3">
+                                    @php
+                                    $galleryImages = json_decode($stay_details->gallery_image, true);
+                                    @endphp
 
-                                <div class="form-input">
-                                    <label for="file-ip-{{ $key }}" class="px-4 py-3 text-center">
-                                        <img class="text-center mt-3" id="file-ip-{{ $key }}-preview" src="{{ asset($image) }}" alt="Image Preview">
-                                        <p class="text-center fw-light mt-3">Edit Pic</p>
-                                    </label>
-                                    <input type="file" name="img_{{ $key }}" id="file-ip-{{ $key }}" data-number="{{ $key }}" accept="image/*">
+
+                                    {{-- Loop through existing images --}}
+                                    @if (!empty($galleryImages))
+                                    @foreach ($galleryImages as $index => $img)
+                                    <div class="col-lg-2 photo-upload-field existing-photo">
+                                        <div class="form-input">
+                                            <img src="{{ asset($img) }}" alt="Image {{ $index + 1 }}" class="img-fluid mb-2" />
+                                            <input type="hidden" name="existing_images[]" value="{{ $img }}">
+                                            <button type="button" class="btn btn-danger btn-sm" onclick="removeExistingPhoto(this)">Delete</button>
+                                        </div>
+                                    </div>
+                                    @endforeach
+                                    @endif
                                 </div>
-                                <button type="button" class="btn btn-danger mt-2" onclick="deletePhoto(this)">Delete</button>
+
+                                <div class="text mt-3">
+                                    <button type="button" class="btn-add rounded border-0 px-3 py-3 text-white"
+                                        onclick="addPhotoField()">
+                                        <i class="fa fa-plus" aria-hidden="true"></i> Add Photo
+                                    </button>
+                                </div>
                             </div>
-                            @endforeach
-                            @else
-                            <p>No images available.</p>
-                            @endif
                         </div>
+                        <script>
+                            let photoCount = 100; // Start high to avoid ID clash with existing photos
 
+                            function addPhotoField() {
+                                const container = document.getElementById('photo-upload-container');
+                                photoCount++;
 
-                        <button id="add-photo-btn" type="button" class="mx-5 my-3 btn btn-primary m-1">Add More Photos</button>
+                                const photoField = document.createElement('div');
+                                photoField.classList.add('col-lg-2', 'photo-upload-field');
+
+                                photoField.innerHTML = `
+            <div class="form-input">
+                <label for="file-ip-${photoCount}" class="px-4 py-2 text-center">
+                    <img class="text-center mt-3" id="file-ip-${photoCount}-preview" src="/assets/image/dashboard/innerpece_addpic_icon.svg">
+                    <p class="text-center fw-light mt-3"> Add Pic</p>
+                </label>
+                <input type="file" name="new_images[]" id="file-ip-${photoCount}" data-number="${photoCount}" accept="image/png, image/jpeg, image/svg+xml" onchange="previewImage(event, this)">
+                <label class="mb-4 text-danger d-block w-100 text-center">
+                    * Upload size [640*120] *
+                </label>
+                <button type="button" class="btn btn-danger mt-2" onclick="deletePhoto(this)">Delete</button>
+            </div>
+        `;
+
+                                container.appendChild(photoField);
+                            }
+
+                            function previewImage(event, inputElement) {
+                                const file = event.target.files[0];
+                                const reader = new FileReader();
+
+                                reader.onload = function() {
+                                    const preview = inputElement.previousElementSibling.querySelector('img');
+                                    preview.src = reader.result;
+                                };
+
+                                if (file) {
+                                    reader.readAsDataURL(file);
+                                }
+                            }
+
+                            function deletePhoto(button) {
+                                const photoField = button.closest('.photo-upload-field');
+                                photoField.remove();
+                            }
+
+                            function removeExistingPhoto(button) {
+                                const container = button.closest('.existing-photo');
+                                container.remove(); // remove the image div from DOM
+                            }
+                        </script>
 
 
 
@@ -405,11 +460,6 @@
 </div>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    function deletePhoto(button) {
-        const photoField = button.closest('.photo-upload-field');
-        photoField.remove();
-    }
-
     $(document).ready(function() {
         $('#summernote1')
             .summernote({
@@ -495,60 +545,6 @@
 
 
 
-    $(document).ready(function() {
-        let photoCount = @json($imageCount); // Use the correct count variable
-
-        // Function to generate new photo upload field HTML
-        function createPhotoUploadField(count) {
-            return `
-            <div class="col-lg-2 photo-upload-field">
-                <div class="form-input">
-                    <label for="file-ip-${count}" class="px-4 py-3 text-center">
-                        <img class="text-center mt-3" id="file-ip-${count}-preview" src="/assets/image/dashboard/innerpece_addpic_icon.svg" alt="Image Preview">
-                        <p class="text-center fw-light mt-3">Add Pic</p>
-                    </label>
-                    <input type="file" name="img_${count}" id="file-ip-${count}" data-number="${count}" accept="image/*">
-                </div>
-                   <button type="button" class="btn btn-danger mt-2" onclick="deletePhoto(this)">Delete</button>
-            </div>
-        `;
-        }
-
-        // Event listener for the "Add More Photos" button
-        $('#add-photo-btn').on('click', function() {
-            photoCount++;
-            const newFieldHtml = createPhotoUploadField(photoCount);
-            $('#photo-upload-container').append(newFieldHtml);
-        });
-
-        // Function to show preview of selected image
-        function showPreview(event) {
-            var file = event.target.files[0];
-            var number = $(event.target).data('number'); // Use data attribute to get the number
-            var previewId = "#file-ip-" + number + "-preview";
-
-            var reader = new FileReader();
-
-            reader.onload = function(e) {
-                $(previewId).attr('src', e.target.result);
-            };
-
-            if (file) {
-                if (file.size <= 2 * 1024 * 1024) { // 2 MB limit
-                    if (file.type === 'image/png' || file.type === 'image/jpeg') {
-                        reader.readAsDataURL(file);
-                    } else {
-                        alert('Please upload a valid PNG or JPEG image.');
-                    }
-                } else {
-                    alert('File size exceeds 2 MB limit.');
-                }
-            }
-        }
-
-        // Delegate event binding for dynamically added file inputs
-        $('#photo-upload-container').on('change', 'input[type="file"]', showPreview);
-    });
 
 
 

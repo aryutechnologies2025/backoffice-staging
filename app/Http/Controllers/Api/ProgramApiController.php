@@ -81,7 +81,7 @@ class ProgramApiController extends Controller
             }
 
             // Fetch the program details using the provided ID
-            $package = InclusivePackages::with('destination', 'theme', 'clientReviews','reviews')->find($programId);
+            $package = InclusivePackages::with('destination', 'theme', 'clientReviews','reviews')->find($ );
 
             if (!$package) {
                 return response()->json([
