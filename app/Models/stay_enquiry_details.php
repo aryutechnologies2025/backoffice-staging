@@ -23,7 +23,7 @@ class stay_enquiry_details extends Model
         'female_count',
         'child_count',
         'checkin_date',
-        'checkout_count',
+        'checkout_date',
         'cab',
         'price'
         
