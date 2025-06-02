@@ -1528,9 +1528,15 @@ class ProgramApiController extends Controller
         }
     
         // Fetch the wishlist entries for the provided user ID
-        $wishlist = Program_wishlist::where('user_id', $userId)
+        $program_wishlist = Program_wishlist::where('user_id', $userId)
             ->with('program_dts') // Assuming the `program_dts` relationship is correctly defined
             ->get();
+
+         $stay_wishlist = stays_whishlist::where('user_id', $userId)
+            ->with('stay_dts') // Assuming the `program_dts` relationship is correctly defined
+            ->get();
+
+        $wishlist =  $program_wishlist->merge($stay_wishlist)->sortByDesc('created_at')->values();
     
         return response()->json([
             'status' => 'success',
@@ -2144,15 +2150,11 @@ class ProgramApiController extends Controller
         }
     
         // Fetch the wishlist entries for the provided user ID
-        $program_wishlist = Program_wishlist::where('user_id', $userId)
+        $wishlist = Program_wishlist::where('user_id', $userId)
             ->with('program_dts') // Assuming the `program_dts` relationship is correctly defined
             ->get();
 
-        $stay_wishlist = stays_whishlist::where('user_id', $userId)
-            ->with('stay_dts') // Assuming the `program_dts` relationship is correctly defined
-            ->get();
-
-            $wishlist =  $program_wishlist->merge($stay_wishlist)->sortByDesc('created_at')->values();
+       
     
         return response()->json([
             'status' => 'success',
