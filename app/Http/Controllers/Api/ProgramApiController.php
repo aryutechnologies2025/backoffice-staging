@@ -1181,6 +1181,8 @@ class ProgramApiController extends Controller
 
         $stayDetails = stay_enquiry_details::where('email', $email)->get();
 
+        $data =  $enquiryDetails->merge($stayDetails)->sortByDesc('created_at')->values();
+    
         if ($enquiryDetails->isEmpty()) {
             return response()->json([
                 'status' => 'error',
@@ -1192,10 +1194,7 @@ class ProgramApiController extends Controller
         return response()->json([
             'status' => 'success',
             'message' => 'Enquiry details retrieved successfully.',
-            'data' => [
-                "program_enquiry" => $enquiryDetails,
-                "stay_enquiry" => $stayDetails
-            ]
+            'data' => $data
 
         ], 200);
     }
