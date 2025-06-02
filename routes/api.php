@@ -88,7 +88,7 @@ Route::prefix('v1')->group(function () {
         Route::get('/get-stay-details', [StayController::class, 'get_stay_details']);
 
         Route::get('/get-stay-destination', [StayDestinationController::class, 'get_stay_destination']);
-        Route::get('/store-stay-enquiry', [StayEnquiryController::class, 'store']);
+        Route::post('/store-stay-enquiry', [StayEnquiryController::class, 'store']);
     });
 });
 
