@@ -25,7 +25,7 @@ class StayEnquiryController extends Controller
             'female_count' => 'required|integer',
             'child_count' => 'required|integer',
             'checkin_date' => 'required|string',
-            'checkout_count' => 'required|integer',
+            'checkout_date' => 'required|string',
             'cab' => 'nullable|string',
             'price' => 'required|integer',
         ]);
