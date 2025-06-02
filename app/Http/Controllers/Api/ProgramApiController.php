@@ -29,6 +29,7 @@ use App\Mail\enquiryEmail;
 use App\Mail\adminEmail;
 use App\Models\customer_package;
 use App\Models\program_pdf;
+use App\Models\stay_enquiry_details;
 use App\Models\stays_whishlist;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
@@ -1178,6 +1179,8 @@ class ProgramApiController extends Controller
 
         $enquiryDetails = EnquiryDetail::where('email', $email)->get();
 
+        $stayDetails = stay_enquiry_details::where('email', $email)->get();
+
         if ($enquiryDetails->isEmpty()) {
             return response()->json([
                 'status' => 'error',
@@ -1189,7 +1192,11 @@ class ProgramApiController extends Controller
         return response()->json([
             'status' => 'success',
             'message' => 'Enquiry details retrieved successfully.',
-            'data' => $enquiryDetails
+            'data' => [
+                "program_enquiry" => $enquiryDetails,
+                "stay_enquiry" => $stayDetails
+            ]
+
         ], 200);
     }
    
