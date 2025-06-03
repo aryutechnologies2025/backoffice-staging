@@ -97,6 +97,7 @@ Route::prefix('v1')->group(function () {
 Route::middleware('auth:sanctum')->group(function () {
     // User-related Routes
     Route::post('/add_review', [ReviewController::class, 'addReview']);
+    Route::post('/add_stay_review', [ReviewController::class, 'addStayReview']);
 
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/user', function (Request $request) {
