@@ -19,7 +19,7 @@ class stays_destination_details extends Model
     {
         return $this->hasMany(StagReview::class, 'stag_id')
         ->with (['user' => function ($query) {
-            $query->select('id','first_name','last_name', 'email'); 
+            $query->select('id','first_name','last_name', 'email','profile_image'); 
         }]);
     }   
 }
