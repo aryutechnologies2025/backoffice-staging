@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Review;
+use App\Models\StagReview;
+use Illuminate\Support\Facades\Log;
 
 class ReviewController extends Controller
 {
@@ -49,31 +51,28 @@ class ReviewController extends Controller
         ], 201);
     }
 
-      public function addStayReview(Request $request)
+    public function addStayReview(Request $request)
     {
         // Validate incoming request
-        $request->validate([
-            'user_id' => 'required|exists:users,id',
-            'package_id' => 'required|exists:stays_destination_details,id',
-            'comment' => 'nullable|string',
-            'rating' => 'nullable|integer|min:1|max:5',
-        ]);
-    
-        // Ensure at least one of comment or rating is present
-        if (is_null($request->comment) && is_null($request->rating)) {
-            return response()->json([
-                'message' => 'You must provide at least a comment or a rating.',
-            ], 422);
-        }
-    
-        // Create the review record
-        // $review = Review::create($request->only(['user_id', 'package_id', 'comment', 'rating']))->orderBy('created_at', 'desc')->get();
-    
+        // $request->validate([
+        //     'user_id' => 'required|exists:users,id',
+        //     'stag_id' => 'required|exists:stays_destination_details,id',
+        //     'comment' => 'nullable|string',
+        //     'rating' => 'nullable|integer|min:1|max:5',
+        // ]);
+        // Log::info('Add Stay Review Request Data: ', $request->all());
 
-        $client_review = new Review;
-        $client_review->package_id = $request->input('package_id');
+        // // Ensure at least one of comment or rating is present
+        // if (is_null($request->comment) && is_null($request->rating)) {
+        //     return response()->json([
+        //         'message' => 'You must provide at least a comment or a rating.',
+        //     ], 422);
+        // }
+        
+        $client_review = new StagReview();
+        $client_review->stag_id = $request->input('stag_id');
         $client_review->user_id = $request->input('user_id');
-        $client_review->comment = $request->input('comment');
+        $client_review->review = $request->input('review');
         $client_review->rating = $request->input('rating');
         $client_review->created_by = $request->input('user_id');
         $client_review->is_deleted = '0';
