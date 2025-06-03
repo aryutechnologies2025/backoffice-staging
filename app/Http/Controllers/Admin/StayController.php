@@ -343,6 +343,7 @@ class StayController extends Controller
 
         $stags = stays_destination_details
             ::where('is_deleted', '0')
+            ->with('stagReviews')
             ->where('id', $programId)->get()
             ->map(function ($items) {
                 return [
@@ -356,6 +357,7 @@ class StayController extends Controller
                     'discount_price' => $items->discount_price,
                     'no_of_days' => $items->no_of_days,
                     'tag_line' => $items->tag_line,
+                    'review'=>$items->stagReviews
                 ];
             });
 

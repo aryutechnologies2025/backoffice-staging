@@ -17,4 +17,14 @@ class StagReview extends Model
         'is_deleted',
         'created_by',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function stag()
+    {
+        return $this->belongsTo(stays_destination_details::class, 'stag_id');
+    }
 }

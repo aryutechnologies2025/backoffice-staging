@@ -14,6 +14,14 @@ class stays_destination_details extends Model
     return $this->hasMany(Amenities::class ,'id',  'amenity_details');
 
     }
+
+    public function stagReviews()
+    {
+        return $this->hasMany(StagReview::class, 'stag_id')
+        ->with (['user' => function ($query) {
+            $query->select('id','first_name','last_name', 'email'); 
+        }]);
+    }   
 }
 
 
