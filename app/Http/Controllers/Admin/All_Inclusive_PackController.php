@@ -439,7 +439,7 @@ class All_Inclusive_PackController extends Controller
         $inclusive_packages->alternate_name = $request->input('alternate_image_name');
         $inclusive_packages->program_inclusion = $request->input('program_inclusion');
         $inclusive_packages->program_exclusion = $request->input('program_exclusion');
-        $inclusive_packages->theme_id = $request->input('themes_name');
+        $inclusive_packages->theme_id = json_encode(($request->input('themes_name')));
         $inclusive_packages->location = $request->input('location');
         $inclusive_packages->city_details = $request->input('cities_name');
         $inclusive_packages->title = $request->input('title');

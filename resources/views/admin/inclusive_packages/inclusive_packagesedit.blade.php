@@ -155,19 +155,27 @@
 
                             <!-- Themes, Destination, and Title in One Line -->
                             <div class="row g-3 mb-4">
+                                <!-- Theme (multi-checkbox) -->
                                 <div class="col-lg-4">
-                                    <label class="fw-bold mb-2">Themes</label>
-                                    <select id="themes_name" name="themes_name"
-                                        class="form-select py-2 rounded-3 shadow-sm">
-                                        <option value="">Select Theme</option>
+                                    <label class="fw-bold mb-2">Theme <span class="text-danger">*</span></label>
+                                    <div class="d-flex flex-column" style="max-height: 200px; overflow-y: auto;">
                                         @foreach ($themes as $id => $name)
-                                            <option value="{{ $id }}"
-                                                {{ $id == $selectedthemeId ? 'selected' : '' }}>
-                                                {{ $name }}
-                                            </option>
+                                            <div class="form-check mb-1">
+                                                <input class="form-check-input" type="checkbox"
+                                                       id="theme-{{ $id }}"
+                                                       name="themes_name[]"
+                                                       value="{{ $id }}"
+                                                       @if (is_array($selectedthemeId) && in_array($id, $selectedthemeId)) checked @endif>
+                                                <label class="form-check-label" for="theme-{{ $id }}">
+                                                    {{ $name }}
+                                                </label>
+                                            </div>
                                         @endforeach
-                                    </select>
+                                    </div>
                                 </div>
+
+
+
                                 <div class="col-lg-4">
                                     <label class="fw-bold mb-2">Destination <span class="text-danger">*</span></label>
                                     <select id="cities_name" name="cities_name"

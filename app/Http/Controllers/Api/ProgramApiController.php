@@ -154,14 +154,22 @@ class ProgramApiController extends Controller
                     ];
                 });
 
-                 $theme = Themes::where('id', $themeIds)
-                ->get(['id', 'themes_name'])
-                // ->keyBy('id')
-                ->map(function ($item) {
-                    return [
-                        'name' => $item->themes_name,
-                    ];
-                });
+                // Handle both single and multiple theme IDs
+                if (is_array($themeIds)) {
+                    $theme = Themes::whereIn('id', $themeIds)
+                        ->get(['id', 'themes_name'])
+                        ->map(function ($item) {
+                            return [
+                                'name' => $item->themes_name,
+                            ];
+                        })
+                        ->values();
+                } elseif (!empty($themeIds)) {
+                    $themeModel = Themes::find($themeIds);
+                    $theme = $themeModel ? [['name' => $themeModel->themes_name]] : [];
+                } else {
+                    $theme = [];
+                }
 
             $formattedStartDate = \Carbon\Carbon::parse($package->start_date)->format('M d, Y');
             $formattedendDate = \Carbon\Carbon::parse($package->return_date)->format('M d, Y');
