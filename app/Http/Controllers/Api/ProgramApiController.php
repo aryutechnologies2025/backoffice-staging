@@ -154,7 +154,7 @@ class ProgramApiController extends Controller
                     ];
                 });
 
-                 $theme = Themes::whereIn('id', $themeIds)
+                 $theme = Themes::where('id', $themeIds)
                 ->get(['id', 'themes_name'])
                 // ->keyBy('id')
                 ->map(function ($item) {
@@ -217,7 +217,7 @@ class ProgramApiController extends Controller
                 'program_desc' => $package->program_description,
                 'flag' => $category,
                 'destination' => $package->destination->city_name,
-                'theme' =>  $theme,
+                'theme' =>  $package->theme->themes_name ?? $theme,
                 'state' => $package->state,
                 'city' => $package->city,
                 'address' => $package->address,
