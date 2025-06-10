@@ -36,6 +36,7 @@ class StayController extends Controller
 
     public function insert(Request $request)
     {
+        
 
         $imagePaths = [];
         $fileInputs = $request->file();

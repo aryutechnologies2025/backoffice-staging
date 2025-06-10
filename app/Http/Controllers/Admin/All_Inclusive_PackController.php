@@ -91,6 +91,12 @@ class All_Inclusive_PackController extends Controller
     public function insert(Request $request)
     {
 
+        $request->validate([
+        'tour_planning' => 'required|array',
+        'tour_planning.*.title' => 'required|string',
+        'tour_planning.*.description' => 'required|string',
+    ]);
+
         // dd($request->all());
         // Handle dynamic image uploads
         $imagePaths = [];
@@ -141,18 +147,18 @@ class All_Inclusive_PackController extends Controller
         //     ]);
         // });
 
-        $tourPlanningJson = Cache::remember("tour_planning_{$request->input('title')}", 3600, function () use ($request) {
-            $planDescription = $request->input('plan_description');
+        // $tourPlanningJson = Cache::remember("tour_planning_{$request->input('title')}", 3600, function () use ($request) {
+        //     $planDescription = $request->input('plan_description');
         
-            // If plan_description is null or empty, return an empty JSON array
-            if (empty($planDescription)) {
-                return json_encode([]);
-            }
+        //     // If plan_description is null or empty, return an empty JSON array
+        //     if (empty($planDescription)) {
+        //         return json_encode([]);
+        //     }
         
-            return json_encode([
-                'plan_description' => $planDescription
-            ]);
-        });
+        //     return json_encode([
+        //         'plan_description' => $planDescription
+        //     ]);
+        // });
 
         $filename = null;
         if ($request->hasFile('program_pdf')) {
@@ -180,14 +186,15 @@ class All_Inclusive_PackController extends Controller
         $inclusive_packages->dinner = $request->input('dinner');
         $inclusive_packages->upload_image_name = $request->input('upload_image_name');
         $inclusive_packages->alternate_name = $request->input('alternate_image_name');
-        $inclusive_packages->theme_id = $request->input('themes_name');
+        $inclusive_packages->theme_id = json_encode(($request->input('themes_name')));
         $inclusive_packages->city_details = $request->input('cities_name');
         $inclusive_packages->title = $request->input('title');
         $inclusive_packages->program_description = $request->input('program_description');
         $inclusive_packages->address = $request->input('address') ?? '';
         $inclusive_packages->category = json_encode($request->input('prop_cat'));
         $inclusive_packages->location = $request->input('location');
-        $inclusive_packages->tour_planning = $tourPlanningJson;
+        // $inclusive_packages->tour_planning = $tourPlanningJson;
+        $inclusive_packages->tour_planning = json_encode($request->input('tour_planning'));
         $inclusive_packages->start_date = $request->input('start_date');
         $inclusive_packages->return_date = $request->input('return_date');
         $inclusive_packages->total_days = $request->input('total_days');
@@ -249,7 +256,6 @@ class All_Inclusive_PackController extends Controller
         $selectedfood_beverages = json_decode($package_details->food_beverages, true) ?? [];
         $selectedactivities = json_decode($package_details->activities, true) ?? [];
         $selectedsafety_features = json_decode($package_details->safety_features, true) ?? [];
-
         $selectedprogram = json_decode($package_details->category, true) ?? [];
         // Get the selected city ID
         $selectedCityId = $package_details->city_details;
@@ -276,6 +282,11 @@ class All_Inclusive_PackController extends Controller
 
     public function update(Request $request, $id)
     {
+         $request->validate([
+        'tour_planning' => 'required|array',
+        'tour_planning.*.title' => 'required|string',
+        'tour_planning.*.description' => 'required|string',
+    ]);
 
         // dd($request->all());
         // Validate the incoming data
@@ -396,11 +407,11 @@ class All_Inclusive_PackController extends Controller
 
 
         // JSON encode complex fields
-        $tourPlanningJson = json_encode([
-            // 'plan_title' => $request->input['plan_title'],
-            // 'plan_subtitle' => $request->input['plan_subtitle'],
-            'plan_description' => $request->input('plan_description')
-        ]);
+        // $tourPlanningJson = json_encode([
+        //     // 'plan_title' => $request->input['plan_title'],
+        //     // 'plan_subtitle' => $request->input['plan_subtitle'],
+        //     'plan_description' => $request->input('plan_description')
+        // ]);
 
 
         //storing the program_pdf file upload
@@ -434,7 +445,7 @@ class All_Inclusive_PackController extends Controller
         $inclusive_packages->title = $request->input('title');
         $inclusive_packages->program_description = $request->input('program_description');
         $inclusive_packages->category = json_encode($request->input('prop_cat', []));
-        $inclusive_packages->tour_planning = $tourPlanningJson;
+        $inclusive_packages->tour_planning =json_encode($request->input('tour_planning'));
         $inclusive_packages->start_date = $request->input('start_date');
         $inclusive_packages->return_date = $request->input('return_date');
         $inclusive_packages->total_days = $request->input('total_days');
