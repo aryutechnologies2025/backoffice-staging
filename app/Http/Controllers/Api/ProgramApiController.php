@@ -31,6 +31,7 @@ use App\Models\customer_package;
 use App\Models\program_pdf;
 use App\Models\stay_enquiry_details;
 use App\Models\stays_whishlist;
+use App\Models\Themes;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
@@ -99,7 +100,7 @@ class ProgramApiController extends Controller
             $eventsPackageImages = json_decode($package->events_package_images, true) ?? [];
             $tourPlanning = json_decode($package->tour_planning, true) ?? [];
             $campRule = json_decode($package->camp_rule, true) ?? [];
-
+            $themeIds = json_decode($package->theme_id, true) ?? [];
             $price_title = json_decode($package->price_tilte, true) ?? [];
             $price_amount = json_decode($package->price_amount, true) ?? [];
 
@@ -150,6 +151,15 @@ class ProgramApiController extends Controller
                     return [
                         'safety_features' => $item->safety_features,
                         'safety_features_pic' => $item->safety_features_pic,
+                    ];
+                });
+
+                 $theme = Themes::whereIn('id', $themeIds)
+                ->get(['id', 'themes_name'])
+                // ->keyBy('id')
+                ->map(function ($item) {
+                    return [
+                        'name' => $item->themes_name,
                     ];
                 });
 
@@ -207,7 +217,7 @@ class ProgramApiController extends Controller
                 'program_desc' => $package->program_description,
                 'flag' => $category,
                 'destination' => $package->destination->city_name,
-                'theme' => $package->theme->themes_name,
+                'theme' =>  $theme,
                 'state' => $package->state,
                 'city' => $package->city,
                 'address' => $package->address,
