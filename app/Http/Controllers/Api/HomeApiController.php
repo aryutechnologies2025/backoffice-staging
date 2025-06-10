@@ -185,6 +185,7 @@ class HomeApiController extends Controller
                 $amenityDetails = json_decode($package->amenity_details, true);
                 $activities = json_decode($package->activities, true);
                 $safetyFeatures = json_decode($package->safety_features, true);
+                $themeIds = json_decode($package->theme, true) ?? [];
 
                 $price_title = json_decode($package->price_tilte, true);
 
@@ -229,7 +230,8 @@ class HomeApiController extends Controller
                     'cover_img' => $package->cover_img,
                     'start_date' => $formattedStartDate,
                     'end_date' => $formattedendDate,
-                    'theme_id' => $package->theme ? $package->theme->id : null,
+                    // 'theme_id' => $package->theme ? $package->theme->id : null,
+                    'theme_id' => $package->theme_id ? json_decode($package->theme_id, true) : null,
                     'theme' => $package->theme ? $package->theme->themes_name : null,
                     'destination_id' => $package->destination ? $package->destination->id : null,
                     'destination' => $package->destination ? $package->destination->city_name : null,

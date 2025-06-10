@@ -83,7 +83,7 @@ class ProgramApiController extends Controller
             }
 
             // Fetch the program details using the provided ID
-            $package = InclusivePackages::with('destination', 'theme', 'clientReviews','reviews')->find($programId);
+            $package = InclusivePackages::with('destination', 'theme', 'clientReviews', 'reviews')->find($programId);
 
             if (!$package) {
                 return response()->json([
@@ -153,22 +153,22 @@ class ProgramApiController extends Controller
                         'safety_features_pic' => $item->safety_features_pic,
                     ];
                 });
-                if (is_array($themeIds)) {
-                    $theme = Themes::whereIn('id', $themeIds)
-                        ->get(['id', 'themes_name'])
-                        ->map(function ($item) {
-                            return [
-                                'id' => $item->id,
-                                'name' => $item->themes_name,
-                            ];
-                        })
-                        ->values();
-                } elseif (!empty($themeIds)) {
-                    $themeModel = Themes::find($themeIds);
-                    $theme = $themeModel ? [['id' => $themeModel->id, 'name' => $themeModel->themes_name]] : [];
-                } else {
-                    $theme = [];
-                }
+            if (is_array($themeIds)) {
+                $theme = Themes::whereIn('id', $themeIds)
+                    ->get(['id', 'themes_name'])
+                    ->map(function ($item) {
+                        return [
+                            'id' => $item->id,
+                            'name' => $item->themes_name,
+                        ];
+                    })
+                    ->values();
+            } elseif (!empty($themeIds)) {
+                $themeModel = Themes::find($themeIds);
+                $theme = $themeModel ? [['id' => $themeModel->id, 'name' => $themeModel->themes_name]] : [];
+            } else {
+                $theme = [];
+            }
 
             $formattedStartDate = \Carbon\Carbon::parse($package->start_date)->format('M d, Y');
             $formattedendDate = \Carbon\Carbon::parse($package->return_date)->format('M d, Y');
@@ -259,11 +259,11 @@ class ProgramApiController extends Controller
                 'average_rating' => number_format($averageRating, 1),
                 'created_date' => $package->created_date,
                 'current_location' => $package->location,
-                'price_title'=> $price_title,
-                'price_amount' =>$price_amount
-              
+                'price_title' => $price_title,
+                'price_amount' => $price_amount
+
             ];
-            
+
             if ($user_id) {
                 $wishlist = Program_wishlist::where('user_id', $user_id)
                     ->where('program_id', $programId)
@@ -1111,7 +1111,7 @@ class ProgramApiController extends Controller
             'phone' => ['required', 'regex:/^\+?[0-9]{10,15}$/'],
             'comments' => 'required|string',
             'location' => 'required|string',
-            
+
             'days' => 'required|integer',
             'travel_destination' => 'string|nullable',
             // 'budget_per_head' => 'required|string',
@@ -1132,18 +1132,18 @@ class ProgramApiController extends Controller
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
-       
-        
+
+
 
         $enquiryData = $request->all();
         $enquiryData['child_age'] = json_encode($request->input('child_age')); // Convert child_age to JSON
 
         $enquiry = EnquiryDetail::create($enquiryData);
- // Find matching program PDF
-//  $programPdf = program_pdf::where('is_deleted', '0')->where('program_name', $enquiry->program_title)->first();
- $programPdf = InclusivePackages::where('is_deleted', '0')->where('title', $enquiry->program_title)->first();
+        // Find matching program PDF
+        //  $programPdf = program_pdf::where('is_deleted', '0')->where('program_name', $enquiry->program_title)->first();
+        $programPdf = InclusivePackages::where('is_deleted', '0')->where('title', $enquiry->program_title)->first();
 
-     
+
         // Send email notifications
         try {
             // Send email to the client
@@ -1199,7 +1199,7 @@ class ProgramApiController extends Controller
         $stayDetails = stay_enquiry_details::where('email', $email)->get();
 
         $data =  $enquiryDetails->merge($stayDetails)->sortByDesc('created_at')->values();
-    
+
         if ($enquiryDetails->isEmpty()) {
             return response()->json([
                 'status' => 'error',
@@ -1215,7 +1215,7 @@ class ProgramApiController extends Controller
 
         ], 200);
     }
-   
+
 
     // public function getClientNotification(Request $request, $id)
     // {
@@ -1319,7 +1319,7 @@ class ProgramApiController extends Controller
             // 'child_age.*' => 'integer|min:0', // Validate each age
             // 'child_age' => 'required|min:' . $request->child_count, // Validate as array
             'child_age.*' => 'min:0', // Validate each age
-           
+
         ]);
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
@@ -1478,7 +1478,7 @@ class ProgramApiController extends Controller
             ], 401);
         }
 
-        
+
 
         $userId = $user->id; // Get the authenticated user's ID
         $programId = $request->input('program_id');
@@ -1541,7 +1541,7 @@ class ProgramApiController extends Controller
     {
         // Retrieve user_id from the request query or fallback to the authenticated user
         $userId = $request->query('user_id') ?? ($request->user() ? $request->user()->id : null);
-    
+
         if (!$userId) {
             return response()->json([
                 'status' => 'error',
@@ -1549,25 +1549,25 @@ class ProgramApiController extends Controller
                 'data' => null
             ], 401);
         }
-    
+
         // Fetch the wishlist entries for the provided user ID
         $program_wishlist = Program_wishlist::where('user_id', $userId)
             ->with('program_dts') // Assuming the `program_dts` relationship is correctly defined
             ->get();
 
-         $stay_wishlist = stays_whishlist::where('user_id', $userId)
+        $stay_wishlist = stays_whishlist::where('user_id', $userId)
             ->with('stay_dts') // Assuming the `program_dts` relationship is correctly defined
             ->get();
 
         $wishlist =  $program_wishlist->merge($stay_wishlist)->sortByDesc('created_at')->values();
-    
+
         return response()->json([
             'status' => 'success',
             'message' => 'Wishlist retrieved successfully.',
             'data' => $wishlist
         ], 200);
     }
-    
+
     // public function getWishlist(Request $request)
     // {
     //     $userId = $request->input('user_id'); // Get the user ID from the request
@@ -1630,6 +1630,7 @@ class ProgramApiController extends Controller
         $activityIds = json_decode($package->activities, true) ?? [];
         $safetyFeatureIds = json_decode($package->safety_features, true) ?? [];
         $addressDetailsIds = json_decode($package->address, true) ?? [];
+        $themeIds = json_decode($package->theme, true) ?? [];
         // Fetch related records and format the response
         $amenities = Amenities::whereIn('id', $amenityIds)
             ->get(['id', 'amenity_name', 'amenity_pic'])
@@ -1671,6 +1672,16 @@ class ProgramApiController extends Controller
                 ];
             });
 
+        $theme = Themes::whereIn('id', $themeIds)
+            ->get(['id', 'themes_name'])
+            ->map(function ($item) {
+                return [
+                    'id' => $item->id,
+
+                ];
+            });
+            
+
         $addressDetails = Address::whereIn('id', $addressDetailsIds)
             ->get(['id', 'title', 'city', 'state', 'country'])
             ->map(function ($item) {
@@ -1692,24 +1703,25 @@ class ProgramApiController extends Controller
                 'activities' => $activities,
                 'safetyFeatures' => $safetyFeatures,
                 'addressDetails' => $addressDetails,
+                'theme' => $theme,
             ],
         ], 200);
     }
 
-     public function specific_program_details(Request $request)
+    public function specific_program_details(Request $request)
     {
         try {
-    
+
             $request->validate([
                 'program_id' => 'required',
             ]);
 
-            $programId = $request->input('program_id'); 
-           
+            $programId = $request->input('program_id');
 
-      
+
+
             $program = customer_package::find($programId);
-             $Inclusivepackage = InclusivePackages::with('destination', 'theme', 'clientReviews','reviews')->find($program->package_id);
+            $Inclusivepackage = InclusivePackages::with('destination', 'theme', 'clientReviews', 'reviews')->find($program->package_id);
 
             if (!$program) {
                 return response()->json([
@@ -1718,7 +1730,7 @@ class ProgramApiController extends Controller
                 ], 404);
             }
 
-           
+
 
             // Check if the program details are already cached
             $cacheKey = "program_details_{$programId}";
@@ -1804,9 +1816,9 @@ class ProgramApiController extends Controller
                     ];
                 });
 
-           
-          
-           
+
+
+
             $importantInfoPlainText = strip_tags(html_entity_decode($package->important_info, ENT_QUOTES, 'UTF-8'));
             $importantInfoPlainText = str_replace(["<br>", "<br/>", "<br />"], "\n", $importantInfoPlainText);
 
@@ -1822,7 +1834,7 @@ class ProgramApiController extends Controller
             // $program_exclusionPlainText = str_replace(["<br>", "<br/>", "<br />"], "\n", $program_exclusionPlainText);
             $eventsPackageImages = json_decode($Inclusivepackage->events_package_images, true) ?? [];
 
-              $reviews = $Inclusivepackage->reviews->map(function ($review) {
+            $reviews = $Inclusivepackage->reviews->map(function ($review) {
                 $user = $review->user;
                 return [
                     'first_name' => $user->first_name ?? null,
@@ -1834,7 +1846,7 @@ class ProgramApiController extends Controller
                 ];
             });
 
-        
+
             $reviewCount = $Inclusivepackage->reviews->count();
 
             $responseData = [
@@ -1842,7 +1854,7 @@ class ProgramApiController extends Controller
                 'name' => $package->name,
                 'title' => $package->package_type,
                 'program_desc' => $Inclusivepackage->program_description,
-               
+
                 // 'destination' => $package->destination->city_name,
                 // 'theme' => $package->theme->themes_name,
                 // 'state' => $package->state,
@@ -1852,7 +1864,7 @@ class ProgramApiController extends Controller
                 'tour_planning' => $tourPlanning,
                 'cover_img' => $Inclusivepackage->cover_img,
                 'gallery_img' => $eventsPackageImages,
-                
+
                 // 'total_days' => $package->total_days,
                 // 'member_capacity' => $package->member_capacity,
                 // 'member_type' => $package->member_type,
@@ -1862,29 +1874,29 @@ class ProgramApiController extends Controller
                 'important_info' => $importantInfoPlainText,
                 'program_inclusion' => $program_inclusionPlainText,
                 'program_exclusion' => $program_exclusionPlainText,
-               
+
                 // 'lunch' => $package->lunch,
                 // 'dinner' => $package->dinner,
                 'amenity_details' => $amenities,
-          
+
                 'foodBeverages' => $foodBeverages,
                 'activities' => $activities,
                 'safety_features' => $safetyFeatures,
-               
-                
+
+
                 // 'google_map' => $package->google_map,
-                
+
                 // 'created_date' => $package->created_date,
                 'current_location' => json_decode($package->location),
                 //  'client_reviews' => $clientReviews,
                 // 'total_reviews' => $totalReviews,
                 'reviews' => $reviews,
                 'review_count' => $reviewCount,
-                'price_title'=> $price_title,
-                'price_amount' =>$price_amount
-              
+                'price_title' => $price_title,
+                'price_amount' => $price_amount
+
             ];
-            
+
             // if ($user_id) {
             //     $wishlist = Program_wishlist::where('user_id', $user_id)
             //         ->where('program_id', $programId)
@@ -1924,152 +1936,152 @@ class ProgramApiController extends Controller
 
 
 
-// public function get_program(Request $request)
-// {
-  
-//     try {
-//         $requestData = $request->all(); 
+    // public function get_program(Request $request)
+    // {
 
-//         $program_type =  $request->input('program_type');
-//         $theme =  $request->input('theme');
-//         $destination = $request->input('destination');
-//         $program_destination =  $request->input('program_destination');
-//         $view_type =  $request->input('view_type');
+    //     try {
+    //         $requestData = $request->all(); 
 
-//         // Build the query
-//         $query = InclusivePackages::where('status', "1")
-//             ->where('is_deleted', "0");
-        
-//         // Conditionally apply filters based on input
-//         if ($program_type) {
-//             $query->whereJsonContains('category', $program_type);
-//         }
+    //         $program_type =  $request->input('program_type');
+    //         $theme =  $request->input('theme');
+    //         $destination = $request->input('destination');
+    //         $program_destination =  $request->input('program_destination');
+    //         $view_type =  $request->input('view_type');
 
-//         if ($theme) {
-//             $query->where('theme_id', $theme);
-//             $view_type = 'all';
-//         }
+    //         // Build the query
+    //         $query = InclusivePackages::where('status', "1")
+    //             ->where('is_deleted', "0");
 
-//         if($destination) {
-//             $query->where('city_details', $destination);
-//             $view_type = 'all';
-//         }
+    //         // Conditionally apply filters based on input
+    //         if ($program_type) {
+    //             $query->whereJsonContains('category', $program_type);
+    //         }
 
-//         if ($program_destination) {
-//             $query->where('city_details', $program_destination);
-//             $view_type = 'all';
-//         }
+    //         if ($theme) {
+    //             $query->where('theme_id', $theme);
+    //             $view_type = 'all';
+    //         }
 
-//         // Apply the limit conditionally
-//         if ($view_type !== 'all') {
-//             $query->take(4); // Limit to 4 packages if view_type is not 'all'
-//         }
+    //         if($destination) {
+    //             $query->where('city_details', $destination);
+    //             $view_type = 'all';
+    //         }
 
-//         // Execute the query
-//         $packages = $query->with(['theme', 'destination', 'clientReviews'])->paginate(10);
-        
-//         // Check if any packages were found
-//         if ($packages->isEmpty()) {
-//             return response()->json([
-//                 'status' => 'success',
-//                 'message' => 'No ' . str_replace('_', ' ', $program_type) . ' found.',
-//                 'data' => []
-//             ], 200);
-//         }
+    //         if ($program_destination) {
+    //             $query->where('city_details', $program_destination);
+    //             $view_type = 'all';
+    //         }
 
-//         // Helper function to get amenities, food & beverage, activities, and safety features
-//         $getDetailsById = function ($package) {
-//             $id = $package->id;
-            
-//             // Call your original method logic here (or modify it to return the required data)
-//             $response = (new ProgramApiController)->getAmenitiesFoodBeverageActivitiesSafetyFeaturesById(new Request(['id' => $id]));
-//             return json_decode($response->getContent(), true)['data'];
-//         };
+    //         // Apply the limit conditionally
+    //         if ($view_type !== 'all') {
+    //             $query->take(4); // Limit to 4 packages if view_type is not 'all'
+    //         }
 
-//         // Process each package to format the output
-//         $formattedPackages = $packages->map(function ($package) use ($getDetailsById) {
-//             // Decode JSON fields
-//             $eventsPackageImages = json_decode($package->cover_img, true);
-//             $tourPlanning = json_decode($package->tour_planning, true);
-//             $campRule = json_decode($package->camp_rule, true);
-//             $amenityDetails = json_decode($package->amenity_details, true);
-//             $activities = json_decode($package->activities, true);
-//             $safetyFeatures = json_decode($package->safety_features, true);
-//             // Process reviews and attach user data
-//         $reviews = $package->reviews->map(function ($review) {
-//             $user = $review->user; // Get the related user (reviewer's name and image)
-//             return [
-//                 'first_name' => $review->user->first_name ?? null,  // Get user name, if available
-//                 'profile_image' => $review->user->profile_image ?? null,        // User's image
-//                 'comment' => $review->comment,
-//                 'rating' => $review->rating,
-//                 'date' => $review->created_at->format('M d, Y'),
-//             ];
-//         });
-//             // Fetch amenities, food & beverage, activities, safety features
-//             $details = $getDetailsById($package);
-            
-//             // Format the start date
-//             $formattedStartDate = \Carbon\Carbon::parse($package->start_date)->format('M d, Y');
+    //         // Execute the query
+    //         $packages = $query->with(['theme', 'destination', 'clientReviews'])->paginate(10);
 
-//             // Extract the first image URL
-//             $formattedLocation = ucfirst($package->city) . ', ' . ucfirst($package->state);
-//             $totalReviews = $package->clientReviews->count();
-//             $averageRating = $package->reviews->avg('rating');
-//             $category = json_decode($package->category, true) ?? [];
-//             $formattedcategory = is_array($category) ? implode(', ', $category) : $category;
+    //         // Check if any packages were found
+    //         if ($packages->isEmpty()) {
+    //             return response()->json([
+    //                 'status' => 'success',
+    //                 'message' => 'No ' . str_replace('_', ' ', $program_type) . ' found.',
+    //                 'data' => []
+    //             ], 200);
+    //         }
 
-            
-//             // Return the formatted package data, including additional details
-//             return [
-//                 'id' => $package->id,
-//                 'title' => ucfirst($package->title),
-//                 'category' => ucfirst($formattedcategory),
-//                 'location' => $formattedLocation,
-//                 'total_days' => $package->total_days,
-//                 'member_capacity' => $package->member_capacity,
-//                 'price' => $package->price,
-//                 'actual_price' => $package->actual_price,
-//                 'cover_img' => $package->cover_img,
-//                 'start_date' => $formattedStartDate,
-//                 'theme_id' => $package->theme ? $package->theme->id : null, 
-//                 'theme' => $package->theme ? $package->theme->themes_name : null,
-//                 'destination_id' => $package->city ? $package->destination->id : null,
-//                 'destination' => $package->city ? $package->destination->city_name : null,
-//                 'average_rating' => number_format($averageRating, 1),
-//                 'totalReviews' => $totalReviews,
+    //         // Helper function to get amenities, food & beverage, activities, and safety features
+    //         $getDetailsById = function ($package) {
+    //             $id = $package->id;
 
-//                 'total_room' => $package->total_room,
-//                 'bath_room' => $package->bath_room,
-//                 'bed_room' => $package->bed_room,
-//                 'hall'=> $package->hall,
-//                 'reviews' => $reviews,
+    //             // Call your original method logic here (or modify it to return the required data)
+    //             $response = (new ProgramApiController)->getAmenitiesFoodBeverageActivitiesSafetyFeaturesById(new Request(['id' => $id]));
+    //             return json_decode($response->getContent(), true)['data'];
+    //         };
 
-//                 // Adding the fetched details
-//                 'amenities' => $details['amenities'] ?? [],
-//                 'foodBeverages' => $details['foodBeverages'] ?? [],
-//                 'activities' => $details['activities'] ?? [],
-//                 'safetyFeatures' => $details['safetyFeatures'] ?? [],
-//             ];
-//         });
+    //         // Process each package to format the output
+    //         $formattedPackages = $packages->map(function ($package) use ($getDetailsById) {
+    //             // Decode JSON fields
+    //             $eventsPackageImages = json_decode($package->cover_img, true);
+    //             $tourPlanning = json_decode($package->tour_planning, true);
+    //             $campRule = json_decode($package->camp_rule, true);
+    //             $amenityDetails = json_decode($package->amenity_details, true);
+    //             $activities = json_decode($package->activities, true);
+    //             $safetyFeatures = json_decode($package->safety_features, true);
+    //             // Process reviews and attach user data
+    //         $reviews = $package->reviews->map(function ($review) {
+    //             $user = $review->user; // Get the related user (reviewer's name and image)
+    //             return [
+    //                 'first_name' => $review->user->first_name ?? null,  // Get user name, if available
+    //                 'profile_image' => $review->user->profile_image ?? null,        // User's image
+    //                 'comment' => $review->comment,
+    //                 'rating' => $review->rating,
+    //                 'date' => $review->created_at->format('M d, Y'),
+    //             ];
+    //         });
+    //             // Fetch amenities, food & beverage, activities, safety features
+    //             $details = $getDetailsById($package);
 
-//         // Return the formatted data with success status
-//         return response()->json([
-//             'status' => 'success',
-//             'message' => '' . str_replace('_', ' ', $program_type) . ' retrieved successfully.',
-//             'data' => $formattedPackages
-//         ], 200);
-//     } catch (\Exception $e) {
-       
+    //             // Format the start date
+    //             $formattedStartDate = \Carbon\Carbon::parse($package->start_date)->format('M d, Y');
 
-//         // Return error response
-//         return response()->json([
-//             'status' => 'error',
-//             'message' => 'An error occurred while fetching ',
-//             'error' => $e->getMessage()
-//         ], 500);
-//     }
-// } 
+    //             // Extract the first image URL
+    //             $formattedLocation = ucfirst($package->city) . ', ' . ucfirst($package->state);
+    //             $totalReviews = $package->clientReviews->count();
+    //             $averageRating = $package->reviews->avg('rating');
+    //             $category = json_decode($package->category, true) ?? [];
+    //             $formattedcategory = is_array($category) ? implode(', ', $category) : $category;
+
+
+    //             // Return the formatted package data, including additional details
+    //             return [
+    //                 'id' => $package->id,
+    //                 'title' => ucfirst($package->title),
+    //                 'category' => ucfirst($formattedcategory),
+    //                 'location' => $formattedLocation,
+    //                 'total_days' => $package->total_days,
+    //                 'member_capacity' => $package->member_capacity,
+    //                 'price' => $package->price,
+    //                 'actual_price' => $package->actual_price,
+    //                 'cover_img' => $package->cover_img,
+    //                 'start_date' => $formattedStartDate,
+    //                 'theme_id' => $package->theme ? $package->theme->id : null, 
+    //                 'theme' => $package->theme ? $package->theme->themes_name : null,
+    //                 'destination_id' => $package->city ? $package->destination->id : null,
+    //                 'destination' => $package->city ? $package->destination->city_name : null,
+    //                 'average_rating' => number_format($averageRating, 1),
+    //                 'totalReviews' => $totalReviews,
+
+    //                 'total_room' => $package->total_room,
+    //                 'bath_room' => $package->bath_room,
+    //                 'bed_room' => $package->bed_room,
+    //                 'hall'=> $package->hall,
+    //                 'reviews' => $reviews,
+
+    //                 // Adding the fetched details
+    //                 'amenities' => $details['amenities'] ?? [],
+    //                 'foodBeverages' => $details['foodBeverages'] ?? [],
+    //                 'activities' => $details['activities'] ?? [],
+    //                 'safetyFeatures' => $details['safetyFeatures'] ?? [],
+    //             ];
+    //         });
+
+    //         // Return the formatted data with success status
+    //         return response()->json([
+    //             'status' => 'success',
+    //             'message' => '' . str_replace('_', ' ', $program_type) . ' retrieved successfully.',
+    //             'data' => $formattedPackages
+    //         ], 200);
+    //     } catch (\Exception $e) {
+
+
+    //         // Return error response
+    //         return response()->json([
+    //             'status' => 'error',
+    //             'message' => 'An error occurred while fetching ',
+    //             'error' => $e->getMessage()
+    //         ], 500);
+    //     }
+    // } 
 
 
 
@@ -2100,7 +2112,7 @@ class ProgramApiController extends Controller
             ], 401);
         }
 
-        
+
 
         $userId = $user->id; // Get the authenticated user's ID
         $programId = $request->input('program_id');
@@ -2163,7 +2175,7 @@ class ProgramApiController extends Controller
     {
         // Retrieve user_id from the request query or fallback to the authenticated user
         $userId = $request->query('user_id') ?? ($request->user() ? $request->user()->id : null);
-    
+
         if (!$userId) {
             return response()->json([
                 'status' => 'error',
@@ -2171,14 +2183,14 @@ class ProgramApiController extends Controller
                 'data' => null
             ], 401);
         }
-    
+
         // Fetch the wishlist entries for the provided user ID
         $wishlist = Program_wishlist::where('user_id', $userId)
             ->with('program_dts') // Assuming the `program_dts` relationship is correctly defined
             ->get();
 
-       
-    
+
+
         return response()->json([
             'status' => 'success',
             'message' => 'Wishlist retrieved successfully.',
