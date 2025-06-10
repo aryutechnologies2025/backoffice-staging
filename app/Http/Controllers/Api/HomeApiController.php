@@ -215,6 +215,8 @@ class HomeApiController extends Controller
                 $averageRating = $package->reviews->avg('rating');
                 $category = json_decode($package->category, true) ?? [];
                 $formattedcategory = is_array($category) ? implode(', ', $category) : $category;
+                // Replace the theme processing section with:
+                $theme = [];
                 if (is_array($themeIds)) {
                     $theme = Themes::whereIn('id', $themeIds)
                         ->get(['id', 'themes_name'])
@@ -224,12 +226,14 @@ class HomeApiController extends Controller
                                 'name' => $item->themes_name,
                             ];
                         })
-                        ->values();
+                        ->values()
+                        ->toArray();
                 } elseif (!empty($themeIds)) {
                     $themeModel = Themes::find($themeIds);
-                    $theme = $themeModel ? [['id' => $themeModel->id, 'name' => $themeModel->themes_name]] : [];
-                } else {
-                    $theme = [];
+                    $theme = $themeModel ? [[
+                        'id' => $themeModel->id,
+                        'name' => $themeModel->themes_name
+                    ]] : [];
                 }
                 // Return the formatted package data, including additional details
                 return [

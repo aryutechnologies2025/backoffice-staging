@@ -126,11 +126,11 @@
         }
 
         /* .form-input {
-                border: 1px dashed #ccc;
-                padding: 10px;
-                border-radius: 5px;
-                background-color: #f9f9f9;
-            } */
+                            border: 1px dashed #ccc;
+                            padding: 10px;
+                            border-radius: 5px;
+                            background-color: #f9f9f9;
+                        } */
     </style>
     <div class="container-wrapper pt-5">
         <div class="row">
@@ -155,33 +155,51 @@
 
                             <div class="row g-3 mb-4">
                                 <div class="col-lg-4">
-                                    <label class="fw-bold mb-2">Theme <span class="text-danger">*</span></label>
-                                    <div class="d-flex flex-column" style="max-height: 200px; overflow-y: auto;">
-                                        @php
-                                            $selectedthemeId = $package_details->theme_id ?? [];
+                                    <label class="fw-bold mb-2">Theme <span class="">*</span></label>
+                                    <div class="dropdown">
+                                        <button class="btn  dropdown-toggle w-100 text-start" type="button"
+                                            id="themeDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                            Select Themes
+                                        </button>
+                                        <ul class="dropdown-menu w-100" aria-labelledby="themeDropdown"
+                                            style="max-height: 200px; overflow-y: auto;">
+                                            @php
+                                                $selectedthemeId = $package_details->theme_id ?? [];
 
-                                            if (is_string($selectedthemeId) && json_decode($selectedthemeId) !== null) {
-                                                $selectedthemeId = json_decode($selectedthemeId, true);
-                                            } elseif (!is_array($selectedthemeId)) {
-                                                $selectedthemeId = $selectedthemeId ? [(string) $selectedthemeId] : [];
-                                            }
+                                                if (
+                                                    is_string($selectedthemeId) &&
+                                                    json_decode($selectedthemeId) !== null
+                                                ) {
+                                                    $selectedthemeId = json_decode($selectedthemeId, true);
+                                                }
+                                                if (!is_array($selectedthemeId)) {
+                                                    $selectedthemeId = $selectedthemeId
+                                                        ? [(string) $selectedthemeId]
+                                                        : [];
+                                                }
 
-                                            $selectedthemeId = array_map('strval', $selectedthemeId);
-                                        @endphp
+                                                $selectedthemeId = array_map('strval', $selectedthemeId);
+                                            @endphp
 
-                                        @foreach ($themes as $id => $name)
-                                            <div class="form-check mb-1">
-                                                <input class="form-check-input" type="checkbox"
-                                                    id="theme-{{ $id }}" name="themes_name[]"
-                                                    value="{{ $id }}"
-                                                    @if (in_array((string) $id, $selectedthemeId, true)) checked @endif>
-                                                <label class="form-check-label" for="theme-{{ $id }}">
-                                                    {{ $name }}
-                                                </label>
-                                            </div>
-                                        @endforeach
+                                            @foreach ($themes as $id => $name)
+                                                <li>
+                                                    <div class="form-check dropdown-item">
+                                                        <input class="form-check-input" type="checkbox"
+                                                            id="theme-{{ $id }}" name="themes_name[]"
+                                                            value="{{ $id }}"
+                                                            @if (in_array((string) $id, $selectedthemeId, true)) checked @endif>
+                                                        <label class="form-check-label w-100"
+                                                            for="theme-{{ $id }}">
+                                                            {{ $name }}
+                                                        </label>
+                                                    </div>
+                                                </li>
+                                            @endforeach
+                                        </ul>
                                     </div>
                                 </div>
+
+
 
                                 <div class="col-lg-4">
                                     <label class="fw-bold mb-2">Destination <span class="text-danger">*</span></label>
@@ -502,7 +520,7 @@
                                                             <input type="text"
                                                                 name="tour_planning[{{ $i }}][title]"
                                                                 class="form-control py-2 rounded-3 shadow-sm"
-                                                                placeholder="Day Title (e.g., Day {{ $i + 1 }})"
+                                                                placeholder="Day Title (e.g., Day {{ (int) $i + 1 }})"
                                                                 value="{{ $day['title'] ?? '' }}">
                                                         </div>
                                                         <div class="col-md-6 mb-2">
@@ -1213,5 +1231,35 @@
                     reader.readAsDataURL(input.files[0]);
                 }
             }
+
+
+            document.addEventListener('DOMContentLoaded', function() {
+                const dropdownButton = document.getElementById('themeDropdown');
+                const checkboxes = document.querySelectorAll('input[name="themes_name[]"]');
+
+                // Update button text when checkboxes change
+                checkboxes.forEach(checkbox => {
+                    checkbox.addEventListener('change', updateButtonText);
+                });
+
+                function updateButtonText() {
+                    const checked = document.querySelectorAll('input[name="themes_name[]"]:checked');
+                    if (checked.length === 0) {
+                        dropdownButton.textContent = 'Select Themes';
+                    } else if (checked.length === 1) {
+                        dropdownButton.textContent = checked[0].nextElementSibling.textContent;
+                    } else {
+                        dropdownButton.textContent = `${checked.length} themes selected`;
+                    }
+                }
+
+                // Initialize button text
+                updateButtonText();
+
+                // Prevent dropdown from closing when clicking checkboxes
+                document.querySelector('.dropdown-menu').addEventListener('click', function(e) {
+                    e.stopPropagation();
+                });
+            });
         </script>
     @endsection
