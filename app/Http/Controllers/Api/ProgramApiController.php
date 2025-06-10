@@ -153,20 +153,19 @@ class ProgramApiController extends Controller
                         'safety_features_pic' => $item->safety_features_pic,
                     ];
                 });
-
-                // Handle both single and multiple theme IDs
                 if (is_array($themeIds)) {
                     $theme = Themes::whereIn('id', $themeIds)
                         ->get(['id', 'themes_name'])
                         ->map(function ($item) {
                             return [
+                                'id' => $item->id,
                                 'name' => $item->themes_name,
                             ];
                         })
                         ->values();
                 } elseif (!empty($themeIds)) {
                     $themeModel = Themes::find($themeIds);
-                    $theme = $themeModel ? [['name' => $themeModel->themes_name]] : [];
+                    $theme = $themeModel ? [['id' => $themeModel->id, 'name' => $themeModel->themes_name]] : [];
                 } else {
                     $theme = [];
                 }

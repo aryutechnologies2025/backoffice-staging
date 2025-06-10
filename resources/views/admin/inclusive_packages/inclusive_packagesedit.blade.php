@@ -126,11 +126,11 @@
         }
 
         /* .form-input {
-            border: 1px dashed #ccc;
-            padding: 10px;
-            border-radius: 5px;
-            background-color: #f9f9f9;
-        } */
+                border: 1px dashed #ccc;
+                padding: 10px;
+                border-radius: 5px;
+                background-color: #f9f9f9;
+            } */
     </style>
     <div class="container-wrapper pt-5">
         <div class="row">
@@ -153,19 +153,28 @@
                         <div class="form-body px-4 py-4 mb-5 rounded-4">
                             <h4 class="fw-bold mb-4">1. Information</h4>
 
-                            <!-- Themes, Destination, and Title in One Line -->
                             <div class="row g-3 mb-4">
-                                <!-- Theme (multi-checkbox) -->
                                 <div class="col-lg-4">
                                     <label class="fw-bold mb-2">Theme <span class="text-danger">*</span></label>
                                     <div class="d-flex flex-column" style="max-height: 200px; overflow-y: auto;">
+                                        @php
+                                            $selectedthemeId = $package_details->theme_id ?? [];
+
+                                            if (is_string($selectedthemeId) && json_decode($selectedthemeId) !== null) {
+                                                $selectedthemeId = json_decode($selectedthemeId, true);
+                                            } elseif (!is_array($selectedthemeId)) {
+                                                $selectedthemeId = $selectedthemeId ? [(string) $selectedthemeId] : [];
+                                            }
+
+                                            $selectedthemeId = array_map('strval', $selectedthemeId);
+                                        @endphp
+
                                         @foreach ($themes as $id => $name)
                                             <div class="form-check mb-1">
                                                 <input class="form-check-input" type="checkbox"
-                                                       id="theme-{{ $id }}"
-                                                       name="themes_name[]"
-                                                       value="{{ $id }}"
-                                                       @if (is_array($selectedthemeId) && in_array($id, $selectedthemeId)) checked @endif>
+                                                    id="theme-{{ $id }}" name="themes_name[]"
+                                                    value="{{ $id }}"
+                                                    @if (in_array((string) $id, $selectedthemeId, true)) checked @endif>
                                                 <label class="form-check-label" for="theme-{{ $id }}">
                                                     {{ $name }}
                                                 </label>
@@ -173,8 +182,6 @@
                                         @endforeach
                                     </div>
                                 </div>
-
-
 
                                 <div class="col-lg-4">
                                     <label class="fw-bold mb-2">Destination <span class="text-danger">*</span></label>
@@ -274,7 +281,8 @@
                                             accept="image/png, image/jpeg, image/svg+xml"
                                             onchange="previewCoverImage(event)">
                                         <div id="file-cover-error" class="text-danger"></div>
-                                        <small class="text-danger d-block mt-2 text-center">* Upload size [1200x120]</small>
+                                        <small class="text-danger d-block mt-2 text-center">* Upload size
+                                            [1200x120]</small>
                                     </div>
                                 </div>
                             </div>
@@ -472,88 +480,91 @@
                                 </div>
                             </div>
                         </div> --}}
-                        <div class="row mb-2">
-                            <div class="col">
-                                <div class="form-body px-5 rounded-4">
-                                    <h4 class="fw-bold mb-3">3. Tour Planning</h4>
-                                    <div id="day-wrapper">
-                                        @php
-                                            $tourPlanning = [];
-                                            if (!empty($package_details->tour_planning)) {
-                                                $tourPlanning = is_array($package_details->tour_planning)
-                                                    ? $package_details->tour_planning
-                                                    : json_decode($package_details->tour_planning, true);
-                                            }
-                                        @endphp
-                                        @if (!empty($tourPlanning) && is_array($tourPlanning))
-                                            @foreach ($tourPlanning as $i => $day)
+                            <div class="row mb-2">
+                                <div class="col">
+                                    <div class="form-body px-5 rounded-4">
+                                        <h4 class="fw-bold mb-3">3. Tour Planning</h4>
+                                        <div id="day-wrapper">
+                                            @php
+                                                $tourPlanning = [];
+                                                if (!empty($package_details->tour_planning)) {
+                                                    $tourPlanning = is_array($package_details->tour_planning)
+                                                        ? $package_details->tour_planning
+                                                        : json_decode($package_details->tour_planning, true);
+                                                }
+                                            @endphp
+                                            @if (!empty($tourPlanning) && is_array($tourPlanning))
+                                                @foreach ($tourPlanning as $i => $day)
+                                                    <div class="row g-2 mb-2 day-block">
+                                                        <div class="col-md-5 mb-2">
+                                                            <label class="form-label fw-bold">Day Title <span
+                                                                    class="text-danger">*</span></label>
+                                                            <input type="text"
+                                                                name="tour_planning[{{ $i }}][title]"
+                                                                class="form-control py-2 rounded-3 shadow-sm"
+                                                                placeholder="Day Title (e.g., Day {{ $i + 1 }})"
+                                                                value="{{ $day['title'] ?? '' }}">
+                                                        </div>
+                                                        <div class="col-md-6 mb-2">
+                                                            <label class="form-label fw-bold">Activity Description <span
+                                                                    class="text-danger">*</span></label>
+                                                            <input type="text"
+                                                                name="tour_planning[{{ $i }}][description]"
+                                                                class="form-control py-2 rounded-3 shadow-sm"
+                                                                placeholder="Activity Description"
+                                                                value="{{ $day['description'] ?? '' }}">
+                                                        </div>
+                                                        <div class="col-md-1 d-flex align-items-end">
+                                                            @if ($loop->first)
+                                                                <!-- No remove button for first row -->
+                                                            @else
+                                                                <button type="button" class="btn btn-danger remove-day"
+                                                                    onclick="removeDay(this)">
+                                                                    <i class="fa fa-trash"></i>
+                                                                </button>
+                                                            @endif
+                                                        </div>
+                                                    </div>
+                                                @endforeach
+                                                @php $tourPlanningIndex = count($tourPlanning); @endphp
+                                            @else
                                                 <div class="row g-2 mb-2 day-block">
                                                     <div class="col-md-5 mb-2">
-                                                        <label class="form-label fw-bold">Day Title <span class="text-danger">*</span></label>
-                                                        <input type="text"
-                                                            name="tour_planning[{{ $i }}][title]"
+                                                        <label class="form-label fw-bold">Day Title <span
+                                                                class="text-danger">*</span></label>
+                                                        <input type="text" name="tour_planning[0][title]"
                                                             class="form-control py-2 rounded-3 shadow-sm"
-                                                            placeholder="Day Title (e.g., Day {{ $i+1 }})"
-                                                            value="{{ $day['title'] ?? '' }}">
+                                                            placeholder="Day Title (e.g., Day 1)">
                                                     </div>
                                                     <div class="col-md-6 mb-2">
-                                                        <label class="form-label fw-bold">Activity Description <span class="text-danger">*</span></label>
-                                                        <input type="text"
-                                                            name="tour_planning[{{ $i }}][description]"
+                                                        <label class="form-label fw-bold">Activity Description <span
+                                                                class="text-danger">*</span></label>
+                                                        <input type="text" name="tour_planning[0][description]"
                                                             class="form-control py-2 rounded-3 shadow-sm"
-                                                            placeholder="Activity Description"
-                                                            value="{{ $day['description'] ?? '' }}">
+                                                            placeholder="Activity Description">
                                                     </div>
                                                     <div class="col-md-1 d-flex align-items-end">
-                                                        @if ($loop->first)
-                                                            <!-- No remove button for first row -->
-                                                        @else
-                                                            <button type="button" class="btn btn-danger remove-day" onclick="removeDay(this)">
-                                                                <i class="fa fa-trash"></i>
-                                                            </button>
-                                                        @endif
+                                                        <!-- No remove button for first row -->
                                                     </div>
                                                 </div>
-                                            @endforeach
-                                            @php $tourPlanningIndex = count($tourPlanning); @endphp
-                                        @else
-                                            <div class="row g-2 mb-2 day-block">
-                                                <div class="col-md-5 mb-2">
-                                                    <label class="form-label fw-bold">Day Title <span class="text-danger">*</span></label>
-                                                    <input type="text"
-                                                        name="tour_planning[0][title]"
-                                                        class="form-control py-2 rounded-3 shadow-sm"
-                                                        placeholder="Day Title (e.g., Day 1)">
-                                                </div>
-                                                <div class="col-md-6 mb-2">
-                                                    <label class="form-label fw-bold">Activity Description <span class="text-danger">*</span></label>
-                                                    <input type="text"
-                                                        name="tour_planning[0][description]"
-                                                        class="form-control py-2 rounded-3 shadow-sm"
-                                                        placeholder="Activity Description">
-                                                </div>
-                                                <div class="col-md-1 d-flex align-items-end">
-                                                    <!-- No remove button for first row -->
-                                                </div>
-                                            </div>
-                                            @php $tourPlanningIndex = 1; @endphp
-                                        @endif
+                                                @php $tourPlanningIndex = 1; @endphp
+                                            @endif
+                                        </div>
+                                        <button type="button" class="btn-add rounded border-0 px-4 py-2 text-white mt-2"
+                                            onclick="addDay()">
+                                            <i class="fa fa-plus" aria-hidden="true"></i> Add More
+                                        </button>
                                     </div>
-                                    <button type="button" class="btn-add rounded border-0 px-4 py-2 text-white mt-2"
-                                        onclick="addDay()">
-                                        <i class="fa fa-plus" aria-hidden="true"></i> Add More
-                                    </button>
                                 </div>
                             </div>
-                        </div>
-                        <script>
-                            let index = {{ $tourPlanningIndex ?? 1 }};
+                            <script>
+                                let index = {{ $tourPlanningIndex ?? 1 }};
 
-                            function addDay() {
-                                const wrapper = document.getElementById('day-wrapper');
-                                const div = document.createElement('div');
-                                div.classList.add('row', 'g-2', 'mb-2', 'day-block');
-                                div.innerHTML = `
+                                function addDay() {
+                                    const wrapper = document.getElementById('day-wrapper');
+                                    const div = document.createElement('div');
+                                    div.classList.add('row', 'g-2', 'mb-2', 'day-block');
+                                    div.innerHTML = `
                                     <div class="col-md-5 mb-2">
                                         <input type="text" name="tour_planning[${index}][title]" class="form-control py-2 rounded-3 shadow-sm" placeholder="Day Title (e.g., Day ${index + 1})">
                                     </div>
@@ -566,14 +577,14 @@
                                         </button>
                                     </div>
                                 `;
-                                wrapper.appendChild(div);
-                                index++;
-                            }
+                                    wrapper.appendChild(div);
+                                    index++;
+                                }
 
-                            function removeDay(btn) {
-                                btn.closest('.day-block').remove();
-                            }
-                        </script>
+                                function removeDay(btn) {
+                                    btn.closest('.day-block').remove();
+                                }
+                            </script>
 
 
                             <!-- 4. Needed -->
