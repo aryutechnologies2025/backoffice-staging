@@ -250,7 +250,7 @@ class HomeApiController extends Controller
                     'end_date' => $formattedendDate,
                     // 'theme_id' => $package->theme ? $package->theme->id : null,
                     'theme_id' => $package->theme_id,
-                    'theme' =>  $theme,
+                    'theme' =>  $package->theme->themes_name ?? null,
                     'destination_id' => $package->destination ? $package->destination->id : null,
                     'destination' => $package->destination ? $package->destination->city_name : null,
                     'average_rating' => number_format($averageRating, 1),
