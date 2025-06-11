@@ -523,6 +523,15 @@
                                                                 placeholder="Day Title (e.g., Day {{ (int) $i + 1 }})"
                                                                 value="{{ $day['title'] ?? '' }}">
                                                         </div>
+                                                        <div class="col-md-5 mb-2">
+                                                            <label class="form-label fw-bold">Day Subtitle <span
+                                                                    class="text-danger">*</span></label>
+                                                            <input type="text"
+                                                                name="tour_planning[{{ $i }}][subtitle]"
+                                                                class="form-control py-2 rounded-3 shadow-sm"
+                                                                placeholder="Day Subtitle (e.g., Day {{ (int) $i + 1 }})"
+                                                                value="{{ $day['subtitle'] ?? '' }}">
+                                                        </div>
                                                         <div class="col-md-6 mb-2">
                                                             <label class="form-label fw-bold">Activity Description <span
                                                                     class="text-danger">*</span></label>
@@ -553,6 +562,13 @@
                                                         <input type="text" name="tour_planning[0][title]"
                                                             class="form-control py-2 rounded-3 shadow-sm"
                                                             placeholder="Day Title (e.g., Day 1)">
+                                                    </div>
+                                                    <div class="col-md-5 mb-2">
+                                                        <label class="form-label fw-bold">Day Subtitle <span
+                                                                class="text-danger">*</span></label>
+                                                        <input type="text" name="tour_planning[0][subtitle]"
+                                                            class="form-control py-2 rounded-3 shadow-sm"
+                                                            placeholder="Day Subtitle ">
                                                     </div>
                                                     <div class="col-md-6 mb-2">
                                                         <label class="form-label fw-bold">Activity Description <span

@@ -94,6 +94,7 @@ class All_Inclusive_PackController extends Controller
         $request->validate([
         'tour_planning' => 'required|array',
         'tour_planning.*.title' => 'required|string',
+        'tour_planning.*.subtitle' => 'nullable|string',
         'tour_planning.*.description' => 'required|string',
     ]);
 
@@ -174,6 +175,8 @@ class All_Inclusive_PackController extends Controller
         $activitiesJson = json_encode($request->input('activities'));
         $safetyFeaturesJson = json_encode($request->input('safety_features'));
         $campRulesJson = json_encode($request->input('camp_rule'));
+        $theme = $request->input('themes_name', []);
+
 
         // Insert into MySQL
         $inclusive_packages = new InclusivePackages();
@@ -186,7 +189,8 @@ class All_Inclusive_PackController extends Controller
         $inclusive_packages->dinner = $request->input('dinner');
         $inclusive_packages->upload_image_name = $request->input('upload_image_name');
         $inclusive_packages->alternate_name = $request->input('alternate_image_name');
-        $inclusive_packages->theme_id = json_encode(($request->input('themes_name')));
+        
+        $inclusive_packages->theme_id = implode(',', $theme);
         $inclusive_packages->city_details = $request->input('cities_name');
         $inclusive_packages->title = $request->input('title');
         $inclusive_packages->program_description = $request->input('program_description');
@@ -432,14 +436,14 @@ class All_Inclusive_PackController extends Controller
         $activitiesJson = json_encode($request->input('activities', []));
         $safetyFeaturesJson = json_encode($request->input('safety_features', []));
         $campRulesJson = json_encode($request->input('camp_rule'));
-
+        $theme = $request->input('themes_name', []);
         // Update the model fields
         // $inclusive_packages->program_pdf = $filePath;
         $inclusive_packages->upload_image_name = $request->input('upload_image_name');
         $inclusive_packages->alternate_name = $request->input('alternate_image_name');
         $inclusive_packages->program_inclusion = $request->input('program_inclusion');
         $inclusive_packages->program_exclusion = $request->input('program_exclusion');
-        $inclusive_packages->theme_id = json_encode(($request->input('themes_name')));
+        $inclusive_packages->theme_id = implode(',', $theme);
         $inclusive_packages->location = $request->input('location');
         $inclusive_packages->city_details = $request->input('cities_name');
         $inclusive_packages->title = $request->input('title');

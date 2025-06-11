@@ -429,6 +429,13 @@
                                                         class="form-control py-2 rounded-3 shadow-sm"
                                                         placeholder="Day Title (e.g., Day 1)">
                                                 </div>
+                                                <div class="col-md-5 mb-2">
+                                                    <label class="form-label fw-bold">Day Subtitle <span
+                                                            class="text-danger">*</span></label>
+                                                    <input type="text" name="tour_planning[0][subtitle]"
+                                                        class="form-control py-2 rounded-3 shadow-sm"
+                                                        placeholder="SubTitle">
+                                                </div>
                                                 <div class="col-md-6 mb-2">
                                                     <label class="form-label fw-bold">Activity Description <span
                                                             class="text-danger">*</span></label>
@@ -461,6 +468,9 @@
                                 </div>
                                 <div class="col-md-6 mb-2">
                                     <input type="text" name="tour_planning[${index}][description]" class="form-control py-2 rounded-3 shadow-sm" placeholder="Activity Description">
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <input type="text" name="tour_planning[${index}][subtitle]" class="form-control py-2 rounded-3 shadow-sm" placeholder="Activity Subtitle">
                                 </div>
                                 <div class="col-md-1 d-flex align-items-end">
                                     <button type="button" class="btn btn-danger remove-day" onclick="removeDay(this)">

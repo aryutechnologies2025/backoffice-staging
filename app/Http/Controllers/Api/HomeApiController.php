@@ -249,7 +249,7 @@ class HomeApiController extends Controller
                     'start_date' => $formattedStartDate,
                     'end_date' => $formattedendDate,
                     // 'theme_id' => $package->theme ? $package->theme->id : null,
-                    'theme_id' => $package->theme_id ? json_decode($package->theme_id, true) : null,
+                    'theme_id' => explode(',', $package->theme_id) ?? [],
                     'theme' =>  $package->theme->themes_name ??  $theme,
 
                     'destination_id' => $package->destination ? $package->destination->id : null,
@@ -275,6 +275,7 @@ class HomeApiController extends Controller
 
                 ];
             });
+            
 
             // Return the formatted data with success status
             return response()->json([
