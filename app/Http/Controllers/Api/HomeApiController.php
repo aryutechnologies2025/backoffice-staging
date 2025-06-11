@@ -123,21 +123,24 @@ class HomeApiController extends Controller
                 $query->whereJsonContains('category', $program_type);
             }
 
-            if ($theme) {
-                $themeIds = is_array($theme) ? $theme : [$theme];
+           if ($theme) {
+    $themeIds = is_array($theme) ? $theme : [$theme];
 
-                $query->where(function ($q) use ($themeIds) {
-                    foreach ($themeIds as $id) {
-                        // Check if the column is a JSON array containing the ID
-                        $q->orWhereJsonContains('theme_id', $id);
+    $query->where(function ($q) use ($themeIds) {
+        foreach ($themeIds as $id) {
+            // JSON array check
+            $q->orWhereJsonContains('theme_id', $id);
 
-                        // Also check if the column is a plain string/number matching the ID
-                        $q->orWhere('theme_id', $id);
-                    }
-                });
+            // CSV check (handles "15,16", "16", "16,20", etc.)
+            $q->orWhere('theme_id', 'LIKE', "%,$id,%")  // Middle
+               ->orWhere('theme_id', 'LIKE', "$id,%")    // Start
+               ->orWhere('theme_id', 'LIKE', "%,$id")    // End
+               ->orWhere('theme_id', $id);              // Exact match
+        }
+    });
 
-                $view_type = 'all';
-            }
+    $view_type = 'all';
+}
 
             if ($destination) {
                 $query->where('city_details', $destination);
@@ -216,25 +219,22 @@ class HomeApiController extends Controller
                 $category = json_decode($package->category, true) ?? [];
                 $formattedcategory = is_array($category) ? implode(', ', $category) : $category;
                 // Replace the theme processing section with:
+                 if (is_array($themeIds)) {
+                $theme = Themes::whereIn('id', $themeIds)
+                    ->get(['id', 'themes_name'])
+                    ->map(function ($item) {
+                        return [
+                            'id' => $item->id,
+                            'name' => $item->themes_name,
+                        ];
+                    })
+                    ->values();
+            } elseif (!empty($themeIds)) {
+                $themeModel = Themes::find($themeIds);
+                $theme = $themeModel ? [['id' => $themeModel->id, 'name' => $themeModel->themes_name]] : [];
+            } else {
                 $theme = [];
-                if (is_array($themeIds)) {
-                    $theme = Themes::whereIn('id', $themeIds)
-                        ->get(['id', 'themes_name'])
-                        ->map(function ($item) {
-                            return [
-                                'id' => $item->id,
-                                'name' => $item->themes_name,
-                            ];
-                        })
-                        ->values()
-                        ->toArray();
-                } elseif (!empty($themeIds)) {
-                    $themeModel = Themes::find($themeIds);
-                    $theme = $themeModel ? [[
-                        'id' => $themeModel->id,
-                        'name' => $themeModel->themes_name
-                    ]] : [];
-                }
+            }
                 // Return the formatted package data, including additional details
                 return [
                     'id' => $package->id,
@@ -249,9 +249,8 @@ class HomeApiController extends Controller
                     'start_date' => $formattedStartDate,
                     'end_date' => $formattedendDate,
                     // 'theme_id' => $package->theme ? $package->theme->id : null,
-                    'theme_id' => explode(',', $package->theme_id) ?? [],
-                    'theme' =>  $package->theme->themes_name ??  $theme,
-
+                    'theme_id' => $package->theme_id,
+                    'theme' =>  $theme,
                     'destination_id' => $package->destination ? $package->destination->id : null,
                     'destination' => $package->destination ? $package->destination->city_name : null,
                     'average_rating' => number_format($averageRating, 1),
@@ -262,7 +261,6 @@ class HomeApiController extends Controller
                     'bed_room' => $package->bed_room,
                     'hall' => $package->hall,
                     'reviews' => $reviews,
-
                     // Adding the fetched details
                     'price_tilte' => $price_title,
                     'pricing' => $price_amount,
