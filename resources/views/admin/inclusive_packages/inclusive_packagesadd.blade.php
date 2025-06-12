@@ -215,16 +215,16 @@
                                 </div>
                             </div>
                             <!-- <input type="hidden" id="plan_description" name="plan_description[]">
-                                            <label class="form-label fw-bold mb-2">Plan Description <span class="text-danger">*</span></label>
-                                            <div id="summernote3" style="height: 200px;"></div> -->
+                                                <label class="form-label fw-bold mb-2">Plan Description <span class="text-danger">*</span></label>
+                                                <div id="summernote3" style="height: 200px;"></div> -->
                             <!-- Title -->
                             <!-- <div class="row mt-4">
-                                            <div class="col">
-                                                <label class="fw-bold mb-2">Title <span class="text-danger">*</span></label>
-                                                <input type="text" placeholder="Title" id="title" name="title"
-                                                    class="form-control py-2 rounded-3 shadow-sm" required value="{{ old('title') }}">
-                                            </div>
-                                        </div> -->
+                                                <div class="col">
+                                                    <label class="fw-bold mb-2">Title <span class="text-danger">*</span></label>
+                                                    <input type="text" placeholder="Title" id="title" name="title"
+                                                        class="form-control py-2 rounded-3 shadow-sm" required value="{{ old('title') }}">
+                                                </div>
+                                            </div> -->
 
                             <!-- Program Description -->
                             <div class="row mt-4">
@@ -423,25 +423,21 @@
                                         <div id="day-wrapper">
                                             <div class="row g-2 mb-2 day-block">
                                                 <div class="col-md-5 mb-2">
-                                                    <label class="form-label fw-bold">Day Title <span
-                                                            class="text-danger">*</span></label>
+                                                    <label class="form-label fw-bold">Day Title <span class="text-danger">*</span></label>
                                                     <input type="text" name="tour_planning[0][title]"
                                                         class="form-control py-2 rounded-3 shadow-sm"
                                                         placeholder="Day Title (e.g., Day 1)">
                                                 </div>
                                                 <div class="col-md-5 mb-2">
-                                                    <label class="form-label fw-bold">Day Subtitle <span
-                                                            class="text-danger">*</span></label>
+                                                    <label class="form-label fw-bold">Day Subtitle <span class="text-danger">*</span></label>
                                                     <input type="text" name="tour_planning[0][subtitle]"
                                                         class="form-control py-2 rounded-3 shadow-sm"
                                                         placeholder="SubTitle">
                                                 </div>
-                                                <div class="col-md-6 mb-2">
-                                                    <label class="form-label fw-bold">Activity Description <span
-                                                            class="text-danger">*</span></label>
-                                                    <input type="text" name="tour_planning[0][description]"
-                                                        class="form-control py-2 rounded-3 shadow-sm"
-                                                        placeholder="Activity Description">
+                                                <div class="col-md-10 mb-2">
+                                                    <label class="form-label fw-bold">Activity Description <span class="text-danger">*</span></label>
+                                                    <input type="hidden" name="tour_planning[0][description]" class="tour-description-hidden">
+                                                    <div class="tour-description-editor"></div>
                                                 </div>
                                                 <div class="col-md-1 d-flex align-items-end">
                                                     <!-- Remove button, hidden for the first row -->
@@ -455,6 +451,7 @@
                                     </div>
                                 </div>
                             </div>
+
                             <script>
                                 let index = 1;
 
@@ -463,96 +460,123 @@
                                     const div = document.createElement('div');
                                     div.classList.add('row', 'g-2', 'mb-2', 'day-block');
                                     div.innerHTML = `
-                                <div class="col-md-5 mb-2">
-                                    <input type="text" name="tour_planning[${index}][title]" class="form-control py-2 rounded-3 shadow-sm" placeholder="Day Title (e.g., Day ${index + 1})">
-                                </div>
-                                <div class="col-md-6 mb-2">
-                                    <input type="text" name="tour_planning[${index}][description]" class="form-control py-2 rounded-3 shadow-sm" placeholder="Activity Description">
-                                </div>
-                                <div class="col-md-6 mb-2">
-                                    <input type="text" name="tour_planning[${index}][subtitle]" class="form-control py-2 rounded-3 shadow-sm" placeholder="Activity Subtitle">
-                                </div>
-                                <div class="col-md-1 d-flex align-items-end">
-                                    <button type="button" class="btn btn-danger remove-day" onclick="removeDay(this)">
-                                        <i class="fa fa-trash"></i>
-                                    </button>
-                                </div>
-                            `;
+                                        <div class="col-md-5 mb-2">
+                                            <input type="text" name="tour_planning[${index}][title]" class="form-control py-2 rounded-3 shadow-sm" placeholder="Day Title (e.g., Day ${index + 1})">
+                                        </div>
+                                        <div class="col-md-5 mb-2">
+                                            <input type="text" name="tour_planning[${index}][subtitle]" class="form-control py-2 rounded-3 shadow-sm" placeholder="Activity Subtitle">
+                                        </div>
+                                        <div class="col-md-10 mb-2">
+                                            <input type="hidden" name="tour_planning[${index}][description]" class="tour-description-hidden">
+                                            <div class="tour-description-editor"></div>
+                                        </div>
+                                        <div class="col-md-1 d-flex align-items-end">
+                                            <button type="button" class="btn btn-danger remove-day" onclick="removeDay(this)">
+                                                <i class="fa fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    `;
                                     wrapper.appendChild(div);
+
+                                    // Initialize Summernote for the new editor
+                                    $(div).find('.tour-description-editor').summernote({
+                                        height: 120,
+                                        callbacks: {
+                                            onChange: function(contents) {
+                                                $(div).find('.tour-description-hidden').val(contents);
+                                            }
+                                        }
+                                    });
+
                                     index++;
                                 }
 
                                 function removeDay(btn) {
                                     btn.closest('.day-block').remove();
                                 }
+
+                                // Initialize Summernote for the first description editor on page load
+                                document.addEventListener('DOMContentLoaded', function() {
+                                    const firstBlock = document.querySelector('#day-wrapper .day-block');
+                                    if (firstBlock) {
+                                        $(firstBlock).find('.tour-description-editor').summernote({
+                                            height: 120,
+                                            callbacks: {
+                                                onChange: function(contents) {
+                                                    $(firstBlock).find('.tour-description-hidden').val(contents);
+                                                }
+                                            }
+                                        });
+                                    }
+                                });
                             </script>
 
 
                             <!-- <div class="row mb-2">
-                                            <div class="col">
-                                                <div class="form-body px-5 rounded-4">
-                                                    <h4 class="fw-bold mb-2">04.Tour Date & Time</h4>
-                                                    <div class="mb-3">
-                                                        <div class="row g-2 align-items-end">
-                                                            <div class="col-md-4">
-                                                                <label class="mb-2">Start Date <span class="text-danger"></span></label>
-                                                                <input type="date" class="form-control py-2 rounded-3 shadow-sm"
-                                                                    name="start_date" id="start_date" value="{{ old('start_date') }}"
-                                                                    >
-                                                            </div>
-                                                            <div class="col-md-4">
-                                                                <label class=" mb-2">Return Date <span
-                                                                        class="text-danger"></span></label>
-                                                                <input type="date" class="form-control py-2 rounded-3 shadow-sm"
-                                                                    name="return_date" id="return_date" value="{{ old('return_date') }}"
-                                                                    >
-                                                            </div>
-                                                            <div class="col-md-4">
-                                                                <label class="mb-2">Total No. of Days</label>
-                                                                <input type="number" class="form-control py-2 rounded-3 shadow-sm"
-                                                                    id="total_days" name="total_days" value="{{ old('total_days') }}"
-                                                                    readonly>
+                                                <div class="col">
+                                                    <div class="form-body px-5 rounded-4">
+                                                        <h4 class="fw-bold mb-2">04.Tour Date & Time</h4>
+                                                        <div class="mb-3">
+                                                            <div class="row g-2 align-items-end">
+                                                                <div class="col-md-4">
+                                                                    <label class="mb-2">Start Date <span class="text-danger"></span></label>
+                                                                    <input type="date" class="form-control py-2 rounded-3 shadow-sm"
+                                                                        name="start_date" id="start_date" value="{{ old('start_date') }}"
+                                                                        >
+                                                                </div>
+                                                                <div class="col-md-4">
+                                                                    <label class=" mb-2">Return Date <span
+                                                                            class="text-danger"></span></label>
+                                                                    <input type="date" class="form-control py-2 rounded-3 shadow-sm"
+                                                                        name="return_date" id="return_date" value="{{ old('return_date') }}"
+                                                                        >
+                                                                </div>
+                                                                <div class="col-md-4">
+                                                                    <label class="mb-2">Total No. of Days</label>
+                                                                    <input type="number" class="form-control py-2 rounded-3 shadow-sm"
+                                                                        id="total_days" name="total_days" value="{{ old('total_days') }}"
+                                                                        readonly>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        </div> -->
+                                            </div> -->
 
                             <!-- 4. Needed -->
                             <!-- <div class="row mb-2">
-                                            <div class="col">
-                                                <div class="form-body px-5 rounded-4">
-                                                    <h4 class="fw-bold mb-2">04.Rooms and Beds</h4>
-                                                    <div class="mb-3">
-                                                        <div class="row g-2 align-items-end">
-                                                            <div class="col-md-3">
-                                                                <label class=" mb-2">Rooms<span class="text-danger"></span></label>
-                                                                <input type="number" class="form-control py-2 rounded-3 shadow-sm"
-                                                                    name="total_room" id="total_room" value="{{ old('total_room') }}"
-                                                                    >
-                                                            </div>
-                                                            <div class="col-md-3">
-                                                                <label class="mb-2">Bath Rooms<span class="text-danger"></span></label>
-                                                                <input type="number" class="form-control py-2 rounded-3 shadow-sm"
-                                                                    name="bath_room" id="bath_room" value="{{ old('bath_room') }}"
-                                                                    >
-                                                            </div>
-                                                            <div class="col-md-3">
-                                                                <label class=" mb-2">Bed Rooms</label>
-                                                                <input type="number" class="form-control py-2 rounded-3 shadow-sm"
-                                                                    id="bed_room" name="bed_room" value="{{ old('bed_room') }}" >
-                                                            </div>
-                                                            <div class="col-md-3">
-                                                                <label class=" mb-2">Hall</label>
-                                                                <input type="number" class="form-control py-2 rounded-3 shadow-sm"
-                                                                    id="hall" name="hall" value="{{ old('hall') }}" >
+                                                <div class="col">
+                                                    <div class="form-body px-5 rounded-4">
+                                                        <h4 class="fw-bold mb-2">04.Rooms and Beds</h4>
+                                                        <div class="mb-3">
+                                                            <div class="row g-2 align-items-end">
+                                                                <div class="col-md-3">
+                                                                    <label class=" mb-2">Rooms<span class="text-danger"></span></label>
+                                                                    <input type="number" class="form-control py-2 rounded-3 shadow-sm"
+                                                                        name="total_room" id="total_room" value="{{ old('total_room') }}"
+                                                                        >
+                                                                </div>
+                                                                <div class="col-md-3">
+                                                                    <label class="mb-2">Bath Rooms<span class="text-danger"></span></label>
+                                                                    <input type="number" class="form-control py-2 rounded-3 shadow-sm"
+                                                                        name="bath_room" id="bath_room" value="{{ old('bath_room') }}"
+                                                                        >
+                                                                </div>
+                                                                <div class="col-md-3">
+                                                                    <label class=" mb-2">Bed Rooms</label>
+                                                                    <input type="number" class="form-control py-2 rounded-3 shadow-sm"
+                                                                        id="bed_room" name="bed_room" value="{{ old('bed_room') }}" >
+                                                                </div>
+                                                                <div class="col-md-3">
+                                                                    <label class=" mb-2">Hall</label>
+                                                                    <input type="number" class="form-control py-2 rounded-3 shadow-sm"
+                                                                        id="hall" name="hall" value="{{ old('hall') }}" >
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        </div> -->
+                                            </div> -->
 
 
 
@@ -715,8 +739,8 @@
                                                     <!-- <textarea id="important_info" class="container__textarea p-5 textarea-feild" name="important_info"
                                                         value="{{ old('important_info') }}" required></textarea> -->
                                                     <!-- <div class="mb-3">
-                                                    <div id="commentEditor5" class="form-control" style="height: 200px;"></div>
-                                                </div> -->
+                                                        <div id="commentEditor5" class="form-control" style="height: 200px;"></div>
+                                                    </div> -->
                                                     <div class=" mt-2">
                                                         <div class="row">
                                                             <div class="col-lg-12 ">
@@ -755,38 +779,38 @@
                             </div>
 
                             <!-- <div class="row mb-3">
-                                            <div class="col">
-                                                <div class="form-body px-1 py-3 rounded-4">
-                                                    <h4 class="fw-bold mb-3">9. Location</h4>
-                                                    <div>
-                                                        <div class="row align-items-start">
-                                                            <div class="col-lg-6">
-                                                                <label for="google_map" class="fw-bold mb-3">Google Map<span class="text-danger">*</span></label>
-                                                                <input
-                                                                    type="text"
-                                                                    id="google_map"
-                                                                    name="google_map"
-                                                                    class="form-control py-3 rounded-3 shadow-sm"
-                                                                    placeholder="Enter Google Map Embed Iframe">
-                                                            </div>
-                                                            <div class="col-lg-6">
-                                                                <label class="fw-bold mb-3">Map Preview</label>
-                                                                <iframe
-                                                                    id="map_preview"
-                                                                    width="100%"
-                                                                    height="250"
-                                                                    frameborder="0"
-                                                                    style="border:0;"
-                                                                    allowfullscreen
-                                                                    aria-hidden="false"
-                                                                    tabindex="0">
-                                                                </iframe>
+                                                <div class="col">
+                                                    <div class="form-body px-1 py-3 rounded-4">
+                                                        <h4 class="fw-bold mb-3">9. Location</h4>
+                                                        <div>
+                                                            <div class="row align-items-start">
+                                                                <div class="col-lg-6">
+                                                                    <label for="google_map" class="fw-bold mb-3">Google Map<span class="text-danger">*</span></label>
+                                                                    <input
+                                                                        type="text"
+                                                                        id="google_map"
+                                                                        name="google_map"
+                                                                        class="form-control py-3 rounded-3 shadow-sm"
+                                                                        placeholder="Enter Google Map Embed Iframe">
+                                                                </div>
+                                                                <div class="col-lg-6">
+                                                                    <label class="fw-bold mb-3">Map Preview</label>
+                                                                    <iframe
+                                                                        id="map_preview"
+                                                                        width="100%"
+                                                                        height="250"
+                                                                        frameborder="0"
+                                                                        style="border:0;"
+                                                                        allowfullscreen
+                                                                        aria-hidden="false"
+                                                                        tabindex="0">
+                                                                    </iframe>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        </div> -->
+                                            </div> -->
 
                             <script>
                                 document.getElementById('google_map').addEventListener('input', function() {
@@ -804,59 +828,60 @@
 
 
                             <!-- <div class="row mb-3">
-                                            <div class="col">
-                                                <div class="form-body px-5 rounded-4">
-                                                    <h4 class="fw-bold mb-3">08. Upload PDF</h4>
-                                                    <div class="mb-1">
-                                                        <div class="row g-2 mb-2">
-                                                            <div class="col">
-                                                                <label class="form-label form-label-top form-label-auto mb-2">Upload PDF</label>
-                                                                <input type="file" id="program_pdf" name="program_pdf" class="form-control py-2 rounded-3 shadow-sm" >
+                                                <div class="col">
+                                                    <div class="form-body px-5 rounded-4">
+                                                        <h4 class="fw-bold mb-3">08. Upload PDF</h4>
+                                                        <div class="mb-1">
+                                                            <div class="row g-2 mb-2">
+                                                                <div class="col">
+                                                                    <label class="form-label form-label-top form-label-auto mb-2">Upload PDF</label>
+                                                                    <input type="file" id="program_pdf" name="program_pdf" class="form-control py-2 rounded-3 shadow-sm" >
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        </div> -->
+                                            </div> -->
 
                             <!-- <div class="row mb-2">
-                                            <div class="col">
-                                                <div class="form-body px-5 rounded-4">
-                                                    <h4 class="fw-bold mb-3">09. Food Menu</h4>
-                                                    <div class="mb-1">
-                                                        <div class="row g-2">
-                                                            <div class="col-lg-4">
-                                                                <label
-                                                                    class="form-label form-label-top form-label-auto mb-2">Breakfast</label>
-                                                                <input type="hidden" id="break_fast" name="break_fast">
-                                                                <div class="mt-2">
-                                                                    <div class="row">
-                                                                        <div class="col-lg-12">
-                                                                            <div id="summernote6" style="height: 200px;"></div>
+                                                <div class="col">
+                                                    <div class="form-body px-5 rounded-4">
+                                                        <h4 class="fw-bold mb-3">09. Food Menu</h4>
+                                                        <div class="mb-1">
+                                                            <div class="row g-2">
+                                                                <div class="col-lg-4">
+                                                                    <label
+                                                                        class="form-label form-label-top form-label-auto mb-2">Breakfast</label>
+                                                                    <input type="hidden" id="break_fast" name="break_fast">
+                                                                    <div class="mt-2">
+                                                                        <div class="row">
+                                                                            <div class="col-lg-12">
+                                                                                <div id="summernote6" style="height: 200px;"></div>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                            </div>
-                                                            <div class="col-lg-4">
-                                                                <label
-                                                                    class="form-label form-label-top form-label-auto  mb-2">Lunch</label>
-                                                                <input type="hidden" id="lunch" name="lunch">
-                                                                <div class="mt-2">
-                                                                    <div class="row">
-                                                                        <div class="col-lg-12">
-                                                                            <div id="summernote7" style="height: 200px;"></div>
+                                                                <div class="col-lg-4">
+                                                                    <label
+                                                                        class="form-label form-label-top form-label-auto  mb-2">Lunch</label>
+                                                                    <input type="hidden" id="lunch" name="lunch">
+                                                                    <div class="mt-2">
+                                                                        <div class="row">
+                                                                            <div class="col-lg-12">
+                                                                                <div id="summernote7" style="height: 200px;"></div>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                            </div>
-                                                            <div class="col-lg-4">
-                                                                <label
-                                                                    class="form-label form-label-top form-label-auto mb-2">Dinner</label>
-                                                                <input type="hidden" id="dinner" name="dinner">
-                                                                <div class="mt-2">
-                                                                    <div class="row">
-                                                                        <div class="col-lg-12">
-                                                                            <div id="summernote8" style="height: 200px;"></div>
+                                                                <div class="col-lg-4">
+                                                                    <label
+                                                                        class="form-label form-label-top form-label-auto mb-2">Dinner</label>
+                                                                    <input type="hidden" id="dinner" name="dinner">
+                                                                    <div class="mt-2">
+                                                                        <div class="row">
+                                                                            <div class="col-lg-12">
+                                                                                <div id="summernote8" style="height: 200px;"></div>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -864,8 +889,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        </div> -->
+                                            </div> -->
                             <!-- 8. AMENITIES -->
                             <div class="row mb-2">
                                 <div class="col">
@@ -985,25 +1009,25 @@
 
 
                             <!-- 6.rule & Regulation
-                                <div class="row mb-5">
-                                    <div class="col">
-                                        <div class="form-body px-5 rounded-4">
-                                            <h4 class="fw-bold mb-5">14. Payment Policy</h4>
-                                            <div class="mb-3">
-                                                <div id="camp-rule-container">
-                                                    <div class="row g-2 mb-4 camp-rule-field">
-                                                        <div class="col">
-                                                            <label class="fw-bold mb-4">Payment Policy <span class="text-danger">*</span></label>
-                                                            <input type="text" name="camp_rule[]" id="camp_rule" class="form-control py-3  px-3 rounded-3 shadow-sm" placeholder="Payment Policy" required>
+                                    <div class="row mb-5">
+                                        <div class="col">
+                                            <div class="form-body px-5 rounded-4">
+                                                <h4 class="fw-bold mb-5">14. Payment Policy</h4>
+                                                <div class="mb-3">
+                                                    <div id="camp-rule-container">
+                                                        <div class="row g-2 mb-4 camp-rule-field">
+                                                            <div class="col">
+                                                                <label class="fw-bold mb-4">Payment Policy <span class="text-danger">*</span></label>
+                                                                <input type="text" name="camp_rule[]" id="camp_rule" class="form-control py-3  px-3 rounded-3 shadow-sm" placeholder="Payment Policy" required>
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                                <div class="text-end">
-                                                    <button type="button" class="btn-add rounded border-0 px-5 py-3 text-white" onclick="addCampRuleField()">
-                                                        <i class="fa fa-plus" aria-hidden="true"></i> Add
-                                                    </button>
-                                                </div>
-                                            </div> -->
+                                                    <div class="text-end">
+                                                        <button type="button" class="btn-add rounded border-0 px-5 py-3 text-white" onclick="addCampRuleField()">
+                                                            <i class="fa fa-plus" aria-hidden="true"></i> Add
+                                                        </button>
+                                                    </div>
+                                                </div> -->
 
                             <br>
 

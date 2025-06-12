@@ -70,7 +70,6 @@ class ProgramApiController extends Controller
                 ]);
             }
 
-            // Check if the program details are already cached
             $cacheKey = "program_details_{$programId}";
             $cachedData = Cache::get($cacheKey);
 
