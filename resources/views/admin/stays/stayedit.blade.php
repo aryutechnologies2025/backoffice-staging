@@ -335,7 +335,7 @@
                                             @foreach($chunk as $amenity)
                                             <div class="col-lg-3 col-md-3 col-sm-4 mb-2">
                                                 <div class="form-check">
-                                                    <input type="checkbox" class="me-2 custom-checkbox" id="amenity-{{ $amenity->id }}" name="amenity_services[]" value="{{ $amenity->id }}" @if(in_array((string) $amenity->id, $selectedAmenities)) checked @endif>
+                                                    <input type="checkbox" class=" custom-checkbox" id="amenity-{{ $amenity->id }}" name="amenity_services[]" value="{{ $amenity->id }}" @if(in_array((string) $amenity->id, $selectedAmenities)) checked @endif>
                                                     <label class="mb-0" for="amenity-{{ $amenity->id }}">{{ $amenity->amenity_name }}</label>
                                                 </div>
                                             </div>
@@ -361,7 +361,7 @@
                                             @foreach($chunk as $item)
                                             <div class="col-lg-3 col-md-3 col-sm-4 mb-2">
                                                 <div class="form-check">
-                                                    <input type="checkbox" class="custom-checkbox me-2" id="food-beverage-{{ $item->id }}" name="food_beverages[]" value="{{ $item->id }}" @if(in_array((string) $item->id, $selectedfood_beverages)) checked @endif>
+                                                    <input type="checkbox" class="custom-checkbox " id="food-beverage-{{ $item->id }}" name="food_beverages[]" value="{{ $item->id }}" @if(in_array((string) $item->id, $selectedfood_beverages)) checked @endif>
 
                                                     <label class="mb-0" for="food-beverage-{{ $item->id }}">{{ $item->food_beverage }}</label>
                                                 </div>
@@ -411,7 +411,7 @@
                                             @foreach($chunk as $item)
                                             <div class="col-lg-3 col-md-3 col-sm-4 mb-2">
                                                 <div class="form-check">
-                                                    <input type="checkbox" class="custom-checkbox me-2" id="safety_features-{{ $item->id }}" name="safety_features[]" value="{{ $item->id }}" @if(in_array((string) $item->id, $selectedsafety_features)) checked @endif>
+                                                    <input type="checkbox" class="custom-checkbox " id="safety_features-{{ $item->id }}" name="safety_features[]" value="{{ $item->id }}" @if(in_array((string) $item->id, $selectedsafety_features)) checked @endif>
                                                     <label class="mb-0" for="safety_features-{{ $item->id }}">{{ $item->safety_features }}</label>
                                                 </div>
                                             </div>
@@ -477,8 +477,23 @@
                 ['table', ['table']],
                 ['insert', ['link', 'picture', 'video']],
                 ['view', ['fullscreen', 'codeview', 'help']]
-            ]
+            ],
+             callbacks: {
+            onChange: function(contents) {
+                // Update the hidden textarea whenever content changes
+                $('#description').val(contents);
+            },
+            onInit: function() {
+                // Initialize the textarea with Summernote content
+                $('#description').val($('#summernote1').summernote('code'));
+            }
+        }
         });
+
+         // Also update the textarea before form submission
+    $('form').on('submit', function() {
+        $('#description').val($('#summernote1').summernote('code'));
+    });
 
     });
 
