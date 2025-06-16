@@ -40,6 +40,7 @@ use App\Http\Controllers\Admin\PdfController;
 use App\Http\Controllers\Admin\CustomerPackage;
 use App\Http\Controllers\Admin\StayController;
 use App\Http\Controllers\Admin\StayDestinationController;
+use App\Http\Controllers\Admin\StayDistrictController;
 use App\Models\stay_desitination;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
@@ -554,8 +555,12 @@ Route::prefix('/')->group(function () {
                 Route::get('/{id}/edit', 'edit_form')->name('admin.stay_details_edit_form');
                 Route::post('/{id}/update', 'update')->name('admin.stay_details_update');
                 Route::post('/change-status', 'change_status')->name('admin.stay_change_status');
+                 
             });
         });
+
+        Route::get('/get-districts/{destination}', [StayController::class, 'getDistricts'])
+    ->name('get-districts');
          Route::controller(StayDestinationController::class)->group(function () {
             Route::prefix('staydestination')->group(function () {
                 Route::get('/', 'list')->name('admin.staydestinationlist');
@@ -565,6 +570,19 @@ Route::prefix('/')->group(function () {
                 Route::post('/{id}/update', 'update')->name('admin.staydestination_update');
                 Route::post('/delete', 'delete')->name('admin.staydestination_delete');
                 Route::post('/change-status', 'change_status')->name('admin.staydestination_status');
+            });
+        });
+
+          Route::controller(StayDistrictController::class)->group(function () {
+            Route::prefix('staydestrict')->group(function () {
+                Route::get('/', 'list')->name('admin.staydistrictlist');
+                Route::get('/add', 'add_form')->name('admin.staydestination_add_form');
+                Route::get('/{id}/edit', 'edit_form')->name('admin.staydistrict_edit_form');
+                Route::post('/insert', 'store')->name('admin.staydistricts_insert');
+                Route::post('/{id}/update', 'update')->name('admin.staydistrict_update');
+                Route::post('/delete', 'delete')->name('admin.staydistrict_delete');
+                Route::post('/change-status', 'change_status')->name('admin.staydistrict_change_status');
+              
             });
         });
 

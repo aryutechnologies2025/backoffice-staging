@@ -130,7 +130,7 @@
                                     <label class="mb-2">Destination <span class="text-danger">*</span></label>
                                     <select id="cities_name" name="cities_name"
                                         class="form-select py-2 rounded-3 shadow-sm" required>
-                                        <option value="" disabled>Select Destination</option>
+                                        <option value="" disabled selected>Select Destination</option>
                                         @foreach($cities as $id => $name)
                                         <option value="{{ $name }}" @if(old('cities_name')=='{{ $id }}' ) selected @endif>
                                             {{ $name }}
@@ -138,6 +138,16 @@
                                         @endforeach
                                     </select>
                                 </div>
+                                <div class="col-md-4">
+                                    <label class="mb-2">District <span class="text-danger">*</span></label>
+                                    <select id="district_name" name="district_name"
+                                        class="form-select py-2 rounded-3 shadow-sm" required>
+                                        <option value="" disabled selected>Select District</option>
+                                        <!-- Districts will be populated dynamically -->
+                                    </select>
+                                </div>
+
+
 
 
                                 <div class="col-md-4">
@@ -292,7 +302,7 @@
                         </div>
 
 
-                            
+
 
 
 
@@ -671,7 +681,64 @@
                 var number = $(this).data('number'); // Use data attribute to get the number
                 showPreview(event, number);
             });
+
+            $('#cities_name').change(function() {
+                const destination = $(this).val();
+                const districtSelect = $('#district_name');
+
+                console.log('Destination selected:', destination); // Debugging
+
+                if (!destination) {
+                    districtSelect.empty().append(
+                        '<option value="" disabled selected>Select District</option>'
+                    ).prop('disabled', true);
+                    return;
+                }
+
+                // Show loading state
+                districtSelect.empty().append(
+                    '<option value="" disabled>Loading districts...</option>'
+                ).prop('disabled', true);
+
+                // AJAX request
+                $.ajax({
+                    url: '/get-districts/' + encodeURIComponent(destination),
+                    type: 'GET',
+                    success: function(data) {
+                        console.log('Received data:', data); // Debugging
+
+                        districtSelect.empty().append(
+                            '<option value="" disabled selected>Select District</option>'
+                        );
+
+                        if (data && data.length > 0) {
+                            $.each(data, function(index, district) {
+                                districtSelect.append(
+                                    $('<option>', {
+                                        value: district,
+                                        text: district
+                                    })
+                                );
+                            });
+                            districtSelect.prop('disabled', false);
+                        } else {
+                            districtSelect.append(
+                                '<option value="" disabled>No districts found for this destination</option>'
+                            );
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('AJAX Error:', status, error); // Debugging
+                        districtSelect.empty().append(
+                            '<option value="" disabled>Error loading districts</option>'
+                        );
+                    }
+                });
+            });
+
+
         });
+
 
         document.addEventListener('DOMContentLoaded', function() {
             let planCount = 1; // Initialize with existing plan count
