@@ -358,11 +358,11 @@ class StayController extends Controller
                 ];
             });
 
-        $stayDistrict = stay_district::where('destination', $destination)->firstOrFail();
+        $stayDistrict = stay_district::where('destination', $destination)->first();
 
         // Initialize the result array
         $destinationsWithDistricts = [];
-
+if ($stayDistrict) {
         // Get the districts data (already array if casted in model)
         $districtsData = is_array($stayDistrict->districts_data)
             ? $stayDistrict->districts_data
@@ -381,7 +381,7 @@ class StayController extends Controller
                 'description' => $d['description'] ?? null,
             ];
         }
-
+}
        
 
 
@@ -390,7 +390,7 @@ class StayController extends Controller
             'message' => 'stays successfully retrived.',
             
             'data' => $stays,
-            'districts' => $destinationsWithDistricts
+            'districts' => $destinationsWithDistricts 
         ], 200);
     }
 
