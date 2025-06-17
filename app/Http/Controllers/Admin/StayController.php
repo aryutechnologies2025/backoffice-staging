@@ -344,6 +344,7 @@ class StayController extends Controller
                     'id' => $items->id,
                     'images' => json_decode($items->gallery_image),
                     'destination' => $items->destination,
+                    'district' => $items->district,
                     'stay_title' => $items->stay_title,
                     'stay_description' => $items->stay_description,
                     'stay_location' => $items->stay_location,
@@ -354,10 +355,40 @@ class StayController extends Controller
                     'tag_line' => $items->tag_line,
                 ];
             });
+
+        $stayDistrict = stay_district::where('destination', $destination)->firstOrFail();
+
+        // Initialize the result array
+        $destinationsWithDistricts = [];
+
+        // Get the districts data (already array if casted in model)
+        $districtsData = is_array($stayDistrict->districts_data)
+            ? $stayDistrict->districts_data
+            : json_decode($stayDistrict->districts_data, true);
+
+        // Check if decoding was successful
+        if (json_last_error() !== JSON_ERROR_NONE && !is_array($stayDistrict->districts_data)) {
+            throw new \Exception("Invalid JSON in districts_data");
+        }
+
+        // Process each district
+        foreach ($districtsData as $d) {
+            $destinationsWithDistricts[] = [
+                'name' => $d['destination'] ?? null,
+                'image' => isset($d['image_path']) ? asset($d['image_path']) : null,
+                'description' => $d['description'] ?? null,
+            ];
+        }
+
+       
+
+
         return response()->json([
             'status' => 'success',
             'message' => 'stays successfully retrived.',
-            'data' => $stays
+            
+            'data' => $stays,
+            'districts' => $destinationsWithDistricts
         ], 200);
     }
 
@@ -388,6 +419,7 @@ class StayController extends Controller
                 return [
                     'images' => json_decode($items->gallery_image),
                     'destination' => $items->destination,
+                    'district' => $items->district,
                     'stay_title' => $items->stay_title,
                     'stay_description' => $items->stay_description,
                     'stay_location' => $items->stay_location,
@@ -457,7 +489,7 @@ class StayController extends Controller
         ], 200);
     }
 
-    
+
     public function getDistricts($destination)
     {
         try {
