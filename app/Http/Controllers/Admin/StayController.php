@@ -339,7 +339,7 @@ class StayController extends Controller
     {
         $destination = $request->destination;
 
-        $stays = stays_destination_details::where('is_deleted', '0')
+        $stays = stays_destination_details::where('is_deleted', '0')->where('status','1')
             ->where('destination', $destination)->orderBy('created_at', 'desc')->get()
             ->map(function ($items) {
                 return [
