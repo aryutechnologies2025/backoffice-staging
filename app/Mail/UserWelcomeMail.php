@@ -25,7 +25,8 @@ class UserWelcomeMail extends Mailable
      public function build()
     {
         return $this->subject('Welcome to Our Website!')
-                    ->view('emails.Welcome');
+                    ->view('emails.Welcome')
+                    ->with('user', $this->user);
     }
 
     /**
@@ -34,7 +35,7 @@ class UserWelcomeMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'User Welcome Mail',
+            subject: 'Welcome to Our Website!',
         );
     }
 
