@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
-
+use App\Mail\UserWelcomeMail;
 use App\Models\ContactUs;
 use App\Models\User;
 
@@ -95,6 +95,8 @@ class AuthController extends Controller
                 'created_date' => now(),
 
             ]);
+            Mail::to($user->email)->send(new UserWelcomeMail($user));
+
 
             // Return success response
             return response()->json([
