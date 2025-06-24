@@ -95,7 +95,12 @@ class AuthController extends Controller
                 'created_date' => now(),
 
             ]);
-            Mail::to($user->email)->send(new UserWelcomeMail($user));
+            try {
+                Mail::to($user->email)->send(new UserWelcomeMail($user));
+            } catch (\Exception $e) {
+                Log::error('Mail sending failed: ' . $e->getMessage());
+                // Don't return error — allow signup to succeed
+            }
 
 
             // Return success response
@@ -114,35 +119,35 @@ class AuthController extends Controller
     {
         // Find the user
         $details = User::find($id);
-    
+
         if (!$details) {
             return response()->json([
                 'error' => 'User not found.'
             ], 404);
         }
-    
+
         // Profile image upload
         $profilePath = public_path('/uploads/profiles_pic');
-    
+
         if (!file_exists($profilePath)) {
             if (!mkdir($profilePath, 0755, true) && !is_dir($profilePath)) {
                 Log::error('Failed to create directory: ' . $profilePath);
                 return response()->json(['error' => 'Failed to create upload directory.'], 500);
             }
         }
-    
+
         $filePath1 = $details->profile_image; // Keep the existing profile image
-    
+
         if ($request->hasFile('image_1')) {
             try {
                 $file1 = $request->file('image_1');
                 $filename1 = time() . '_1.' . $file1->getClientOriginalExtension();
                 $file1->move($profilePath, $filename1);
                 $filePath1 = 'uploads/profiles_pic/' . $filename1;
-    
+
                 // Log success
                 Log::info('File uploaded successfully: ' . $filePath1);
-    
+
                 // Optional: Delete the old profile image if it exists
                 if ($details->profile_image && file_exists(public_path($details->profile_image))) {
                     unlink(public_path($details->profile_image));
@@ -152,7 +157,7 @@ class AuthController extends Controller
                 return response()->json(['error' => 'File upload failed.'], 500);
             }
         }
-    
+
         // Update user details
         $details->first_name = $request->input('first_name', $details->first_name);
         $details->last_name = $request->input('last_name', $details->last_name);
@@ -165,15 +170,15 @@ class AuthController extends Controller
         $details->zip_province_code = $request->input('zip_province_code', $details->zip_province_code);
         $details->country = $request->input('country', $details->country);
         $details->profile_image = $filePath1;
-    
+
         $details->save();
-    
+
         return response()->json([
             'message' => 'User updated successfully!',
             'user' => $details,
         ], 200);
     }
-    
+
 
 
 
@@ -252,7 +257,7 @@ class AuthController extends Controller
         ], 200);
     }
 
-    
+
 
 
 
@@ -431,7 +436,7 @@ class AuthController extends Controller
                 'name' => $contact->first_name,
                 'email' => $contact->email,
                 'phone' => $contact->phone,
-                 'comments' => $contact->message,
+                'comments' => $contact->message,
 
             ]));
         } catch (\Exception $e) {
