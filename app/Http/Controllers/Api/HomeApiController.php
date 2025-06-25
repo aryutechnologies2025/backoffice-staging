@@ -116,31 +116,33 @@ class HomeApiController extends Controller
 
             // Build the query
             $query = InclusivePackages::where('status', "1")
-                ->where('is_deleted', "0");
+                ->where('is_deleted', "0")
+                ->whereNotNull('price_amount')
+                ->orderByRaw('CAST(price_amount AS UNSIGNED) ASC');
 
             // Conditionally apply filters based on input
             if ($program_type) {
                 $query->whereJsonContains('category', $program_type);
             }
 
-           if ($theme) {
-    $themeIds = is_array($theme) ? $theme : [$theme];
+            if ($theme) {
+                $themeIds = is_array($theme) ? $theme : [$theme];
 
-    $query->where(function ($q) use ($themeIds) {
-        foreach ($themeIds as $id) {
-            // JSON array check
-            $q->orWhereJsonContains('theme_id', $id);
+                $query->where(function ($q) use ($themeIds) {
+                    foreach ($themeIds as $id) {
+                        // JSON array check
+                        $q->orWhereJsonContains('theme_id', $id);
 
-            // CSV check (handles "15,16", "16", "16,20", etc.)
-            $q->orWhere('theme_id', 'LIKE', "%,$id,%")  // Middle
-               ->orWhere('theme_id', 'LIKE', "$id,%")    // Start
-               ->orWhere('theme_id', 'LIKE', "%,$id")    // End
-               ->orWhere('theme_id', $id);              // Exact match
-        }
-    });
+                        // CSV check (handles "15,16", "16", "16,20", etc.)
+                        $q->orWhere('theme_id', 'LIKE', "%,$id,%")  // Middle
+                            ->orWhere('theme_id', 'LIKE', "$id,%")    // Start
+                            ->orWhere('theme_id', 'LIKE', "%,$id")    // End
+                            ->orWhere('theme_id', $id);              // Exact match
+                    }
+                });
 
-    $view_type = 'all';
-}
+                $view_type = 'all';
+            }
 
             if ($destination) {
                 $query->where('city_details', $destination);
@@ -219,22 +221,22 @@ class HomeApiController extends Controller
                 $category = json_decode($package->category, true) ?? [];
                 $formattedcategory = is_array($category) ? implode(', ', $category) : $category;
                 // Replace the theme processing section with:
-                 if (is_array($themeIds)) {
-                $theme = Themes::whereIn('id', $themeIds)
-                    ->get(['id', 'themes_name'])
-                    ->map(function ($item) {
-                        return [
-                            'id' => $item->id,
-                            'name' => $item->themes_name,
-                        ];
-                    })
-                    ->values();
-            } elseif (!empty($themeIds)) {
-                $themeModel = Themes::find($themeIds);
-                $theme = $themeModel ? [['id' => $themeModel->id, 'name' => $themeModel->themes_name]] : [];
-            } else {
-                $theme = [];
-            }
+                if (is_array($themeIds)) {
+                    $theme = Themes::whereIn('id', $themeIds)
+                        ->get(['id', 'themes_name'])
+                        ->map(function ($item) {
+                            return [
+                                'id' => $item->id,
+                                'name' => $item->themes_name,
+                            ];
+                        })
+                        ->values();
+                } elseif (!empty($themeIds)) {
+                    $themeModel = Themes::find($themeIds);
+                    $theme = $themeModel ? [['id' => $themeModel->id, 'name' => $themeModel->themes_name]] : [];
+                } else {
+                    $theme = [];
+                }
                 // Return the formatted package data, including additional details
                 return [
                     'id' => $package->id,
@@ -273,7 +275,7 @@ class HomeApiController extends Controller
 
                 ];
             });
-            
+
 
             // Return the formatted data with success status
             return response()->json([
