@@ -62,7 +62,11 @@ class CustomerPackage extends Controller
 
     public function insert(Request $request)
     {
-
+         $request->validate([
+        'tour_planning' => 'required|array',
+        'tour_planning.*.title' => 'required|string',
+        'tour_planning.*.description' => 'required|string',
+    ]);
         $customer_package = new customer_package();
         $customer_package->name = ucfirst($request->name);
         $customer_package->phone_number = $request->phone_number;
@@ -88,13 +92,13 @@ class CustomerPackage extends Controller
 
         $customer_package->camp_rule = $campRulesJson;
 
-        $tourPlanningJson = json_encode([
-            // 'plan_title' => $request->input['plan_title'],
-            // 'plan_subtitle' => $request->input['plan_subtitle'],
-            'plan_description' => $request->input('plan_description')
-        ]);
+        // $tourPlanningJson = json_encode([
+        //     // 'plan_title' => $request->input['plan_title'],
+        //     // 'plan_subtitle' => $request->input['plan_subtitle'],
+        //     'plan_description' => $request->input('plan_description')
+        // ]);
 
-        $customer_package->tour_planning = $tourPlanningJson;
+        $customer_package->tour_planning = json_encode($request->input('tour_planning'));;
 
 
         $customer_package->price_title = json_encode($request->input('price_title', []));
@@ -319,7 +323,13 @@ class CustomerPackage extends Controller
 
       public function update(Request $request,$id)
     {
-        Log::info("test",$request->all());
+
+         $request->validate([
+        'tour_planning' => 'required|array',
+        'tour_planning.*.title' => 'required|string',
+        'tour_planning.*.description' => 'required|string',
+    ]);
+        // Log::info("test",$request->all());
         $customer_package = customer_package::find($id);
         $customer_package->name = ucfirst($request->name);
         $customer_package->phone_number = $request->phone_number;
@@ -344,13 +354,13 @@ class CustomerPackage extends Controller
 
         $customer_package->camp_rule = $campRulesJson;
 
-        $tourPlanningJson = json_encode([
-            // 'plan_title' => $request->input['plan_title'],
-            // 'plan_subtitle' => $request->input['plan_subtitle'],
-            'plan_description' => $request->input('plan_description')
-        ]);
+        // $tourPlanningJson = json_encode([
+        //     // 'plan_title' => $request->input['plan_title'],
+        //     // 'plan_subtitle' => $request->input['plan_subtitle'],
+        //     'plan_description' => $request->input('plan_description')
+        // ]);
 
-        $customer_package->tour_planning = $tourPlanningJson;
+        $customer_package->tour_planning = json_encode($request->input('tour_planning'));
 
 
         $customer_package->price_title = json_encode($request->input('price_title', []));
