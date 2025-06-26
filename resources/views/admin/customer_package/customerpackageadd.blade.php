@@ -64,10 +64,10 @@
                 <!-- 1.INFORMATION -->
                 <div class="row mb-3">
                     <div class="col-lg-4">
-                                <label class="fw-bold mb-2">Title </label>
-                                <input type="text" placeholder="Title" id="title" name="title"
-                                    class="form-control py-2 rounded-3 shadow-sm" >
-                            </div>
+                        <label class="fw-bold mb-2">Title </label>
+                        <input type="text" placeholder="Title" id="title" name="title"
+                            class="form-control py-2 rounded-3 shadow-sm">
+                    </div>
 
 
 
@@ -98,48 +98,20 @@
 
 
                     <div class="row mb-3">
-                            <div class="col">
-                                <div class="form-body px-5 rounded-4">
-                                    <h4 class="fw-bold mb-2">02. Tour Planning <span class="text-danger">*</span></h4>
-                                    <div id="plan-container">
-                                        @php
-                                        // Decode JSON if needed
-
-                                        $tourPlanning = json_decode($package_details->tour_planning ?? '{}', true);
-                                        @endphp
-                                        <div class="plan-item">
-                                            <!-- Plan Description -->
-                                            <div class="row g-2 mt-3 align-items-center mb-2">
-                                                <div class="col-lg-12">
-                                                    <label class="form-label mb-2">
-                                                        Plan Description <span class="text-danger">*</span>
-                                                    </label>
-
-                                                    @php
-                                                    $rawDescription = $tourPlanning['tour_planning'] ?? '';
-                                                    $plainTextDescription = html_entity_decode(strip_tags($rawDescription));
-                                                    @endphp
-
-                                                    <input type="hidden" name="plan_description[]" id="plan_description" value="{{ $plainTextDescription }}">
-
-                                                    <div id="summernote3" class="border rounded p-2 shadow-sm bg-light">
-                                                        {!! $rawDescription !!}
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                    <!-- Add New Plan Button -->
-                                    <!-- <div class="text-end ">
+                        <div class="col">
+                            <div class="form-body px-5 rounded-4">
+                                <h4 class="fw-bold mb-2">02. Tour Planning <span class="text-danger">*</span></h4>
+                                <div id="day-wrapper"></div>
+                                <!-- Add New Plan Button -->
+                                <!-- <div class="text-end ">
                                         <button type="button" id="add-plan-btn"
                                             class="btn-add rounded-3 border-0 px-3 py-2 text-white">
                                             <i class="fa fa-plus" aria-hidden="true"></i> Add
                                         </button>
                                     </div> -->
-                                </div>
                             </div>
                         </div>
+                    </div>
 
                     <!-- <div class="row mb-2">
                             <div class="col">
@@ -662,7 +634,7 @@
                         <div class="col-lg-3">
                             <label class="fw-bold mb-3 ">Order</label>
                             <input type="number" placeholder="Order" id="list_order" name="list_order"
-                                value="{{old('order')}}" class="form-control py-2 rounded-3 shadow-sm" >
+                                value="{{old('order')}}" class="form-control py-2 rounded-3 shadow-sm">
                         </div>
                     </div>
 
@@ -1042,13 +1014,64 @@
                     // Handle tour planning and location
                     if (response.package_details) {
                         var tourVal = typeof response.package_details.tour_planning === 'string' ?
-                            JSON.parse(response.package_details.tour_planning).plan_description :
-                            response.package_details.tour_planning.plan_description;
+                            JSON.parse(response.package_details.tour_planning) :
+                            response.package_details.tour_planning;
+
+                        console.log(tourVal);
+
+                        // First, clear all existing day blocks except the first one
+                        $('#day-wrapper').html('');
+
+                        tourVal.forEach(function(day, i) {
+                            const wrapper = document.getElementById('day-wrapper');
+                            const div = document.createElement('div');
+                            div.classList.add('row', 'g-2', 'mb-2', 'day-block');
+
+                            div.innerHTML = `
+        <div class="col-md-5 mb-2">
+            <input type="text" name="tour_planning[${i}][title]" class="form-control py-2 rounded-3 shadow-sm" value="${day.title}" placeholder="Day Title (e.g., Day ${i + 1})">
+        </div>
+        <div class="col-md-5 mb-2">
+            <input type="text" name="tour_planning[${i}][subtitle]" class="form-control py-2 rounded-3 shadow-sm" value="${day.subtitle}" placeholder="Activity Subtitle">
+        </div>
+        <div class="col-md-10 mb-2">
+            <input type="hidden" name="tour_planning[${i}][description]" class="tour-description-hidden">
+            <div class="tour-description-editor"></div>
+        </div>
+        <div class="col-md-1 d-flex align-items-end">
+            ${i > 0 ? `<button type="button" class="btn btn-danger remove-day" onclick="removeDay(this)">
+                <i class="fa fa-trash"></i>
+            </button>` : ''}
+        </div>
+    `;
+
+
+                            wrapper.appendChild(div);
+
+                            // Initialize Summernote and set saved HTML description
+                            const editor = $(div).find('.tour-description-editor');
+                            const hiddenInput = $(div).find('.tour-description-hidden');
+
+                            editor.summernote({
+                                height: 120,
+                                callbacks: {
+                                    onChange: function(contents) {
+                                        hiddenInput.val(contents);
+                                    }
+                                }
+                            });
+
+                            // Set old saved description to Summernote and hidden field
+                            editor.summernote('code', day.description);
+                            hiddenInput.val(day.description);
+                        });
+
+
 
                         if (response.package_details.location) {
                             $('#title').val(response.package_details.title)
                             $('#summernote10').summernote('code', response.package_details.location);
-                           
+
                             $('#summernote3').summernote('code', tourVal);
                         }
 
@@ -1187,13 +1210,13 @@
 
                         // Update hidden input on form submission
                         $('form').on('submit', function() {
-                        
-                          $('#plan_description').val( $('#summernote3').summernote('code'));
-                        $('#location').val($('#summernote10').summernote('code'));
-                         $('#important_info').val($('#summernote4').summernote('code'));
-                        $('#program_inclusion').val($('#summernote5').summernote('code'));
-                        $('#program_exclusion').val($('#summernote9').summernote('code'));
-                    });
+
+                            $('#plan_description').val($('#summernote3').summernote('code'));
+                            $('#location').val($('#summernote10').summernote('code'));
+                            $('#important_info').val($('#summernote4').summernote('code'));
+                            $('#program_inclusion').val($('#summernote5').summernote('code'));
+                            $('#program_exclusion').val($('#summernote9').summernote('code'));
+                        });
 
 
                     }
@@ -1208,6 +1231,10 @@
         });
 
 
+    });
+
+    $(document).on('click', '.remove-day', function() {
+        $(this).closest('.day-block').remove();
     });
 </script>
 @endsection

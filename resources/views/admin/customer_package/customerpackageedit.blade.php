@@ -106,45 +106,153 @@
                         <div class="col">
                             <div class="form-body px-5 rounded-4">
                                 <h4 class="fw-bold mb-2">02. Tour Planning <span class="text-danger">*</span></h4>
-                                <div id="plan-container">
-                                    @php
-                                    // Decode JSON if needed
-
-                                    $tourPlanning = json_decode($customer->tour_planning ?? '{}', true);
-                                    @endphp
-                                    <div class="plan-item">
-                                        <!-- Plan Description -->
-                                        <div class="row g-2 mt-3 align-items-center mb-2">
-                                            <div class="col-lg-12">
-                                                <label class="form-label mb-2">
-                                                    Plan Description <span class="text-danger">*</span>
-                                                </label>
-
-                                                @php
-                                                $rawDescription = $tourPlanning['plan_description'][0] ?? '';
-                                                $plainTextDescription = html_entity_decode(strip_tags($rawDescription));
-                                                @endphp
-
-                                                <input type="hidden" name="plan_description[]" id="plan_description" value="{{ $plainTextDescription }}">
-
-                                                <div id="summernote3" class="border rounded p-2 shadow-sm bg-light">
-                                                    {!! $rawDescription !!}
+                                <div id="day-wrapper">
+                                            @php
+                                                $tourPlanning = [];
+                                                if (!empty($customer->tour_planning)) {
+                                                    $tourPlanning = is_array($customer->tour_planning)
+                                                        ? $customer->tour_planning
+                                                        : json_decode($customer->tour_planning, true);
+                                                }
+                                            @endphp
+                                            @if (!empty($tourPlanning) && is_array($tourPlanning))
+                                                @foreach ($tourPlanning as $i => $day)
+                                                    <div class="row g-2 mb-2 day-block">
+                                                        <div class="col-md-5 mb-2">
+                                                            <label class="form-label fw-bold">Day Title <span class="text-danger">*</span></label>
+                                                            <input type="text"
+                                                                name="tour_planning[{{ $i }}][title]"
+                                                                class="form-control py-2 rounded-3 shadow-sm"
+                                                                placeholder="Day Title (e.g., Day {{ (int) $i + 1 }})"
+                                                                value="{{ $day['title'] ?? '' }}">
+                                                        </div>
+                                                        <div class="col-md-5 mb-2">
+                                                            <label class="form-label fw-bold">Day Subtitle <span class="text-danger">*</span></label>
+                                                            <input type="text"
+                                                                name="tour_planning[{{ $i }}][subtitle]"
+                                                                class="form-control py-2 rounded-3 shadow-sm"
+                                                                placeholder="Day Subtitle (e.g., Day {{ (int) $i + 1 }})"
+                                                                value="{{ $day['subtitle'] ?? '' }}">
+                                                        </div>
+                                                        <div class="col-md-10 mb-2">
+                                                            <label class="form-label fw-bold">Activity Description <span class="text-danger">*</span></label>
+                                                            <input type="hidden"
+                                                                name="tour_planning[{{ $i }}][description]"
+                                                                class="form-control py-2 rounded-3 shadow-sm tour-description-hidden"
+                                                                placeholder="Activity Description"
+                                                                value="{{ $day['description'] ?? '' }}">
+                                                            <div class="tour-description-editor"></div>
+                                                        </div>
+                                                        <div class="col-md-1 d-flex align-items-end">
+                                                            @if ($loop->first)
+                                                                <!-- No remove button for first row -->
+                                                            @else
+                                                                <button type="button" class="btn btn-danger remove-day"
+                                                                    onclick="removeDay(this)">
+                                                                    <i class="fa fa-trash"></i>
+                                                                </button>
+                                                            @endif
+                                                        </div>
+                                                    </div>
+                                                @endforeach
+                                                @php $tourPlanningIndex = count($tourPlanning); @endphp
+                                            @else
+                                                <div class="row g-2 mb-2 day-block">
+                                                    <div class="col-md-5 mb-2">
+                                                        <label class="form-label fw-bold">Day Title <span class="text-danger">*</span></label>
+                                                        <input type="text" name="tour_planning[0][title]"
+                                                            class="form-control py-2 rounded-3 shadow-sm"
+                                                            placeholder="Day Title (e.g., Day 1)">
+                                                    </div>
+                                                    <div class="col-md-5 mb-2">
+                                                        <label class="form-label fw-bold">Day Subtitle <span class="text-danger">*</span></label>
+                                                        <input type="text" name="tour_planning[0][subtitle]"
+                                                            class="form-control py-2 rounded-3 shadow-sm"
+                                                            placeholder="Day Subtitle ">
+                                                    </div>
+                                                    <div class="col-md-6 mb-2">
+                                                        <label class="form-label fw-bold">Activity Description <span class="text-danger">*</span></label>
+                                                        <input type="hidden" name="tour_planning[0][description]"
+                                                            class="form-control py-2 rounded-3 shadow-sm tour-description-hidden"
+                                                            placeholder="Activity Description">
+                                                        <div class="tour-description-editor"></div>
+                                                    </div>
+                                                    <div class="col-md-1 d-flex align-items-end">
+                                                        <!-- No remove button for first row -->
+                                                    </div>
                                                 </div>
-                                            </div>
+                                                @php $tourPlanningIndex = 1; @endphp
+                                            @endif
                                         </div>
-
-                                    </div>
-                                </div>
-                                <!-- Add New Plan Button -->
-                                <!-- <div class="text-end ">
-                                        <button type="button" id="add-plan-btn"
-                                            class="btn-add rounded-3 border-0 px-3 py-2 text-white">
-                                            <i class="fa fa-plus" aria-hidden="true"></i> Add
+                                        <button type="button" class="btn-add rounded border-0 px-4 py-2 text-white mt-2"
+                                            onclick="addDay()">
+                                            <i class="fa fa-plus" aria-hidden="true"></i> Add More
                                         </button>
-                                    </div> -->
                             </div>
                         </div>
                     </div>
+                       <script>
+                                let index = {{ $tourPlanningIndex ?? 1 }};
+
+                                function addDay() {
+                                    const wrapper = document.getElementById('day-wrapper');
+                                    const div = document.createElement('div');
+                                         div.classList.add('row', 'g-2', 'mb-2', 'day-block');
+                                    div.innerHTML = `
+                                        <div class="col-md-5 mb-2">
+                                            <input type="text" name="tour_planning[${index}][title]" class="form-control py-2 rounded-3 shadow-sm" placeholder="Day Title (e.g., Day ${index + 1})">
+                                        </div>
+                                        <div class="col-md-5 mb-2">
+                                            <input type="text" name="tour_planning[${index}][subtitle]" class="form-control py-2 rounded-3 shadow-sm" placeholder="Day Subtitle">
+                                        </div>
+                                        <div class="col-md-10 mb-2">
+                                            <input type="hidden" name="tour_planning[${index}][description]" class="form-control py-2 rounded-3 shadow-sm tour-description-hidden" placeholder="Activity Description">
+                                            <div class="tour-description-editor"></div>
+                                        </div>
+                                        <div class="col-md-1 d-flex align-items-end">
+                                            <button type="button" class="btn btn-danger remove-day" onclick="removeDay(this)">
+                                                <i class="fa fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    `;
+                                    wrapper.appendChild(div);
+                                    // Initialize Summernote for the new editor
+                                    $(div).find('.tour-description-editor').summernote({
+                                        height: 120,
+                                        callbacks: {
+                                            onChange: function(contents) {
+                                                $(div).find('.tour-description-hidden').val(contents);
+                                            }
+                                        }
+                                    });
+                                    index++;
+                                }
+
+                                function removeDay(btn) {
+                                    btn.closest('.day-block').remove();
+                                }
+
+                                // Initialize Summernote for all description editors on page load
+                                document.addEventListener('DOMContentLoaded', function() {
+                                    $('#day-wrapper .day-block').each(function() {
+                                        var $block = $(this);
+                                        var $editor = $block.find('.tour-description-editor');
+                                        var $hidden = $block.find('.tour-description-hidden');
+                                        // Set initial content if exists
+                                        if ($hidden.val()) {
+                                            $editor.html($hidden.val());
+                                        }
+                                        $editor.summernote({
+                                            height: 120,
+                                            callbacks: {
+                                                onChange: function(contents) {
+                                                    $hidden.val(contents);
+                                                }
+                                            }
+                                        });
+                                    });
+                                });
+                            </script>
 
                     <!-- <div class="row mb-2">
                             <div class="col">
@@ -1037,10 +1145,57 @@
 
                     // Handle tour planning and location
                     if (response.package_details) {
-                        var tourVal = typeof response.package_details.tour_planning === 'string' ?
-                            JSON.parse(response.package_details.tour_planning).plan_description :
-                            response.package_details.tour_planning.plan_description;
+                         var tourVal = typeof response.package_details.tour_planning === 'string' ?
+                            JSON.parse(response.package_details.tour_planning) :
+                            response.package_details.tour_planning;
 
+                        console.log(tourVal);
+
+                        // First, clear all existing day blocks except the first one
+                        $('#day-wrapper').html('');
+
+                        tourVal.forEach(function(day, i) {
+                            const wrapper = document.getElementById('day-wrapper');
+                            const div = document.createElement('div');
+                            div.classList.add('row', 'g-2', 'mb-2', 'day-block');
+
+                            div.innerHTML = `
+        <div class="col-md-5 mb-2">
+            <input type="text" name="tour_planning[${i}][title]" class="form-control py-2 rounded-3 shadow-sm" value="${day.title}" placeholder="Day Title (e.g., Day ${i + 1})">
+        </div>
+        <div class="col-md-5 mb-2">
+            <input type="text" name="tour_planning[${i}][subtitle]" class="form-control py-2 rounded-3 shadow-sm" value="${day.subtitle}" placeholder="Activity Subtitle">
+        </div>
+        <div class="col-md-10 mb-2">
+            <input type="hidden" name="tour_planning[${i}][description]" class="tour-description-hidden">
+            <div class="tour-description-editor"></div>
+        </div>
+        <div class="col-md-1 d-flex align-items-end">
+            ${i > 0 ? `<button type="button" class="btn btn-danger remove-day" onclick="removeDay(this)">
+                <i class="fa fa-trash"></i>
+            </button>` : ''}
+        </div>
+    `;
+
+                            wrapper.appendChild(div);
+
+                            // Initialize Summernote and set saved HTML description
+                            const editor = $(div).find('.tour-description-editor');
+                            const hiddenInput = $(div).find('.tour-description-hidden');
+
+                            editor.summernote({
+                                height: 120,
+                                callbacks: {
+                                    onChange: function(contents) {
+                                        hiddenInput.val(contents);
+                                    }
+                                }
+                            });
+
+                            // Set old saved description to Summernote and hidden field
+                            editor.summernote('code', day.description);
+                            hiddenInput.val(day.description);
+                        });
                         if (response.package_details.location) {
                             $('#title').val(response.package_details.title)
                             $('#summernote10').summernote('code', response.package_details.location);
@@ -1161,6 +1316,7 @@
                                 $(this).prop('checked', selectedactivities[$(this).val()] || false);
                             });
                         }
+
                         //Safety Features
                         if (response.selectedsafety_features) {
                             const selectedsafety_features = {};
