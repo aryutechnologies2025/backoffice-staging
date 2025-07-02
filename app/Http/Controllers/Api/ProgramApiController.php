@@ -1679,7 +1679,7 @@ class ProgramApiController extends Controller
 
                 ];
             });
-            
+
 
         $addressDetails = Address::whereIn('id', $addressDetailsIds)
             ->get(['id', 'title', 'city', 'state', 'country'])
@@ -2195,5 +2195,45 @@ class ProgramApiController extends Controller
             'message' => 'Wishlist retrieved successfully.',
             'data' => $wishlist
         ], 200);
+    }
+
+    public function getPriceWiseProgramm(Request $request)
+    {
+        //price_check - under_5k, 5k_to_10k, 10k_to_20k, 20k_to_30k, 30k_to_40k, above_40k
+        $priceCheck = $request->input('price_check');
+
+        $packages = InclusivePackages::where('status', "1")
+            ->where('is_deleted', "0")
+            ->whereNotNull('price_amount')
+            ->get()
+            ->filter(function ($package) use ($priceCheck) {
+                $prices = json_decode($package->price_amount, true);
+                $firstPrice = (float)collect($prices)->filter()->first();
+
+                switch ($priceCheck) {
+                    case '0':
+                        return $firstPrice == 0;
+                    case 'under_5k':
+                        return $firstPrice > 0 && $firstPrice <= 5000;
+                    case '5k_to_10k':
+                        return $firstPrice > 5000 && $firstPrice <= 10000;
+                    case '10k_to_20k':
+                        return $firstPrice > 10000 && $firstPrice <= 20000;
+                    case '20k_to_30k':
+                        return $firstPrice > 20000 && $firstPrice <= 30000;
+                    case '30k_to_40k':
+                        return $firstPrice > 30000 && $firstPrice <= 40000;
+                    case 'above_40k':
+                        return $firstPrice > 40000;
+                    default:
+                        return true;
+                }
+            });
+
+        return response()->json([
+            'packages' => $packages->values(),
+            'count' => $packages->count(),
+            'message' => 'Packages filtered successfully'
+        ]);
     }
 }

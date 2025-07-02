@@ -89,6 +89,9 @@ Route::prefix('v1')->group(function () {
 
         Route::get('/get-stay-destination', [StayDestinationController::class, 'get_stay_destination']);
         Route::post('/store-stay-enquiry', [StayEnquiryController::class, 'store']);
+
+        //price fillter
+        Route::get('/get-pricewise-programs', [ProgramApiController::class, 'getPriceWiseProgramm']);
     });
 });
 
@@ -108,7 +111,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/add-remove-wishlist', [ProgramApiController::class, 'manage_wishlist']);
 
     //stay wishlist
-     Route::post('/add-remove-staywishlist', [ProgramApiController::class, 'manage_wishlist_stay']);
+    Route::post('/add-remove-staywishlist', [ProgramApiController::class, 'manage_wishlist_stay']);
 
     // Program Details
     Route::post('/getEnquiryDetailsByEmail', [ProgramApiController::class, 'getEnquiryDetailsByEmail']);
