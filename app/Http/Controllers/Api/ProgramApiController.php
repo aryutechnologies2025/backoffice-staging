@@ -2229,15 +2229,6 @@ class ProgramApiController extends Controller
                         return true;
                 }
             });
-
-        if ($packages->isEmpty()) {
-            return response()->json([
-                'status' => 'success',
-                'message' => 'No record found.',
-                'data' => []
-            ], 200);
-        }
-
         // Helper function to get amenities, food & beverage, activities, and safety features
         $getDetailsById = function ($package) {
             $id = $package->id;
@@ -2247,108 +2238,105 @@ class ProgramApiController extends Controller
             return json_decode($response->getContent(), true)['data'];
         };
 
+        $formattedPackages = $packages->map(function ($package) use ($getDetailsById) {
+            // Decode JSON fields
+            $eventsPackageImages = json_decode($package->cover_img, true);
+            $tourPlanning = json_decode($package->tour_planning, true);
+            $campRule = json_decode($package->camp_rule, true);
+            $amenityDetails = json_decode($package->amenity_details, true);
+            $activities = json_decode($package->activities, true);
+            $safetyFeatures = json_decode($package->safety_features, true);
+            $themeIds = json_decode($package->theme_id, true) ?? [];
 
-        // Process each package to format the output
-            $formattedPackages = $packages->map(function ($package) use ($getDetailsById) {
-                // Decode JSON fields
-                $eventsPackageImages = json_decode($package->cover_img, true);
-                $tourPlanning = json_decode($package->tour_planning, true);
-                $campRule = json_decode($package->camp_rule, true);
-                $amenityDetails = json_decode($package->amenity_details, true);
-                $activities = json_decode($package->activities, true);
-                $safetyFeatures = json_decode($package->safety_features, true);
-                $themeIds = json_decode($package->theme_id, true) ?? [];
+            $price_title = json_decode($package->price_tilte, true);
 
-                $price_title = json_decode($package->price_tilte, true);
+            $price_amount = json_decode($package->price_amount, true);
 
-                $price_amount = json_decode($package->price_amount, true);
-
-                // Process reviews and attach user data
-                $reviews = $package->reviews->map(function ($review) {
-                    $user = $review->user; // Get the related user (reviewer's name and image)
-                    return [
-                        'first_name' => $review->user->first_name ?? null,  // Get user name, if available
-                        'profile_image' => $review->user->profile_image ?? null,        // User's image
-                        'comment' => $review->comment,
-                        'rating' => $review->rating,
-                        'date' => $review->created_at->format('M d, Y'),
-                    ];
-                });
-                // Fetch amenities, food & beverage, activities, safety features
-                $details = $getDetailsById($package);
-
-                // Format the start date
-                $formattedStartDate = \Carbon\Carbon::parse($package->start_date)->format('M d, Y');
-                $formattedendDate = \Carbon\Carbon::parse($package->return_date)->format('M d, Y');
-
-                // Extract the first image URL
-                $formattedLocation = ucfirst($package->address) . ', ' . ucfirst($package->state);
-                $totalReviews = $package->clientReviews->count();
-                $averageRating = $package->reviews->avg('rating');
-                $category = json_decode($package->category, true) ?? [];
-                $formattedcategory = is_array($category) ? implode(', ', $category) : $category;
-                // Replace the theme processing section with:
-                if (is_array($themeIds)) {
-                    $theme = Themes::whereIn('id', $themeIds)
-                        ->get(['id', 'themes_name'])
-                        ->map(function ($item) {
-                            return [
-                                'id' => $item->id,
-                                'name' => $item->themes_name,
-                            ];
-                        })
-                        ->values();
-                } elseif (!empty($themeIds)) {
-                    $themeModel = Themes::find($themeIds);
-                    $theme = $themeModel ? [['id' => $themeModel->id, 'name' => $themeModel->themes_name]] : [];
-                } else {
-                    $theme = [];
-                }
-                // Return the formatted package data, including additional details
+            // Process reviews and attach user data
+            $reviews = $package->reviews->map(function ($review) {
+                $user = $review->user; // Get the related user (reviewer's name and image)
                 return [
-                    'id' => $package->id,
-                    'title' => ucfirst($package->title),
-                    'category' => ucfirst($formattedcategory),
-                    // 'location' => $formattedLocation,
-                    'total_days' => $package->total_days,
-                    'member_capacity' => $package->member_capacity,
-                    // 'price' => $package->price,
-                    //  'actual_price' => $package->actual_price,
-                    'cover_img' => $package->cover_img,
-                    'start_date' => $formattedStartDate,
-                    'end_date' => $formattedendDate,
-                    // 'theme_id' => $package->theme ? $package->theme->id : null,
-                    'theme_id' => $package->theme_id,
-                    'theme' =>  $package->theme->themes_name ?? null,
-                    'destination_id' => $package->destination ? $package->destination->id : null,
-                    'destination' => $package->destination ? $package->destination->city_name : null,
-                    'average_rating' => number_format($averageRating, 1),
-                    'totalReviews' => $totalReviews,
-                    'current_location' => $package->location,
-                    'total_room' => $package->total_room,
-                    'bath_room' => $package->bath_room,
-                    'bed_room' => $package->bed_room,
-                    'hall' => $package->hall,
-                    'reviews' => $reviews,
-                    // Adding the fetched details
-                    'price_tilte' => $price_title,
-                    'pricing' => $price_amount,
-                    'amenities' => $details['amenities'] ?? [],
-                    'foodBeverages' => $details['foodBeverages'] ?? [],
-                    'activities' => $details['activities'] ?? [],
-                    'safetyFeatures' => $details['safetyFeatures'] ?? [],
-                    'addressDetails' => $details['addressDetails'] ?? [],
-
-
+                    'first_name' => $review->user->first_name ?? null,  // Get user name, if available
+                    'profile_image' => $review->user->profile_image ?? null,        // User's image
+                    'comment' => $review->comment,
+                    'rating' => $review->rating,
+                    'date' => $review->created_at->format('M d, Y'),
                 ];
             });
+            // Fetch amenities, food & beverage, activities, safety features
+            $details = $getDetailsById($package);
+
+            // Format the start date
+            $formattedStartDate = \Carbon\Carbon::parse($package->start_date)->format('M d, Y');
+            $formattedendDate = \Carbon\Carbon::parse($package->return_date)->format('M d, Y');
+
+            // Extract the first image URL
+            $formattedLocation = ucfirst($package->address) . ', ' . ucfirst($package->state);
+            $totalReviews = $package->clientReviews->count();
+            $averageRating = $package->reviews->avg('rating');
+            $category = json_decode($package->category, true) ?? [];
+            $formattedcategory = is_array($category) ? implode(', ', $category) : $category;
+            // Replace the theme processing section with:
+            if (is_array($themeIds)) {
+                $theme = Themes::whereIn('id', $themeIds)
+                    ->get(['id', 'themes_name'])
+                    ->map(function ($item) {
+                        return [
+                            'id' => $item->id,
+                            'name' => $item->themes_name,
+                        ];
+                    })
+                    ->values();
+            } elseif (!empty($themeIds)) {
+                $themeModel = Themes::find($themeIds);
+                $theme = $themeModel ? [['id' => $themeModel->id, 'name' => $themeModel->themes_name]] : [];
+            } else {
+                $theme = [];
+            }
+            // Return the formatted package data, including additional details
+            return [
+                'id' => $package->id,
+                'title' => ucfirst($package->title),
+                'category' => ucfirst($formattedcategory),
+                // 'location' => $formattedLocation,
+                'total_days' => $package->total_days,
+                'member_capacity' => $package->member_capacity,
+                // 'price' => $package->price,
+                //  'actual_price' => $package->actual_price,
+                'cover_img' => $package->cover_img,
+                'start_date' => $formattedStartDate,
+                'end_date' => $formattedendDate,
+                // 'theme_id' => $package->theme ? $package->theme->id : null,
+                'theme_id' => $package->theme_id,
+                'theme' =>  $package->theme->themes_name ?? null,
+                'destination_id' => $package->destination ? $package->destination->id : null,
+                'destination' => $package->destination ? $package->destination->city_name : null,
+                'average_rating' => number_format($averageRating, 1),
+                'totalReviews' => $totalReviews,
+                'current_location' => $package->location,
+                'total_room' => $package->total_room,
+                'bath_room' => $package->bath_room,
+                'bed_room' => $package->bed_room,
+                'hall' => $package->hall,
+                'reviews' => $reviews,
+                // Adding the fetched details
+                'price_tilte' => $price_title,
+                'pricing' => $price_amount,
+                'amenities' => $details['amenities'] ?? [],
+                'foodBeverages' => $details['foodBeverages'] ?? [],
+                'activities' => $details['activities'] ?? [],
+                'safetyFeatures' => $details['safetyFeatures'] ?? [],
+                'addressDetails' => $details['addressDetails'] ?? [],
 
 
-            // Return the formatted data with success status
-            return response()->json([
-                'status' => 'success',
-                'message' => 'Data retrieved successfully.',
-                'data' => $formattedPackages
-            ], 200);
+            ];
+        });
+
+
+        return response()->json([
+            'packages' => $formattedPackages->values(),
+            'count' => $formattedPackages->count(),
+            'message' => 'Packages filtered successfully'
+        ]);
     }
 }
