@@ -162,6 +162,31 @@ class HomeApiController extends Controller
             // Execute the query
             $packages = $query->with(['theme', 'destination', 'clientReviews'])->orderBy('list_order', 'asc')->get();
 
+            $packages = $packages->sortBy(function ($package) {
+                $prices = json_decode($package->price_amount, true) ?? [];
+                return (float)($prices[0] ?? PHP_INT_MAX); // Sort by first price value
+            })->values();
+
+            // $packages = $packages->sortBy(function ($package) {
+            //     $prices = json_decode($package->price_amount, true) ?? [];
+
+            //     // Get first price value
+            //     $firstPrice = $prices[0] ?? null;
+
+            //     // Handle null or invalid values
+            //     if ($firstPrice === null || $firstPrice === 'null') {
+            //         return PHP_INT_MAX; // Push null values to the end
+            //     }
+
+            //     // Clean the price string (remove quotes and trim whitespace)
+            //     if (is_string($firstPrice)) {
+            //         $firstPrice = trim(str_replace(['"', "'"], '', $firstPrice));
+            //     }
+
+            //     // Convert to float if numeric, otherwise use a high value
+            //     return is_numeric($firstPrice) ? (float)$firstPrice : PHP_INT_MAX;
+            // })->values();
+
             // Check if any packages were found
             if ($packages->isEmpty()) {
                 return response()->json([
