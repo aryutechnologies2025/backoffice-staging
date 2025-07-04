@@ -1757,11 +1757,27 @@ class ProgramApiController extends Controller
 
             //stays gallery image
 
-            $stay_details = $package->stay_details_id;
+            // $stay_details = $package->stay_details_id;
 
-            $stay_gallery = stays_destination_details::where('id',  $stay_details)->select('id','gallery_image')->first();
+            // $stay_gallery = stays_destination_details::where('id',  $stay_details)->select('id','gallery_image')->first();
 
-            $stay_gallery = json_decode($stay_gallery->gallery_image, true) ?? [];
+            // $stay_gallery = json_decode($stay_gallery->gallery_image, true) ?? [];
+            $stay_gallery = [];
+
+            // Check if stay_details_id exists and is not null
+            if (!empty($package->stay_details_id)) {
+                $stay_details = $package->stay_details_id;
+
+                // Get gallery images with null check
+                $stay_gallery_record = stays_destination_details::where('id', $stay_details)
+                    ->select('id', 'gallery_image')
+                    ->first();
+
+                // Safely decode JSON only if record exists and has gallery_image
+                if ($stay_gallery_record && !empty($stay_gallery_record->gallery_image)) {
+                    $stay_gallery = json_decode($stay_gallery_record->gallery_image, true) ?? [];
+                }
+            }
             // dd($stay_gallery);
 
             $amenityIds = json_decode($package->amenities, true) ?? [];
