@@ -17,6 +17,7 @@ use App\Models\InclusivePackages;
 use App\Models\Safetyfeatures;
 use App\Models\Themes;
 use App\Models\Themes_category;
+use App\Models\stays_destination_details;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -62,11 +63,13 @@ class CustomerPackage extends Controller
 
     public function insert(Request $request)
     {
-         $request->validate([
-        'tour_planning' => 'required|array',
-        'tour_planning.*.title' => 'required|string',
-        'tour_planning.*.description' => 'required|string',
-    ]);
+
+        // dd($request->all());
+        $request->validate([
+            'tour_planning' => 'required|array',
+            'tour_planning.*.title' => 'required|string',
+            'tour_planning.*.description' => 'required|string',
+        ]);
         $customer_package = new customer_package();
         $customer_package->name = ucfirst($request->name);
         $customer_package->phone_number = $request->phone_number;
@@ -77,6 +80,7 @@ class CustomerPackage extends Controller
 
 
         $customer_package->important_info = $request->input('important_info');
+        $customer_package->stay_details_id = $request->input('package_stay');
         $customer_package->package_inclusion = json_encode($request->input('program_inclusion'));
 
         $customer_package->package_exclusion = json_encode($request->input('program_exclusion'));
@@ -234,6 +238,16 @@ class CustomerPackage extends Controller
         $safety_features_dts = Safetyfeatures::where('status', "1")->where('is_deleted', "0")->get();
         $geo_feature_dts = Geo_feature::where('status', "1")->where('is_deleted', "0")->pluck('geo_feature', 'id');
         $themes = Themes::where('status', "1")->where('is_deleted', "0")->pluck('themes_name', 'id');
+
+        $package_details_citys = InclusivePackages::where('id', $request->id)
+            ->pluck('city_details')
+            ->toArray();
+
+        // dump($package_details_citys);
+        $cities = City::where('status', "1")->where('is_deleted', "0")->whereIn('id', $package_details_citys)->pluck('city_name')->toArray();
+
+        $stay_details = stays_destination_details::where('is_deleted', '0')->whereIn('destination', $cities)->orderBy('created_at', 'desc')->select('id', 'stay_title')->get();
+        // dd($cities);
         if (!$package_details) {
             return redirect()->route('admin.inclusive_package_list')->with('error', 'Package not found');
         }
@@ -265,6 +279,7 @@ class CustomerPackage extends Controller
         $data = [
             'package_details' => $package_details,
             'cities_dts' => $cities_dts,
+            'cities_details' => $stay_details,
             'themes' => $themes,
             'amenities_dts' => $amenities_dts,
             'foodBeverages_dts' => $foodBeverages_dts,
@@ -288,9 +303,9 @@ class CustomerPackage extends Controller
         return json_encode($data);
     }
 
-      public function edit_form(Request $request, $id)
+    public function edit_form(Request $request, $id)
     {
-         $title = 'Edit Customer Package';
+        $title = 'Edit Customer Package';
         $cities = City::where('status', "1")->where('is_deleted', "0")->pluck('city_name', 'id');
         $themes = Themes::where('status', "1")->where('is_deleted', "0")->pluck('themes_name', 'id');
         $amenities = Amenities::where('status', "1")->where('is_deleted', "0")->get();
@@ -302,34 +317,44 @@ class CustomerPackage extends Controller
         $titles = DB::table('inclusive_package_details')->where('is_deleted', '0')->pluck('title', 'id');
 
         $customer = customer_package::find($id);
+
+        $package_details_citys = InclusivePackages::where('id', $id)
+            ->pluck('city_details')
+            ->toArray();
+
+        // dump($package_details_citys);
+        $cities = City::where('status', "1")->where('is_deleted', "0")->whereIn('id', $package_details_citys)->pluck('city_name')->toArray();
+
+        $stay_details = stays_destination_details::where('is_deleted', '0')->whereIn('destination', $cities)->orderBy('created_at', 'desc')->select('id', 'stay_title')->get();
         if (!$customer) {
             return redirect()->route('admin.influencers.list')
                 ->with('error', 'Influencer not found.');
         }
 
         return view('admin.customer_package.customerpackageedit', compact(
-            'title','customer',
+            'title',
+            'customer',
             'titles',
             'cities',
             'themes',
             'amenities',
             'foodBeverages',
             'activities',
-            'safety_features'
+            'safety_features',
+            'stay_details'
         ));
-      
     }
 
 
-      public function update(Request $request,$id)
+    public function update(Request $request, $id)
     {
 
-         $request->validate([
-        'tour_planning' => 'required|array',
-        'tour_planning.*.title' => 'required|string',
-        'tour_planning.*.description' => 'required|string',
-    ]);
-        // Log::info("test",$request->all());
+        $request->validate([
+            'tour_planning' => 'required|array',
+            'tour_planning.*.title' => 'required|string',
+            'tour_planning.*.description' => 'required|string',
+        ]);
+        // dd("test",$request->all());
         $customer_package = customer_package::find($id);
         $customer_package->name = ucfirst($request->name);
         $customer_package->phone_number = $request->phone_number;
@@ -337,9 +362,11 @@ class CustomerPackage extends Controller
         $customer_package->package_id = $customer_package->package_id;
         $customer_package->package_type = $request->title;
 
+        $customer_package->stay_details_id = $request->package_stay;
+
 
         $customer_package->important_info = $request->input('important_info');
-        $customer_package->package_inclusion = json_encode($request->input('program_inclusion')) ?? $request->input('program_inclusion') ;
+        $customer_package->package_inclusion = json_encode($request->input('program_inclusion')) ?? $request->input('program_inclusion');
 
         $customer_package->package_exclusion = json_encode($request->input('program_exclusion'));
 
@@ -396,5 +423,4 @@ class CustomerPackage extends Controller
         return redirect()->route('admin.CustomerPackage_list')
             ->with('success', 'customer Updated successfully');
     }
-
 }

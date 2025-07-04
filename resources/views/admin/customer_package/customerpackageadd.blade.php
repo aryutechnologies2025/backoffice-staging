@@ -59,6 +59,14 @@
                 </select>
             </div>
 
+            <div class="col-md-5 mb-3">
+                <label for="title_id" class="form-label">Select Stays</label>
+                <select class="package" name="package_stay" id="package_stay" class="form-control">
+                    <option disabled selected>Select Package Type</option>
+
+                </select>
+            </div>
+
             <div class="test">
                 <h2>Package Details</h2>
                 <!-- 1.INFORMATION -->
@@ -1010,6 +1018,53 @@
             success: function(response) {
                 try {
                     response = typeof response === 'string' ? JSON.parse(response) : response;
+
+                    const packageStaySelect = $('#package_stay');
+
+                    packageStaySelect.empty().append(
+                        $('<option></option>')
+                        .val('')
+                        .text('Select Package Type')
+                        .prop('disabled', true)
+                        .prop('selected', true)
+                    );
+
+                    if (response && response.cities_details && Array.isArray(response.cities_details)) {
+                        const validStays = response.cities_details.filter(stay =>
+                            stay && stay.id !== undefined && stay.stay_title
+                        );
+
+                        if (validStays.length > 0) {
+                            // Add each valid stay as an option
+                            validStays.forEach(stay => {
+                                packageStaySelect.append(
+                                    $('<option></option>')
+                                    .val(stay.id)
+                                    .text(stay.stay_title)
+                                );
+                            });
+
+                            // Enable select if it was disabled
+                            packageStaySelect.prop('disabled', false);
+                        } else {
+                            // No valid stays found
+                            packageStaySelect.append(
+                                $('<option></option>')
+                                .val('')
+                                .text('No available stays')
+                            );
+                            packageStaySelect.prop('disabled', true);
+                        }
+                    } else {
+                        // Invalid response structure
+                        packageStaySelect.append(
+                            $('<option></option>')
+                            .val('')
+                            .text('Invalid data format')
+                        );
+                        packageStaySelect.prop('disabled', true);
+                        console.error('Invalid response structure:', response);
+                    }
 
                     // Handle tour planning and location
                     if (response.package_details) {

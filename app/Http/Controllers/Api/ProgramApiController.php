@@ -34,6 +34,7 @@ use App\Models\stays_whishlist;
 use App\Models\Themes;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use App\Models\stays_destination_details;
 
 class ProgramApiController extends Controller
 {
@@ -1754,6 +1755,15 @@ class ProgramApiController extends Controller
                 ], 404);
             }
 
+            //stays gallery image
+
+            $stay_details = $package->stay_details_id;
+
+            $stay_gallery = stays_destination_details::where('id',  $stay_details)->select('id','gallery_image')->first();
+
+            $stay_gallery = json_decode($stay_gallery->gallery_image, true) ?? [];
+            // dd($stay_gallery);
+
             $amenityIds = json_decode($package->amenities, true) ?? [];
             $foodBeverageIds = json_decode($package->food_beverages, true) ?? [];
             $activityIds = json_decode($package->activities, true) ?? [];
@@ -1863,6 +1873,7 @@ class ProgramApiController extends Controller
                 'tour_planning' => $tourPlanning,
                 'cover_img' => $Inclusivepackage->cover_img,
                 'gallery_img' => $eventsPackageImages,
+                'stay_images' => $stay_gallery,
 
                 // 'total_days' => $package->total_days,
                 // 'member_capacity' => $package->member_capacity,
