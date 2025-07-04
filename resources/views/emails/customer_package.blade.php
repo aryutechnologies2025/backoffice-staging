@@ -16,7 +16,7 @@
         <li><strong>Phone Number:</strong> {{$details['phone_number']}}</li>
         <li><strong>Package:</strong> {{$details['package_type'] }}</li>
         Package Details: <a href="https://innerpece.com/{{$details['package_id']}}/{{$details['package_type']}}#{{$details['name']}}">https://innerpece.com/{{$details['package_id']}}/{{$details['package_type']}}</a>
-            <p>If you have any urgent inquiries, please contact us at bharath@innerpece.com or +91 6384131642  </p>
+            <p>If you have any urgent inquiries, please contact us at bharath@innerpece.com, jay@innerpece.com or +91 6384131642  </p>
         </ul>
 
         <p>Best regards,</p>

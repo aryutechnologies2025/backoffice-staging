@@ -1,23 +1,24 @@
 @extends('layouts.app')
 @Section('content')
 
- <style>
-   a:hover {
+<style>
+    a:hover {
         color: rgb(27, 108, 138);
     }
-    a{
-        color:rgb(37, 150, 190);
-    }
-    
 
-    .city{
+    a {
+        color: rgb(37, 150, 190);
+    }
+
+
+    .city {
         color: rgb(27, 108, 138);
     }
- </style>
+</style>
 
 <div class="row body-sec py-5  px-5 justify-content-around">
     <div class="col-lg-6">
-    <b><a href="/dashboard" >Dashboard</a> > <a class="city" href="" >Customer Package</a></b>
+        <b><a href="/dashboard">Dashboard</a> > <a class="city" href="">Customer Package</a></b>
         <br>
         <br>
         <h3 class="fw-bold">{{$title}}</h3>
@@ -35,19 +36,19 @@
 <div class="row body-sec px-5">
     <div class="col-lg-12">
         <div class="table-sec rounded-bottom-4 mb-5">
-        <table id="cityTable" class="table pt-2">
-        <thead>
-                     <tr class="rounded-top-4">
+            <table id="cityTable" class="table pt-2">
+                <thead>
+                    <tr class="rounded-top-4">
                         <th class="text-center"><span>S.No</span></th>
-            <th class="text-center "><span> Name </span></th>
-            <th class="text-center "><span> Phone Number </span></th>
-            <th class="text-center "><span> Email </span></th>
-            <th class="text-center "><span> Package Type </span></th>
-            <th class="text-center "><span> Status </span></th>
-            <th class="text-center "><span> Package URL </span></th>
-
-            <th class="text-center"><span> Action </span></th>
-        </tr>
+                        <th class="text-center "><span> Name </span></th>
+                        <th class="text-center "><span> Phone Number </span></th>
+                        <th class="text-center "><span> Email </span></th>
+                        <th class="text-center "><span> Package Type </span></th>
+                        <th class="text-center "><span> Status </span></th>
+                        <th class="text-center "><span> Package URL </span></th>
+                        <th class="text-center "><span> Package Duplicate </span></th>
+                        <th class="text-center"><span> Action </span></th>
+                    </tr>
                 </thead>
                 <tbody>
                     @if($customer_package_list->isEmpty())
@@ -56,11 +57,11 @@
                     </tr>
                     @else
                     @foreach ($customer_package_list as $row)
-                  
-                    <tr>
-                    <td class="text-center">{{ $loop->iteration }}</td>
 
-                       
+                    <tr>
+                        <td class="text-center">{{ $loop->iteration }}</td>
+
+
                         <!-- <td class="text-center"><img src="{{ $row->cover_img ? asset($row->cover_img) : asset($settings->footer_logo) }}" alt="{{ $row->alternate_name ?? 'Default Alt Text' }}" style="max-width: 100px; max-height: 100px; object-fit: cover;"></td> -->
                         <td class="text-center">{{ $row->name }}</td>
                         <td class="text-center">{{ $row->phone_number }}</td>
@@ -84,15 +85,18 @@
 
                         <!-- <td class="text-center"><a href="https://innerpece.com/{{ $row->package_type }}/{{$row->package_type }}#{{$row->name}}">copy</a></td> -->
                         <td class="text-center text-primary">
-                            <a href="#" 
-                            class="copy-link text-dark" 
-                            data-link="https://innerpece.com/{{ $row->package_id }}/{{ str_replace(' ', '-', $row->package_type) }}#{{ $row->id }}"
-                            title="Click to copy link">
-                            <i class="fa fa-clone" aria-hidden="true"></i> copy
+                            <a href="#"
+                                class="copy-link text-dark"
+                                data-link="https://innerpece.com/{{ $row->package_id }}/{{ str_replace(' ', '-', $row->package_type) }}#{{ $row->id }}"
+                                title="Click to copy link">
+                                <i class="fa fa-clone" aria-hidden="true"></i> copy
                             </a>
                             <span class="copy-feedback text-success small ms-2" style="display:none">Copied!</span>
                         </td>
-                        <td class="text-center" >
+                        <td class="duplicate_package" data-package_id="{{ $row->id }}" style="cursor: pointer;">
+                            Duplicate
+                        </td>
+                        <td class="text-center">
                             <a href="{{ route('admin.CustomerPackage_edit_form',$row->id) }}" class="table-edit-link">
                                 <span class="fa-stack">
                                     <i class="fa fa-square fa-stack-2x"></i>
@@ -113,7 +117,7 @@
 
                 </tbody>
             </table>
-          
+
         </div>
     </div>
 </div>
@@ -131,34 +135,70 @@
             "language": {
                 "emptyTable": "No records found",
             },
-            "columnDefs": [
-                { "orderable": true, "targets": [0, 3] } // Disable ordering on Icon and Action columns
+            "columnDefs": [{
+                    "orderable": true,
+                    "targets": [0, 3]
+                } // Disable ordering on Icon and Action columns
             ]
         });
     });
 
     document.addEventListener('DOMContentLoaded', function() {
-    // Copy link functionality
-    document.querySelectorAll('.copy-link').forEach(link => {
-        link.addEventListener('click', function(e) {
-            e.preventDefault();
-            const url = this.getAttribute('data-link');
-            
-            // Copy to clipboard
-            navigator.clipboard.writeText(url).then(() => {
-                // Show feedback
-                const feedback = this.nextElementSibling;
-                feedback.style.display = 'inline';
-                link.style.display='none';
-                setTimeout(() => {
-                    feedback.style.display = 'none';
-                    link.style.display='inline';
-                }, 2000);
-            }).catch(err => {
-                console.error('Failed to copy: ', err);
+        // Copy link functionality
+        document.querySelectorAll('.copy-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const url = this.getAttribute('data-link');
+
+                // Copy to clipboard
+                navigator.clipboard.writeText(url).then(() => {
+                    // Show feedback
+                    const feedback = this.nextElementSibling;
+                    feedback.style.display = 'inline';
+                    link.style.display = 'none';
+                    setTimeout(() => {
+                        feedback.style.display = 'none';
+                        link.style.display = 'inline';
+                    }, 2000);
+                }).catch(err => {
+                    console.error('Failed to copy: ', err);
+                });
+            });
+        });
+
+        $(document).on('click', '.duplicate_package', function() {
+            const packageId = $(this).data('package_id');
+            const $button = $(this);
+
+            // Show loading state
+            $button.html('<i class="fas fa-spinner fa-spin"></i> Duplicating...');
+            $.ajax({
+                url: '/customer-package/duplicate-entry-details',
+                type: 'POST',
+                data: {
+                    id: packageId,
+                },
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(response) {
+                    if (response.success) {
+                        toastr.success('Package duplicated successfully!');
+                        // Refresh the table or add the new row
+                        // if ($.fn.DataTable.isDataTable('#cityTable')) {
+                        //     $('#cityTable').DataTable().ajax.reload(null, false);
+                        // }
+                        location.reload();
+                    } else {
+                        toastr.error(response.message || 'Failed to duplicate package');
+                    }
+                },
+                error: function(xhr) {
+                    toastr.error('An error occurred while duplicating the package');
+                    console.error('Error:', xhr.responseText);
+                }
             });
         });
     });
-});
 </script>
 @endsection

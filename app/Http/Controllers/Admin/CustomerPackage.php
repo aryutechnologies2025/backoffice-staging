@@ -303,6 +303,61 @@ class CustomerPackage extends Controller
         return json_encode($data);
     }
 
+    //duplicate entry 
+    public function duplicatePackage(Request $request)
+    {
+        try {
+            // Find the original package
+            $original = customer_package::find($request->id);
+            // dd($original);
+            $customer_package = new customer_package;
+            $customer_package->name = $original->name . ' (Duplicate)';
+            $customer_package->phone_number = $original->phone_number;
+            $customer_package->email = $original->email;
+            $customer_package->package_id = $original->package_id;
+            $customer_package->package_type = $original->package_type;
+
+
+            $customer_package->important_info = $original->important_info;
+            $customer_package->stay_details_id = $original->stay_details_id;
+            $customer_package->package_inclusion = $original->package_inclusion;
+            $customer_package->package_exclusion = $original->package_exclusion;
+
+            $customer_package->camp_rule = $original->camp_rule;
+
+            $customer_package->tour_planning = $original->tour_planning;
+
+
+            $customer_package->price_title = $original->price_title;
+            $customer_package->price_amount = $original->price_amount;
+            $customer_package->amenities = $original->amenities;
+            $customer_package->food_beverages = $original->food_beverages;
+            $customer_package->activities = $original->activities;
+            $customer_package->safety_features = $original->safety_features;
+            $customer_package->list_order = $original->list_order;
+
+            $customer_package->status =  $original->status;
+
+            $location = $original->location;
+
+            $customer_package->location =  $location;
+            $customer_package->save();
+
+
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Package duplicated successfully',
+                'new_entry' => $customer_package
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to duplicate package: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
     public function edit_form(Request $request, $id)
     {
         $title = 'Edit Customer Package';

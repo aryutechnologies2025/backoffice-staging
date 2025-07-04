@@ -1083,22 +1083,22 @@
                             div.classList.add('row', 'g-2', 'mb-2', 'day-block');
 
                             div.innerHTML = `
-        <div class="col-md-5 mb-2">
-            <input type="text" name="tour_planning[${i}][title]" class="form-control py-2 rounded-3 shadow-sm" value="${day.title}" placeholder="Day Title (e.g., Day ${i + 1})">
-        </div>
-        <div class="col-md-5 mb-2">
-            <input type="text" name="tour_planning[${i}][subtitle]" class="form-control py-2 rounded-3 shadow-sm" value="${day.subtitle}" placeholder="Activity Subtitle">
-        </div>
-        <div class="col-md-10 mb-2">
-            <input type="hidden" name="tour_planning[${i}][description]" class="tour-description-hidden">
-            <div class="tour-description-editor"></div>
-        </div>
-        <div class="col-md-1 d-flex align-items-end">
-            ${i > 0 ? `<button type="button" class="btn btn-danger remove-day" onclick="removeDay(this)">
-                <i class="fa fa-trash"></i>
-            </button>` : ''}
-        </div>
-    `;
+                    <div class="col-md-5 mb-2">
+                        <input type="text" name="tour_planning[${i}][title]" class="form-control py-2 rounded-3 shadow-sm" value="${day.title}" placeholder="Day Title (e.g., Day ${i + 1})">
+                    </div>
+                    <div class="col-md-5 mb-2">
+                        <input type="text" name="tour_planning[${i}][subtitle]" class="form-control py-2 rounded-3 shadow-sm" value="${day.subtitle}" placeholder="Activity Subtitle">
+                    </div>
+                    <div class="col-md-10 mb-2">
+                        <input type="hidden" name="tour_planning[${i}][description]" class="tour-description-hidden">
+                        <div class="tour-description-editor"></div>
+                    </div>
+                    <div class="col-md-1 d-flex align-items-end">
+                        ${i > 0 ? `<button type="button" class="btn btn-danger remove-day" onclick="removeDay(this)">
+                            <i class="fa fa-trash"></i>
+                        </button>` : ''}
+                    </div>
+                `;
 
 
                             wrapper.appendChild(div);

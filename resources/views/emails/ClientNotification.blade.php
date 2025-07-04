@@ -17,7 +17,7 @@
         <li><strong>Travel Destination:</strong>{{$details ['travel_destination']}}</li>
         <li><strong>Message:</strong> {{$details ['comments'] }}</li>
 
-            <p>If you have any urgent inquiries, please contact us at bharath@innerpece.com or +91 6384131642  </p>
+            <p>If you have any urgent inquiries, please contact us at bharath@innerpece.com, jay@innerpece.com or +91 6384131642  </p>
         </ul>
 
         <p>Best regards,</p>

@@ -161,6 +161,7 @@ Route::prefix('/')->group(function () {
 
 
                 Route::post('/package-details', 'package_details')->name('admin.CustomerPackage_details');
+                Route::post('/duplicate-entry-details', 'duplicatePackage')->name('admin.CustomerPackage_dupdetails');
             });
         });
 
