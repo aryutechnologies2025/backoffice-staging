@@ -491,6 +491,8 @@
                                 </div>
                             </div>
                         </div> -->
+
+                    
                     <!-- 8. AMENITIES -->
                     <div class="row mb-2">
                         <div class="col">
