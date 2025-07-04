@@ -157,7 +157,7 @@
                                 <div class="col-md-4">
                                     <label class="mb-2">District <span class="text-danger">*</span></label>
                                     <select id="district_name" name="district_name"
-                                        class="form-select py-2 rounded-3 shadow-sm" required>
+                                        class="form-select py-2 rounded-3 shadow-sm">
                                         <option value="" disabled selected>Select District</option>
                                         @if ($stay_details->district)
                                         <option value="" selected>{{$stay_details->district}}</option>
@@ -335,7 +335,45 @@
 
 
 
+                        <div class="row mb-3">
+                            <div class="col">
+                                <div class="form-body px-1 py-3 rounded-4">
+                                    <h4 class="fw-bold mb-3">Stays Inclusion</h4>
+                                    <div>
+                                        <input type="hidden" id="program_inclusion" name="program_inclusion">
+                                        @php
+                                        $plain_text_program_inclusion = html_entity_decode(
+                                        strip_tags($stay_details->package_inclusion),
+                                        );
+                                        @endphp
+                                        <div class="mt-2">
+                                            <div id="summernote5">{!! $plain_text_program_inclusion !!}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
+
+
+                        <div class="row mb-3">
+                            <div class="col">
+                                <div class="form-body px-1 py-3 rounded-4">
+                                    <h4 class="fw-bold mb-3">Stays Exclusion</h4>
+                                    <div>
+                                        <input type="hidden" id="program_exclusion" name="program_exclusion">
+                                        @php
+                                        $plain_text_program_inclusion = html_entity_decode(
+                                        strip_tags($stay_details->package_exclusion),
+                                        );
+                                        @endphp
+                                        <div class="mt-2">
+                                            <div id="summernote9">{!! $plain_text_program_inclusion !!}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <!-- 8.AMENITIES -->
                         <div class="row mb-3">
                             <div class="col">
@@ -473,7 +511,7 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function() {
-        $('#summernote1')
+        $('#summernote1,#summernote9,#summernote5')
             .summernote({
                 height: 200 // Set the height of the editor
             });
@@ -500,6 +538,36 @@
                     $('#description').val($('#summernote1').summernote('code'));
                 }
             }
+        });
+
+        $('#summernote5').summernote({
+            placeholder: 'Hello stand alone ui',
+            tabsize: 2,
+            height: 100,
+            toolbar: [
+                ['style', ['style']],
+                ['font', ['bold', 'underline', 'clear']],
+                ['color', ['color']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['table', ['table']],
+                ['insert', ['link', 'picture', 'video']],
+                ['view', ['fullscreen', 'codeview', 'help']]
+            ]
+        });
+
+        $('#summernote9').summernote({
+            placeholder: 'Hello stand alone ui',
+            tabsize: 2,
+            height: 100,
+            toolbar: [
+                ['style', ['style']],
+                ['font', ['bold', 'underline', 'clear']],
+                ['color', ['color']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['table', ['table']],
+                ['insert', ['link', 'picture', 'video']],
+                ['view', ['fullscreen', 'codeview', 'help']]
+            ]
         });
 
         // Also update the textarea before form submission

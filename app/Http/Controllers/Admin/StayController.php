@@ -107,8 +107,8 @@ class StayController extends Controller
         $stay_details->discount_price = $request->input('price_amount');
         $stay_details->actual_price = $request->input('actual_price_amount');
         $stay_details->no_of_days = $request->input('price_title');
-        $stay_details->package_inclusion = json_encode($request->input('program_inclusion'));
-        $stay_details->package_exclusion = json_encode($request->input('program_exclusion'));
+        $stay_details->package_inclusion = $request->input('program_inclusion');
+        $stay_details->package_exclusion = $request->input('program_exclusion');
         $stay_details->district = $request->input('district_name');
 
         $stay_details->amenity_details = $amenitiesJson;
@@ -180,7 +180,9 @@ class StayController extends Controller
         $foodBeveragesJson = json_encode($request->input('food_beverages'));
         $activitiesJson = json_encode($request->input('activities'));
         $safetyFeaturesJson = json_encode($request->input('safety_features'));
+        $stay_details->package_inclusion = $request->input('program_inclusion');
 
+        $stay_details->package_exclusion = $request->input('program_exclusion');
         $stay_details->destination = $request->input('cities_name');
         $stay_details->stay_title = $request->input('title');
         $stay_details->stay_description = $request->input('description');
@@ -293,6 +295,7 @@ class StayController extends Controller
         $districtNames = array_unique($districtNames);
 
 
+        // dd($stay_details);
         return view('admin.stays.stayedit', compact('stay_details', 'cities_dts', 'amenities_dts', 'foodBeverages_dts', 'activities_dts', 'safety_features_dts', 'selectedCityId', 'selectedAmenities', 'selectedthemeId', 'selectedfood_beverages', 'selectedactivities', 'selectedsafety_features', 'selectedgeo_featureId',    'selecteddesCategoryId', 'selectedCategoryId', 'selectedprogram', 'districtNames'));
     }
 
@@ -431,7 +434,9 @@ class StayController extends Controller
                     'discount_price' => $items->discount_price,
                     'no_of_days' => $items->no_of_days,
                     'tag_line' => $items->tag_line,
-                    'review' => $items->stagReviews
+                    'review' => $items->stagReviews,
+                    'stay_inclusive' => $items->package_inclusion,
+                    'stay_exclusive' => $items->package_exclusion	
                 ];
             });
 

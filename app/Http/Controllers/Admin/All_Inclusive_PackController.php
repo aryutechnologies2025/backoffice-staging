@@ -96,7 +96,7 @@ class All_Inclusive_PackController extends Controller
         'tour_planning.*.title' => 'required|string',
         'tour_planning.*.subtitle' => 'nullable|string',
         'tour_planning.*.description' => 'required|string',
-    ]);
+        ]);
 
         // dd($request->all());
         // Handle dynamic image uploads
