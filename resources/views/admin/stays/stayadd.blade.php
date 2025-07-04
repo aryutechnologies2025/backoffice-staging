@@ -306,7 +306,7 @@
                           <div class="row mb-1">
                                 <div class="col">
                                     <div class="form-body px-5  rounded-4">
-                                        <h4 class="fw-bold mb-2">7.Package Inclusion </h4>
+                                        <h4 class="fw-bold mb-2">Stays Inclusion </h4>
                                         <div class="mb-2">
                                             <div class="row g-2 mb-2">
                                                 <div class="col">
@@ -334,7 +334,7 @@
                             <div class="row mb-1">
                                 <div class="col">
                                     <div class="form-body px-5  rounded-4">
-                                        <h4 class="fw-bold mb-2">8.Package Exclusion </h4>
+                                        <h4 class="fw-bold mb-2">Stays Exclusion </h4>
                                         <div class="mb-2">
                                             <div class="row g-2 mb-2">
                                                 <div class="col">
