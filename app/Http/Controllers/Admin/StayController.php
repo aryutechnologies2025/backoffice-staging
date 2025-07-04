@@ -107,7 +107,8 @@ class StayController extends Controller
         $stay_details->discount_price = $request->input('price_amount');
         $stay_details->actual_price = $request->input('actual_price_amount');
         $stay_details->no_of_days = $request->input('price_title');
-
+        $stay_details->package_inclusion = json_encode($request->input('program_inclusion'));
+        $stay_details->package_exclusion = json_encode($request->input('program_exclusion'));
         $stay_details->district = $request->input('district_name');
 
         $stay_details->amenity_details = $amenitiesJson;
@@ -339,7 +340,7 @@ class StayController extends Controller
     {
         $destination = $request->destination;
 
-        $stays = stays_destination_details::where('is_deleted', '0')->where('status','1')
+        $stays = stays_destination_details::where('is_deleted', '0')->where('status', '1')
             ->where('destination', $destination)->orderBy('created_at', 'desc')->get()
             ->map(function ($items) {
                 return [
@@ -362,35 +363,35 @@ class StayController extends Controller
 
         // Initialize the result array
         $destinationsWithDistricts = [];
-if ($stayDistrict) {
-        // Get the districts data (already array if casted in model)
-        $districtsData = is_array($stayDistrict->districts_data)
-            ? $stayDistrict->districts_data
-            : json_decode($stayDistrict->districts_data, true);
+        if ($stayDistrict) {
+            // Get the districts data (already array if casted in model)
+            $districtsData = is_array($stayDistrict->districts_data)
+                ? $stayDistrict->districts_data
+                : json_decode($stayDistrict->districts_data, true);
 
-        // Check if decoding was successful
-        if (json_last_error() !== JSON_ERROR_NONE && !is_array($stayDistrict->districts_data)) {
-            throw new \Exception("Invalid JSON in districts_data");
+            // Check if decoding was successful
+            if (json_last_error() !== JSON_ERROR_NONE && !is_array($stayDistrict->districts_data)) {
+                throw new \Exception("Invalid JSON in districts_data");
+            }
+
+            // Process each district
+            foreach ($districtsData as $d) {
+                $destinationsWithDistricts[] = [
+                    'name' => $d['destination'] ?? null,
+                    'image' => isset($d['image_path']) ? asset($d['image_path']) : null,
+                    'description' => $d['description'] ?? null,
+                ];
+            }
         }
 
-        // Process each district
-        foreach ($districtsData as $d) {
-            $destinationsWithDistricts[] = [
-                'name' => $d['destination'] ?? null,
-                'image' => isset($d['image_path']) ? asset($d['image_path']) : null,
-                'description' => $d['description'] ?? null,
-            ];
-        }
-}
-       
 
 
         return response()->json([
             'status' => 'success',
             'message' => 'stays successfully retrived.',
-            
+
             'data' => $stays,
-            'districts' => $destinationsWithDistricts 
+            'districts' => $destinationsWithDistricts
         ], 200);
     }
 

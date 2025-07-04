@@ -82,11 +82,7 @@ class CustomerPackage extends Controller
         $customer_package->important_info = $request->input('important_info');
         $customer_package->stay_details_id = $request->input('package_stay');
         $customer_package->package_inclusion = json_encode($request->input('program_inclusion'));
-
         $customer_package->package_exclusion = json_encode($request->input('program_exclusion'));
-
-
-
 
         $amenitiesJson = json_encode($request->input('amenity_services', []));
         $foodBeveragesJson = json_encode($request->input('food_beverages', []));

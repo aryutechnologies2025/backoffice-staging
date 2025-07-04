@@ -303,7 +303,56 @@
 
 
 
+                          <div class="row mb-1">
+                                <div class="col">
+                                    <div class="form-body px-5  rounded-4">
+                                        <h4 class="fw-bold mb-2">7.Package Inclusion </h4>
+                                        <div class="mb-2">
+                                            <div class="row g-2 mb-2">
+                                                <div class="col">
+                                                    <input type="hidden" id="program_inclusion"
+                                                        name="program_inclusion">
+                                                    <!-- <textarea id="important_info" class="container__textarea p-5 textarea-feild" name="important_info"
+                                                        value="{{ old('important_info') }}" required></textarea> -->
+                                                    <!-- <div class="mb-3">
+                                                        <div id="commentEditor5" class="form-control" style="height: 200px;"></div>
+                                                    </div> -->
+                                                    <div class=" mt-2">
+                                                        <div class="row">
+                                                            <div class="col-lg-12 ">
+                                                                <div id="summernote5" style="height: 200px;"></div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
+                            <div class="row mb-1">
+                                <div class="col">
+                                    <div class="form-body px-5  rounded-4">
+                                        <h4 class="fw-bold mb-2">8.Package Exclusion </h4>
+                                        <div class="mb-2">
+                                            <div class="row g-2 mb-2">
+                                                <div class="col">
+                                                    <input type="hidden" id="program_exclusion"
+                                                        name="program_exclusion">
+                                                    <div class=" mt-2">
+                                                        <div class="row">
+                                                            <div class="col-lg-12 ">
+                                                                <div id="summernote9" style="height: 200px;"></div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
 
                         <!-- 8. AMENITIES -->
