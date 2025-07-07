@@ -1745,7 +1745,11 @@ class ProgramApiController extends Controller
             }
 
             // Fetch the program details using the provided ID
-            $package = customer_package::find($programId);
+            $package = customer_package::where('is_deleted', 0)
+            ->where('status', 1)
+                ->where('id', $programId)
+                // ->with('destination', 'theme', 'clientReviews')
+            ->find($programId);
 
             if (!$package) {
                 return response()->json([

@@ -161,6 +161,10 @@
 @endsection
 
 @section('scripts')
+<!-- Add jQuery if not already included -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- Add SheetJS (XLSX) library for Excel export -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script>
     function handleFollowUpChange(selectElement) {
         let enquiryId = $(selectElement).data('enquiry-id');
@@ -239,7 +243,6 @@
         });
     }
 
-
     $(document).ready(function() {
         $('#cityTable').DataTable();
 
@@ -267,14 +270,19 @@
             $('#modalComments').text($(this).data('comments'));
             $('#modalDate').text($(this).data('date'));
         });
-    });
 
-
-    $('#downloadExcel').on('click', function() {
-        const wb = XLSX.utils.table_to_book(document.getElementById('cityTable'), {
-            sheet: "Enquiries"
+        // Move the downloadExcel click handler inside document ready
+        $('#downloadExcel').on('click', function() {
+            let $table = $('#cityTable').clone();
+            $table.find('tr').each(function() {
+                $(this).find('th:last-child, td:last-child').remove();
+            });
+            let tempDiv = $('<div>').append($table);
+            const wb = XLSX.utils.table_to_book(tempDiv.find('table')[0], {
+                sheet: "Enquiries"
+            });
+            XLSX.writeFile(wb, 'Enquiries_Data.xlsx');
         });
-        XLSX.writeFile(wb, 'Enquiries_Data.xlsx');
     });
 </script>
 @endsection

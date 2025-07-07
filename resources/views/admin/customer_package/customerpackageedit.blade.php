@@ -53,8 +53,7 @@
                 <select class="package" name="package_type" id="package" class="form-control">
                     <option disabled selected>Select Package Type</option>
                     @foreach($titles as $id => $name)
-                    <option value="{{ $id }}" {{ $customer->package_id == $id ? 'selected' : '' }}>{{ $name }}</option>
-
+                    <option value="{{  json_encode(['id' => $id, 'name' => $name])  }}">{{ $name }}</option>
                     @endforeach
                 </select>
             </div>
@@ -113,11 +112,11 @@
 
 
 
-                      <div class="row mb-2">
-                                <div class="col">
-                                    <div class="form-body px-5 rounded-4">
-                                        <h4 class="fw-bold mb-3">3. Tour Planning</h4>
-                                        <div id="day-wrapper">
+                    <div class="row mb-3">
+                        <div class="col">
+                            <div class="form-body px-5 rounded-4">
+                                <h4 class="fw-bold mb-2">02. Tour Planning <span class="text-danger">*</span></h4>
+                                <div id="day-wrapper">
                                             @php
                                                 $tourPlanning = [];
                                                 if (!empty($customer->tour_planning)) {
@@ -199,10 +198,10 @@
                                             onclick="addDay()">
                                             <i class="fa fa-plus" aria-hidden="true"></i> Add More
                                         </button>
-                                    </div>
-                                </div>
                             </div>
-                            <script>
+                        </div>
+                    </div>
+                       <script>
                                 let index = {{ $tourPlanningIndex ?? 1 }};
 
                                 function addDay() {
@@ -1153,10 +1152,55 @@
             success: function(response) {
                 try {
                     response = typeof response === 'string' ? JSON.parse(response) : response;
+                    const packageStaySelect = $('#package_stay');
 
+                    packageStaySelect.empty().append(
+                        $('<option></option>')
+                        .val('')
+                        .text('Select Package Type')
+                        .prop('disabled', true)
+                        .prop('selected', true)
+                    );
+
+                    if (response && response.cities_details && Array.isArray(response.cities_details)) {
+                        const validStays = response.cities_details.filter(stay =>
+                            stay && stay.id !== undefined && stay.stay_title
+                        );
+
+                        if (validStays.length > 0) {
+                            // Add each valid stay as an option
+                            validStays.forEach(stay => {
+                                packageStaySelect.append(
+                                    $('<option></option>')
+                                    .val(stay.id)
+                                    .text(stay.stay_title)
+                                );
+                            });
+
+                            // Enable select if it was disabled
+                            packageStaySelect.prop('disabled', false);
+                        } else {
+                            // No valid stays found
+                            packageStaySelect.append(
+                                $('<option></option>')
+                                .val('')
+                                .text('No available stays')
+                            );
+                            packageStaySelect.prop('disabled', true);
+                        }
+                    } else {
+                        // Invalid response structure
+                        packageStaySelect.append(
+                            $('<option></option>')
+                            .val('')
+                            .text('Invalid data format')
+                        );
+                        packageStaySelect.prop('disabled', true);
+                        console.error('Invalid response structure:', response);
+                    }
                     // Handle tour planning and location
                     if (response.package_details) {
-                        var tourVal = typeof response.package_details.tour_planning === 'string' ?
+                         var tourVal = typeof response.package_details.tour_planning === 'string' ?
                             JSON.parse(response.package_details.tour_planning) :
                             response.package_details.tour_planning;
 

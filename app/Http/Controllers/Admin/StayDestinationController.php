@@ -174,7 +174,9 @@ class StayDestinationController extends Controller
 
     public function get_stay_destination(Request $request)
     {
-        $city_dts = stay_desitination::where('is_deleted', '0')->select('id','city_name','city_image','upload_image_name','alternate_name')->get();
+        $city_dts = stay_desitination::where('is_deleted', '0')
+        ->where('status', '1')
+        ->select('id','city_name','city_image','upload_image_name','alternate_name')->get();
         return response()->json([
             'status' => 'success',
             'message' => 'Stays city successfully retrieved.',

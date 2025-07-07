@@ -561,7 +561,7 @@ Route::prefix('/')->group(function () {
         });
 
         Route::get('/get-districts/{destination}', [StayController::class, 'getDistricts'])
-    ->name('get-districts');
+        ->name('get-districts');
          Route::controller(StayDestinationController::class)->group(function () {
             Route::prefix('staydestination')->group(function () {
                 Route::get('/', 'list')->name('admin.staydestinationlist');
@@ -577,7 +577,7 @@ Route::prefix('/')->group(function () {
           Route::controller(StayDistrictController::class)->group(function () {
             Route::prefix('staydestrict')->group(function () {
                 Route::get('/', 'list')->name('admin.staydistrictlist');
-                Route::get('/add', 'add_form')->name('admin.staydestination_add_form');
+                Route::get('/add', 'add_form')->name('admin.staydistrict_add_form');
                 Route::get('/{id}/edit', 'edit_form')->name('admin.staydistrict_edit_form');
                 Route::post('/insert', 'store')->name('admin.staydistricts_insert');
                 Route::post('/{id}/update', 'update')->name('admin.staydistrict_update');

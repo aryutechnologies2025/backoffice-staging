@@ -85,16 +85,24 @@
 
                         <!-- <td class="text-center"><a href="https://innerpece.com/{{ $row->package_type }}/{{$row->package_type }}#{{$row->name}}">copy</a></td> -->
                         <td class="text-center text-primary">
-                            <a href="#"
-                                class="copy-link text-dark"
-                                data-link="https://innerpece.com/{{ $row->package_id }}/{{ str_replace(' ', '-', $row->package_type) }}#{{ $row->id }}"
-                                title="Click to copy link">
-                                <i class="fa fa-clone" aria-hidden="true"></i> copy
-                            </a>
-                            <span class="copy-feedback text-success small ms-2" style="display:none">Copied!</span>
+                            @if(isset($row->status) && $row->status == '1')
+                                <a href="#"
+                                    class="copy-link text-dark"
+                                    data-link="https://innerpece.com/{{ $row->package_id }}/{{ str_replace(' ', '-', $row->package_type) }}#{{ $row->id }}"
+                                    title="Click to copy link">
+                                    <i class="fa fa-clone" aria-hidden="true"></i> copy
+                                </a>
+                                <span class="copy-feedback text-success small ms-2" style="display:none">Copied!</span>
+                            @else
+                                <span class="text-muted" title="Inactive package">
+                                    <i class="fa fa-clone" aria-hidden="true"></i> copy
+                                </span>
+                            @endif
                         </td>
-                        <td class="duplicate_package" data-package_id="{{ $row->id }}" style="cursor: pointer;">
-                            Duplicate
+                        <td class="text-center">
+                            <button type="button" class="btn btn-primary text-white duplicate_package" data-package_id="{{ $row->id }}">
+                                <i class="fa fa-copy"></i> Duplicate
+                            </button>
                         </td>
                         <td class="text-center">
                             <a href="{{ route('admin.CustomerPackage_edit_form',$row->id) }}" class="table-edit-link">

@@ -412,7 +412,6 @@ class CustomerPackage extends Controller
         $customer_package->email = $request->email;
         $customer_package->package_id = $customer_package->package_id;
         $customer_package->package_type = $request->title;
-
         $customer_package->stay_details_id = $request->package_stay;
 
 

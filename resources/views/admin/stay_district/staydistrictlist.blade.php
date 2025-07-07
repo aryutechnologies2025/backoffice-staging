@@ -23,7 +23,7 @@
     </div>
     <div class="col-lg-6">
         <div class="d-flex justify-content-end">
-            <a href="{{ route('admin.staydestination_add_form') }}">
+            <a href="{{ route('admin.staydistrict_add_form') }}">
                 <button class="btn btn-add px-5" type="button">Add Stay District</button>
             </a>
         </div>
