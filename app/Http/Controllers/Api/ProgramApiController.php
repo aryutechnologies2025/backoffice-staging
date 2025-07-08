@@ -1722,8 +1722,7 @@ class ProgramApiController extends Controller
 
             $program = customer_package::find($programId);
             $Inclusivepackage = InclusivePackages::with('destination', 'theme', 'clientReviews', 'reviews')
-            ->where('is_deleted', 0)
-            ->where('status', 1)->find($program->package_id);
+            ->find($program->package_id);
 
             if (!$program) {
                 return response()->json([
