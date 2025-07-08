@@ -27,7 +27,7 @@ class CustomerPackage extends Controller
     public function list(Request $request)
     {
         $title = 'Customer Package List';
-        $customer_package_list = customer_package::where('is_deleted', '0')->latest()->paginate(10);
+        $customer_package_list = customer_package::where('is_deleted', '0')->get();
         return view('admin.customer_package.customerpackagelist', compact('title', 'customer_package_list'));
     }
 
