@@ -1884,7 +1884,8 @@ class ProgramApiController extends Controller
                 'name' => $package->name,
                 'title' => $package->package_type,
                 'program_desc' => $Inclusivepackage->program_description,
-
+                'is_deleted' => $package->is_deleted,
+                'status' => $package->status,
                 // 'destination' => $package->destination->city_name,
                 // 'theme' => $package->theme->themes_name,
                 // 'state' => $package->state,
