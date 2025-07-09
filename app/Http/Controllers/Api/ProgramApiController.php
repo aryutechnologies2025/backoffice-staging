@@ -1157,7 +1157,7 @@ class ProgramApiController extends Controller
             ]));
 
             // Send email to admin
-            Mail::to('iyyappan@aryutechnologies.com')->send(new adminEmail([
+            Mail::to('contact@innerpece.com')->send(new adminEmail([
                 'name' => $enquiry->name,
                 'email' => $enquiry->email,
                 'phone' => $enquiry->phone,
@@ -1341,7 +1341,7 @@ class ProgramApiController extends Controller
             ]));
 
             // Send email to admin
-            Mail::to('iyyappan@aryutechnologies.com')->send(new adminEmail([
+            Mail::to('contact@innerpece.com')->send(new adminEmail([
                 'name' => $enquiry->name,
                 'email' => $enquiry->email,
                 'phone' => $enquiry->phone,
@@ -1383,7 +1383,7 @@ class ProgramApiController extends Controller
                     ]));
 
                     // Send email to admin
-                    Mail::to('iyyappan@aryutechnologies.com')->send(new adminEmail([
+                    Mail::to('contact@innerpece.com')->send(new adminEmail([
                         'name' => $projectDetails->name,
                         'email' => $projectDetails->email,
                         'phone' => $projectDetails->phone,
