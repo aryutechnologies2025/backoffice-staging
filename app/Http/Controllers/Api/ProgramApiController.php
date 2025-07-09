@@ -1157,7 +1157,7 @@ class ProgramApiController extends Controller
             ]));
 
             // Send email to admin
-            Mail::to('contact@innerpece.com')->send(new adminEmail([
+            Mail::to('iyyappan@aryutechnologies.com')->send(new adminEmail([
                 'name' => $enquiry->name,
                 'email' => $enquiry->email,
                 'phone' => $enquiry->phone,
@@ -1341,7 +1341,7 @@ class ProgramApiController extends Controller
             ]));
 
             // Send email to admin
-            Mail::to('contact@innerpece.com')->send(new adminEmail([
+            Mail::to('iyyappan@aryutechnologies.com')->send(new adminEmail([
                 'name' => $enquiry->name,
                 'email' => $enquiry->email,
                 'phone' => $enquiry->phone,
@@ -1383,7 +1383,7 @@ class ProgramApiController extends Controller
                     ]));
 
                     // Send email to admin
-                    Mail::to('contact@innerpece.com')->send(new adminEmail([
+                    Mail::to('iyyappan@aryutechnologies.com')->send(new adminEmail([
                         'name' => $projectDetails->name,
                         'email' => $projectDetails->email,
                         'phone' => $projectDetails->phone,
@@ -1722,7 +1722,7 @@ class ProgramApiController extends Controller
 
             $program = customer_package::find($programId);
             $Inclusivepackage = InclusivePackages::with('destination', 'theme', 'clientReviews', 'reviews')
-            ->find($program->package_id);
+                ->find($program->package_id);
 
             if (!$program) {
                 return response()->json([
@@ -1747,10 +1747,10 @@ class ProgramApiController extends Controller
 
             // Fetch the program details using the provided ID
             $package = customer_package::where('is_deleted', 0)
-            ->where('status', 1)
+                ->where('status', 1)
                 ->where('id', $programId)
                 // ->with('destination', 'theme', 'clientReviews')
-            ->find($programId);
+                ->find($programId);
 
             if (!$package) {
                 return response()->json([
