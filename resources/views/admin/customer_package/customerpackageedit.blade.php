@@ -15,7 +15,7 @@
 </style>
 <div class="container mt-5 mb-5">
     <div class="col-lg-12">
-        <b><a href="/dashboard">Dashboard</a> > <a class="" href="/enquiry">Booking</a></b> > <a class="enquiry" href="">Add Booking</a>
+        <b><a href="/dashboard">Dashboard</a> > <a class="" href="/customer-package">Customer List</a></b> > 
         <br><br>
         <h3 class="fw-bold">{{$title}}</h3>
     </div>
@@ -50,10 +50,16 @@
             <!-- Package Type Selector -->
             <div class="col-md-5 mb-3">
                 <label for="title_id" class="form-label">Select Package Type</label>
-                <select class="package" name="package_type" id="package" class="form-control">
-                    <option disabled selected>Select Package Type</option>
+                <br>
+                <label class="form-label text-danger">  Current: {{ $titless }}</label>
+                
+                <select class="package form-control" name="package_type" id="package">
+                    <option disabled {{ !$customer->package_type ? 'selected' : '' }}>Select Package Type</option>
                     @foreach($titles as $id => $name)
-                    <option value="{{  json_encode(['id' => $id, 'name' => $name])  }}">{{ $name }}</option>
+                    <option value="{{ json_encode(['id' => $id, 'name' => $name]) }}"
+                        {{ $customer->package_type == $id ? 'selected' : '' }}>
+                        {{ $name }}
+                    </option>
                     @endforeach
                 </select>
             </div>

@@ -368,9 +368,13 @@ class CustomerPackage extends Controller
 
 
         $titles = DB::table('inclusive_package_details')->where('is_deleted', '0')->pluck('title', 'id');
-
+        
+            
         $customer = customer_package::find($id);
-
+        $titless = customer_package::where('is_deleted', '0')
+            ->where('id', $id)
+            ->pluck('package_type');
+        // dd($titless);
         $package_details_citys = InclusivePackages::where('id', $id)
             ->pluck('city_details')
             ->toArray();
@@ -378,7 +382,14 @@ class CustomerPackage extends Controller
         // dump($package_details_citys);
         $cities = City::where('status', "1")->where('is_deleted', "0")->whereIn('id', $package_details_citys)->pluck('city_name')->toArray();
 
-        $stay_details = stays_destination_details::where('is_deleted', '0')->whereIn('destination', $cities)->orderBy('created_at', 'desc')->select('id', 'stay_title')->get();
+$stay_details = stays_destination_details::where(function($query) use ($cities) {
+        $query->where('is_deleted', '0')
+              ->whereIn('destination', $cities);
+    })
+    ->orWhere('id', $customer->stay_details_id) // Always include selected old stay
+    ->orderBy('created_at', 'desc')
+    ->select('id', 'stay_title')
+    ->get();
         if (!$customer) {
             return redirect()->route('admin.influencers.list')
                 ->with('error', 'Influencer not found.');
@@ -388,6 +399,7 @@ class CustomerPackage extends Controller
             'title',
             'customer',
             'titles',
+            'titless',
             'cities',
             'themes',
             'amenities',
