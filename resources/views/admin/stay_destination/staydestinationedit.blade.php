@@ -26,20 +26,18 @@
                                     <div class="form-input">
                                         <!-- Existing image preview -->
                                         @if ($destination_details->city_image)
-                                        <img id="file-ip-1-preview" src="{{ asset($destination_details->city_image) }}" alt="Thumbnail Preview" class="img-thumbnail mb-3" style="max-height: 150px; object-fit: cover;">
-                                        @else
-                                        <img id="file-ip-1-preview" src="/assets/image/dashboard/innerpece_addpic_icon.svg" alt="Add Pic" class="img-thumbnail mb-3">
+                                        <img id="file-ip-1-preview" src="{{ asset($destination_details->city_image) }}"  style="max-height: 150px; object-fit: cover;">
+                                       
                                         @endif
 
                                         <label for="file-ip-1" class="d-block text-center py-3" style="cursor: pointer;">
                                             <p class="text-center fw-light">Update Pic</p>
                                         </label>
-                                        <input type="file" id="file-ip-1" name="image_1" accept="image/png, image/jpeg, image/svg+xml" onchange="previewImage(event)">
+                                        <input type="file" id="file-ip-1" name="image_1"  onchange="previewImage(event)">
                                         <div id="file-ip-1-error" class="text-danger"></div>
                                     </div>
                                 </div>
                             </div>
-                            <!-- <h6>*Supported formats: PNG & JPG; File size limit: 2 MB</h6> -->
                         </div>
                         <div class="col-4 g-2">
                             <div class="col">

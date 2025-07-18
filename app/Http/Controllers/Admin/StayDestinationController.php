@@ -153,10 +153,11 @@ class StayDestinationController extends Controller
 
         if ($request->hasFile('image_1')) {
             $file1 = $request->file('image_1');
-            $customFileName = preg_replace('/[^A-Za-z0-9_\-]/', '_', $request->input('city_image'));
-            $filename1 = $customFileName . '.' . $file1->getClientOriginalExtension();
+            // $customFileName = preg_replace('/[^A-Za-z0-9_\-]/', '_', $request->input('city_image'));
+            $filename1 = time() . '.' . $file1->getClientOriginalExtension();
             $file1->move($cityPath, $filename1);
             $filePath1 = 'uploads/cities_pic/' . $filename1;
+            $City->city_image = $filePath1;
         }
 
         $City->city_image = $filePath1;
