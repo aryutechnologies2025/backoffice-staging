@@ -149,6 +149,8 @@ Route::prefix('/')->group(function () {
                 Route::post('/change-status', 'change_status')->name('admin.inclusive_package_status');
                 Route::get('/theme-categories/{themeId}', 'getThemeCategories')->name('admin.theme_categories');
                 Route::get('/destination-categories',  'getDestinationCategories')->name('admin.destination_categories');
+
+                Route::post('/duplicate-entry-details', 'duplicatePackage')->name('admin.ProgramPackage_dupdetails');
             });
         });
         //   Route::get('/dashboard', [All_Inclusive_PackController::class, 'showDashboard'])->name('dashboard');

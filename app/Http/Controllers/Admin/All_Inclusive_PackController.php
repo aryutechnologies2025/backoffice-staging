@@ -92,10 +92,10 @@ class All_Inclusive_PackController extends Controller
     {
 
         $request->validate([
-        'tour_planning' => 'required|array',
-        'tour_planning.*.title' => 'required|string',
-        'tour_planning.*.subtitle' => 'nullable|string',
-        'tour_planning.*.description' => 'required|string',
+            'tour_planning' => 'required|array',
+            'tour_planning.*.title' => 'required|string',
+            'tour_planning.*.subtitle' => 'nullable|string',
+            'tour_planning.*.description' => 'required|string',
         ]);
 
         // dd($request->all());
@@ -150,12 +150,12 @@ class All_Inclusive_PackController extends Controller
 
         // $tourPlanningJson = Cache::remember("tour_planning_{$request->input('title')}", 3600, function () use ($request) {
         //     $planDescription = $request->input('plan_description');
-        
+
         //     // If plan_description is null or empty, return an empty JSON array
         //     if (empty($planDescription)) {
         //         return json_encode([]);
         //     }
-        
+
         //     return json_encode([
         //         'plan_description' => $planDescription
         //     ]);
@@ -189,7 +189,7 @@ class All_Inclusive_PackController extends Controller
         $inclusive_packages->dinner = $request->input('dinner');
         $inclusive_packages->upload_image_name = $request->input('upload_image_name');
         $inclusive_packages->alternate_name = $request->input('alternate_image_name');
-        
+
         $inclusive_packages->theme_id = implode(',', $theme);
         $inclusive_packages->city_details = $request->input('cities_name');
         $inclusive_packages->title = $request->input('title');
@@ -286,11 +286,11 @@ class All_Inclusive_PackController extends Controller
 
     public function update(Request $request, $id)
     {
-         $request->validate([
-        'tour_planning' => 'required|array',
-        'tour_planning.*.title' => 'required|string',
-        'tour_planning.*.description' => 'required|string',
-    ]);
+        $request->validate([
+            'tour_planning' => 'required|array',
+            'tour_planning.*.title' => 'required|string',
+            'tour_planning.*.description' => 'required|string',
+        ]);
 
         // dd($request->all());
         // Validate the incoming data
@@ -449,7 +449,7 @@ class All_Inclusive_PackController extends Controller
         $inclusive_packages->title = $request->input('title');
         $inclusive_packages->program_description = $request->input('program_description');
         $inclusive_packages->category = json_encode($request->input('prop_cat', []));
-        $inclusive_packages->tour_planning =json_encode($request->input('tour_planning'));
+        $inclusive_packages->tour_planning = json_encode($request->input('tour_planning'));
         $inclusive_packages->start_date = $request->input('start_date');
         $inclusive_packages->return_date = $request->input('return_date');
         $inclusive_packages->total_days = $request->input('total_days');
@@ -459,11 +459,11 @@ class All_Inclusive_PackController extends Controller
         $inclusive_packages->camp_rule = $campRulesJson;
         $inclusive_packages->important_info = $request->input('important_info');
         //$inclusive_packages->google_map = $request->input['google_map'];
-       $inclusive_packages->events_package_images = json_encode(array_values($imagePaths));
-       // $inclusive_packages->total_room = $request->input['total_room'];
-       // $inclusive_packages->bath_room = $request->input['bath_room'];
-       // $inclusive_packages->bed_room = $request->input['bed_room'];
-      //  $inclusive_packages->hall = $request->input['hall'];
+        $inclusive_packages->events_package_images = json_encode(array_values($imagePaths));
+        // $inclusive_packages->total_room = $request->input['total_room'];
+        // $inclusive_packages->bath_room = $request->input['bath_room'];
+        // $inclusive_packages->bed_room = $request->input['bed_room'];
+        //  $inclusive_packages->hall = $request->input['hall'];
         $inclusive_packages->amenity_details = $amenitiesJson;
         $inclusive_packages->food_beverages = $foodBeveragesJson;
         $inclusive_packages->activities = $activitiesJson;
@@ -564,4 +564,98 @@ class All_Inclusive_PackController extends Controller
     //     return view('dashboard.dashboard', ['programCount' => $programCount]);  // Pass using array
     // }
 
+
+    //duplicate entry 
+    public function duplicatePackage(Request $request)
+    {
+        try {
+            // Find the original package
+            $original = InclusivePackages::find($request->id);
+            $customer_package = new InclusivePackages;
+            $customer_package->title = $original->title . ' (Duplicate)';
+            $customer_package->location = $original->location;
+            $customer_package->program_pdf = $original->program_pdf;
+            $customer_package->program_description     = $original->program_description;
+            $customer_package->category = $original->category;
+
+
+            $customer_package->type = $original->type;
+            $customer_package->city_details = $original->city_details;
+            $customer_package->destination_cat = $original->destination_cat;
+            $customer_package->theme_id = $original->theme_id;
+
+            $customer_package->theme_cat_id = $original->theme_cat_id;
+
+            $customer_package->state = $original->state;
+
+
+            $customer_package->city = $original->city;
+            $customer_package->address = $original->address;
+            $customer_package->country = $original->country;
+            $customer_package->geo_feature = $original->geo_feature;
+            $customer_package->tour_planning = $original->tour_planning;
+            $customer_package->events_package_images = $original->events_package_images;
+            $customer_package->cover_img = $original->cover_img;
+            $customer_package->start_date = $original->start_date;
+            $customer_package->return_date = $original->return_date;
+            $customer_package->total_days = $original->total_days;
+            $customer_package->total_room = $original->total_room;
+
+            $customer_package->bath_room = $original->bath_room;
+            $customer_package->bed_room = $original->bed_room;
+            $customer_package->hall = $original->hall;
+            $customer_package->member_capacity = $original->member_capacity;
+            $customer_package->member_type = $original->member_type;
+
+            $customer_package->price = $original->price;
+            $customer_package->actual_price = $original->actual_price;
+            $customer_package->coupon_code = $original->coupon_code;
+            $customer_package->camp_rule = $original->camp_rule;
+            $customer_package->important_info = $original->important_info;
+            $customer_package->program_inclusion = $original->program_inclusion;
+            $customer_package->program_exclusion = $original->program_exclusion;
+            $customer_package->break_fast = $original->break_fast;
+            $customer_package->lunch = $original->lunch;
+            $customer_package->dinner = $original->dinner;
+
+
+            $customer_package->amenity_details = $original->amenity_details;
+            $customer_package->food_beverages = $original->food_beverages;
+            $customer_package->activities = $original->activities;
+            $customer_package->safety_features = $original->safety_features;
+            $customer_package->google_map = $original->google_map;
+
+            $customer_package->is_deleted = '0';
+            $customer_package->created_date = now();
+            $customer_package->created_by = 'admin';
+            $customer_package->updated_at = null;
+
+            $customer_package->status_changed_by = $original->status_changed_by;
+            $customer_package->status = $original->status;
+            $customer_package->is_featured = $original->is_featured;
+            $customer_package->alternate_name = $original->alternate_name;
+
+            $customer_package->upload_image_name = $original->upload_image_name;
+            $customer_package->slug = $original->slug;
+            $customer_package->price_tilte = $original->price_tilte;
+            $customer_package->price_amount = $original->price_amount;
+            $customer_package->list_order = $original->list_order;
+
+          
+            $customer_package->save();
+
+
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Program duplicated successfully',
+                'new_entry' => $customer_package
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to duplicate program: ' . $e->getMessage()
+            ], 500);
+        }
+    }
 }
