@@ -1,0 +1,140 @@
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use App\Models\ActivityP;
+use App\Models\City;
+
+class ActivityController extends Controller
+{
+    public function list(Request $request)
+    {
+        $title = 'Activity List';
+        $stay_details = ActivityP::where('is_deleted', '0')->get();
+        return view('admin.activities_m.activitylist', compact('title', 'stay_details'));
+    }
+
+    public function add_form()
+    {
+        $cities = City::where('status', "1")->where('is_deleted', "0")->pluck('city_name', 'id');
+
+        $title = 'Add Activity';
+
+        return view('admin.activities_m.activityadd', compact('title', 'cities'));
+    }
+
+    public function insert(Request $request)
+    {
+
+        $pricing = new ActivityP();
+        $pricing->destination_id = $request->input('cities_name');
+        $pricing->district_id = $request->input('district_name');
+
+        // Convert array to JSON before storing
+        $pricing->title_price = json_encode($request->input('camp_rules'));
+
+        $pricing->status = $request->has('status') && $request->input('status') === 'on' ? '1' : '0';
+        $pricing->is_deleted = '0';
+        $pricing->save();
+
+        return redirect()->route('admin.activitylist')
+            ->with('success', 'Activity created successfully.');
+    }
+
+    public function change_status(Request $request)
+    {
+        // Retrieve the request data
+        $record_id = $request->input('record_id');
+        $mode = $request->input('mode');
+
+        // Find the admin record by ID
+        $City = ActivityP::find($record_id);
+
+        if ($City) {
+            // Update the status based on the mode value
+            if ($mode == 0) {
+                $City->status = "0";
+            } else {
+                $City->status = "1";
+            }
+
+            $City->save();
+
+            // Prepare the response
+            $response = [
+                'status' => '1',
+                'response' => 'Pricing status changed successfully.'
+            ];
+        } else {
+            // Record not found
+            $response = [
+                'status' => '0',
+                'response' => 'Record not found.'
+            ];
+        }
+
+        // Return the response as JSON
+        return response()->json($response);
+    }
+
+    public function delete(Request $request)
+    {
+        // Retrieve the request data
+        $record_id = $request->input('record_id');
+
+        // Find the admin record by ID
+        $City = ActivityP::find($record_id);
+        if ($City) {
+            // Update the is_deleted field to 1
+            $City->is_deleted = "1";
+
+
+            $City->save();
+
+            // Prepare the response
+            $response = [
+                'status' => '1',
+                'response' => 'Record marked as deleted successfully.'
+            ];
+        } else {
+            // Record not found
+            $response = [
+                'status' => '0',
+                'response' => 'Record not found.'
+            ];
+        }
+
+        // Return the response as JSON
+        return response()->json($response);
+    }
+
+    public function edit_form(Request $request, $id)
+    {
+        $destination_details = ActivityP::find($id);
+        $cities = City::where('status', "1")->where('is_deleted', "0")->pluck('city_name', 'id');
+        $title = 'Edit Activity';
+
+        $camp_rules = json_decode($destination_details->title_price, true);
+
+        // dd($destination_details);
+        return view('admin.activities_m.activityedit', compact('destination_details', 'title', 'cities', 'camp_rules'));
+    }
+
+    public function update(Request $request, $id)
+    {
+
+        $pricing = ActivityP::findOrFail($id);
+        $pricing->destination_id = $request->input('cities_name');
+        $pricing->district_id = $request->input('district_name');
+        $pricing->title_price = json_encode($request->input('camp_rules'));
+        $pricing->status = $request->has('status') && $request->input('status') === 'on' ? '1' : '0';
+        $pricing->save();
+
+        return redirect()->route('admin.activitylist')
+            ->with('success', 'Activity updated successfully.');
+    }
+
+   
+}

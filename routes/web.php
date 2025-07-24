@@ -41,6 +41,12 @@ use App\Http\Controllers\Admin\CustomerPackage;
 use App\Http\Controllers\Admin\StayController;
 use App\Http\Controllers\Admin\StayDestinationController;
 use App\Http\Controllers\Admin\StayDistrictController;
+use App\Http\Controllers\Admin\StayPriceController;
+use App\Http\Controllers\Admin\CabController;
+use App\Http\Controllers\Admin\ActivityController;
+use App\Http\Controllers\Admin\PricingCalculatorController;
+
+
 use App\Models\stay_desitination;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
@@ -556,13 +562,12 @@ Route::prefix('/')->group(function () {
                 Route::get('/{id}/edit', 'edit_form')->name('admin.stay_details_edit_form');
                 Route::post('/{id}/update', 'update')->name('admin.stay_details_update');
                 Route::post('/change-status', 'change_status')->name('admin.stay_change_status');
-                 
             });
         });
 
         Route::get('/get-districts/{destination}', [StayController::class, 'getDistricts'])
-        ->name('get-districts');
-         Route::controller(StayDestinationController::class)->group(function () {
+            ->name('get-districts');
+        Route::controller(StayDestinationController::class)->group(function () {
             Route::prefix('staydestination')->group(function () {
                 Route::get('/', 'list')->name('admin.staydestinationlist');
                 Route::get('/add', 'add_form')->name('admin.staydestination_add_form');
@@ -574,7 +579,7 @@ Route::prefix('/')->group(function () {
             });
         });
 
-          Route::controller(StayDistrictController::class)->group(function () {
+        Route::controller(StayDistrictController::class)->group(function () {
             Route::prefix('staydestrict')->group(function () {
                 Route::get('/', 'list')->name('admin.staydistrictlist');
                 Route::get('/add', 'add_form')->name('admin.staydistrict_add_form');
@@ -583,9 +588,62 @@ Route::prefix('/')->group(function () {
                 Route::post('/{id}/update', 'update')->name('admin.staydistrict_update');
                 Route::post('/delete', 'delete')->name('admin.staydistrict_delete');
                 Route::post('/change-status', 'change_status')->name('admin.staydistrict_change_status');
-              
             });
         });
 
+        //stay pricing
+
+        Route::controller(StayPriceController::class)->group(function () {
+            Route::prefix('staypricing')->group(function () {
+                Route::get('/', 'list')->name('admin.staypricinglist');
+                Route::get('/add', 'add_form')->name('admin.staypricing_add_form');
+                Route::get('/{id}/edit', 'edit_form')->name('admin.staypricing_edit_form');
+                Route::post('/insert', 'insert')->name('admin.staypricing_insert');
+                Route::post('/{id}/update', 'update')->name('admin.staypricing_update');
+                Route::post('/delete', 'delete')->name('admin.staypricingdelete');
+                Route::post('/change-status', 'change_status')->name('admin.staypricing_change_status');
+            });
+        });
+
+        //cab
+
+        Route::controller(CabController::class)->group(function () {
+            Route::prefix('cab')->group(function () {
+                Route::get('/', 'list')->name('admin.cablist');
+                Route::get('/add', 'add_form')->name('admin.cab_add_form');
+                Route::get('/{id}/edit', 'edit_form')->name('admin.cab_edit_form');
+                Route::post('/insert', 'insert')->name('admin.cab_insert');
+                Route::post('/{id}/update', 'update')->name('admin.cab_update');
+                Route::post('/delete', 'delete')->name('admin.cabdelete');
+                Route::post('/change-status', 'change_status')->name('admin.cab_change_status');
+            });
+        });
+
+        //activity
+        Route::controller(ActivityController::class)->group(function () {
+            Route::prefix('activity')->group(function () {
+                Route::get('/', 'list')->name('admin.activitylist');
+                Route::get('/add', 'add_form')->name('admin.activity_add_form');
+                Route::get('/{id}/edit', 'edit_form')->name('admin.activity_edit_form');
+                Route::post('/insert', 'insert')->name('admin.activity_insert');
+                Route::post('/{id}/update', 'update')->name('admin.activity_update');
+                Route::post('/delete', 'delete')->name('admin.activitydelete');
+                Route::post('/change-status', 'change_status')->name('admin.activity_change_status');
+            });
+        });
+
+        //pricing calculator
+
+        Route::controller(PricingCalculatorController::class)->group(function () {
+            Route::prefix('pricingcalculator')->group(function () {
+                Route::get('/', 'list')->name('admin.pricinglist');
+                Route::get('/add', 'add_form')->name('admin.pricing_add_form');
+                Route::get('/{id}/edit', 'edit_form')->name('admin.pricing_edit_form');
+                Route::post('/insert', 'insert')->name('admin.pricing_insert');
+                Route::post('/{id}/update', 'update')->name('admin.pricing_update');
+                Route::post('/delete', 'delete')->name('admin.pricingdelete');
+                Route::post('/change-status', 'change_status')->name('admin.pricing_change_status');
+            });
+        });
     });
 });

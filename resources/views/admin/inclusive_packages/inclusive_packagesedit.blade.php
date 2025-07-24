@@ -663,7 +663,7 @@
                                             @php
                                                 $priceTitle = json_decode($package_details->price_tilte, true) ?? [];
                                                 $priceAmount = json_decode($package_details->price_amount, true) ?? [];
-                                                $count = max(4, count($priceTitle), count($priceAmount));
+                                                $count = max(6, count($priceTitle), count($priceAmount));
                                             @endphp
 
                                             @for ($i = 0; $i < $count; $i++)

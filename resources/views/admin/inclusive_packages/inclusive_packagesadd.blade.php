@@ -667,6 +667,46 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                            <div class="row mb-2">
+                                                <div class="col-lg-6">
+                                                    <label class="form-label form-label-top form-label-auto fw-bold mb-2">
+                                                        Title
+                                                    </label>
+                                                    <input type="text" name="price_title[]"
+                                                        class="form-control py-2 rounded-3 shadow-sm" placeholder="Title">
+                                                </div>
+                                                <div class="col-lg-6">
+                                                    <label class="fw-bold mb-2">Amount <span
+                                                            class="text-danger">*</span></label>
+                                                    <div class="position-relative">
+                                                        <span
+                                                            class="position-absolute top-50 start-0 translate-middle-y ps-3">₹</span>
+                                                        <input type="number" name="price_amount[]"
+                                                            class="form-control py-2 ps-5 rounded-3 shadow-sm"
+                                                            placeholder="Actual Amount">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row mb-2">
+                                                <div class="col-lg-6">
+                                                    <label class="form-label form-label-top form-label-auto fw-bold mb-2">
+                                                        Title
+                                                    </label>
+                                                    <input type="text" name="price_title[]"
+                                                        class="form-control py-2 rounded-3 shadow-sm" placeholder="Title">
+                                                </div>
+                                                <div class="col-lg-6">
+                                                    <label class="fw-bold mb-2">Amount <span
+                                                            class="text-danger">*</span></label>
+                                                    <div class="position-relative">
+                                                        <span
+                                                            class="position-absolute top-50 start-0 translate-middle-y ps-3">₹</span>
+                                                        <input type="number" name="price_amount[]"
+                                                            class="form-control py-2 ps-5 rounded-3 shadow-sm"
+                                                            placeholder="Actual Amount">
+                                                    </div>
+                                                </div>
+                                            </div>
 
                                         </div>
                                     </div>

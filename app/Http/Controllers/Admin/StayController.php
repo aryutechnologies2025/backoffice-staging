@@ -518,6 +518,7 @@ class StayController extends Controller
 
             // Extract district names
             $districtNames = array_column($districts, 'destination');
+            
 
             return response()->json(array_values(array_unique($districtNames)));
         } catch (\Exception $e) {
