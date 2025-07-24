@@ -8,14 +8,14 @@
     <title>{{ $settings->meta_title ?? 'Inner Pece' }}</title>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-<!-- Bootstrap Bundle (includes Popper) -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-<link href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" rel="stylesheet" />
-<!-- Bootstrap Multiselect JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap-multiselect@1.1.1/dist/js/bootstrap-multiselect.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <!-- Bootstrap Bundle (includes Popper) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" rel="stylesheet" />
+    <!-- Bootstrap Multiselect JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-multiselect@1.1.1/dist/js/bootstrap-multiselect.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <link rel="icon" href="{{ $settings->fav_icon ? asset($settings->fav_icon) : '' }}" type="image/x-icon">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
     <!-- <link rel="stylesheet" href="/assets/css/bootstrap.min.css"> -->
@@ -36,20 +36,20 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
     <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" /> -->
-  <!-- Include DataTables CSS and JS -->
-  <meta name="csrf-token" content="{{ csrf_token() }}">
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.1/xlsx.full.min.js"></script>
+    <!-- Include DataTables CSS and JS -->
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.1/xlsx.full.min.js"></script>
 
-   
+
     @yield('scripts')
     @yield('style')
     @stack('js')
 </head>
 
 <body id="body-pd">
-    
+
     <div class="row ">
         <header class="header py-5 ps-0 " id="header">
             <div class="col-lg-3 text-start" id="navbarNav">
@@ -58,51 +58,52 @@
                     <div id="header-toggle" class="text-dark"><i class="bi bi-list"></i></div>
                 </div>
             </div>
-           
+
             <!-- <div class="col-lg-3 text-end pt-3">
                 <a href="#"><i class="fa fa-bell text-white px-4 mt-3" style="font-size:30px"></i></a>
                 <img class="" style="width: 20%;" src="/assets/image/dashboard/innerpece_admin_img.png" alt="">
             </div> -->
             <div class="d-flex gap-2   p-2 justify-content-center align-items-center ">
-                    <div id="liveTime" class=" text-secondary"></div>
-                    <script>
-    function updateTime() {
-        const now = new Date();
+                <div id="liveTime" class=" text-secondary"></div>
+                <script>
+                    function updateTime() {
+                        const now = new Date();
 
-        const options = {
-            weekday: 'short',   // Short day like "Mon", "Tue"
-            year: 'numeric',
-            month: 'short',
-            day: 'numeric',
-            hour: 'numeric',
-            minute: 'numeric',
-            hour12: true
-        };
+                        const options = {
+                            weekday: 'short', // Short day like "Mon", "Tue"
+                            year: 'numeric',
+                            month: 'short',
+                            day: 'numeric',
+                            hour: 'numeric',
+                            minute: 'numeric',
+                            hour12: true
+                        };
 
-        const timeString = now.toLocaleString('en-US', options);
-        document.getElementById('liveTime').textContent = timeString;
-    }
+                        const timeString = now.toLocaleString('en-US', options);
+                        document.getElementById('liveTime').textContent = timeString;
+                    }
 
-    setInterval(updateTime, 1000);
-    updateTime();
-</script>
+                    setInterval(updateTime, 1000);
+                    updateTime();
+                </script>
 
-<style>
-    .stay-img,.customer-package{
-        width: 20px;
-    }
-</style>
-                    <div class="bg-white rounded-5 py-2 px-4 d-none d-lg-flex gap-2  ">  
-                       
-                        <div>
-                            <p class="fs-6 p-0 m-0 d-flex text-secondary">Welcome 👋  <span class="fs-6 text-start fw-bold text-dark ms-1">Admin</span></p>
-                            <b class="rounded-circle " style="width: 10%; height: auto;" src="{{ session('admin_email') ? asset(session('admin_email')) : '/assets/image/dashboard/innerpece_admin_img.png' }}" alt="admin_email"></b>
-                            <span class="text-secondary ">{{ session('admin_email') }}</span>
-                           
-                        </div>
+                <style>
+                    .stay-img,
+                    .customer-package {
+                        width: 20px;
+                    }
+                </style>
+                <div class="bg-white rounded-5 py-2 px-4 d-none d-lg-flex gap-2  ">
+
+                    <div>
+                        <p class="fs-6 p-0 m-0 d-flex text-secondary">Welcome 👋 <span class="fs-6 text-start fw-bold text-dark ms-1">Admin</span></p>
+                        <b class="rounded-circle " style="width: 10%; height: auto;" src="{{ session('admin_email') ? asset(session('admin_email')) : '/assets/image/dashboard/innerpece_admin_img.png' }}" alt="admin_email"></b>
+                        <span class="text-secondary ">{{ session('admin_email') }}</span>
+
                     </div>
-                   
                 </div>
+
+            </div>
             <!-- <div class="col-lg-3 text-end pt-3">
             <b class="rounded-circle" style="width: 10%; height: auto;" src="{{ session('admin_name') ? asset(session('admin_name')) : '/assets/image/dashboard/innerpece_admin_img.png' }}" alt="admin_name"></b>
             <span class="text-white">{{ session('admin_name') }}</span> 
@@ -110,11 +111,11 @@
             <b class="rounded-circle" style="width: 10%; height: auto;" src="{{ session('admin_email') ? asset(session('admin_email')) : '/assets/image/dashboard/innerpece_admin_img.png' }}" alt="admin_email"></b>
                 <span class="text-white">{{ session('admin_email') }}</span>
             </div> -->
-            </div>
-            <!-- Modal -->
-            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -126,28 +127,28 @@
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     <button type="button" class="btn btn-primary">Save changes</button>
                 </div>
-                </div>
             </div>
-            </div>
+        </div>
+    </div>
 
-        </header>
+    </header>
     </div>
     <div class="l-navbar" id="nav-bar">
-        
+
         <nav class="nav w-100">
             <div>
-            <!-- <img src="/assets/image/dashboard/plane.svg" alt=""  class="px-5 invisible navbar-toggle-icon" style="height: 30px;"> -->
-            
+                <!-- <img src="/assets/image/dashboard/plane.svg" alt=""  class="px-5 invisible navbar-toggle-icon" style="height: 30px;"> -->
+
                 <div class="nav_list ">
                     <img class="pt-3 px-2 " style="width:90%;" src="{{ $settings->footer_logo ? asset($settings->footer_logo) : '/assets/image/login/inner_pece_logo.png' }}" alt="">
                     <div>
-                    <img src="{{$settings->fav_icon}}" alt=""  class="px-4 mb-3 invisible navbar-toggle-icon" style="height: 30px;">
+                        <img src="{{$settings->fav_icon}}" alt="" class="px-4 mb-3 invisible navbar-toggle-icon" style="height: 30px;">
                     </div>
                     <a href="{{ route('admin.dashboard') }}" class="nav_link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }} mb-3 text-white">
                         <img src="/assets/image/dashboard/Dashboard.svg" alt="">
                         <span class="nav_name">Dashboard</span>
                     </a>
-                    
+
                     <a href="{{ route('admin.user_list') }}" class="nav_link {{ request()->routeIs(['admin.user_list', 'admin.user_add_form', 'admin.user_edit_form']) ? 'active' : ''}} mb-3 text-white">
                         <img src="/assets/image/dashboard/user.svg" alt="">
                         <span class="nav_name"> User Registration </span>
@@ -157,7 +158,7 @@
                         <span class="nav_name">contact-Us</span>
                     </a>
                     <a href="{{ route('admin.assistance_form_list') }}" class="nav_link {{ request()->routeIs(['admin.assistance_form_list']) ? 'active' : '' }} mb-3 text-white">
-                    <i class="bi bi-info-square"></i>
+                        <i class="bi bi-info-square"></i>
                         <span class="nav_name">Assitance Form</span>
                     </a>
                     <a href="{{ route('admin.enquiry_list') }}" class="nav_link {{ request()->routeIs(['admin.enquiry_list']) ? 'active' : '' }} mb-3 text-white">
@@ -166,7 +167,7 @@
                     </a>
                     <a href="{{ route('admin.home_enquiry_list') }}" class="nav_link {{ request()->routeIs(['admin.home_enquiry_list']) ? 'active' : '' }} mb-3 text-white">
                         <img src="/assets/image/dashboard/enquiry.svg" alt="">
-                        <span class="nav_name"> Enquiry  </span>
+                        <span class="nav_name"> Enquiry </span>
                     </a>
                     <!-- <a href="{{ route('admin.review_review_list') }}" class="nav_link {{ request()->routeIs(['admin.review_review_list', 'admin.client_review_add_form', 'admin.client_review_edit_form']) ? 'active' : ''}} mb-3 text-white">
                         <img src="/assets/image/dashboard/review.svg" alt="">
@@ -194,15 +195,31 @@
                         <span class="nav_name"> Destination </span>
                     </a>
 
-                     <a href="{{ route('admin.staylist') }}" class="nav_link {{ request()->routeIs(['admin.staylist', 'admin.stays_add_form', 'admin.stay_details_edit_form']) ? 'active' : '' }} mb-3 text-white">
+                    <a href="{{ route('admin.staylist') }}" class="nav_link {{ request()->routeIs(['admin.staylist', 'admin.stays_add_form', 'admin.stay_details_edit_form']) ? 'active' : '' }} mb-3 text-white">
                         <img src="/assets/image/dashboard/stay.png" alt="" class="stay-img">
                         <span class="nav_name"> Stays </span>
                     </a>
-                     <a href="{{ route('admin.staydestinationlist') }}" class="nav_link {{ request()->routeIs(['admin.staydestination_add_form', 'admin.staydestinationlist', 'admin.staydestination_edit_form']) ? 'active' : '' }} mb-3 text-white">
+                    <a href="{{ route('admin.staydestinationlist') }}" class="nav_link {{ request()->routeIs(['admin.staydestination_add_form', 'admin.staydestinationlist', 'admin.staydestination_edit_form']) ? 'active' : '' }} mb-3 text-white">
                         <img src="/assets/image/dashboard/stay.png" alt="" class="stay-img">
                         <span class="nav_name"> Stays Destination </span>
                     </a>
-                     <a href="{{ route('admin.staydistrictlist') }}" class="nav_link {{ request()->routeIs(['']) ? 'active' : '' }} mb-3 text-white">
+                    <a href="{{ route('admin.staypricinglist') }}" class="nav_link {{ request()->routeIs(['admin.staypricing_add_form', 'admin.staypricinglist', 'admin.staypricing_edit_form']) ? 'active' : '' }} mb-3 text-white">
+                        <img src="/assets/image/dashboard/stay.png" alt="" class="stay-img">
+                        <span class="nav_name"> Stay Pricing </span>
+                    </a>
+                    <a href="{{ route('admin.cablist') }}" class="nav_link {{ request()->routeIs(['admin.cab_add_form', 'admin.cablist', 'admin.cab_edit_form']) ? 'active' : '' }} mb-3 text-white">
+                        <img src="/assets/image/dashboard/stay.png" alt="" class="stay-img">
+                        <span class="nav_name"> Cab </span>
+                    </a>
+                     <a href="{{ route('admin.activitylist') }}" class="nav_link {{ request()->routeIs(['admin.activity_add_form', 'admin.activitylist', 'admin.activity_edit_form']) ? 'active' : '' }} mb-3 text-white">
+                        <img src="/assets/image/dashboard/stay.png" alt="" class="stay-img">
+                        <span class="nav_name"> Activity </span>
+                    </a>
+                     <a href="{{ route('admin.pricinglist') }}" class="nav_link {{ request()->routeIs(['admin.pricing_add_form', 'admin.pricinglist', 'admin.pricing_edit_form']) ? 'active' : '' }} mb-3 text-white">
+                        <img src="/assets/image/dashboard/stay.png" alt="" class="stay-img">
+                        <span class="nav_name"> Pricing Calculator </span>
+                    </a>
+                    <a href="{{ route('admin.staydistrictlist') }}" class="nav_link {{ request()->routeIs(['']) ? 'active' : '' }} mb-3 text-white">
                         <img src="/assets/image/dashboard/stay.png" alt="" class="stay-img">
                         <span class="nav_name"> Stays District </span>
                     </a>
@@ -224,17 +241,17 @@
                         <img src="/assets/image/dashboard/review.svg" alt="">
                         <span class="nav_name"> Review </span>
                     </a>
-                   
+
                     <a href="{{ route('admin.wish_list') }}" class="nav_link {{ request()->routeIs(['admin.wish_list', 'admin.wishlist_add_form', 'admin.wishlist_edit_form']) ? 'active' : '' }} mb-3 text-white">
                         <img src="/assets/image/dashboard/wishlist.svg" alt="">
                         <span class="nav_name"> Wishlist</span>
                     </a>
-                 
+
                     <a href="{{ route('admin.faqlist') }}" class="nav_link {{ request()->routeIs(['admin.faqlist', 'admin.faq_add_form', 'admin.faq_edit_form']) ? 'active' : '' }} mb-3 text-white">
                         <img src="/assets/image/dashboard/faq.svg" alt="">
                         <span class="nav_name">FAQ</span>
                     </a>
-                   
+
                     <a href="{{ route('admin.amenitieslist') }}" class="nav_link {{ request()->routeIs(['admin.amenitieslist', 'admin.amenities_add_form', 'admin.amenities_edit_form']) ? 'active' : '' }} mb-3 text-white">
                         <img src="/assets/image/dashboard/amenities.svg" alt="">
                         <span class="nav_name">Amenities</span>
@@ -347,15 +364,15 @@
                         <span class="nav_name" style="color: #fff;"> General Setting </span>
                     </a>
                     <div class="profile-content mb-4">
-                    <a href="{{ route('admin.logout') }}" class="nav_link mb-5 ">
-                        <img class="" src="/assets/image/dashboard/turn-off.svg" alt="">
-                        <span class="nav_name logout-menu"   >Logout</span>
-                    </a>
-                </div>
-                    
+                        <a href="{{ route('admin.logout') }}" class="nav_link mb-5 ">
+                            <img class="" src="/assets/image/dashboard/turn-off.svg" alt="">
+                            <span class="nav_name logout-menu">Logout</span>
+                        </a>
+                    </div>
+
 
                     {{-- <a class="nav_link {{ request()->routeIs(['admin.faqlist', 'admin.faq_add_form', 'admin.faq_edit_form']) ? 'active' : '' }} mb-3">
-                        <span class="nav_name"></span>
+                    <span class="nav_name"></span>
                     </a> --}}
                 </div>
             </div>
@@ -473,18 +490,18 @@
             @if(session('success'))
             toastr.success("{{ session('success') }}");
             @endif
-            @if($errors->any())
-            @foreach($errors->all() as $error)
+            @if($errors-> any())
+            @foreach($errors-> all() as $error)
             toastr.error("{{ $error }}");
             @endforeach
             @endif
-            
+
         });
 
 
 
-        
-   
+
+
         const tableBody = document.getElementById('tableBody');
 
         // Function to filter rows by status
@@ -510,27 +527,27 @@
             filterTable('Inactive');
         });
 
-    //     function updateTime() {
-    //     const now = new Date();
+        //     function updateTime() {
+        //     const now = new Date();
 
-    //     const options = {
-    //         weekday: 'short',   // Short day like "Mon", "Tue"
-    //         year: 'numeric',
-    //         month: 'short',
-    //         day: 'numeric',
-    //         hour: 'numeric',
-    //         minute: 'numeric',
-    //         hour12: true
-    //     };
+        //     const options = {
+        //         weekday: 'short',   // Short day like "Mon", "Tue"
+        //         year: 'numeric',
+        //         month: 'short',
+        //         day: 'numeric',
+        //         hour: 'numeric',
+        //         minute: 'numeric',
+        //         hour12: true
+        //     };
 
-    //     const timeString = now.toLocaleString('en-US', options);
-    //     document.getElementById('liveTime').textContent = timeString;
-    // }
+        //     const timeString = now.toLocaleString('en-US', options);
+        //     document.getElementById('liveTime').textContent = timeString;
+        // }
 
-    // setInterval(updateTime, 1000);
-    // updateTime();
+        // setInterval(updateTime, 1000);
+        // updateTime();
     </script>
-      <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 
 
     @endpush
