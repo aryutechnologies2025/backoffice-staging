@@ -44,6 +44,7 @@
                         <th class="text-center "><span> Image </span></th>
                         <th class="text-center "><span> Category </span></th>
                         <th class="text-center "><span>Date&Time </span></th>
+                        <th class="text-center "><span> Package Duplicate </span></th>
                         <th class="text-center ">
                             <span> Status </span>
                         </th>
@@ -86,6 +87,11 @@
 
                         <td class="text-center">{{ $formattedCategories }}</td>
                         <td class="text-center">{{ $row->created_at }}</td>
+                        <td class="text-center">
+                            <button type="button" class="btn btn-primary text-white duplicate_package" data-package_id="{{ $row->id }}">
+                                <i class="fa fa-copy"></i> Duplicate
+                            </button>
+                        </td>
                         @php
                         $disp_status = 'In Active';
                         $actTitle = 'Click to activate';
@@ -144,6 +150,40 @@
                     "targets": [0, 3]
                 } // Disable ordering on Icon and Action columns
             ]
+        });
+
+         $(document).on('click', '.duplicate_package', function() {
+            const packageId = $(this).data('package_id');
+            const $button = $(this);
+
+            // Show loading state
+            $button.html('<i class="fas fa-spinner fa-spin"></i> Duplicating...');
+            $.ajax({
+                url: "{{ route('admin.ProgramPackage_dupdetails') }}",
+                type: 'POST',
+                data: {
+                    id: packageId,
+                },
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(response) {
+                    if (response.success) {
+                        toastr.success('Package duplicated successfully!');
+                        // Refresh the table or add the new row
+                        // if ($.fn.DataTable.isDataTable('#cityTable')) {
+                        //     $('#cityTable').DataTable().ajax.reload(null, false);
+                        // }
+                        location.reload();
+                    } else {
+                        toastr.error(response.message || 'Failed to duplicate package');
+                    }
+                },
+                error: function(xhr) {
+                    toastr.error('An error occurred while duplicating the package');
+                    console.error('Error:', xhr.responseText);
+                }
+            });
         });
     });
 </script>
