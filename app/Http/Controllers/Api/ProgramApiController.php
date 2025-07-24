@@ -1719,8 +1719,22 @@ class ProgramApiController extends Controller
             $programId = $request->input('program_id');
 
 
+            // First check the customer_package status
+            $program = customer_package::where('is_deleted', 0)
+                ->where('status', 1)
+                ->find($programId);
+
+            if (!$program) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Program not found or not active',
+                ], 404);
+            }
+
 
             $program = customer_package::find($programId);
+
+
             $Inclusivepackage = InclusivePackages::with('destination', 'theme', 'clientReviews', 'reviews')
                 ->find($program->package_id);
 
