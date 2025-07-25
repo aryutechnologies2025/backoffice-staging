@@ -29,10 +29,24 @@ class CabController extends Controller
     {
         // dd($request->all());
         $pricing = new Cab();
+
+        // Check if a record with the same destination_id and district_id already exists
+        $existingPricing = Cab::where('destination_id', $request->input('cities_name'))
+            ->where('district_id', $request->input('district_name'))
+            ->where('travel_mode', $request->input('travel_mode'))
+            ->where('is_deleted', '0')
+            ->first();
+
+        if ($existingPricing) {
+            return redirect()->back()
+                ->withInput()
+                ->withErrors(['duplicate' => "This destination, district, and travel mode combination ({$request->input('travel_mode')}) already exists. Duplicate entries are not allowed."]);
+        }
+
+
         $pricing->destination_id = $request->input('cities_name');
         $pricing->district_id = $request->input('district_name');
         $pricing->travel_mode = $request->input('travel_mode');
-        // Convert array to JSON before storing
         $pricing->title_price = json_encode($request->input('camp_rules'));
 
         $pricing->status = $request->has('status') && $request->input('status') === 'on' ? '1' : '0';
@@ -126,16 +140,34 @@ class CabController extends Controller
     {
 
         $pricing = Cab::findOrFail($id);
+
+
+        
+        // Check for duplicates EXCLUDING the current record
+        $existingPricing = Cab::where('destination_id', $request->input('cities_name'))
+            ->where('district_id', $request->input('district_name'))
+            ->where('is_deleted', '0')
+            ->where('id', '!=', $id)  // Exclude current record
+            ->first();
+
+        if ($existingPricing) {
+            return redirect()->back()
+                ->withInput()
+                ->withErrors(['duplicate' => 'This destination and district combination already exists. Duplicate entries are not allowed.']);
+        }
+
+        // Filter out removed items and reindex array
+        $campRules = array_values(array_filter($request->camp_rules, function ($rule) {
+            return !isset($rule['removed']);
+        }));
         $pricing->destination_id = $request->input('cities_name');
         $pricing->district_id = $request->input('district_name');
         $pricing->travel_mode = $request->input('travel_mode');
-        $pricing->title_price = json_encode($request->input('camp_rules'));
+        $pricing->title_price = json_encode($campRules);
         $pricing->status = $request->has('status') && $request->input('status') === 'on' ? '1' : '0';
         $pricing->save();
 
         return redirect()->route('admin.cablist')
             ->with('success', 'Cab updated successfully.');
     }
-
-   
 }

@@ -203,7 +203,7 @@
                         <img src="/assets/image/dashboard/stay.png" alt="" class="stay-img">
                         <span class="nav_name"> Stays Destination </span>
                     </a>
-                    <!-- <a href="{{ route('admin.staypricinglist') }}" class="nav_link {{ request()->routeIs(['admin.staypricing_add_form', 'admin.staypricinglist', 'admin.staypricing_edit_form']) ? 'active' : '' }} mb-3 text-white">
+                    <a href="{{ route('admin.staypricinglist') }}" class="nav_link {{ request()->routeIs(['admin.staypricing_add_form', 'admin.staypricinglist', 'admin.staypricing_edit_form']) ? 'active' : '' }} mb-3 text-white">
                         <img src="/assets/image/dashboard/stay.png" alt="" class="stay-img">
                         <span class="nav_name"> Stay Pricing </span>
                     </a>
@@ -218,7 +218,7 @@
                      <a href="{{ route('admin.pricinglist') }}" class="nav_link {{ request()->routeIs(['admin.pricing_add_form', 'admin.pricinglist', 'admin.pricing_edit_form']) ? 'active' : '' }} mb-3 text-white">
                         <img src="/assets/image/dashboard/stay.png" alt="" class="stay-img">
                         <span class="nav_name"> Pricing Calculator </span>
-                    </a> -->
+                    </a>
                     <a href="{{ route('admin.staydistrictlist') }}" class="nav_link {{ request()->routeIs(['']) ? 'active' : '' }} mb-3 text-white">
                         <img src="/assets/image/dashboard/stay.png" alt="" class="stay-img">
                         <span class="nav_name"> Stays District </span>

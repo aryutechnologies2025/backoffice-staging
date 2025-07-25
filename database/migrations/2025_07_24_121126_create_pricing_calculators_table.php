@@ -15,9 +15,6 @@ return new class extends Migration
             $table->id();
             $table->string('destination_id')->nullable();
             $table->string('district_id')->nullable();
-            $table->string('stay_price')->nullable();
-            $table->string('cab_price')->nullable();
-            $table->string('activity_price')->nullable();
             $table->string('total_pricing')->nullable();
             $table->enum('status', ['1', '0'])->default('1');
             $table->enum('is_deleted', ['0', '1'])->default('0');

@@ -120,11 +120,11 @@
 <div class="container-wrapper py-5">
     <div class="row">
         <div class="col-lg-12">
-           <b><a href="/dashboard">Dashboard</a> > <a href="/pricingcalculator">Pricing</a> > <a
+            <b><a href="/dashboard">Dashboard</a> > <a href="/pricingcalculator">Pricing</a> > <a
                     class="add">Add</a></b>
             <br>
             <br>
-            <h3 class="fw-bold pb-2">Add Pricing</h3>
+            <h3 class="fw-bold pb-2">Pricing Calculator</h3>
         </div>
 
         <!-- FORM -->
@@ -137,8 +137,9 @@
                     <div class="form-body p-4 rounded-4">
                         <h4 class="fw-bold mb-5 px-5 pt-5">Information</h4>
 
-
+                     
                         <div class="mb-3 px-5">
+                           
                             <div class="row gap-2">
                                 <!-- Theme and Destination -->
                                 <div class="col-md-4 ">
@@ -162,48 +163,33 @@
                                     </select>
                                 </div>
 
-                                <div class="col-md-4 ">
-                                    <label class="mb-2">Stay <span class="text-danger">*</span></label>
-                                    <select id="cities_name" name="cities_name"
-                                        class="form-select py-2 rounded-3 shadow-sm" required>
-                                        <option value="" disabled selected>Select Stay</option>
-                                        @foreach($cities as $id => $name)
-                                        <option value="{{ $name }}" @if(old('cities_name')=='{{ $id }}' ) selected @endif>
-                                            {{ $name }}
-                                        </option>
-                                        @endforeach
-                                    </select>
-                                </div>
-
-                                 <div class="col-md-4 ">
-                                    <label class="mb-2">Cab <span class="text-danger">*</span></label>
-                                    <select id="cities_name" name="cities_name"
-                                        class="form-select py-2 rounded-3 shadow-sm" required>
-                                        <option value="" disabled selected>Select Cab</option>
-                                        @foreach($cities as $id => $name)
-                                        <option value="{{ $name }}" @if(old('cities_name')=='{{ $id }}' ) selected @endif>
-                                            {{ $name }}
-                                        </option>
-                                        @endforeach
-                                    </select>
-                                </div>
-
-                                <div class="col-md-4 ">
-                                    <label class="mb-2">Activity <span class="text-danger">*</span></label>
-                                    <select id="cities_name" name="cities_name"
-                                        class="form-select py-2 rounded-3 shadow-sm" required>
-                                        <option value="" disabled selected>Select Activity</option>
-                                        @foreach($cities as $id => $name)
-                                        <option value="{{ $name }}" @if(old('cities_name')=='{{ $id }}' ) selected @endif>
-                                            {{ $name }}
-                                        </option>
-                                        @endforeach
-                                    </select>
-                                </div>
 
 
-                             
+
+                                <!-- <div class=""> -->
+
+                                <!-- </div> -->
+
                             </div>
+                            <!-- Stays Section -->
+                            <div id="stays-section" class="row d-flex mt-3" style="display: none;">
+                            </div>
+
+                            <!-- Activities Section -->
+                            <div id="activities-section" class="row d-flex mt-3" style="display: none;">
+                            </div>
+
+                            <!-- Cabs Section (if needed) -->
+                            <div id="cabs-section" class="row d-flex mt-3" style="display: none;">
+                            </div>
+
+                            <div class="row d-flex mt-3">
+                                <div class="col-md-4">
+                                    <label class="mb-2">Total Amount</label>
+                                    <input id="total_amount" type="number" class="form-control" name="total_amount">
+                                </div>
+                            </div>
+
                         </div>
 
                         <br>
@@ -225,7 +211,7 @@
                         </style>
 
                         <div class="col-lg-12 text-end mt-5">
-                            <a href="{{ route('admin.staypricinglist') }}">
+                            <a href="{{ route('admin.pricinglist') }}">
                                 <button type="button" class="cancel-btn"> Cancel </button>
                             </a>
                             <button class="submit-btn sbmtBtn ms-4 mb-5"> Submit </button>
@@ -242,153 +228,159 @@
 
     <script>
         $(document).ready(function() {
-            $('#summernote1,#summernote2,#summernote3,#summernote4,#summernote5,#summernote6,#summernote7,#summernote8,#summernote9,#summernote10')
-                .summernote({
-                    height: 200 // Set the height of the editor
+
+
+            // Initialize total amount
+            let totalAmount = 0;
+
+            // Function to calculate total amount
+            function calculateTotal() {
+                totalAmount = 0;
+
+                // Calculate from stays
+                $('#stays-section input[type="checkbox"]:checked').each(function() {
+                    const priceText = $(this).next('label').text().split(' - ')[1];
+                    const price = parseFloat(priceText) || 0;
+                    totalAmount += price;
                 });
-            $('#summernote1').summernote({
-                placeholder: 'Hello stand alone ui',
-                tabsize: 2,
-                height: 100,
-                toolbar: [
-                    ['style', ['style']],
-                    ['font', ['bold', 'underline', 'clear']],
-                    ['color', ['color']],
-                    ['para', ['ul', 'ol', 'paragraph']],
-                    ['table', ['table']],
-                    ['insert', ['link', 'picture', 'video']],
-                    ['view', ['fullscreen', 'codeview', 'help']]
-                ]
+
+                // Calculate from activities
+                $('#activities-section input[type="checkbox"]:checked').each(function() {
+                    const priceText = $(this).next('label').text().split(' - ')[1];
+                    const price = parseFloat(priceText) || 0;
+                    totalAmount += price;
+                });
+
+                // Calculate from cabs
+                $('#cabs-section input[type="checkbox"]:checked').each(function() {
+                    const priceText = $(this).next('label').text().split(' - ')[1];
+                    const price = parseFloat(priceText) || 0;
+                    totalAmount += price;
+                });
+
+                // Update the total amount field
+                $('#total_amount').val(totalAmount.toFixed(2));
+            }
+
+            // District change handler
+            $('#district_name').change(function() {
+                const destination = $('#cities_name').val();
+                const district = $(this).val();
+
+                // Clear previous results and reset total
+                $('#stays-section, #activities-section, #cabs-section').empty().hide();
+                $('#total_amount').val('0.00');
+                totalAmount = 0;
+
+                $.ajax({
+                    url: "{{ route('admin.pricing_details') }}",
+                    type: 'POST',
+                    data: {
+                        destination: destination,
+                        district: district,
+                        _token: "{{ csrf_token() }}"
+                    },
+                    success: function(data) {
+                        // Process stays
+                        if (data.stays && data.stays.length > 0) {
+                            const staysSection = $('#stays-section');
+                            staysSection.empty().append('<div class="fw-bold">Stays</div>');
+
+                            data.stays.forEach((stayGroup) => {
+                                stayGroup.forEach((stay) => {
+                                    if (stay.title && stay.price) {
+                                        staysSection.append(`
+                               
+                                    <div class=" col-md-3 d-flex  mt-3">
+                                        <input type="checkbox" class="form-check-input stay-checkbox mx-2 pt-3" 
+                                            id="stay-${stay.title.replace(/\s+/g, '-')}"
+                                            name="stay_items[]"
+                                            data-id="${stay.id}"
+                                            data-type="stay"
+                                            data-title="${stay.title.trim()}"
+                                            data-price="${stay.price}">
+                                        <label for="stay-${stay.title.replace(/\s+/g, '-')}">
+                                            ${stay.title} - ${stay.price}
+                                        </label>
+                                    </div>
+                              
+                                `);
+                                    }
+                                });
+                            });
+                            staysSection.show();
+                        }
+
+                        // Process activities
+                        if (data.activities && data.activities.length > 0) {
+                            const activitiesSection = $('#activities-section');
+                            activitiesSection.empty().append('<p class="fw-bold">Activities</p>');
+
+                            data.activities.forEach((activityGroup) => {
+                                activityGroup.forEach((activity) => {
+                                    if (activity.title && activity.price) {
+                                        activitiesSection.append(`
+                                        <div class=" col-md-3 d-flex  mt-3">
+                                            <input type="checkbox" class="form-check-input activity-checkbox mx-2 pt-3" 
+                                                id="activity-${activity.title.replace(/\s+/g, '-')}"
+                                                    name="activity_items[]"
+                                                    data-type="activity"
+                                                    data-id="${activity.id}"
+                                                    data-title="${activity.title.trim()}"
+                                                    data-price="${activity.price}">
+                                            <label for="activity-${activity.title.replace(/\s+/g, '-')}">
+                                                ${activity.title} - ${activity.price}
+                                            </label>
+                                        </div>
+                                `);
+                                    }
+                                });
+                            });
+                            activitiesSection.show();
+                        }
+
+                        // Process cabs
+                        if (data.cabs && data.cabs.length > 0) {
+                            const cabsSection = $('#cabs-section');
+                            cabsSection.empty().append('<p class="fw-bold">Cabs</p>');
+
+                            data.cabs.forEach((cabGroup) => {
+                                cabGroup.forEach((cab) => {
+                                    if (cab.title && cab.price) {
+                                        cabsSection.append(`
+                                            <div class="col-md-3 d-flex mt-3">
+                                                <input type="checkbox" class="form-check-input cab-checkbox mx-2 pt-3" 
+                                                    id="cab-${cab.title.replace(/\s+/g, '-')}"
+                                                    name="cab_items[]"
+                                                    data-type="cab"
+                                                    data-id="${cab.id}"
+                                                    data-title="${cab.title.trim()}"
+                                                    data-price="${cab.price}">
+                                                <label for="cab-${cab.title.replace(/\s+/g, '-')}">
+                                                    ${cab.title} - ${cab.price}
+                                                </label>
+
+                                            </div>
+                                        `);
+                                    }
+                                });
+                            });
+                            cabsSection.show();
+                        }
+
+                        // Set up event listeners for new checkboxes
+                        $('.stay-checkbox, .activity-checkbox, .cab-checkbox').change(function() {
+                            calculateTotal();
+                        });
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('AJAX Error:', status, error);
+                    }
+                });
             });
 
-            $('#summernote2').summernote({
-                placeholder: 'Hello stand alone ui',
-                tabsize: 2,
-                height: 100,
-                toolbar: [
-                    ['style', ['style']],
-                    ['font', ['bold', 'underline', 'clear']],
-                    ['color', ['color']],
-                    ['para', ['ul', 'ol', 'paragraph']],
-                    ['table', ['table']],
-                    ['insert', ['link', 'picture', 'video']],
-                    ['view', ['fullscreen', 'codeview', 'help']]
-                ]
-            });
-            $('#summernote3').summernote({
-                placeholder: 'Hello stand alone ui',
-                tabsize: 2,
-                height: 100,
-                toolbar: [
-                    ['style', ['style']],
-                    ['font', ['bold', 'underline', 'clear']],
-                    ['color', ['color']],
-                    ['para', ['ul', 'ol', 'paragraph']],
-                    ['table', ['table']],
-                    ['insert', ['link', 'picture', 'video']],
-                    ['view', ['fullscreen', 'codeview', 'help']]
-                ]
-            });
-            $('#summernote4').summernote({
-                placeholder: 'Hello stand alone ui',
-                tabsize: 2,
-                height: 100,
-                toolbar: [
-                    ['style', ['style']],
-                    ['font', ['bold', 'underline', 'clear']],
-                    ['color', ['color']],
-                    ['para', ['ul', 'ol', 'paragraph']],
-                    ['table', ['table']],
-                    ['insert', ['link', 'picture', 'video']],
-                    ['view', ['fullscreen', 'codeview', 'help']]
-                ]
-            });
-            $('#summernote5').summernote({
-                placeholder: 'Hello stand alone ui',
-                tabsize: 2,
-                height: 100,
-                toolbar: [
-                    ['style', ['style']],
-                    ['font', ['bold', 'underline', 'clear']],
-                    ['color', ['color']],
-                    ['para', ['ul', 'ol', 'paragraph']],
-                    ['table', ['table']],
-                    ['insert', ['link', 'picture', 'video']],
-                    ['view', ['fullscreen', 'codeview', 'help']]
-                ]
-            });
-            $('#summernote9').summernote({
-                placeholder: 'Hello stand alone ui',
-                tabsize: 2,
-                height: 100,
-                toolbar: [
-                    ['style', ['style']],
-                    ['font', ['bold', 'underline', 'clear']],
-                    ['color', ['color']],
-                    ['para', ['ul', 'ol', 'paragraph']],
-                    ['table', ['table']],
-                    ['insert', ['link', 'picture', 'video']],
-                    ['view', ['fullscreen', 'codeview', 'help']]
-                ]
-            });
-            $('#summernote6').summernote({
-                placeholder: 'Hello stand alone ui',
-                tabsize: 2,
-                height: 100,
-                toolbar: [
-                    ['style', ['style']],
-                    ['font', ['bold', 'underline', 'clear']],
-                    ['color', ['color']],
-                    ['para', ['ul', 'ol', 'paragraph']],
-                    ['table', ['table']],
-                    ['insert', ['link', 'picture', 'video']],
-                    ['view', ['fullscreen', 'codeview', 'help']]
-                ]
-            });
-            $('#summernote7').summernote({
-                placeholder: 'Hello stand alone ui',
-                tabsize: 2,
-                height: 100,
-                toolbar: [
-                    ['style', ['style']],
-                    ['font', ['bold', 'underline', 'clear']],
-                    ['color', ['color']],
-                    ['para', ['ul', 'ol', 'paragraph']],
-                    ['table', ['table']],
-                    ['insert', ['link', 'picture', 'video']],
-                    ['view', ['fullscreen', 'codeview', 'help']]
-                ]
-            });
-            $('#summernote8').summernote({
-                placeholder: 'Hello stand alone ui',
-                tabsize: 2,
-                height: 100,
-                toolbar: [
-                    ['style', ['style']],
-                    ['font', ['bold', 'underline', 'clear']],
-                    ['color', ['color']],
-                    ['para', ['ul', 'ol', 'paragraph']],
-                    ['table', ['table']],
-                    ['insert', ['link', 'picture', 'video']],
-                    ['view', ['fullscreen', 'codeview', 'help']]
-                ]
-            });
-            $('#summernote10').summernote({
-                placeholder: 'Hello stand alone ui',
-                tabsize: 2,
-                height: 100,
-                toolbar: [
-                    ['style', ['style']],
-                    ['font', ['bold', 'underline', 'clear']],
-                    ['color', ['color']],
-                    ['para', ['ul', 'ol', 'paragraph']],
-                    ['table', ['table']],
-                    ['insert', ['link', 'picture', 'video']],
-                    ['view', ['fullscreen', 'codeview', 'help']]
-                ]
-            });
-
-
+            // Initialize with 0.00
+            $('#total_amount').val('0.00');
 
             $('#cities_name').change(function() {
                 const destination = $(this).val();
@@ -443,8 +435,55 @@
                     }
                 });
             });
+
+            $('#form_valid').submit(function(e) {
+                e.preventDefault();
+
+                const selectedItems = [];
+
+                // Collect all checked items
+                $('input[type="checkbox"]:checked').each(function() {
+                    selectedItems.push({
+                        id: $(this).data('id'),
+                        type: $(this).data('type'),
+                        title: $(this).data('title'),
+                        price: $(this).data('price')
+                    });
+                });
+
+                // Validate at least one item is selected
+                if (selectedItems.length === 0) {
+                    alert('Please select at least one item');
+                    return false;
+                }
+
+                // Add selected items to form
+                $('<input>').attr({
+                    type: 'hidden',
+                    name: 'selected_items',
+                    value: JSON.stringify(selectedItems)
+                }).appendTo('#form_valid');
+
+                // Submit the form
+                this.submit();
+            });
+
+
+            // if ($('#auto-dismiss-error').length) {
+            //     // Hide the error after 5 seconds with fade out effect
+            //     setTimeout(function() {
+            //         $('#auto-dismiss-error').fadeOut(500, function() {
+            //             $(this).remove();
+            //         });
+            //     }, 10000); // 5000ms = 5 seconds
+
+            //     // Optional: Add close button functionality
+            //     $('#auto-dismiss-error').prepend(
+            //         '<button type="button" class="btn-close float-end" data-bs-dismiss="alert" aria-label="Close"></button>'
+            //     );
+            // }
+
+
         });
-
-
     </script>
     @endsection
