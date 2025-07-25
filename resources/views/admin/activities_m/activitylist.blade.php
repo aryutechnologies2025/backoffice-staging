@@ -46,11 +46,7 @@
                 </thead>
 
                      <tbody>
-                    @if($stay_details->isEmpty())
-                    <tr>
-                        <td colspan="5" class="text-center">No records</td>
-                    </tr>
-                    @else
+                
                     @foreach ($stay_details as $row)
 
                     <tr>
@@ -89,7 +85,6 @@
                         </td>
                     </tr>
                     @endforeach
-                    @endif
 
                 </tbody>
             </table>
