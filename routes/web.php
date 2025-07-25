@@ -645,6 +645,7 @@ Route::prefix('/')->group(function () {
                 Route::post('/{id}/update', 'update')->name('admin.pricing_update');
                 Route::post('/delete', 'delete')->name('admin.pricingdelete');
                 Route::post('/change-status', 'change_status')->name('admin.pricing_change_status');
+                Route::post('/pricing-details', 'pricing_details')->name('admin.pricing_details');
             });
         });
     });

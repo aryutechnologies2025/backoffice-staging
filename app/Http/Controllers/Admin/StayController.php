@@ -525,4 +525,5 @@ class StayController extends Controller
             return response()->json([], 500);
         }
     }
+    
 }

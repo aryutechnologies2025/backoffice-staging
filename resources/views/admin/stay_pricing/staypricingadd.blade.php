@@ -120,11 +120,11 @@
 <div class="container-wrapper py-5">
     <div class="row">
         <div class="col-lg-12">
-           <b><a href="/dashboard">Dashboard</a> > <a href="/staypricing">Stay Pricing</a> > <a
+            <b><a href="/dashboard">Dashboard</a> > <a href="/staypricing">Stay Pricing</a> > <a
                     class="add">Add</a></b>
             <br>
             <br>
-            <h3 class="fw-bold pb-2">Add Stay Details</h3>
+            <h3 class="fw-bold pb-2">Add Stay Pricing</h3>
         </div>
 
         <!-- FORM -->
@@ -167,7 +167,7 @@
                                     <!-- Initial fields -->
                                     <div class="row mb-4">
                                         <div class="col-md-4">
-                                            <label class="mb-2">Title <span class="text-danger">*</span></label>
+                                            <label class="mb-2"> Title <span class="text-danger">*</span></label>
                                             <input type="text" placeholder="Title"
                                                 name="camp_rules[0][title]"
                                                 class="form-control py-2 rounded-3 shadow-sm"
@@ -231,215 +231,6 @@
 
     <script>
         $(document).ready(function() {
-            $('#summernote1,#summernote2,#summernote3,#summernote4,#summernote5,#summernote6,#summernote7,#summernote8,#summernote9,#summernote10')
-                .summernote({
-                    height: 200 // Set the height of the editor
-                });
-            $('#summernote1').summernote({
-                placeholder: 'Hello stand alone ui',
-                tabsize: 2,
-                height: 100,
-                toolbar: [
-                    ['style', ['style']],
-                    ['font', ['bold', 'underline', 'clear']],
-                    ['color', ['color']],
-                    ['para', ['ul', 'ol', 'paragraph']],
-                    ['table', ['table']],
-                    ['insert', ['link', 'picture', 'video']],
-                    ['view', ['fullscreen', 'codeview', 'help']]
-                ]
-            });
-
-            $('#summernote2').summernote({
-                placeholder: 'Hello stand alone ui',
-                tabsize: 2,
-                height: 100,
-                toolbar: [
-                    ['style', ['style']],
-                    ['font', ['bold', 'underline', 'clear']],
-                    ['color', ['color']],
-                    ['para', ['ul', 'ol', 'paragraph']],
-                    ['table', ['table']],
-                    ['insert', ['link', 'picture', 'video']],
-                    ['view', ['fullscreen', 'codeview', 'help']]
-                ]
-            });
-            $('#summernote3').summernote({
-                placeholder: 'Hello stand alone ui',
-                tabsize: 2,
-                height: 100,
-                toolbar: [
-                    ['style', ['style']],
-                    ['font', ['bold', 'underline', 'clear']],
-                    ['color', ['color']],
-                    ['para', ['ul', 'ol', 'paragraph']],
-                    ['table', ['table']],
-                    ['insert', ['link', 'picture', 'video']],
-                    ['view', ['fullscreen', 'codeview', 'help']]
-                ]
-            });
-            $('#summernote4').summernote({
-                placeholder: 'Hello stand alone ui',
-                tabsize: 2,
-                height: 100,
-                toolbar: [
-                    ['style', ['style']],
-                    ['font', ['bold', 'underline', 'clear']],
-                    ['color', ['color']],
-                    ['para', ['ul', 'ol', 'paragraph']],
-                    ['table', ['table']],
-                    ['insert', ['link', 'picture', 'video']],
-                    ['view', ['fullscreen', 'codeview', 'help']]
-                ]
-            });
-            $('#summernote5').summernote({
-                placeholder: 'Hello stand alone ui',
-                tabsize: 2,
-                height: 100,
-                toolbar: [
-                    ['style', ['style']],
-                    ['font', ['bold', 'underline', 'clear']],
-                    ['color', ['color']],
-                    ['para', ['ul', 'ol', 'paragraph']],
-                    ['table', ['table']],
-                    ['insert', ['link', 'picture', 'video']],
-                    ['view', ['fullscreen', 'codeview', 'help']]
-                ]
-            });
-            $('#summernote9').summernote({
-                placeholder: 'Hello stand alone ui',
-                tabsize: 2,
-                height: 100,
-                toolbar: [
-                    ['style', ['style']],
-                    ['font', ['bold', 'underline', 'clear']],
-                    ['color', ['color']],
-                    ['para', ['ul', 'ol', 'paragraph']],
-                    ['table', ['table']],
-                    ['insert', ['link', 'picture', 'video']],
-                    ['view', ['fullscreen', 'codeview', 'help']]
-                ]
-            });
-            $('#summernote6').summernote({
-                placeholder: 'Hello stand alone ui',
-                tabsize: 2,
-                height: 100,
-                toolbar: [
-                    ['style', ['style']],
-                    ['font', ['bold', 'underline', 'clear']],
-                    ['color', ['color']],
-                    ['para', ['ul', 'ol', 'paragraph']],
-                    ['table', ['table']],
-                    ['insert', ['link', 'picture', 'video']],
-                    ['view', ['fullscreen', 'codeview', 'help']]
-                ]
-            });
-            $('#summernote7').summernote({
-                placeholder: 'Hello stand alone ui',
-                tabsize: 2,
-                height: 100,
-                toolbar: [
-                    ['style', ['style']],
-                    ['font', ['bold', 'underline', 'clear']],
-                    ['color', ['color']],
-                    ['para', ['ul', 'ol', 'paragraph']],
-                    ['table', ['table']],
-                    ['insert', ['link', 'picture', 'video']],
-                    ['view', ['fullscreen', 'codeview', 'help']]
-                ]
-            });
-            $('#summernote8').summernote({
-                placeholder: 'Hello stand alone ui',
-                tabsize: 2,
-                height: 100,
-                toolbar: [
-                    ['style', ['style']],
-                    ['font', ['bold', 'underline', 'clear']],
-                    ['color', ['color']],
-                    ['para', ['ul', 'ol', 'paragraph']],
-                    ['table', ['table']],
-                    ['insert', ['link', 'picture', 'video']],
-                    ['view', ['fullscreen', 'codeview', 'help']]
-                ]
-            });
-            $('#summernote10').summernote({
-                placeholder: 'Hello stand alone ui',
-                tabsize: 2,
-                height: 100,
-                toolbar: [
-                    ['style', ['style']],
-                    ['font', ['bold', 'underline', 'clear']],
-                    ['color', ['color']],
-                    ['para', ['ul', 'ol', 'paragraph']],
-                    ['table', ['table']],
-                    ['insert', ['link', 'picture', 'video']],
-                    ['view', ['fullscreen', 'codeview', 'help']]
-                ]
-            });
-
-
-
-
-
-
-
-
-
-            let photoCount = 1; // Start with existing photo field count
-
-            // Function to generate new photo upload field HTML
-            function createPhotoUploadField(count) {
-                return `
-                <div class="col-lg-2 photo-upload-field">
-                    <div class="form-input">
-                        <label for="file-ip-${count}" class="px-4 py-3 text-center">
-                            <img class="text-center mt-3" id="file-ip-${count}-preview" src="/assets/image/dashboard/innerpece_addpic_icon.svg">
-                            <p class="text-center fw-light mt-3"> Add Pic</p>
-                        </label>
-                        <input type="file" name="img_${count}" id="file-ip-${count}" data-number="${count}" accept="image/*">
-                    </div>
-                </div>
-            `;
-            }
-
-            // Event listener for the "Add More Photos" button
-            $('#add-photo-btn').on('click', function() {
-                photoCount++;
-                const newFieldHtml = createPhotoUploadField(photoCount);
-                $('#photo-upload-container').append(newFieldHtml);
-            });
-
-            // Function to show preview of selected image
-            function showPreview(event, number) {
-                var file = event.target.files[0];
-                var reader = new FileReader();
-                var previewId = "#file-ip-" + number + "-preview";
-                var errorMessageId = "#file-ip-" + number + "-error";
-
-                reader.onload = function(e) {
-                    $(previewId).attr('src', e.target.result);
-                    $(errorMessageId).text(''); // Clear any previous error message
-                };
-
-                if (file) {
-                    if (file.size <= 2 * 1024 * 1024) { // 2 MB limit
-                        if (file.type === 'image/png' || file.type === 'image/jpeg') {
-                            reader.readAsDataURL(file);
-                        } else {
-                            $(errorMessageId).text('Please upload a valid PNG or JPEG image.');
-                        }
-                    } else {
-                        $(errorMessageId).text('File size exceeds 2 MB limit.');
-                    }
-                }
-            }
-
-            // Delegate event binding for dynamically added file inputs
-            $('#photo-upload-container').on('change', 'input[type="file"]', function(event) {
-                var number = $(this).data('number'); // Use data attribute to get the number
-                showPreview(event, number);
-            });
-
             $('#cities_name').change(function() {
                 const destination = $(this).val();
                 const districtSelect = $('#district_name');
@@ -494,7 +285,7 @@
                 });
             });
 
-
+            
         });
 
 
@@ -548,60 +339,5 @@
                 fieldGroup.remove();
             }
         }
-
-
     </script>
     @endsection
-
-    <script>
-        function validateImage(input) {
-            const file = input.files[0];
-            const errorElement = document.getElementById('file-ip-1-error');
-            const previewElement = document.getElementById('file-ip-1-preview');
-
-            // Clear previous error messages and reset preview
-            errorElement.textContent = '';
-            previewElement.src = '/assets/image/dashboard/innerpece_addpic_icon.svg';
-
-            if (file) {
-                const reader = new FileReader();
-
-                reader.onload = function(e) {
-                    const img = new Image();
-
-                    img.onload = function() {
-                        console.log('Image loaded with width: ' + img.width + ' and height: ' + img.height);
-
-
-                        if (1200 > img.width || 200 > img.height) {
-                            console.log("Dimensions exceed allowed size!");
-                            showError('Image sixe must be max of  1200x120 pixels.');
-                            input.value = '';
-                        } else {
-                            console.log("Image dimensions are valid.");
-
-                            previewElement.src = e.target.result;
-                        }
-                    };
-
-                    // Handling image load error
-                    img.onerror = function() {
-                        console.log("Error loading image file."); // Debugging log for errors
-                        showError("Error loading the image file. It might be corrupted or not a valid image.");
-                    };
-
-                    img.src = e.target.result;
-                };
-
-                // Read the image as a data URL
-                reader.readAsDataURL(file);
-            } else {
-                showError('No file selected.');
-            }
-        }
-
-        function showError(message) {
-            const errorElement = document.getElementById('file-ip-1-error');
-            errorElement.textContent = message;
-        }
-    </script>

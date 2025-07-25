@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('destination_id')->nullable();
             $table->string('district_id')->nullable();
+            $table->string('title')->nullable();
             $table->json('title_price')->nullable();
             $table->enum('status', ['1', '0'])->default('1');
             $table->enum('is_deleted', ['0', '1'])->default('0');

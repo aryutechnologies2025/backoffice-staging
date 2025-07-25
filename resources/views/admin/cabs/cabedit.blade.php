@@ -168,6 +168,7 @@
                                     </select>
                                 </div>
 
+
                                 <div class="col-md-4">
                                     <label class="mb-2">Travel Mode <span class="text-danger">*</span></label>
                                     <select id="travel_mode" name="travel_mode" class="form-select py-2 rounded-3 shadow-sm" required>
@@ -276,271 +277,13 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <script>
+
+        let fieldCounter = {{ count($camp_rules ?? []) > 0 ? count($camp_rules) : 0 }};
+
         $(document).ready(function() {
 
             const $citiesSelect = $('#cities_name');
-            $('#summernote1,#summernote2,#summernote3,#summernote4,#summernote5,#summernote6,#summernote7,#summernote8,#summernote9,#summernote10')
-                .summernote({
-                    height: 200 // Set the height of the editor
-                });
-            $('#summernote1').summernote({
-                placeholder: 'Hello stand alone ui',
-                tabsize: 2,
-                height: 100,
-                toolbar: [
-                    ['style', ['style']],
-                    ['font', ['bold', 'underline', 'clear']],
-                    ['color', ['color']],
-                    ['para', ['ul', 'ol', 'paragraph']],
-                    ['table', ['table']],
-                    ['insert', ['link', 'picture', 'video']],
-                    ['view', ['fullscreen', 'codeview', 'help']]
-                ]
-            });
-
-            $('#summernote2').summernote({
-                placeholder: 'Hello stand alone ui',
-                tabsize: 2,
-                height: 100,
-                toolbar: [
-                    ['style', ['style']],
-                    ['font', ['bold', 'underline', 'clear']],
-                    ['color', ['color']],
-                    ['para', ['ul', 'ol', 'paragraph']],
-                    ['table', ['table']],
-                    ['insert', ['link', 'picture', 'video']],
-                    ['view', ['fullscreen', 'codeview', 'help']]
-                ]
-            });
-            $('#summernote3').summernote({
-                placeholder: 'Hello stand alone ui',
-                tabsize: 2,
-                height: 100,
-                toolbar: [
-                    ['style', ['style']],
-                    ['font', ['bold', 'underline', 'clear']],
-                    ['color', ['color']],
-                    ['para', ['ul', 'ol', 'paragraph']],
-                    ['table', ['table']],
-                    ['insert', ['link', 'picture', 'video']],
-                    ['view', ['fullscreen', 'codeview', 'help']]
-                ]
-            });
-            $('#summernote4').summernote({
-                placeholder: 'Hello stand alone ui',
-                tabsize: 2,
-                height: 100,
-                toolbar: [
-                    ['style', ['style']],
-                    ['font', ['bold', 'underline', 'clear']],
-                    ['color', ['color']],
-                    ['para', ['ul', 'ol', 'paragraph']],
-                    ['table', ['table']],
-                    ['insert', ['link', 'picture', 'video']],
-                    ['view', ['fullscreen', 'codeview', 'help']]
-                ]
-            });
-            $('#summernote5').summernote({
-                placeholder: 'Hello stand alone ui',
-                tabsize: 2,
-                height: 100,
-                toolbar: [
-                    ['style', ['style']],
-                    ['font', ['bold', 'underline', 'clear']],
-                    ['color', ['color']],
-                    ['para', ['ul', 'ol', 'paragraph']],
-                    ['table', ['table']],
-                    ['insert', ['link', 'picture', 'video']],
-                    ['view', ['fullscreen', 'codeview', 'help']]
-                ]
-            });
-            $('#summernote9').summernote({
-                placeholder: 'Hello stand alone ui',
-                tabsize: 2,
-                height: 100,
-                toolbar: [
-                    ['style', ['style']],
-                    ['font', ['bold', 'underline', 'clear']],
-                    ['color', ['color']],
-                    ['para', ['ul', 'ol', 'paragraph']],
-                    ['table', ['table']],
-                    ['insert', ['link', 'picture', 'video']],
-                    ['view', ['fullscreen', 'codeview', 'help']]
-                ]
-            });
-            $('#summernote6').summernote({
-                placeholder: 'Hello stand alone ui',
-                tabsize: 2,
-                height: 100,
-                toolbar: [
-                    ['style', ['style']],
-                    ['font', ['bold', 'underline', 'clear']],
-                    ['color', ['color']],
-                    ['para', ['ul', 'ol', 'paragraph']],
-                    ['table', ['table']],
-                    ['insert', ['link', 'picture', 'video']],
-                    ['view', ['fullscreen', 'codeview', 'help']]
-                ]
-            });
-            $('#summernote7').summernote({
-                placeholder: 'Hello stand alone ui',
-                tabsize: 2,
-                height: 100,
-                toolbar: [
-                    ['style', ['style']],
-                    ['font', ['bold', 'underline', 'clear']],
-                    ['color', ['color']],
-                    ['para', ['ul', 'ol', 'paragraph']],
-                    ['table', ['table']],
-                    ['insert', ['link', 'picture', 'video']],
-                    ['view', ['fullscreen', 'codeview', 'help']]
-                ]
-            });
-            $('#summernote8').summernote({
-                placeholder: 'Hello stand alone ui',
-                tabsize: 2,
-                height: 100,
-                toolbar: [
-                    ['style', ['style']],
-                    ['font', ['bold', 'underline', 'clear']],
-                    ['color', ['color']],
-                    ['para', ['ul', 'ol', 'paragraph']],
-                    ['table', ['table']],
-                    ['insert', ['link', 'picture', 'video']],
-                    ['view', ['fullscreen', 'codeview', 'help']]
-                ]
-            });
-            $('#summernote10').summernote({
-                placeholder: 'Hello stand alone ui',
-                tabsize: 2,
-                height: 100,
-                toolbar: [
-                    ['style', ['style']],
-                    ['font', ['bold', 'underline', 'clear']],
-                    ['color', ['color']],
-                    ['para', ['ul', 'ol', 'paragraph']],
-                    ['table', ['table']],
-                    ['insert', ['link', 'picture', 'video']],
-                    ['view', ['fullscreen', 'codeview', 'help']]
-                ]
-            });
-
-
-
-
-
-
-
-
-
-            let photoCount = 1; // Start with existing photo field count
-
-            // Function to generate new photo upload field HTML
-            function createPhotoUploadField(count) {
-                return `
-                <div class="col-lg-2 photo-upload-field">
-                    <div class="form-input">
-                        <label for="file-ip-${count}" class="px-4 py-3 text-center">
-                            <img class="text-center mt-3" id="file-ip-${count}-preview" src="/assets/image/dashboard/innerpece_addpic_icon.svg">
-                            <p class="text-center fw-light mt-3"> Add Pic</p>
-                        </label>
-                        <input type="file" name="img_${count}" id="file-ip-${count}" data-number="${count}" accept="image/*">
-                    </div>
-                </div>
-            `;
-            }
-
-            // Event listener for the "Add More Photos" button
-            $('#add-photo-btn').on('click', function() {
-                photoCount++;
-                const newFieldHtml = createPhotoUploadField(photoCount);
-                $('#photo-upload-container').append(newFieldHtml);
-            });
-
-            // Function to show preview of selected image
-            function showPreview(event, number) {
-                var file = event.target.files[0];
-                var reader = new FileReader();
-                var previewId = "#file-ip-" + number + "-preview";
-                var errorMessageId = "#file-ip-" + number + "-error";
-
-                reader.onload = function(e) {
-                    $(previewId).attr('src', e.target.result);
-                    $(errorMessageId).text(''); // Clear any previous error message
-                };
-
-                if (file) {
-                    if (file.size <= 2 * 1024 * 1024) { // 2 MB limit
-                        if (file.type === 'image/png' || file.type === 'image/jpeg') {
-                            reader.readAsDataURL(file);
-                        } else {
-                            $(errorMessageId).text('Please upload a valid PNG or JPEG image.');
-                        }
-                    } else {
-                        $(errorMessageId).text('File size exceeds 2 MB limit.');
-                    }
-                }
-            }
-
-            // Delegate event binding for dynamically added file inputs
-            $('#photo-upload-container').on('change', 'input[type="file"]', function(event) {
-                var number = $(this).data('number'); // Use data attribute to get the number
-                showPreview(event, number);
-            });
-
-            // $('#cities_name').change(function() {
-            //     const destination = $(this).val();
-            //     const districtSelect = $('#district_name');
-
-            //     console.log('Destination selected:', destination); // Debugging
-
-            //     if (!destination) {
-            //         districtSelect.empty().append(
-            //             '<option value="" disabled selected>Select District</option>'
-            //         ).prop('disabled', true);
-            //         return;
-            //     }
-
-            //     // Show loading state
-            //     districtSelect.empty().append(
-            //         '<option value="" disabled>Loading districts...</option>'
-            //     ).prop('disabled', true);
-
-            //     // AJAX request
-            //     $.ajax({
-            //         url: '/get-districts/' + encodeURIComponent(destination),
-            //         type: 'GET',
-            //         success: function(data) {
-            //             console.log('Received data:', data); // Debugging
-
-            //             districtSelect.empty().append(
-            //                 '<option value="" disabled selected>Select District</option>'
-            //             );
-
-            //             if (data && data.length > 0) {
-            //                 $.each(data, function(index, district) {
-            //                     districtSelect.append(
-            //                         $('<option>', {
-            //                             value: district,
-            //                             text: district
-            //                         })
-            //                     );
-            //                 });
-            //                 districtSelect.prop('disabled', false);
-            //             } else {
-            //                 districtSelect.append(
-            //                     '<option value="" disabled>No districts found for this destination</option>'
-            //                 );
-            //             }
-            //         },
-            //         error: function(xhr, status, error) {
-            //             console.error('AJAX Error:', status, error); // Debugging
-            //             districtSelect.empty().append(
-            //                 '<option value="" disabled>Error loading districts</option>'
-            //             );
-            //         }
-            //     });
-            // });
+        
 
 
             // Initialize with existing values if in edit mode
@@ -607,13 +350,12 @@
                 });
             }
 
-
         });
 
 
 
-        let fieldCounter = {{ count($camp_rules ?? []) > 0 ? count($camp_rules) - 1 : 0 }};
 
+        // Function to add new price field
         function addPriceField() {
             const container = document.getElementById('camp-rule-container');
             fieldCounter++;
@@ -647,64 +389,58 @@
             container.appendChild(newField);
         }
 
+        // Function to remove field and mark as removed
         function removeField(button) {
             const fieldGroup = button.closest('.camp-rule-field');
             if (fieldGroup) {
-                fieldGroup.remove();
+                // Instead of removing, we'll hide and add a hidden input to mark as removed
+                fieldGroup.style.display = 'none';
+
+                // Add hidden input to mark this field as removed
+                const inputs = fieldGroup.querySelectorAll('input[name^="camp_rules"]');
+                if (inputs.length > 0) {
+                    const inputName = inputs[0].name;
+                    const indexMatch = inputName.match(/\[(\d+)\]/);
+                    if (indexMatch && indexMatch[1]) {
+                        const index = indexMatch[1];
+                        const hiddenInput = document.createElement('input');
+                        hiddenInput.type = 'hidden';
+                        hiddenInput.name = `camp_rules[${index}][removed]`;
+                        hiddenInput.value = '1';
+                        fieldGroup.appendChild(hiddenInput);
+                    }
+                }
             }
         }
+
+        // Before form submission, clean up removed items
+        document.getElementById('form_valid').addEventListener('submit', function(e) {
+            // Remove all hidden fields (they've already served their purpose)
+            document.querySelectorAll('.camp-rule-field [name$="[removed]"]').forEach(el => {
+                el.remove();
+            });
+
+            // Remove all hidden field groups
+            document.querySelectorAll('.camp-rule-field').forEach(el => {
+                if (el.style.display === 'none') {
+                    el.remove();
+                }
+            });
+
+            // Reindex remaining fields to maintain sequential numbering
+            const remainingFields = document.querySelectorAll('.camp-rule-field:not([style*="display: none"])');
+            remainingFields.forEach((field, newIndex) => {
+                // Skip the first field (index 0) as it's static
+                if (newIndex >= 0) {
+                    const inputs = field.querySelectorAll('input[name^="camp_rules"]');
+                    inputs.forEach(input => {
+                        const oldName = input.name;
+                        const newName = oldName.replace(/\[(\d+)\]/, `[${newIndex + 1}]`);
+                        input.name = newName;
+                    });
+                }
+            });
+        });
     </script>
     @endsection
 
-    <script>
-        function validateImage(input) {
-            const file = input.files[0];
-            const errorElement = document.getElementById('file-ip-1-error');
-            const previewElement = document.getElementById('file-ip-1-preview');
-
-            // Clear previous error messages and reset preview
-            errorElement.textContent = '';
-            previewElement.src = '/assets/image/dashboard/innerpece_addpic_icon.svg';
-
-            if (file) {
-                const reader = new FileReader();
-
-                reader.onload = function(e) {
-                    const img = new Image();
-
-                    img.onload = function() {
-                        console.log('Image loaded with width: ' + img.width + ' and height: ' + img.height);
-
-
-                        if (1200 > img.width || 200 > img.height) {
-                            console.log("Dimensions exceed allowed size!");
-                            showError('Image sixe must be max of  1200x120 pixels.');
-                            input.value = '';
-                        } else {
-                            console.log("Image dimensions are valid.");
-
-                            previewElement.src = e.target.result;
-                        }
-                    };
-
-                    // Handling image load error
-                    img.onerror = function() {
-                        console.log("Error loading image file."); // Debugging log for errors
-                        showError("Error loading the image file. It might be corrupted or not a valid image.");
-                    };
-
-                    img.src = e.target.result;
-                };
-
-                // Read the image as a data URL
-                reader.readAsDataURL(file);
-            } else {
-                showError('No file selected.');
-            }
-        }
-
-        function showError(message) {
-            const errorElement = document.getElementById('file-ip-1-error');
-            errorElement.textContent = message;
-        }
-    </script>

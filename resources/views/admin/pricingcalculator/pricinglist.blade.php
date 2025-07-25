@@ -46,7 +46,7 @@
                     </tr>
                 </thead>
 
-                     <tbody>
+                    <tbody>
                     @if($stay_details->isEmpty())
                     <tr>
                         <td colspan="6" class="text-center">No records</td>
@@ -60,7 +60,7 @@
                         <td class="text-center">{{ $row->destination_id }}</td>
                        
                         <td class="text-center">{{ $row->district_id }}</td>
-                        <td></td>
+                        <td class="text-center">{{ $row->total_pricing }}</td>
                         @php
                         $disp_status = 'In Active';
                         $actTitle = 'Click to activate';
@@ -113,9 +113,9 @@
             "language": {
                 "emptyTable": "No records found",
             },
-            "columnDefs": [
-                { "orderable": true, "targets": [0, 3] } // Disable ordering on Icon and Action columns
-            ]
+            // "columnDefs": [
+            //     { "orderable": true, "targets": [0, 3] } // Disable ordering on Icon and Action columns
+            // ]
         });
     });
 </script>
