@@ -475,10 +475,6 @@ class ProgramApiController extends Controller
         }
     }
 
-
-
-
-
     //get by destination with price 
 
     public function destination_program_by_price_sort(Request $request)
@@ -661,9 +657,6 @@ class ProgramApiController extends Controller
             ], 500);
         }
     }
-
-
-
 
     public function filter_program_by_price(Request $request)
     {

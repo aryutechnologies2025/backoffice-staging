@@ -91,6 +91,7 @@ class All_Inclusive_PackController extends Controller
     public function insert(Request $request)
     {
 
+        // dd($request->all());
         $request->validate([
             'tour_planning' => 'required|array',
             'tour_planning.*.title' => 'required|string',
@@ -252,6 +253,8 @@ class All_Inclusive_PackController extends Controller
         $safety_features_dts = Safetyfeatures::where('status', "1")->where('is_deleted', "0")->get();
         $geo_feature_dts = Geo_feature::where('status', "1")->where('is_deleted', "0")->pluck('geo_feature', 'id');
         $themes = Themes::where('status', "1")->where('is_deleted', "0")->pluck('themes_name', 'id');
+
+        // dd($themes);
         if (!$package_details) {
             return redirect()->route('admin.inclusive_package_list')->with('error', 'Package not found');
         }
@@ -587,7 +590,6 @@ class All_Inclusive_PackController extends Controller
             $customer_package->theme_cat_id = $original->theme_cat_id;
 
             $customer_package->state = $original->state;
-
 
             $customer_package->city = $original->city;
             $customer_package->address = $original->address;

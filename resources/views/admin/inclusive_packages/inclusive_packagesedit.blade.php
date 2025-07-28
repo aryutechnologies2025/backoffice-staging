@@ -165,25 +165,12 @@
                                             style="max-height: 200px; overflow-y: auto;">
                                             @php
                                                 $selectedthemeId = $package_details->theme_id ?? [];
-
-                                                if (
-                                                    is_string($selectedthemeId) &&
-                                                    json_decode($selectedthemeId) !== null
-                                                ) {
-                                                    $selectedthemeId = json_decode($selectedthemeId, true);
-                                                }
-                                                if (!is_array($selectedthemeId)) {
-                                                    $selectedthemeId = $selectedthemeId
-                                                        ? [(string) $selectedthemeId]
-                                                        : [];
-                                                }
-
-                                                $selectedthemeId = array_map('strval', $selectedthemeId);
+                                                $selectedthemeId = explode(",",$selectedthemeId);
                                             @endphp
 
                                             @foreach ($themes as $id => $name)
                                                 <li>
-                                                    <div class="form-check dropdown-item">
+                                                    <div class="form-check">
                                                         <input class="form-check-input" type="checkbox"
                                                             id="theme-{{ $id }}" name="themes_name[]"
                                                             value="{{ $id }}"
@@ -1179,16 +1166,16 @@
                 // Function to generate new photo upload field HTML
                 function createPhotoUploadField(count) {
                     return `
-            <div class="col-lg-2 photo-upload-field">
-                <div class="form-input">
-                    <label for="file-ip-${count}" class="px-4 py-3 text-center">
-                        <img class="text-center mt-3" id="file-ip-${count}-preview" src="/assets/image/dashboard/innerpece_addpic_icon.svg" alt="Image Preview">
-                        <p class="text-center fw-light mt-3">Add Pic</p>
-                    </label>
-                    <input type="file" name="img_${count}" id="file-ip-${count}" data-number="${count}" accept="image/*">
+                <div class="col-lg-2 photo-upload-field">
+                    <div class="form-input">
+                        <label for="file-ip-${count}" class="px-4 py-3 text-center">
+                            <img class="text-center mt-3" id="file-ip-${count}-preview" src="/assets/image/dashboard/innerpece_addpic_icon.svg" alt="Image Preview">
+                            <p class="text-center fw-light mt-3">Add Pic</p>
+                        </label>
+                        <input type="file" name="img_${count}" id="file-ip-${count}" data-number="${count}" accept="image/*">
+                    </div>
                 </div>
-            </div>
-        `;
+                `;
                 }
 
                 // // Event listener for the "Add More Photos" button
@@ -1227,7 +1214,6 @@
                 // Delegate event binding for dynamically added file inputs
                 $('#photo-upload-container').on('change', 'input[type="file"]', showPreview);
             });
-
 
 
             function addCampRuleField() {
