@@ -223,7 +223,7 @@ class ProgramApiController extends Controller
                 'title' => $package->title,
                 'program_desc' => $package->program_description,
                 'flag' => $category,
-                'destination' => $package->destination->city_name,
+                'destination' => $package->destination->city_name ?? null,
                 'theme' =>  $package->theme->themes_name ?? $theme,
                 'state' => $package->state,
                 'city' => $package->city,
