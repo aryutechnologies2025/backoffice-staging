@@ -362,7 +362,7 @@ class StayController extends Controller
                 ];
             });
 
-        $stayDistrict = stay_district::where('destination', $destination)->first();
+        $stayDistrict = stay_district::where('destination', $destination)->where('is_deleted', '0')->where('status', '1')->first();
 
         // Initialize the result array
         $destinationsWithDistricts = [];
