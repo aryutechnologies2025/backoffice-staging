@@ -28,8 +28,8 @@ class CustomerPackage extends Controller
     {
         $title = 'Customer Package List';
         $customer_package_list = customer_package::where('is_deleted', '0')
-        ->orderBy('created_at', 'desc')
-        ->get();
+            ->orderBy('created_at', 'desc')
+            ->get();
         return view('admin.customer_package.customerpackagelist', compact('title', 'customer_package_list'));
     }
 
@@ -368,8 +368,8 @@ class CustomerPackage extends Controller
 
 
         $titles = DB::table('inclusive_package_details')->where('is_deleted', '0')->pluck('title', 'id');
-        
-            
+
+
         $customer = customer_package::find($id);
         $titless = customer_package::where('is_deleted', '0')
             ->where('id', $id)
@@ -382,18 +382,18 @@ class CustomerPackage extends Controller
         // dump($package_details_citys);
         $cities = City::where('status', "1")->where('is_deleted', "0")->whereIn('id', $package_details_citys)->pluck('city_name')->toArray();
 
-        $stay_details = stays_destination_details::where(function($query) use ($cities) {
-                $query->where('is_deleted', '0')
-                    ->whereIn('destination', $cities);
-            })
-        ->orWhere('id', $customer->stay_details_id) // Always include selected old stay
-        ->orderBy('created_at', 'desc')
-        ->select('id', 'stay_title')
-        ->get();
-            if (!$customer) {
-                return redirect()->route('admin.influencers.list')
-                    ->with('error', 'Influencer not found.');
-            }
+        $stay_details = stays_destination_details::where(function ($query) use ($cities) {
+            $query->where('is_deleted', '0')
+                ->whereIn('destination', $cities);
+        })
+            ->orWhere('id', $customer->stay_details_id) // Always include selected old stay
+            ->orderBy('created_at', 'desc')
+            ->select('id', 'stay_title')
+            ->get();
+        if (!$customer) {
+            return redirect()->route('admin.influencers.list')
+                ->with('error', 'Influencer not found.');
+        }
 
         return view('admin.customer_package.customerpackageedit', compact(
             'title',
@@ -451,8 +451,18 @@ class CustomerPackage extends Controller
         //     'plan_description' => $request->input('plan_description')
         // ]);
 
-        $customer_package->tour_planning = json_encode($request->input('tour_planning'));
 
+        // $customer_package->tour_planning = json_encode($request->input('tour_planning'));
+        //latest- changes
+        $tourPlanning = $request->input('tour_planning');
+        // Clean each description field
+        $cleanedPlanning = array_map(function ($day) {
+            $day['description'] = strip_tags($day['description']); // Remove HTML tags
+            $day['description'] = trim($day['description']); // Remove whitespace
+            return $day;
+        }, $tourPlanning);
+
+        $customer_package->tour_planning = json_encode($cleanedPlanning);
 
         $customer_package->price_title = json_encode($request->input('price_title', []));
         $customer_package->price_amount = json_encode($request->input('price_amount', []));
