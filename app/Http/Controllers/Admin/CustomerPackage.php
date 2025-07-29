@@ -382,18 +382,18 @@ class CustomerPackage extends Controller
         // dump($package_details_citys);
         $cities = City::where('status', "1")->where('is_deleted', "0")->whereIn('id', $package_details_citys)->pluck('city_name')->toArray();
 
-$stay_details = stays_destination_details::where(function($query) use ($cities) {
-        $query->where('is_deleted', '0')
-              ->whereIn('destination', $cities);
-    })
-    ->orWhere('id', $customer->stay_details_id) // Always include selected old stay
-    ->orderBy('created_at', 'desc')
-    ->select('id', 'stay_title')
-    ->get();
-        if (!$customer) {
-            return redirect()->route('admin.influencers.list')
-                ->with('error', 'Influencer not found.');
-        }
+        $stay_details = stays_destination_details::where(function($query) use ($cities) {
+                $query->where('is_deleted', '0')
+                    ->whereIn('destination', $cities);
+            })
+        ->orWhere('id', $customer->stay_details_id) // Always include selected old stay
+        ->orderBy('created_at', 'desc')
+        ->select('id', 'stay_title')
+        ->get();
+            if (!$customer) {
+                return redirect()->route('admin.influencers.list')
+                    ->with('error', 'Influencer not found.');
+            }
 
         return view('admin.customer_package.customerpackageedit', compact(
             'title',
@@ -414,11 +414,11 @@ $stay_details = stays_destination_details::where(function($query) use ($cities) 
     public function update(Request $request, $id)
     {
 
-        $request->validate([
-            'tour_planning' => 'required|array',
-            'tour_planning.*.title' => 'required|string',
-            'tour_planning.*.description' => 'required|string',
-        ]);
+        // $request->validate([
+        //     'tour_planning' => 'required|array',
+        //     'tour_planning.*.title' => 'required|string',
+        //     'tour_planning.*.description' => 'required|string',
+        // ]);
         // dd("test",$request->all());
         $customer_package = customer_package::find($id);
         $customer_package->name = ucfirst($request->name);

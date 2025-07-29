@@ -1215,7 +1215,6 @@
                 $('#photo-upload-container').on('change', 'input[type="file"]', showPreview);
             });
 
-
             function addCampRuleField() {
                 // Find the container where new fields will be added
                 var container = document.getElementById('camp-rule-container');
