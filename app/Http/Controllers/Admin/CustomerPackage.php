@@ -414,11 +414,11 @@ class CustomerPackage extends Controller
     public function update(Request $request, $id)
     {
 
-        // $request->validate([
-        //     'tour_planning' => 'required|array',
-        //     'tour_planning.*.title' => 'required|string',
-        //     'tour_planning.*.description' => 'required|string',
-        // ]);
+        $request->validate([
+            'tour_planning' => 'required|array',
+            'tour_planning.*.title' => 'required|string',
+            'tour_planning.*.description' => 'required|string',
+        ]);
         // dd("test",$request->all());
         $customer_package = customer_package::find($id);
         $customer_package->name = ucfirst($request->name);
@@ -452,17 +452,17 @@ class CustomerPackage extends Controller
         // ]);
 
 
-        // $customer_package->tour_planning = json_encode($request->input('tour_planning'));
+        $customer_package->tour_planning = json_encode($request->input('tour_planning'));
         //latest- changes
-        $tourPlanning = $request->input('tour_planning');
-        // Clean each description field
-        $cleanedPlanning = array_map(function ($day) {
-            $day['description'] = strip_tags($day['description']); // Remove HTML tags
-            $day['description'] = trim($day['description']); // Remove whitespace
-            return $day;
-        }, $tourPlanning);
+        // $tourPlanning = $request->input('tour_planning');
+        // // Clean each description field
+        // $cleanedPlanning = array_map(function ($day) {
+        //     $day['description'] = strip_tags($day['description']); // Remove HTML tags
+        //     $day['description'] = trim($day['description']); // Remove whitespace
+        //     return $day;
+        // }, $tourPlanning);
 
-        $customer_package->tour_planning = json_encode($cleanedPlanning);
+        // $customer_package->tour_planning = json_encode($cleanedPlanning);
 
         $customer_package->price_title = json_encode($request->input('price_title', []));
         $customer_package->price_amount = json_encode($request->input('price_amount', []));
