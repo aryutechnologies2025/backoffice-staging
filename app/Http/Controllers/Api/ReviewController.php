@@ -69,23 +69,23 @@ class ReviewController extends Controller
         //     ], 422);
         // }
         
-        // $client_review = new StagReview();
-        // $client_review->stag_id = $request->input('stag_id');
-        // $client_review->user_id = $request->input('user_id');
-        // $client_review->review = $request->input('review');
-        // $client_review->rating = $request->input('rating');
-        // $client_review->created_by = $request->input('user_id');
-        // $client_review->is_deleted = '0';
-        // $client_review->save();
-
-        $client_review = new Review();
-        $client_review->package_id = $request->input('stag_id');
+        $client_review = new StagReview();
+        $client_review->stag_id = $request->input('stag_id');
         $client_review->user_id = $request->input('user_id');
-        $client_review->comment = $request->input('review');
+        $client_review->review = $request->input('review');
         $client_review->rating = $request->input('rating');
         $client_review->created_by = $request->input('user_id');
         $client_review->is_deleted = '0';
         $client_review->save();
+
+        // $client_review = new Review();
+        // $client_review->package_id = $request->input('stag_id');
+        // $client_review->user_id = $request->input('user_id');
+        // $client_review->comment = $request->input('review');
+        // $client_review->rating = $request->input('rating');
+        // $client_review->created_by = $request->input('user_id');
+        // $client_review->is_deleted = '0';
+        // $client_review->save();
 
         // Return response
         return response()->json([
