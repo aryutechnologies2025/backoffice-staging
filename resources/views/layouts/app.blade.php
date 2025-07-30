@@ -242,6 +242,11 @@
                         <span class="nav_name"> Review </span>
                     </a>
 
+                    <a href="{{ route('admin.stay_review_list') }}" class="nav_link {{ request()->routeIs(['admin.stay_review_list', 'admin.stay_review_add_form', 'admin.stay_review_edit_form']) ? 'active' : ''}} mb-3 text-white">
+                        <img src="/assets/image/dashboard/review.svg" alt="">
+                        <span class="nav_name"> Stay Review </span>
+                    </a>
+
                     <a href="{{ route('admin.wish_list') }}" class="nav_link {{ request()->routeIs(['admin.wish_list', 'admin.wishlist_add_form', 'admin.wishlist_edit_form']) ? 'active' : '' }} mb-3 text-white">
                         <img src="/assets/image/dashboard/wishlist.svg" alt="">
                         <span class="nav_name"> Wishlist</span>
