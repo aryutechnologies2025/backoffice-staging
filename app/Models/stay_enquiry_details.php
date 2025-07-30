@@ -28,4 +28,10 @@ class stay_enquiry_details extends Model
         'price'
         
     ];
+
+
+    public function followUps()
+    {
+        return $this->hasMany(FollowUp::class, 'home_id', 'id');
+    }
 }

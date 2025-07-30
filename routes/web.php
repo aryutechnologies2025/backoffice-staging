@@ -487,6 +487,7 @@ Route::prefix('/')->group(function () {
                 Route::get('/', 'list')->name('admin.home_enquiry_list');
                 Route::get('/add', 'add_form')->name('admin.home_enquiry_add_form');
                 Route::post('/insert/enquiry', 'insert')->name('admin.home_enquiry_store_form');
+                Route::get('/stay', 'stayList')->name('admin.stay_home_enquiry_list');
             });
         });
 

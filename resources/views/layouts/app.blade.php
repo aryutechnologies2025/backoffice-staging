@@ -169,6 +169,10 @@
                         <img src="/assets/image/dashboard/enquiry.svg" alt="">
                         <span class="nav_name"> Enquiry </span>
                     </a>
+                    <a href="{{ route('admin.stay_home_enquiry_list') }}" class="nav_link {{ request()->routeIs(['admin.stay_home_enquiry_list']) ? 'active' : '' }} mb-3 text-white">
+                        <img src="/assets/image/dashboard/enquiry.svg" alt="">
+                        <span class="nav_name"> Stay Enquiry </span>
+                    </a>
                     <!-- <a href="{{ route('admin.review_review_list') }}" class="nav_link {{ request()->routeIs(['admin.review_review_list', 'admin.client_review_add_form', 'admin.client_review_edit_form']) ? 'active' : ''}} mb-3 text-white">
                         <img src="/assets/image/dashboard/review.svg" alt="">
                         <span class="nav_name"> Client Review </span>
