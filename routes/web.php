@@ -45,7 +45,7 @@ use App\Http\Controllers\Admin\StayPriceController;
 use App\Http\Controllers\Admin\CabController;
 use App\Http\Controllers\Admin\ActivityController;
 use App\Http\Controllers\Admin\PricingCalculatorController;
-
+use App\Http\Controllers\Admin\StayreviewController;
 
 use App\Models\stay_desitination;
 use Illuminate\Support\Facades\Artisan;
@@ -538,6 +538,21 @@ Route::prefix('/')->group(function () {
                 Route::post('/delete', 'delete')->name('admin.client_review_delete');
                 Route::post('/change-status', 'change_status')->name('admin.client_review_status');
                 Route::post('/review_delete', 'review_delete')->name('admin.review_delete');
+            });
+        });
+
+
+         //stay Review
+        Route::controller(StayreviewController::class)->group(function () {
+            Route::prefix('stay_review')->group(function () {
+                Route::get('/', 'list')->name('admin.stay_review_list');
+                Route::get('/add', 'add_form')->name('admin.stay_review_add_form');
+                Route::get('/{id}/edit', 'edit_form')->name('admin.stay_review_edit_form');
+                Route::post('/insert', 'insert')->name('admin.stay_review_insert');
+                Route::post('/{id}/update', 'update')->name('admin.stay_review_update');
+                Route::post('/delete', 'delete')->name('admin.stay_review_delete');
+                Route::post('/change-status', 'change_status')->name('admin.stay_review_status');
+                Route::post('/review_delete', 'review_delete')->name('admin.stay_review_delete');
             });
         });
 
