@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\EnquiryDetail;
 use Illuminate\Http\Request;
 use App\Models\HomeEnquiryDetail;
+use App\Models\stay_enquiry_details;
 
 class HomeEnquiryController extends Controller
 {
@@ -73,6 +74,14 @@ class HomeEnquiryController extends Controller
     public function add_form(){
         $title = 'Add Enquiry Form';
         return view('admin.home_enquiry.home_enquiryform', compact('title'));
+    }
+
+    public function stayList(Request $request)
+    {
+        $title = 'Stay Enquiry List';
+        $enquiry_dts = stay_enquiry_details::orderBy('created_at', 'desc')->get();
+
+        return view('admin.stay_enquiry.stayenquirylist', compact('title', 'enquiry_dts'));
     }
        
     
