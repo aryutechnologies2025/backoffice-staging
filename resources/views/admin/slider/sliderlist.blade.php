@@ -46,7 +46,7 @@
                         <th class="text-center"><span>S.No</span></th>
                         <th class="text-center"><span> Image</span></th>
                         <th class="text-center"><span>Title</span></th>
-                        <th class="text-center"><span>Time&Date</span></th>
+                        <th class="text-center"><span>Date</span></th>
                         <th class="text-center"><span>Status</span></th>
                         <th class="text-center"><span>Action</span></th>
                     </tr>
@@ -69,7 +69,7 @@
                                 style="max-width: 70px; max-height: 70px; object-fit: cover;">
                         </td>
                         <td class="text-center">{{ $row->slider_name }}</td>
-                        <td class="text-center">{{ $row->created_at }}</td>
+                        <td class="text-center">{{ \App\Helpers\DateHelper::formatDate($row->created_at) }}</td>
                         @php
                         $disp_status = 'In Active';
                         $actTitle = 'Click to activate';

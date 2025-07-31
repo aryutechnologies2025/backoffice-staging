@@ -4,13 +4,14 @@
     a:hover {
         color: rgb(27, 108, 138);
     }
-    a{
-        color:rgb(37, 150, 190);
+
+    a {
+        color: rgb(37, 150, 190);
     }
-    
+
 
     .enquiry {
-       color: rgb(27, 108, 138);
+        color: rgb(27, 108, 138);
     }
 
     .modal {
@@ -54,7 +55,7 @@
                         <th class="text-center">Email</th>
                         <th class="text-center">Phone</th>
                         <th class="text-center">Next FollowUp</th>
-                        <th class="text-center">Time & Date</th>
+                        <th class="text-center">Date</th>
                         <th class="text-center">Status</th>
                         <th class="text-center">Action</th>
                     </tr>
@@ -76,7 +77,7 @@
                         @else
                         <td class="text-center">N/A</td>
                         @endif
-                        <td class="text-center">{{ $row->created_at }}</td>
+                        <td class="text-center">{{ \App\Helpers\DateHelper::formatDate($row->created_at) }}</td>
                         <td class="text-center">
                             <select
                                 class="form-select followUpStatus"
@@ -95,27 +96,15 @@
 
                         </td>
                         <td class="text-center d-flex gap-1">
-                            <button class="btn btn-warning view-btn"
-                                data-name="{{ $row->name }}"
-                                data-email="{{ $row->email }}"
-                                data-phone="{{ $row->phone }}"
-                                data-comments="{{ $row->comments }}"
-                                data-location="{{ $row->location }}"
-                                data-days="{{ $row->days }}"
-                                data-travel_destination="{{ $row->travel_destination }}"
-                                data-budget_per_head="{{ $row->budget_per_head }}"
-                                data-cab_need="{{ $row->cab_need }}"
-                                data-total_count="{{ $row->total_count }}"
-                                data-male_count="{{$row->male_count}}"
-                                data-female_count="{{$row->female_count}}"
-                                data-travel_date="{{ $row->travel_date }}"
-                                data-rooms_count="{{ $row->rooms_count }}"
-                                data-date="{{ $row->created_at->format('d/m/Y h:i:s') }}"
-                                data-bs-toggle="modal"
-                                data-bs-target="#viewModal">
+                            <a class="btn btn-warning view-btn" href="{{ route('admin.home_enquiry_view', $row->id) }}">
                                 <i class="bi bi-eye-fill"></i>
-                            </button>
+                            </a>
                             <a href="{{ route('admin.enquiry.followups', $row->id) }}" class="btn btn-primary"><i class="bi bi-list-check"></i></a>
+                            <a href="javascript:void(0);" class="table-link danger delconfirm" data-row_id="{{ $row->id }}" data-act_url="{{ route('admin.stay_enquiry_delete') }}" data-csrf_token="{{ csrf_token() }}">
+                                <span class="fa-stack">
+                                    <i class="fa fa-trash-o fa-stack-1x fa-inverse" style="color:red !important;"></i>
+                                </span>
+                            </a>
                         </td>
                     </tr>
                     @endforeach

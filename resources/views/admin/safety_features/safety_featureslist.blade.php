@@ -40,7 +40,7 @@
                         <th class="text-center"><span>S.No</span></th>
                         <th class="text-center"><span> Safety Features Logo</span></th>
                         <th class="text-center"><span> Safety Features </span></th>
-                        <th class="text-center "><span> Date&Time </span></th>
+                        <th class="text-center "><span> Date </span></th>
 
                         <th class="text-center"><span> Status </span></th>
                         <th class="text-center"><span> Action </span></th>
@@ -59,7 +59,7 @@
 
                     <td class="text-center"><img src="{{ asset($row->safety_features_pic) }}" alt="Thumbnail" style="max-width: 100px; max-height: 100px; object-fit: cover;"></td>
                     <td class="text-center">{{ $row->safety_features }}</td>
-                        <td class="text-center">{{ $row->created_at }}</td>
+                        <td class="text-center">{{ \App\Helpers\DateHelper::formatDate($row->created_at) }}</td>
                         @php
                         $disp_status = 'In Active';
                         $actTitle = 'Click to activate';

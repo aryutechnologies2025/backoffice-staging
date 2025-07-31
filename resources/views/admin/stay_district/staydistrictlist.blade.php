@@ -40,7 +40,7 @@
                         <th class="text-center">S.No</th>
                        
                         <th class="text-center">Title</th>
-                        <th class="text-center">Date&Time</th>
+                        <th class="text-center">Date</th>
 
                         <th class="text-center">Status</th>
                         <th class="text-center">Action</th>
@@ -59,7 +59,7 @@
                             <img src="{{ asset($row->city_image) }}" alt="{{ $row->alternate_name ?? 'Default Alt Text' }}" style="max-width: 56px; max-height: 56px; object-fit: cover;">
                         </td> -->
                         <td class="text-center">{{ $row->destination }}</td>
-                        <td class="text-center">{{ $row->created_at }}</td>
+                        <td class="text-center">{{ \App\Helpers\DateHelper::formatDate($row->created_at) }}</td>
                           @php
                         $disp_status = 'In Active';
                         $actTitle = 'Click to activate';

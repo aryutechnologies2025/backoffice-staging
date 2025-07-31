@@ -15,9 +15,16 @@ class EnquiryController extends Controller
     public function list(Request $request)
     {
         $title = 'Booking List';
-        $enquiry_dts = EnquiryDetail::with('package')->orderBy('created_at', 'desc')->get();
+        $enquiry_dts = EnquiryDetail::with('package')->where('is_deleted', '0')->orderBy('created_at', 'desc')->get();
        
         return view('admin.enquiry.enquirylist', compact('title', 'enquiry_dts'));
+    }
+    
+    public function view_form(Request $request, $id)
+    {
+        $user_details = EnquiryDetail::find($id);
+        $title = 'View User';
+        return view('admin.enquiry.enquiryview', compact('user_details', 'title'));
     }
 
     public function addFollowUp(Request $request, $enquiryId)
@@ -90,6 +97,40 @@ class EnquiryController extends Controller
     public function add_form(){
         $title = 'Add Book Enquiry';
         return view('admin.enquiry.add_enquiry', compact('title'));
+    }
+
+    public function delete(Request $request)
+    {
+        // Retrieve the request data
+        $record_id = $request->input('record_id');
+
+        // Find the admin record by ID
+        $user = EnquiryDetail::find($record_id);
+        if ($user) {
+            // Update the is_deleted field to 1
+            $user->is_deleted = "1";
+
+            // Set the updated_date field
+            $user->updated_date = date('Y-m-d H:i:s');
+            $user->deleted_by = 'admin';
+            // Save the changes
+            $user->save();
+
+            // Prepare the response
+            $response = [
+                'status' => '1',
+                'response' => 'Record marked as deleted successfully.'
+            ];
+        } else {
+            // Record not found
+            $response = [
+                'status' => '0',
+                'response' => 'Record not found.'
+            ];
+        }
+
+        // Return the response as JSON
+        return response()->json($response);
     }
        
 }

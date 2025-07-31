@@ -76,6 +76,13 @@ class UserController extends Controller
         return view('admin.user.useredit', compact('user_details', 'title'));
     }
 
+    public function view_form(Request $request, $id)
+    {
+        $user_details = User::find($id);
+        $title = 'View User';
+        return view('admin.user.userview', compact('user_details', 'title'));
+    }
+
     public function update(Request $request, $id)
     {
         // Find the user by ID
