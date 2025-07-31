@@ -1,0 +1,32 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::table('enquiry_details', function (Blueprint $table) {
+             $table->date('updated_date')->nullable();
+            $table->string('deleted_by')->nullable();
+             $table->enum('is_deleted', ['1', '0'])->default('0');
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::table('enquiry_details', function (Blueprint $table) {
+             $table->dropColumn('is_deleted');
+              $table->dropColumn('updated_date');
+               $table->dropColumn('deleted_by');
+        });
+    }
+};

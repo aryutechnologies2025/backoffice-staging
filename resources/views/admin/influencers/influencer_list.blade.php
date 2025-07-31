@@ -45,7 +45,7 @@
                         <th class="text-center"><span>Name</span></th>
                         <th class="text-center"><span>Reference_id</span></th>
                         <th class="text-center"><span>Email</span></th>
-                        <th class="text-center"><span>Date&Time</span></th>
+                        <th class="text-center"><span>Date</span></th>
                         <th class="text-center"><span>Information</span></th>
                         <th class="text-center"><span>Affiliate Link</span></th>
                         <!-- <th class="text-center"><span>Clicks</span></th> -->
@@ -59,38 +59,18 @@
                         <td class="text-center">{{ $row->full_name }}</td>
                         <td class="text-center">{{ $row->reference_id }}</td>
                         <td class="text-center">{{ $row->email }}</td>
-                        <td class="text-center">{{ $row->created_at }}</td>
+                        <td class="text-center">{{ \App\Helpers\DateHelper::formatDate($row->created_at) }}</td>
                         <td class="text-center">
-                            <button class="btn btn-warning view-btn text-white" 
-                                data-full_name="{{ $row->full_name }}"
-                                data-email="{{ $row->email }}"
-                                data-phone="{{ $row->phone }}"
-                                data-whatsapp="{{ $row->whatsapp }}" 
-                                data-gender="{{ $row->gender }}"
-                                data-age="{{ $row->age }}"
-                                data-city="{{ $row->city }}"
-                                data-instagram_name="{{ $row->instagram_name }}"
-                                data-instagram_profile_link="{{ $row->instagram_profile_link }}"
-                                data-linkedin_name="{{ $row->linkedin_name }}"
-                                data-linkedin_profile_link="{{ $row->linkedin_profile_link }}"
-                                data-youtube_name="{{ $row->youtube_name }}"
-                                data-youtube_profile_link="{{ $row->youtube_profile_link }}"
-                                data-twitter_name="{{ $row->twitter_name }}"
-                                data-twitter_profile_link="{{ $row->twitter_profile_link }}"
-                                data-facebook_name="{{ $row->facebook_name }}"
-                                data-facebook_profile_link="{{ $row->facebook_profile_link }}"
-                                data-date="{{ $row->created_at->format('d/m/Y h:i:s') }}"
-                                data-bs-toggle="modal" 
-                                data-bs-target="#viewModal">
-                                View
-                            </button>
+                             <a class="btn btn-warning view-btn" href="{{ route('admin.influencer_view', $row->id) }}">
+                                <i class="bi bi-eye-fill"></i>
+                            </a>
                         </td>
                         <!-- <td class="text-center" style="font-size: small;">{{ $row->referral_code }}</td> -->
                         <td class="text-center " style="width: 10%;">
                             <button class="btn text-white btn-sm btn-info view-links" data-id="{{ $row->id }}" data-name="{{ $row->full_name }}"
                             data-signup-url="https://innerpece.com/signup?ref={{ $row->reference_id }}-{{ substr($row->full_name, 0, 4) }}"
                            > 
-                                View Affiliate Links
+                                <i class="fa fa-link" aria-hidden="true"></i>
                             </button>
                         </td>
                         <!-- <td class="text-center">
@@ -164,7 +144,7 @@
 
 <!-- Affiliate Links Modal -->
 <div class="custom-message-modal modal fade" id="affiliateLinksModal" tabindex="-1" aria-labelledby="affiliateLinksLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="affiliateLinksLabel">Affiliate Links</h5>

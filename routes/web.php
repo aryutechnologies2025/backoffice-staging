@@ -276,6 +276,7 @@ Route::prefix('/')->group(function () {
                 Route::post('/{id}/update', 'update')->name('admin.influencer_update');
                 Route::post('/delete', 'delete')->name('admin.influencer_delete');
                 Route::post('/change-status', 'change_status')->name('admin.influencer_status');
+                 Route::get('/{id}/view', 'view_form')->name('admin.influencer_view');
             });
         });
         // web.php
@@ -436,6 +437,7 @@ Route::prefix('/')->group(function () {
                 Route::get('/', 'list')->name('admin.user_list');
                 Route::get('/add', 'add_form')->name('admin.user_add_form');
                 Route::get('/{id}/edit', 'edit_form')->name('admin.user_edit_form');
+                Route::get('/{id}/view', 'view_form')->name('admin.user_view_form');
                 Route::post('/insert', 'insert')->name('admin.user_insert');
                 Route::post('/{id}/update', 'update')->name('admin.user_update');
                 Route::post('/delete', 'delete')->name('admin.user_delete');
@@ -447,6 +449,7 @@ Route::prefix('/')->group(function () {
         Route::controller(Contact_usController::class)->group(function () {
             Route::prefix('contact-us')->group(function () {
                 Route::get('/', 'list')->name('admin.contact_list');
+                Route::post('/delete', 'delete')->name('admin.contact_delete');
             });
         });
 
@@ -455,6 +458,7 @@ Route::prefix('/')->group(function () {
         Route::controller(AssitanceFormController::class)->group(function () {
             Route::prefix('assistance-form')->group(function () {
                 Route::get('/', 'list')->name('admin.assistance_form_list');
+                Route::post('/delete', 'delete')->name('admin.assistance_delete');
             });
         });
 
@@ -464,6 +468,8 @@ Route::prefix('/')->group(function () {
                 Route::get('/', 'list')->name('admin.enquiry_list');
                 Route::post('/store', 'insert')->name('admin.enquiry_store');
                 Route::get('/add', 'add_form')->name('admin.enquiry_add_form');
+                Route::get('/{id}/view', 'view_form')->name('admin.enquiry_view');
+                Route::post('/delete', 'delete')->name('admin.enquiry_delete');
             });
         });
         Route::post('/enquiry/followup', [EnquiryController::class, 'markFollowUp']);
@@ -488,6 +494,11 @@ Route::prefix('/')->group(function () {
                 Route::get('/add', 'add_form')->name('admin.home_enquiry_add_form');
                 Route::post('/insert/enquiry', 'insert')->name('admin.home_enquiry_store_form');
                 Route::get('/stay', 'stayList')->name('admin.stay_home_enquiry_list');
+                Route::get('/{id}/view', 'view_form')->name('admin.home_enquiry_view');
+                Route::post('/delete', 'delete')->name('admin.home_enquiry_delete');
+
+                Route::get('/{id}/stay_view', 'stay_view_form')->name('admin.stay_enquiry_view');
+                Route::post('/delete', 'staydelete')->name('admin.stay_enquiry_delete');
             });
         });
 

@@ -12,31 +12,31 @@ class InfluencersController extends Controller
     {
         $title = 'Influencers List';
         $influencers = Influencers::where('is_deleted', '0')
-        ->orderBy('created_at', 'desc')
-        ->get();
-    
+            ->orderBy('created_at', 'desc')
+            ->get();
+
         // Fetch affiliate links for each influencer
         foreach ($influencers as $influencer) {
             // This assumes you have an affiliate_links relation or method
             $influencer->affiliate_links = $influencer->getAffiliateLinks();
         }
-    
+
         return view('admin.influencers.influencer_list', compact('title', 'influencers'));
     }
-    
+
     public function getAffiliateLinks($id)
     {
         $influencer = Influencers::find($id);
         if (!$influencer) {
             return response()->json(['status' => '0', 'response' => 'Influencer not found.'], 404);
         }
-    
+
         // Eager load the packages and generate affiliate links
         $affiliateLinks = $influencer->getAffiliateLinks();
-    
+
         return response()->json(['status' => '1', 'data' => $affiliateLinks]);
     }
-    
+
 
 
     public function add_form()
@@ -62,7 +62,7 @@ class InfluencersController extends Controller
         ]);
 
         $influencer = new Influencers;
-        
+
         // Generate the next reference_id
         $lastInfluencer = Influencers::where('reference_id', 'LIKE', 'Innerpece-%')->orderBy('id', 'desc')->first();
         if ($lastInfluencer) {
@@ -71,10 +71,10 @@ class InfluencersController extends Controller
         } else {
             $newReferenceId = 'Innerpece-001'; // Start from Inf-001 if no records exist
         }
-        
+
         // Generate referral code
         $newReferralCode = strtoupper(substr(md5(uniqid(rand(), true)), 0, 8)); // Create a unique referral code
-        
+
         // Fill influencer data
         $influencer->fill($request->all());
         $influencer->reference_id = $newReferenceId;
@@ -82,55 +82,55 @@ class InfluencersController extends Controller
         $influencer->created_by = 'admin';
         $influencer->status = $request->has('status') && $request->input('status') === 'on' ? '1' : '0';
         $influencer->is_deleted = '0';
-        
+
         $influencer->save();
-        
+
         // Generate signup URL
         $signupUrl = 'https://innerpece.com/signup?ref=' . $newReferenceId;
-      
+
         return redirect()->route('admin.influencer_list')
             ->with('success', 'Influencer added successfully. Reference ID: ' . $newReferenceId . ', Referral Code: ' . $newReferralCode . ', Signup URL: ' . $signupUrl);
     }
-    
+
 
     // public function getAffiliateLinks($id)
     // {
-        
+
     //     // Fetch the influencer
     //     $influencer = Influencers::find($id);
     //     if (!$influencer) {
     //         return response()->json(['status' => '0', 'response' => 'Influencer not found.'], 404);
     //     }
-    
+
     //     // Fetch package titles
     //     $titles = InclusivePackages::where('is_deleted', '0')->get(['id', 'title']);
-        
+
     //     // Generate affiliate links
     //     $affiliateLinks = $titles->map(function ($title) use ($influencer) {
     //         // Check if referral_code is present
     //         if (empty($influencer->referral_code)) {
     //             return null;  // Or handle it with a default code
     //         }
-    
+
     //         // Generate the base URL and append the referral code
     //         $baseUrl = url('/' . $title->id . '/' . str_replace(' ', '-', strtolower($title->title)));
     //         $url = $baseUrl . '?ref=' . $influencer->referral_code;
-        
+
     //         // Log the generated URL for debugging
     //         \Log::info('Generated URL: ' . $url);
-    
+
     //         return [
     //             'title' => $title->title,
     //             'url' => $url,
     //         ];
     //     });
-    
+
     //     // Filter out any null values (if referral_code was missing)
     //     $affiliateLinks = $affiliateLinks->filter()->values();
-    
+
     //     return response()->json(['status' => '1', 'data' => $affiliateLinks]);
     // }
-    
+
 
     public function edit_form(Request $request, $id)
     {
@@ -169,7 +169,7 @@ class InfluencersController extends Controller
 
         if ($influencer) {
             $influencer->status = $mode == 0 ? '0' : '1';
-           
+
             $influencer->updated_at = now();
             $influencer->save();
 
@@ -191,8 +191,8 @@ class InfluencersController extends Controller
 
         $influencer = Influencers::find($record_id);
         if ($influencer) {
-            $influencer->is_deleted ="1";
-            
+            $influencer->is_deleted = "1";
+
             $influencer->updated_at = now();
             $influencer->save();
 
@@ -210,54 +210,59 @@ class InfluencersController extends Controller
 
 
     // A helper method to generate affiliate links for an influencer
-// private function getAffiliateLinksForInfluencer($influencer)
-// {
-//     $links = [];
-//     $packages = InclusivePackages::all(); // Assuming you are fetching all packages or filtering as necessary
+    // private function getAffiliateLinksForInfluencer($influencer)
+    // {
+    //     $links = [];
+    //     $packages = InclusivePackages::all(); // Assuming you are fetching all packages or filtering as necessary
 
-//     foreach ($packages as $package) {
-//         $links[] = [
-//             'title' => $package->title,
-//             'url' => url('/' . $package->id . '/' . \Str::slug($package->title) . '?ref=' . $influencer->reference_id)
-//         ];
-//     }
+    //     foreach ($packages as $package) {
+    //         $links[] = [
+    //             'title' => $package->title,
+    //             'url' => url('/' . $package->id . '/' . \Str::slug($package->title) . '?ref=' . $influencer->reference_id)
+    //         ];
+    //     }
 
-//     return $links;
-// }
-
-
-// public function showProgramWithReferral($program_slug, Request $request)
-// {
-//     // Capture the referral code from the query string
-//     $referral_code = $request->query('ref');
-    
-//     // Find the influencer by referral code
-//     $influencer = Influencers::where('reference_id', $referral_code)->first();
-    
-//     if (!$influencer) {
-//         return response()->json([
-//             'status' => 'error',
-//             'message' => 'Invalid referral code.',
-//         ], 404);
-//     }
-
-//     // Find the program using the program_slug
-//     $program = InclusivePackages::where('slug', $program_slug)->first();
-    
-//     if (!$program) {
-//         return response()->json([
-//             'status' => 'error',
-//             'message' => 'Program not found.',
-//         ], 404);
-//     }
-
-//     // Optionally, log the referral or process any business logic based on the referral code
-//     // You can use session to store the referral or track analytics
-    
-//     // Prepare the response
-//     return view('program.show', compact('program', 'influencer', 'referral_code'));
-// }
+    //     return $links;
+    // }
 
 
+    // public function showProgramWithReferral($program_slug, Request $request)
+    // {
+    //     // Capture the referral code from the query string
+    //     $referral_code = $request->query('ref');
 
+    //     // Find the influencer by referral code
+    //     $influencer = Influencers::where('reference_id', $referral_code)->first();
+
+    //     if (!$influencer) {
+    //         return response()->json([
+    //             'status' => 'error',
+    //             'message' => 'Invalid referral code.',
+    //         ], 404);
+    //     }
+
+    //     // Find the program using the program_slug
+    //     $program = InclusivePackages::where('slug', $program_slug)->first();
+
+    //     if (!$program) {
+    //         return response()->json([
+    //             'status' => 'error',
+    //             'message' => 'Program not found.',
+    //         ], 404);
+    //     }
+
+    //     // Optionally, log the referral or process any business logic based on the referral code
+    //     // You can use session to store the referral or track analytics
+
+    //     // Prepare the response
+    //     return view('program.show', compact('program', 'influencer', 'referral_code'));
+    // }
+
+
+    public function view_form(Request $request, $id)
+    {
+        $user_details = Influencers::find($id);
+        $title = 'View Details';
+        return view('admin.influencers.influencerview', compact('user_details', 'title'));
+    }
 }

@@ -1,15 +1,16 @@
 @extends('layouts.app')
 @section('content')
 <style>
-   a:hover {
+    a:hover {
         color: rgb(27, 108, 138);
     }
-    a{
-        color:rgb(37, 150, 190);
+
+    a {
+        color: rgb(37, 150, 190);
     }
-  
+
     .enquiry {
-       color: rgb(27, 108, 138);
+        color: rgb(27, 108, 138);
     }
 
     .modal {
@@ -23,7 +24,7 @@
         font-size: 15px !important;
     }
 
-    .custom-message-modal{
+    .custom-message-modal {
         width: 100% !important;
         background: #29292960;
     }
@@ -82,29 +83,16 @@
                         <td class="text-center">{{$row->reference_id ?? '-'}}</td>
 
                         <td class="text-center d-flex gap-1">
-                            <button class="btn btn-warning view-btn"
-                                data-id="{{ $row->id }}"
-                                data-name="{{ $row->name }}"
-                                data-email="{{ $row->email }}"
-                                data-phone="{{ $row->phone }}"
-                                data-comments="{{ $row->comments }}"
-                                data-location="{{ $row->location }}"
-                                data-days="{{ $row->days }}"
-                                data-travel_destination="{{ $row->travel_destination }}"
-                                data-pricing="{{ $row->pricing }}"
-                                data-cab_need="{{ $row->cab_need }}"
-                                data-total_count="{{ $row->total_count }}"
-                                data-male_count="{{ $row->male_count }}"
-                                data-female_count="{{ $row->female_count }}"
-                                data-child_count="{{ $row->child_count }}"
-                                data-travel_date="{{ $row->travel_date }}"
-                                data-rooms_count="{{ $row->rooms_count }}"
-                                data-date="{{ $row->created_at->format('d/m/Y h:i:s') }}"
-                                data-bs-toggle="modal"
-                                data-bs-target="#viewModal">
+                            <a class="btn btn-warning view-btn" href="{{ route('admin.enquiry_view', $row->id) }}">
                                 <i class="bi bi-eye-fill"></i>
-                            </button>
+                            </a>
                             <a href="{{ route('admin.enquiry.enquiryfollowups', $row->id) }}" class="btn btn-primary"><i class="bi bi-list-check"></i></a>
+                            <a href="javascript:void(0);" class="table-link danger delconfirm" data-row_id="{{ $row->id }}" data-act_url="{{ route('admin.enquiry_delete') }}" data-csrf_token="{{ csrf_token() }}">
+                                <span class="fa-stack">
+                                    <!-- <i class="fa fa-square fa-stack-2x"></i> -->
+                                    <i class="fa fa-trash-o fa-stack-1x fa-inverse" style="color:red !important;"></i>
+                                </span>
+                            </a>
                         </td>
                     </tr>
                     @endforeach
@@ -171,7 +159,7 @@
 
         // Populate modal with data
         $(document).on('click', '.view-btn', function() {
-        // $('.view-btn').on('click', function() {
+            // $('.view-btn').on('click', function() {
             $('#modalName').text($(this).data('name'));
             $('#modalEmail').text($(this).data('email'));
             $('#modalPhone').text($(this).data('phone'));
@@ -188,7 +176,7 @@
             $('#modalTravelDate').text($(this).data('travel_date'));
             $('#modalRoomsCount').text($(this).data('rooms_count'));
             $('#modalDate').text($(this).data('date'));
-           
+
         });
 
         // Download Excel

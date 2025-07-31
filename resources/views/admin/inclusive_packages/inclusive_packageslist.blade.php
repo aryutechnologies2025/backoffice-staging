@@ -43,7 +43,7 @@
                         <th class="text-center "><span> Title </span></th>
                         <th class="text-center "><span> Image </span></th>
                         <th class="text-center "><span> Category </span></th>
-                        <th class="text-center "><span>Date&Time </span></th>
+                        <th class="text-center "><span>Date </span></th>
                         <th class="text-center "><span> Package Duplicate </span></th>
                         <th class="text-center ">
                             <span> Status </span>
@@ -86,7 +86,7 @@
                         <td class="text-center"><img src="{{ $row->cover_img ? asset($row->cover_img) : asset($settings->footer_logo) }}" alt="{{ $row->alternate_name ?? 'Default Alt Text' }}" style="max-width: 100px; max-height: 100px; object-fit: cover;"></td>
 
                         <td class="text-center">{{ $formattedCategories }}</td>
-                        <td class="text-center">{{ $row->created_at }}</td>
+                        <td class="text-center">{{ \App\Helpers\DateHelper::formatDate($row->created_at) }}</td>
                         <td class="text-center">
                             <button type="button" class="btn btn-primary text-white duplicate_package" data-package_id="{{ $row->id }}">
                                 <i class="fa fa-copy"></i> Duplicate

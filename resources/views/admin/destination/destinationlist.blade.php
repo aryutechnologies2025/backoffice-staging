@@ -23,7 +23,7 @@
                     <th class="text-center"><span> Destination  </span></th>
                         <th class="text-center"><span> Place </span></th>
                         <th class="text-center"><span> Destination Image </span></th>
-                        <th class="text-center"><span>Time&Date</span></th>
+                        <th class="text-center"><span>Date</span></th>
 
                         <th class="text-center"><span> Status </span></th>
                         <th class="text-center"><span> Action </span></th>
@@ -41,7 +41,7 @@
                         <td class="text-center">{{ $row->destination_name }}</td>
                         <td class="text-center">{{ $row->place }}</td>
                         <td class="text-center"><img src="{{ asset($row->destination_pic) }}" alt="Thumbnail" style="max-width: 100px; max-height: 100px; object-fit: cover;"></td>
-                        <td class="text-center">{{ $row->created_at }}</td>
+                        <td class="text-center">{{ \App\Helpers\DateHelper::formatDate($row->created_at) }}</td>
 
                         @php
                         $disp_status = 'In Active';

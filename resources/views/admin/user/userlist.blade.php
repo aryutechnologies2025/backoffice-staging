@@ -41,7 +41,7 @@
                         <!-- <th class="text-center"><span>DOB</span></th> -->
                         <th class="text-center "><span>Phone Number</span></th>
                         <th class="text-center"><span>Address</span></th>
-                        <th class="text-center"><span>Date&Time</span></th>
+                        <th class="text-center"><span>Date</span></th>
                     
                         <th class="text-center"><span>Status</span></th>
                         <th class="text-center"><span>Action</span></th>
@@ -62,8 +62,14 @@
                         <td class="text-center px-2">{{ $row->email }}</td>
                         <!-- <td class="text-center w-45">{{ $row->dob }}</td> -->
                         <td class="text-center px-3">{{ $row->phone }}</td>
-                        <td class="text-center px-3">{{ $row->street }}, {{ $row->city }}, {{ $row->state }}, {{ $row->zip_province_code }}, {{ $row->country }}</td>
-                        <td class="text-center">{{$row->created_at}}</td>
+                        <td class="text-center px-3">
+                            <!-- {{ $row->street }},  -->
+                            {{ $row->city }}, 
+                            <!-- {{ $row->state }}, 
+                            {{ $row->zip_province_code }}, 
+                            {{ $row->country }} -->
+                        </td>
+                        <td class="text-center">{{ \App\Helpers\DateHelper::formatDate($row->created_at)}}</td>
                         @php
                         $disp_status = 'In Active';
                         $actTitle = 'Click to activate';
@@ -79,6 +85,11 @@
                         @endphp
                         <td class="text-center"><a data-toggle="tooltip" data-csrf_token="{{ csrf_token() }}" data-original-title="{{ $actTitle }}" class="stsconfirm" href="javascript:void(0);" data-row_id="{{ $row->id }}" data-act_url="{{ route('admin.user_status') }}" data-stsmode="{{ $mode }}"><button type="button" class="btn {{ $btnColr }} px-5">{{ $disp_status }}</button></a></td>
                         <td class="text-center" style="width: 20%;">
+                            <a href="{{ route('admin.user_view_form',$row->id) }}" class="table-edit-link">
+                                <span class="fa-stack">
+                                    <i class="fa-regular fa fa-eye fa-stack-1x fa-inverse" style="color:blue !important;"></i>
+                                </span>
+                            </a>
                             <a href="{{ route('admin.user_edit_form',$row->id) }}" class="table-edit-link">
                                 <span class="fa-stack">
                                     <!-- <i class="fa fa-square fa-stack-2x"></i> -->
