@@ -7,47 +7,56 @@
     }
 
     a {
-        color: rgb(37, 150, 190);
+        font-family: 'Poppins', sans-serif;
+        font-weight:500;
+        color:#8B7eff;
+        font-size:13px;
     }
 
 
     .city {
-        color: rgb(27, 108, 138);
+        font-family: 'Poppins', sans-serif;
+        font-weight:600;
+        color:#282833;
+        font-size:13px;
     }
 </style>
 
-<div class="row body-sec py-5  px-5 justify-content-around">
-    <div class="col-lg-6">
-        <b><a href="/dashboard">Dashboard</a> > <a class="city" href="">Customer Package</a></b>
-        <br>
-        <br>
-        <h3 class="fw-bold">{{$title}}</h3>
+<div class="row body-sec py-3 px-5 justify-content-around">
+    <div class="text-start col-lg-6 ">
+        <h3 class="admin-title fw-bold">{{$title}}</h3>
     </div>
-    <div class="col-lg-6">
+    <div class="text-end col-lg-6 ">
+       <b><a href="/dashboard">Dashboard</a> > <a class="city" href="">Customer Package</a></b>
+    </div>
+    <div class="mt-2 mb-2 col-lg-12">
         <div class="d-flex justify-content-end">
-            <a href="{{ route('admin.CustomerPackage_form') }}">
+             <a href="{{ route('admin.CustomerPackage_form') }}">
                 <button class="btn btn-add px-5" type="button"> Create Customer </button>
             </a>
         </div>
     </div>
-</div>
+
+</div>  
+
+
 
 <!-- EVENT LIST -->
 <div class="row body-sec px-5">
-    <div class="col-lg-12">
+    <div class="bg-white pt-3 col-lg-12">
         <div class="table-sec rounded-bottom-4 mb-5">
-            <table id="cityTable" class="table pt-2">
+            <table id="cityTable" class="table table-bordered pt-2">
                 <thead>
                     <tr class="rounded-top-4">
-                        <th class="text-center"><span>S.No</span></th>
-                        <th class="text-center "><span> Name </span></th>
-                        <th class="text-center "><span> Phone Number </span></th>
-                        <th class="text-center "><span> Email </span></th>
-                        <th class="text-center "><span> Package Type </span></th>
-                        <th class="text-center "><span> Status </span></th>
-                        <th class="text-center "><span> Package URL </span></th>
-                        <th class="text-center "><span> Package Duplicate </span></th>
-                        <th class="text-center"><span> Action </span></th>
+                        <th class="text-start"><span>S.No</span></th>
+                        <th class="text-start "><span> Name </span></th>
+                        <th class="text-start"><span> Phone Number </span></th>
+                        <th class="text-start"><span> Email </span></th>
+                        <th class="text-start"><span> Package Type </span></th>
+                        <th class="text-start"><span> Status </span></th>
+                        <th class="text-start"><span> Package URL </span></th>
+                        <th class="text-start"><span> Package Duplicate </span></th>
+                        <th class="text-start"><span> Action </span></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -59,14 +68,14 @@
                     @foreach ($customer_package_list as $row)
 
                     <tr>
-                        <td class="text-center">{{ $loop->iteration }}</td>
+                        <td class="text-start">{{ $loop->iteration }}</td>
 
 
                         <!-- <td class="text-center"><img src="{{ $row->cover_img ? asset($row->cover_img) : asset($settings->footer_logo) }}" alt="{{ $row->alternate_name ?? 'Default Alt Text' }}" style="max-width: 100px; max-height: 100px; object-fit: cover;"></td> -->
-                        <td class="text-center">{{ $row->name }}</td>
-                        <td class="text-center">{{ $row->phone_number }}</td>
-                        <td class="text-center">{{ $row->email }}</td>
-                        <td class="text-center">{{ $row->package_type  }}</td>
+                        <td class="text-start">{{ $row->name }}</td>
+                        <td class="text-start">{{ $row->phone_number }}</td>
+                        <td class="text-start">{{ $row->email }}</td>
+                        <td class="text-start">{{ $row->package_type  }}</td>
                         <!-- <td class="text-center">{{ $row->created_at }}</td> -->
                         @php
                         $disp_status = 'In Active';
@@ -81,10 +90,10 @@
                         $actTitle = 'Click to deactivate';
                         }
                         @endphp
-                        <td class="text-center"><a data-toggle="tooltip" data-csrf_token="{{ csrf_token() }}" data-original-title="{{ $actTitle }}" class="stsconfirm" href="javascript:void(0);" data-row_id="{{ $row->id }}" data-act_url="{{ route('admin.CustomerPackage_status') }}" data-stsmode="{{ $mode }}"><button type="button" class="btn {{ $btnColr }} px-5">{{ $disp_status }}</button></a></td>
+                        <td class="text-start"><a data-toggle="tooltip" data-csrf_token="{{ csrf_token() }}" data-original-title="{{ $actTitle }}" class="stsconfirm" href="javascript:void(0);" data-row_id="{{ $row->id }}" data-act_url="{{ route('admin.CustomerPackage_status') }}" data-stsmode="{{ $mode }}"><button type="button" class="btn {{ $btnColr }} px-5">{{ $disp_status }}</button></a></td>
 
                         <!-- <td class="text-center"><a href="https://innerpece.com/{{ $row->package_type }}/{{$row->package_type }}#{{$row->name}}">copy</a></td> -->
-                        <td class="text-center text-primary">
+                        <td class="text-start text-primary">
                             @if(isset($row->status) && $row->status == '1')
                                 <a href="#"
                                     class="copy-link text-dark"
@@ -99,12 +108,12 @@
                                 </span>
                             @endif
                         </td>
-                        <td class="text-center">
-                            <button type="button" class="btn btn-primary text-white duplicate_package" data-package_id="{{ $row->id }}">
-                                <i class="fa fa-copy"></i> Duplicate
+                        <td class="text-start">
+                            <button type="button" class="btn text-dark duplicate_package" data-package_id="{{ $row->id }}">
+                                <i class="fa fa-copy" style="color:blue !important;"></i> Duplicate
                             </button>
                         </td>
-                        <td class="text-center">
+                        <td class="text-start">
                             <a href="{{ route('admin.CustomerPackage_edit_form',$row->id) }}" class="table-edit-link">
                                 <span class="fa-stack">
                                     <i class="fa fa-square fa-stack-2x"></i>
@@ -142,11 +151,11 @@
             "searching": true,
             "language": {
                 "emptyTable": "No records found",
+                "searchPlaceholder": "Search cities...",  // 👈 Your placeholder text
+                "search": ""  // 👈 This removes the "Search:" label
             },
-            "columnDefs": [{
-                    "orderable": true,
-                    "targets": [0, 3]
-                } // Disable ordering on Icon and Action columns
+            "columnDefs": [
+                { "orderable": true, "targets": [0, 3] }
             ]
         });
     });

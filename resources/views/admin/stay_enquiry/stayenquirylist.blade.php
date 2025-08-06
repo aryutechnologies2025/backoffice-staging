@@ -6,12 +6,18 @@
     }
 
     a {
-        color: rgb(37, 150, 190);
+        font-family: 'Poppins', sans-serif;
+        font-weight:500;
+        color:#8B7eff;
+        font-size:13px;
     }
 
 
     .enquiry {
-        color: rgb(27, 108, 138);
+       font-family: 'Poppins', sans-serif;
+        font-weight:600;
+        color:#282833;
+        font-size:13px;
     }
 
     .modal {
@@ -26,38 +32,35 @@
     }
 </style>
 
-<div class="row body-sec py-5 px-5 justify-content-around">
-    <div class="col-lg-6">
-        <b><a href="/dashboard">Dashboard</a> > <a class="enquiry" href="{{ route('admin.stay_home_enquiry_list') }}">Stay Enquiry</a></b>
-        <br><br>
-        <h3 class="fw-bold">{{$title}}</h3>
+ <div class="row body-sec py-3 px-5 justify-content-around">
+        <div class="text-start col-lg-6 ">
+            <h3 class="admin-title fw-bold">{{$title}}</h3>
+        </div>
+        <div class="text-end col-lg-6 ">
+           <b><a href="/dashboard">Dashboard</a> > <a class="enquiry" href="{{ route('admin.stay_home_enquiry_list') }}">Stay Enquiry</a></b>
+        </div>
     </div>
-    <div class="col-lg-6">
 
-        <!-- <div class="d-flex justify-content-end">
-            <a href="{{ route('admin.home_enquiry_add_form') }}">
-                <button class="btn btn-add px-5" type="button">Add Enquiry Form</button>
-            </a>
-        </div> -->
-    </div>
-</div>
+
+    
+
 
 <div class="row body-sec px-5">
-    <div class="col-lg-12">
+    <div class="bg-white pt-3 col-lg-12">
         <div class="table-sec rounded-bottom-4 mb-5">
             <button id="downloadExcel" class="btn btn-success mb-3">Download List</button>
 
-            <table id="cityTable" class="table pt-2">
+            <table id="cityTable" class="table table-bordered pt-2">
                 <thead>
                     <tr class="rounded-top-4">
-                        <th class="text-center">S.No</th>
-                        <th class="text-center">Name</th>
-                        <th class="text-center">Email</th>
-                        <th class="text-center">Phone</th>
-                        <th class="text-center">Next FollowUp</th>
-                        <th class="text-center">Date</th>
+                        <th class="text-start">S.No</th>
+                        <th class="text-start">Name</th>
+                        <th class="text-start">Email</th>
+                        <th class="text-start">Phone</th>
+                        <th class="text-start">Next FollowUp</th>
+                        <th class="text-start">Date</th>
                         <!-- <th class="text-center">Status</th> -->
-                        <th class="text-center">Action</th>
+                        <th class="text-start">Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -68,16 +71,16 @@
                     @else
                     @foreach ($enquiry_dts as $row)
                     <tr>
-                        <td class="text-center">{{ $loop->iteration }}</td>
-                        <td class="text-center">{{ $row->name }}</td>
-                        <td class="text-center">{{ $row->email }}</td>
-                        <td class="text-center">{{ $row->phone }}</td>
+                        <td class="text-start">{{ $loop->iteration }}</td>
+                        <td class="text-start">{{ $row->name }}</td>
+                        <td class="text-start">{{ $row->email }}</td>
+                        <td class="text-start">{{ $row->phone }}</td>
                         @if($row->followUps->isNotEmpty())
-                        <td class="text-center">{{ $row->followUps->last()->next_follow_up_date }}</td>
+                        <td class="text-start">{{ $row->followUps->last()->next_follow_up_date }}</td>
                         @else
-                        <td class="text-center">N/A</td>
+                        <td class="text-start">N/A</td>
                         @endif
-                        <td class="text-center">{{ \App\Helpers\DateHelper::formatDate($row->created_at) }}</td>
+                        <td class="text-start">{{ \App\Helpers\DateHelper::formatDate($row->created_at) }}</td>
                         <!-- <td class="text-center">
                             <select
                                 class="form-select followUpStatus"
@@ -95,9 +98,9 @@
 
 
                         </td> -->
-                        <td class="text-center d-flex gap-1">
-                            <a class="btn btn-warning view-btn" href="{{ route('admin.stay_enquiry_view', $row->id) }}">
-                                <i class="bi bi-eye-fill"></i>
+                        <td class="text-start d-flex gap-1">
+                            <a class="btn view-btn" href="{{ route('admin.stay_enquiry_view', $row->id) }}">
+                                <i class="bi bi-eye-fill" style="color:#000 !important;"></i>
                             </a>
                             <!-- <a href="{{ route('admin.enquiry.followups', $row->id) }}" class="btn btn-primary"><i class="bi bi-list-check"></i></a> -->
                             <a href="javascript:void(0);" class="table-link danger delconfirm" data-row_id="{{ $row->id }}" data-act_url="{{ route('admin.stay_enquiry_delete') }}" data-csrf_token="{{ csrf_token() }}">
@@ -155,6 +158,23 @@
 <!-- Add SheetJS (XLSX) library for Excel export -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script>
+     $(document).ready(function() {
+        $('#cityTable').DataTable({
+            "pageLength": 10,
+            "lengthChange": true,
+            "ordering": true,
+            "searching": true,
+            "language": {
+                "emptyTable": "No records found",
+                "searchPlaceholder": "Search cities...",  // 👈 Your placeholder text
+                "search": ""  // 👈 This removes the "Search:" label
+            },
+            "columnDefs": [
+                { "orderable": true, "targets": [0, 3] }
+            ]
+        });
+    }); 
+
     function handleFollowUpChange(selectElement) {
         let enquiryId = $(selectElement).data('enquiry-id');
         let newStatus = $(selectElement).val();

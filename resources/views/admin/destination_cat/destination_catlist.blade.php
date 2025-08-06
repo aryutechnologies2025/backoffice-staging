@@ -20,7 +20,7 @@
             <table class="table user-list">
                 <thead>
                     <tr class="rounded-top-4">
-                        <th class="text-center"><span>S.No </span></th>
+                        <th class="text-center"><span>S.No</span></th>
                         <th class="text-center"><span> Destination </span></th>
                         <th class="text-center"><span> Destination Category </span></th>
                         <th class="text-center"><span> Status </span></th>

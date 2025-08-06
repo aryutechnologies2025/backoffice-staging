@@ -6,11 +6,17 @@
     }
 
     a {
-        color: rgb(37, 150, 190);
+        font-family: 'Poppins', sans-serif;
+        font-weight:500;
+        color:#8B7eff;
+        font-size:13px;
     }
 
     .enquiry {
-        color: rgb(27, 108, 138);
+       font-family: 'Poppins', sans-serif;
+        font-weight:600;
+        color:#282833;
+        font-size:13px;
     }
 
     .modal {
@@ -30,40 +36,43 @@
     }
 </style>
 
-<div class="row body-sec py-5 px-5 justify-content-around">
-    <div class="col-lg-6">
-        <b><a href="/dashboard">Dashboard</a> > <a class="enquiry" href="">Booking</a></b>
-        <br><br>
-        <h3 class="fw-bold">{{$title}}</h3>
+<div class="row body-sec py-3 px-5 justify-content-around">
+    <div class="text-start col-lg-6 ">
+        <h3 class="admin-title fw-bold">{{$title}}</h3>
     </div>
-    <div class="col-lg-6">
-
+    <div class="text-end col-lg-6 ">
+       <b><a href="/dashboard">Dashboard</a> > <a class="enquiry" href="">Booking</a></b>
+    </div>
+    <div class="mt-2 mb-2 col-lg-12">
         <div class="d-flex justify-content-end">
             <a href="{{ route('admin.enquiry_add_form') }}">
-                <button class="btn btn-add px-5" type="button">Add Booking</button>
+                <button class="btn-add px-4" type="button">Add Booking</button>
             </a>
         </div>
     </div>
-</div>
+
+</div> 
+
+
 
 <div class="row body-sec px-5">
-    <div class="col-lg-12">
+    <div class="bg-white pt-3 col-lg-12">
         <div class="table-sec rounded-bottom-4 mb-5">
             <!-- Button to Download Excel -->
             <button id="downloadExcel" class="btn btn-success mb-3">Download List</button>
 
-            <table id="cityTable" class="table pt-2 " style="width: 100%;">
+            <table id="cityTable" class="table table-bordered pt-2 " style="width: 100%;">
                 <thead>
                     <tr class="rounded-top-4">
-                        <th class="text-center"><span>S.No</span></th>
-                        <th class="text-center"><span>Name</span></th>
-                        <th class="text-center"><span>Email</span></th>
-                        <th class="text-center"><span>Phone</span></th>
-                        <th class="text-center"><span>Budget</span></th>
-                        <th class="text-center"><span>Program Name</span></th>
-                        <th class="text-center"><span>Refered By</span></th>
+                        <th class="text-start"><span>S.No</span></th>
+                        <th class="text-start"><span>Name</span></th>
+                        <th class="text-start"><span>Email</span></th>
+                        <th class="text-start"><span>Phone</span></th>
+                        <th class="text-start"><span>Budget</span></th>
+                        <th class="text-start"><span>Program Name</span></th>
+                        <th class="text-start"><span>Refered By</span></th>
 
-                        <th class="text-center"><span>Action</span></th>
+                        <th class="text-start"><span>Action</span></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -74,19 +83,19 @@
                     @else
                     @foreach ($enquiry_dts as $row)
                     <tr>
-                        <td class="text-center">{{ $loop->iteration }}</td>
-                        <td class="text-center">{{ $row->name }}</td>
-                        <td class="text-center">{{ $row->email }}</td>
-                        <td class="text-center">{{ $row->phone }}</td>
-                        <td class="text-center">{{ $row->pricing }}</td>
-                        <td class="text-center">{{ $row->program_title ?? 'null' }}</td>
-                        <td class="text-center">{{$row->reference_id ?? '-'}}</td>
+                        <td class="text-start">{{ $loop->iteration }}</td>
+                        <td class="text-start">{{ $row->name }}</td>
+                        <td class="text-start">{{ $row->email }}</td>
+                        <td class="text-start">{{ $row->phone }}</td>
+                        <td class="text-start">{{ $row->pricing }}</td>
+                        <td class="text-start">{{ $row->program_title ?? 'null' }}</td>
+                        <td class="text-start">{{$row->reference_id ?? '-'}}</td>
 
-                        <td class="text-center d-flex gap-1">
-                            <a class="btn btn-warning view-btn" href="{{ route('admin.enquiry_view', $row->id) }}">
-                                <i class="bi bi-eye-fill"></i>
+                        <td class="text-start d-flex gap-1">
+                            <a class="btn view-btn" href="{{ route('admin.enquiry_view', $row->id) }}">
+                                <i class="bi bi-eye-fill" style="color:#000 !important;"></i>
                             </a>
-                            <a href="{{ route('admin.enquiry.enquiryfollowups', $row->id) }}" class="btn btn-primary"><i class="bi bi-list-check"></i></a>
+                            <a href="{{ route('admin.enquiry.enquiryfollowups', $row->id) }}" class="btn "><i class="bi bi-list-check" style="color:blue !important;"></i></a>
                             <a href="javascript:void(0);" class="table-link danger delconfirm" data-row_id="{{ $row->id }}" data-act_url="{{ route('admin.enquiry_delete') }}" data-csrf_token="{{ csrf_token() }}">
                                 <span class="fa-stack">
                                     <!-- <i class="fa fa-square fa-stack-2x"></i> -->
@@ -140,8 +149,7 @@
 
 @section('scripts')
 <script>
-    $(document).ready(function() {
-        // Initialize DataTable
+     $(document).ready(function() {
         $('#cityTable').DataTable({
             "pageLength": 10,
             "lengthChange": true,
@@ -149,14 +157,14 @@
             "searching": true,
             "language": {
                 "emptyTable": "No records found",
+                "searchPlaceholder": "Search cities...",  // 👈 Your placeholder text
+                "search": ""  // 👈 This removes the "Search:" label
             },
-            "columnDefs": [{
-                    "orderable": true,
-                    "targets": [0, 6]
-                } // Disable ordering on specific columns
+            "columnDefs": [
+                { "orderable": true, "targets": [0, 3] }
             ]
         });
-
+        
         // Populate modal with data
         $(document).on('click', '.view-btn', function() {
             // $('.view-btn').on('click', function() {
