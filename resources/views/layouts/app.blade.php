@@ -51,11 +51,11 @@
 <body id="body-pd">
 
     <div class="row ">
-        <header class="header py-5 ps-0 " id="header">
+          <header class="header py-2 ps-0 " id="header">
             <div class="col-lg-3 text-start" id="navbarNav">
                 <div class="header_toggle mt-2">
                     <!-- <img id="header-toggle" src="/assets/image/dashboard/innerpece_toogle_icon.svg" alt=""> -->
-                    <div id="header-toggle" class="text-dark"><i class="bi bi-list"></i></div>
+                    <div id="header-toggle" class="text-dark px-3"><i class="bi bi-list"></i></div>
                 </div>
             </div>
 
@@ -64,7 +64,7 @@
                 <img class="" style="width: 20%;" src="/assets/image/dashboard/innerpece_admin_img.png" alt="">
             </div> -->
             <div class="d-flex gap-2   p-2 justify-content-center align-items-center ">
-                <div id="liveTime" class=" text-secondary"></div>
+                <div id="liveTime" class=" text-dark"></div>
                 <script>
                     function updateTime() {
                         const now = new Date();
@@ -96,9 +96,9 @@
                 <div class="bg-white rounded-5 py-2 px-4 d-none d-lg-flex gap-2  ">
 
                     <div>
-                        <p class="fs-6 p-0 m-0 d-flex text-secondary">Welcome 👋 <span class="fs-6 text-start fw-bold text-dark ms-1">Admin</span></p>
+                        <p class="fs-6 p-0 m-0 d-flex text-dark">Welcome👋 <span class="fs-6 text-start fw-bold text-dark ms-1">Admin</span></p>
                         <b class="rounded-circle " style="width: 10%; height: auto;" src="{{ session('admin_email') ? asset(session('admin_email')) : '/assets/image/dashboard/innerpece_admin_img.png' }}" alt="admin_email"></b>
-                        <span class="text-secondary ">{{ session('admin_email') }}</span>
+                        <span class="text-dark">{{ session('admin_email') }}</span>
 
                     </div>
                 </div>

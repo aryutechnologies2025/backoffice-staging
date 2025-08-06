@@ -6,10 +6,16 @@
         color: rgb(27, 108, 138);
     }
     a{
-        color:rgb(37, 150, 190);
+        font-family: 'Poppins', sans-serif;
+        font-weight:500;
+        color:#8B7eff;
+        font-size:13px;
     }
     .city{
-       color: rgb(27, 108, 138);
+        font-family: 'Poppins', sans-serif;
+        font-weight:600;
+        color:#282833;
+        font-size:13px;
     }
 
     .px-5 {
@@ -22,11 +28,12 @@
 }
 </style>
 <div class="row body-sec py-5 px-5 justify-content-around">
-    <div class="col-lg-12 mb-3">
-    <b><a href="/dashboard" >Dashboard</a> > <a class="city" href="/settings" >Settings</a></b>
-        <br>
-        <br>
-        <h3 class="fw-bold">{{ $title }}</h3>
+    <div class="text-end col-lg-12 mb-3">
+    <b><a href="/dashboard" >Dashboard</a> > <a class="city " href="/settings" >Settings</a></b>
+      
+   </div>   
+    <div class="col-lg-12 mb-3"> 
+        <h3 class="admin-title fw-bold">{{ $title }}</h3>
         <!-- <p class="fw-light">There are many variations of passages of Lorem Ipsum</p> -->
     </div>
 
