@@ -157,9 +157,9 @@
 
                                 <!-- District Dropdown -->
                                 <div class="col-md-4">
-                                    <label class="mb-2">District <span class="text-danger">*</span></label>
+                                    <label class="mb-2">Location <span class="text-danger">*</span></label>
                                     <select id="district_name" name="district_name" class="form-select py-2 rounded-3 shadow-sm" required>
-                                        <option value="" disabled selected>Select District</option>
+                                        <option value="" disabled selected>Select location</option>
                                         @if(isset($destination_details->district_id))
                                         <option value="{{ $destination_details->district_id }}" selected>
                                             {{ $destination_details->district_id }}
@@ -167,6 +167,13 @@
                                         @endif
                                     </select>
                                 </div>
+
+                                
+                                 <div class="col-md-4">
+                                    <label class="mb-2">Title <span class="text-danger">*</span></label>
+                                    <input type="text"  class="form-control py-2 rounded-3 shadow-sm" id="title" name="title" value="{{ $destination_details->title }}">
+                                </div>
+
 
                                 <div class="d-flex flex-column">
                                     <!-- Initial fields -->

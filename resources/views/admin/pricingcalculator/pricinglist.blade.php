@@ -56,7 +56,7 @@
 
                     <tbody>
                    
-                    @foreach ($stay_details as $row)
+                    @foreach ($pricingCalculators as $row)
 
                     <tr>
                         <td class="text-start">{{ $loop->iteration }}</td>

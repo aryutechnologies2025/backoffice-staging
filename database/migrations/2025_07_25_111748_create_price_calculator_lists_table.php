@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('type_id')->nullable();
             $table->string('type');
             $table->string('title');
+            $table->string('price_title');
             $table->string('price');
             $table->timestamps();
         });
