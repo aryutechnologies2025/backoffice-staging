@@ -276,7 +276,7 @@ Route::prefix('/')->group(function () {
                 Route::post('/{id}/update', 'update')->name('admin.influencer_update');
                 Route::post('/delete', 'delete')->name('admin.influencer_delete');
                 Route::post('/change-status', 'change_status')->name('admin.influencer_status');
-                 Route::get('/{id}/view', 'view_form')->name('admin.influencer_view');
+                Route::get('/{id}/view', 'view_form')->name('admin.influencer_view');
             });
         });
         // web.php
@@ -554,7 +554,7 @@ Route::prefix('/')->group(function () {
         });
 
 
-         //stay Review
+        //stay Review
         Route::controller(StayreviewController::class)->group(function () {
             Route::prefix('stay_review')->group(function () {
                 Route::get('/', 'list')->name('admin.stay_review_list');
@@ -596,6 +596,7 @@ Route::prefix('/')->group(function () {
 
         Route::get('/get-districts/{destination}', [StayController::class, 'getDistricts'])
             ->name('get-districts');
+        Route::post('/get-districts-list', [StayController::class, 'getUpdateDistricts'])->name('get.districts.list');
         Route::controller(StayDestinationController::class)->group(function () {
             Route::prefix('staydestination')->group(function () {
                 Route::get('/', 'list')->name('admin.staydestinationlist');
@@ -673,6 +674,10 @@ Route::prefix('/')->group(function () {
                 Route::post('/delete', 'delete')->name('admin.pricingdelete');
                 Route::post('/change-status', 'change_status')->name('admin.pricing_change_status');
                 Route::post('/pricing-details', 'pricing_details')->name('admin.pricing_details');
+                Route::post('/travel-details', 'travel_details')->name('admin.travel_details');
+                Route::post('/stay-details', 'stay_details')->name('admin.stay_details');
+                Route::post('/activity-details', 'activity_details')->name('admin.activity_details');
+                Route::post('/cabs-details', 'cabs_details')->name('admin.cabs_details');
             });
         });
     });

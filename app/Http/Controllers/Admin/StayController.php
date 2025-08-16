@@ -436,7 +436,7 @@ class StayController extends Controller
                     'tag_line' => $items->tag_line,
                     'review' => $items->stagReviews,
                     'stay_inclusive' => $items->package_inclusion,
-                    'stay_exclusive' => $items->package_exclusion	
+                    'stay_exclusive' => $items->package_exclusion
                 ];
             });
 
@@ -518,12 +518,49 @@ class StayController extends Controller
 
             // Extract district names
             $districtNames = array_column($districts, 'destination');
-            
+
 
             return response()->json(array_values(array_unique($districtNames)));
         } catch (\Exception $e) {
             return response()->json([], 500);
         }
     }
-    
+
+
+    public function getUpdateDistricts(Request $request)
+    {
+        try {
+            $destinations = $request->input('destination_ids');
+            if (empty($destinations)) {
+                return response()->json([]);
+            }
+
+
+            $allDistricts = [];
+
+            foreach ($destinations as $destination) {
+                $stayDistrict = stay_district::where('destination', $destination)->first();
+
+                if ($stayDistrict) {
+                    $districts = is_array($stayDistrict->districts_data)
+                        ? $stayDistrict->districts_data
+                        : json_decode($stayDistrict->districts_data, true);
+
+                    if (is_array($districts)) {
+                        foreach ($districts as $district) {
+                            if (isset($district['destination'])) {
+                                $allDistricts[] = $district['destination'];
+                            }
+                        }
+                    }
+                }
+            }
+
+            // dd($allDistricts);
+            return response()->json(array_values(array_unique($allDistricts)));
+        } catch (\Exception $e) {
+            \Log::error("Error fetching districts: " . $e->getMessage());
+            return response()->json([], 500);
+        }
+    }
 }

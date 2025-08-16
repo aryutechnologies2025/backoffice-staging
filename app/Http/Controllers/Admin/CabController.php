@@ -31,20 +31,21 @@ class CabController extends Controller
         $pricing = new Cab();
 
         // Check if a record with the same destination_id and district_id already exists
-        $existingPricing = Cab::where('destination_id', $request->input('cities_name'))
-            ->where('district_id', $request->input('district_name'))
-            ->where('travel_mode', $request->input('travel_mode'))
-            ->where('is_deleted', '0')
-            ->first();
+        // $existingPricing = Cab::where('destination_id', $request->input('cities_name'))
+        //     ->where('district_id', $request->input('district_name'))
+        //     ->where('travel_mode', $request->input('travel_mode'))
+        //     ->where('is_deleted', '0')
+        //     ->first();
 
-        if ($existingPricing) {
-            return redirect()->back()
-                ->withInput()
-                ->withErrors(['duplicate' => "This destination, district, and travel mode combination ({$request->input('travel_mode')}) already exists. Duplicate entries are not allowed."]);
-        }
+        // if ($existingPricing) {
+        //     return redirect()->back()
+        //         ->withInput()
+        //         ->withErrors(['duplicate' => "This destination, district, and travel mode combination ({$request->input('travel_mode')}) already exists. Duplicate entries are not allowed."]);
+        // }
 
 
         $pricing->destination_id = $request->input('cities_name');
+        $pricing->title = $request->input('title');
         $pricing->district_id = $request->input('district_name');
         $pricing->travel_mode = $request->input('travel_mode');
         $pricing->title_price = json_encode($request->input('camp_rules'));
@@ -162,6 +163,7 @@ class CabController extends Controller
         }));
         $pricing->destination_id = $request->input('cities_name');
         $pricing->district_id = $request->input('district_name');
+        $pricing->title = $request->input('title');
         $pricing->travel_mode = $request->input('travel_mode');
         $pricing->title_price = json_encode($campRules);
         $pricing->status = $request->has('status') && $request->input('status') === 'on' ? '1' : '0';

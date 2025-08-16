@@ -157,9 +157,9 @@
 
                                 <!-- District Dropdown -->
                                 <div class="col-md-4">
-                                    <label class="mb-2">District <span class="text-danger">*</span></label>
+                                    <label class="mb-2">Location <span class="text-danger">*</span></label>
                                     <select id="district_name" name="district_name" class="form-select py-2 rounded-3 shadow-sm">
-                                        <option value="" disabled selected>Select District</option>
+                                        <option value="" disabled selected>Select location</option>
                                         @if(isset($destination_details->district_id))
                                         <option value="" selected>
                                             {{ $destination_details->district_id }}
@@ -168,12 +168,18 @@
                                     </select>
                                 </div>
 
-                            
+                                <div class="col-md-4">
+                                    <label class="mb-2">Title <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control py-2 rounded-3 shadow-sm" id="title" name="title" value="{{ $destination_details->title }}">
+                                </div>
+
+
+
                                 <div class="d-flex flex-column">
                                     <!-- Initial fields -->
                                     <div class="row mb-4">
                                         <div class="col-md-4">
-                                            <label class="mb-2">Title <span class="text-danger">*</span></label>
+                                            <label class="mb-2">Price Title <span class="text-danger">*</span></label>
                                             <input type="text" placeholder="Title"
                                                 name="camp_rules[0][title]"
                                                 class="form-control py-2 rounded-3 shadow-sm"
@@ -264,8 +270,11 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <script>
-
-         let fieldCounter = {{ count($camp_rules ?? []) > 0 ? count($camp_rules) : 0 }};
+        let fieldCounter = {
+            {
+                count($camp_rules ?? []) > 0 ? count($camp_rules) : 0
+            }
+        };
         $(document).ready(function() {
             // Delegate event binding for dynamically added file inputs
             $('#photo-upload-container').on('change', 'input[type="file"]', function(event) {

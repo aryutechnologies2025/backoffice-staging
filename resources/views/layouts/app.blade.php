@@ -33,15 +33,18 @@
     <!-- <link rel="stylesheet" href="/assets/css/summernote-bs4.min.css"> -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
     <link href="https://cdn.jsdelivr.net/npm/summernote/dist/summernote-lite.min.css" rel="stylesheet">
+   
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-
     <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" /> -->
     <!-- Include DataTables CSS and JS -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.1/xlsx.full.min.js"></script>
+  
 
+    <!-- Bootstrap Multiselect CSS & JS -->
+   
 
     @yield('scripts')
     @yield('style')
@@ -51,7 +54,7 @@
 <body id="body-pd">
 
     <div class="row ">
-          <header class="header py-2 ps-0 " id="header">
+        <header class="header py-2 ps-0 " id="header">
             <div class="col-lg-3 text-start" id="navbarNav">
                 <div class="header_toggle mt-2">
                     <!-- <img id="header-toggle" src="/assets/image/dashboard/innerpece_toogle_icon.svg" alt=""> -->
@@ -215,11 +218,11 @@
                         <img src="/assets/image/dashboard/stay.png" alt="" class="stay-img">
                         <span class="nav_name"> Cab </span>
                     </a>
-                     <a href="{{ route('admin.activitylist') }}" class="nav_link {{ request()->routeIs(['admin.activity_add_form', 'admin.activitylist', 'admin.activity_edit_form']) ? 'active' : '' }} mb-3 text-white">
+                    <a href="{{ route('admin.activitylist') }}" class="nav_link {{ request()->routeIs(['admin.activity_add_form', 'admin.activitylist', 'admin.activity_edit_form']) ? 'active' : '' }} mb-3 text-white">
                         <img src="/assets/image/dashboard/stay.png" alt="" class="stay-img">
                         <span class="nav_name"> Activity </span>
                     </a>
-                     <a href="{{ route('admin.pricinglist') }}" class="nav_link {{ request()->routeIs(['admin.pricing_add_form', 'admin.pricinglist', 'admin.pricing_edit_form']) ? 'active' : '' }} mb-3 text-white">
+                    <a href="{{ route('admin.pricinglist') }}" class="nav_link {{ request()->routeIs(['admin.pricing_add_form', 'admin.pricinglist', 'admin.pricing_edit_form']) ? 'active' : '' }} mb-3 text-white">
                         <img src="/assets/image/dashboard/stay.png" alt="" class="stay-img">
                         <span class="nav_name"> Pricing Calculator </span>
                     </a>
@@ -453,6 +456,7 @@
     <script src="https://cdn.jsdelivr.net/npm/summernote/dist/summernote-lite.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script>
+        
         $(".sbmtBtn").click(function(evt) {
 
         });

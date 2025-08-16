@@ -16,4 +16,6 @@ class PricingCalculator extends Model
     {
         return $this->hasMany(PriceCalculatorList::class, 'pricing_calculator_id');
     }
+
+    
 }
