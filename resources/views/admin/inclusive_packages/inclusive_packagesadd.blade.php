@@ -192,13 +192,14 @@
 
 
                                 <!-- Destination (Single Select) -->
-                                <div class="col-md-4 ">
+                                <div class="col-md-4">
                                     <label class="mb-2">Destination <span class="text-danger">*</span></label>
                                     <select id="cities_name" name="cities_name"
-                                        class="form-select py-2 rounded-3 shadow-sm" required>
-                                        <option value="" disabled selected>Select Destination</option>
-                                        @foreach($cities as $id => $name)
-                                        <option value="{{ $name }}" @if(old('cities_name')=='{{ $id }}' ) selected @endif>
+                                        class="form-select py-2 rounded-3 shadow-sm">
+                                        <option value="">Select Destination</option>
+                                        @foreach ($cities as $id => $name)
+                                        <option value="{{ $id }}" data-name="{{ $name }}"
+                                            @if (old('cities_name')==$id) selected @endif>
                                             {{ $name }}
                                         </option>
                                         @endforeach
@@ -206,10 +207,10 @@
                                 </div>
 
                                 <div class="col-md-4">
-                                    <label class="mb-2">District <span class="text-danger">*</span></label>
+                                    <label class="mb-2">Location <span class="text-danger">*</span></label>
                                     <select id="district_name" name="district_name"
                                         class="form-select py-2 rounded-3 shadow-sm" required>
-                                        <option value="" disabled selected>Select District</option>
+                                        <option value="" disabled selected>Select Location</option>
                                         <!-- Districts will be populated dynamically -->
                                     </select>
                                 </div>
@@ -1332,10 +1333,13 @@
                 showPreview(event, number);
             });
 
-             $('#cities_name').change(function() {
-                alert('change');
+            $('#cities_name').change(function() {
                 const destination = $(this).val();
+                const selectedOption = $(this).find('option:selected');
+                const destinationId = selectedOption.val();
+                const destinationName = selectedOption.data('name');
                 const districtSelect = $('#district_name');
+
                 if (!destination) {
                     districtSelect.empty().append(
                         '<option value="" disabled selected>Select District</option>'
@@ -1350,7 +1354,7 @@
 
                 // AJAX request
                 $.ajax({
-                    url: '/get-districts/' + encodeURIComponent(destination),
+                    url: '/get-districts-program/' + encodeURIComponent(destinationName),
                     type: 'GET',
                     success: function(data) {
                         console.log('Received data:', data); // Debugging
@@ -1572,6 +1576,5 @@
                 allSelectedText: 'All Selected',
                 selectAllText: 'Select All'
             });
-
         });
     </script>

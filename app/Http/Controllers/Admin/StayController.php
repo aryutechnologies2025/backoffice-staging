@@ -526,6 +526,33 @@ class StayController extends Controller
         }
     }
 
+    public function getDistrictsProgram($destination)
+    {
+        try {
+            $stayDistrict = stay_district::where('destination', $destination)->first();
+
+            if (!$stayDistrict) {
+                return response()->json([]);
+            }
+
+            // Check if districts_data is already an array
+            $districts = is_array($stayDistrict->districts_data)
+                ? $stayDistrict->districts_data
+                : json_decode($stayDistrict->districts_data, true);
+
+            if (!is_array($districts)) {
+                throw new \Exception("Invalid districts data format");
+            }
+
+            // Extract district names
+            $districtNames = array_column($districts, 'destination');
+
+
+            return response()->json(array_values(array_unique($districtNames)));
+        } catch (\Exception $e) {
+            return response()->json([], 500);
+        }
+    }
 
     public function getUpdateDistricts(Request $request)
     {
@@ -556,7 +583,6 @@ class StayController extends Controller
                 }
             }
 
-            // dd($allDistricts);
             return response()->json(array_values(array_unique($allDistricts)));
         } catch (\Exception $e) {
             \Log::error("Error fetching districts: " . $e->getMessage());

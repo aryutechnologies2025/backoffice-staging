@@ -597,6 +597,9 @@ Route::prefix('/')->group(function () {
         Route::get('/get-districts/{destination}', [StayController::class, 'getDistricts'])
             ->name('get-districts');
         Route::post('/get-districts-list', [StayController::class, 'getUpdateDistricts'])->name('get.districts.list');
+
+        Route::get('/get-districts-program/{destination}', [StayController::class, 'getDistrictsProgram'])
+            ->name('get-districts-program');
         Route::controller(StayDestinationController::class)->group(function () {
             Route::prefix('staydestination')->group(function () {
                 Route::get('/', 'list')->name('admin.staydestinationlist');
