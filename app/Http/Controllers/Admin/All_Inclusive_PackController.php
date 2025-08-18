@@ -91,7 +91,7 @@ class All_Inclusive_PackController extends Controller
     public function insert(Request $request)
     {
 
-        dd($request->all());
+        // dd($request->all());
         $request->validate([
             'tour_planning' => 'required|array',
             'tour_planning.*.title' => 'required|string',
