@@ -34,6 +34,19 @@ class PricingCalculatorController extends Controller
     public function insert(Request $request)
     {
         // dd($request->all());
+
+         $existingPricing = PricingCalculator::where('destination_id', $request->input('cities_name'))
+            ->where('district_id', $request->input('district_name'))
+            ->where('is_deleted', '0')
+            ->first();
+
+        if ($existingPricing) {
+            return redirect()->back()
+                ->withInput()
+                ->withErrors(['duplicate' => 'This destination and district combination already exists. Duplicate entries are not allowed.']);
+        }
+
+
         $pricingcalculator_v = new PricingCalculator();
 
         $pricingcalculator_v->destination_id = $request->cities_name;
@@ -108,7 +121,6 @@ class PricingCalculatorController extends Controller
             ->with('success', 'Pricing created successfully.');
     }
 
-
     public function edit_form(Request $request, $id)
     {
         $destination_details = PricingCalculator::with('priceLists')
@@ -126,6 +138,18 @@ class PricingCalculatorController extends Controller
     {
 
         // dd($request->all());
+         $existingPricing = PricingCalculator::where('destination_id', $request->input('cities_name'))
+            ->where('district_id', $request->input('district_name'))
+            ->where('is_deleted', '0')
+            ->where('id', '!=', $id)
+            ->first();
+
+        if ($existingPricing) {
+            return redirect()->back()
+                ->withInput()
+                ->withErrors(['duplicate' => 'This destination and district combination already exists. Duplicate entries are not allowed.']);
+        }
+
         $pricingcalculator_v = PricingCalculator::findOrFail($id);
         $pricingcalculator_v->destination_id = $request->cities_name;
         $pricingcalculator_v->district_id = $request->district_name;
