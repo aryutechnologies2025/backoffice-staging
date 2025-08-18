@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('pricing_calculators', function (Blueprint $table) {
             $table->id();
-            $table->string('destination_id')->nullable();
-            $table->string('district_id')->nullable();
+            $table->string('destination_id')->nullable()->index();
+            $table->string('district_id')->nullable()->index();
             $table->string('stays_id')->nullable();
             $table->string('activitys_id')->nullable();
             $table->string('cab_details_id')->nullable();
