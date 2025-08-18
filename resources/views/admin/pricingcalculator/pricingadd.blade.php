@@ -523,25 +523,35 @@
                     container.empty();
 
                     data.stays_details.forEach((stayGroup, index) => {
+                        const groupTitle = stayGroup[0]?.title || '';
+                        const groupHeaderHtml = `
+                            <div class="row stay-group-header mb-2">
+                                <div class="col-md-12">
+                                    <h5>${groupTitle}</h5>
+                                </div>
+                            </div>
+                        `;
+                        container.append(groupHeaderHtml);
+
                         stayGroup.forEach((stay, subIndex) => {
                             const stayHtml = `
-                                    <div class="row stay-price-row mb-3" data-stay-id="${selectedStays[index]}">
-                                        <div class="col-md-4">
-                                         <input type="hidden" name="stays[${index}][${subIndex}][stay_id]" value="${stay.stay_id}">
-                                            <input type="hidden" name="stays[${index}][${subIndex}][title]" value="${stay.title}">
-                                            <input type="text" class="form-control" value="${stay.title}" readonly>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <input type="hidden" name="stays[${index}][${subIndex}][price_title]" value="${stay.price_title}">
-                                            <input type="text" class="form-control" value="${stay.price_title}" readonly>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <input type="text" class="form-control price-input" 
-                                                name="stays[${index}][${subIndex}][price]" 
-                                                value="${stay.price}">
-                                        </div>
+                                <div class="row stay-price-row mb-3" data-stay-id="${selectedStays[index]}">
+                                    <div class="col-md-4">
+                                        <input type="hidden" name="stays[${index}][${subIndex}][stay_id]" value="${stay.stay_id}">
+                                        <input type="hidden" name="stays[${index}][${subIndex}][title]" value="${stay.title}">
+                                        <!-- Title removed from display (already shown in header) -->
                                     </div>
-                                `;
+                                    <div class="col-md-4">
+                                        <input type="hidden" name="stays[${index}][${subIndex}][price_title]" value="${stay.price_title}">
+                                        <input type="text" class="form-control" value="${stay.price_title}" readonly>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="text" class="form-control price-input" 
+                                            name="stays[${index}][${subIndex}][price]" 
+                                            value="${stay.price}">
+                                    </div>
+                                </div>
+                            `;
                             container.append(stayHtml);
                         });
                     });
@@ -580,27 +590,40 @@
                     const container = $('#activity-details-container');
                     container.empty();
 
-                    data.activity_details.forEach((stayGroup, index) => {
-                        stayGroup.forEach((stay, subIndex) => {
-                            const stayHtml = `
-                        <div class="row stay-price-row mb-3" data-stay-id="${selectedStays[index]}">
-                            <div class="col-md-4">
-                                <input type="hidden" name="activity[${index}][${subIndex}][activity_id]" value="${stay.activity_id}">
-                                <input type="hidden" name="activity[${index}][${subIndex}][title]" value="${stay.title}">
-                                <input type="text" class="form-control" value="${stay.title}" readonly>
-                            </div>
-                            <div class="col-md-4">
-                                <input type="hidden" name="activity[${index}][${subIndex}][price_title]" value="${stay.price_title}">
-                                <input type="text" class="form-control" value="${stay.price_title}" readonly>
-                            </div>
-                            <div class="col-md-4">
-                                <input type="text" class="form-control price-input" 
-                                       name="activity[${index}][${subIndex}][price]" 
-                                       value="${stay.price}">
-                            </div>
-                        </div>
-                    `;
-                            container.append(stayHtml);
+                    data.activity_details.forEach((activityGroup, groupIndex) => {
+                        // Add a group header showing the title just once
+                        if (activityGroup.length > 0) {
+                            const groupHeaderHtml = `
+                                <div class="row activity-group-header mb-2">
+                                    <div class="col-md-12">
+                                        <h5>${activityGroup[0].title}</h5>
+                                    </div>
+                                </div>
+                            `;
+                            container.append(groupHeaderHtml);
+                        }
+
+                        // Process each activity in the group
+                        activityGroup.forEach((activity, itemIndex) => {
+                            const activityHtml = `
+                                <div class="row activity-price-row mb-3" data-activity-id="${selectedStays[groupIndex]}">
+                                    <div class="col-md-4">
+                                        <input type="hidden" name="activity[${groupIndex}][${itemIndex}][activity_id]" value="${activity.activity_id}">
+                                        <input type="hidden" name="activity[${groupIndex}][${itemIndex}][title]" value="${activity.title}">
+                                        <!-- Title removed from display (shown in header) -->
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="hidden" name="activity[${groupIndex}][${itemIndex}][price_title]" value="${activity.price_title}">
+                                        <input type="text" class="form-control" value="${activity.price_title}" readonly>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="text" class="form-control price-input" 
+                                            name="activity[${groupIndex}][${itemIndex}][price]" 
+                                            value="${activity.price}">
+                                    </div>
+                                </div>
+                            `;
+                            container.append(activityHtml);
                         });
                     });
                 },
@@ -783,26 +806,38 @@
             container.empty();
 
             if (detailsData && detailsData.length > 0) {
-                detailsData.forEach((detailGroup, index) => {
-                    detailGroup.forEach((detail, subIndex) => {
+                detailsData.forEach((cabGroup, groupIndex) => {
+                    // Add group header with title (shown once per group)
+                    if (cabGroup.length > 0) {
+                        container.append(`
+                            <div class="row cab-group-header mb-2">
+                                <div class="col-md-12">
+                                    <h5>${cabGroup[0].title}</h5>
+                                </div>
+                            </div>
+                        `);
+                    }
+
+                    // Add each cab detail (without repeating title)
+                    cabGroup.forEach((cab, itemIndex) => {
                         container.append(`
                             <div class="row cab-detail-row mb-3">
                                 <div class="col-md-4">
-                                    <input type="hidden" name="cabs[${index}][${subIndex}][cab_id]" value="${detail.cab_id}">
-                                    <input type="hidden" name="cabs[${index}][${subIndex}][title]" value="${detail.title}">
-                                    <input type="text" class="form-control" value="${detail.title}" readonly>
+                                    <input type="hidden" name="cabs[${groupIndex}][${itemIndex}][cab_id]" value="${cab.cab_id}">
+                                    <input type="hidden" name="cabs[${groupIndex}][${itemIndex}][title]" value="${cab.title}">
+                                    <!-- Title removed from display (shown in header) -->
                                 </div>
                                 <div class="col-md-4">
-                                    <input type="hidden" name="cabs[${index}][${subIndex}][price_title]" value="${detail.price_title}">
-                                    <input type="text" class="form-control" value="${detail.price_title}" readonly>
+                                    <input type="hidden" name="cabs[${groupIndex}][${itemIndex}][price_title]" value="${cab.price_title}">
+                                    <input type="text" class="form-control" value="${cab.price_title}" readonly>
                                 </div>
                                 <div class="col-md-4">
                                     <input type="text" class="form-control price-input" 
-                                        name="cabs[${index}][${subIndex}][price]" 
-                                        value="${detail.price}">
+                                        name="cabs[${groupIndex}][${itemIndex}][price]" 
+                                        value="${cab.price}">
                                 </div>
                             </div>
-                            `);
+                        `);
                     });
                 });
                 container.show();

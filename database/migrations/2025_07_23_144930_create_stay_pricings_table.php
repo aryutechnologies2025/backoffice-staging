@@ -13,11 +13,11 @@ return new class extends Migration
     {
         Schema::create('stay_pricings', function (Blueprint $table) {
             $table->id();
-            $table->string('destination_id')->nullable();
-            $table->string('district_id')->nullable();
+            $table->string('destination_id')->nullable()->index();
+            $table->string('district_id')->nullable()->index();
             $table->string('title')->nullable();
             $table->json('title_price')->nullable();
-            $table->enum('status', ['1', '0'])->default('1');
+            $table->enum('status', ['1', '0'])->default('1')->index();
             $table->enum('is_deleted', ['0', '1'])->default('0');
             $table->timestamps();
         });

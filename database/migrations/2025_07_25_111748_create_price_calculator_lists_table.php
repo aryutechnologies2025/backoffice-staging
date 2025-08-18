@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('price_calculator_lists', function (Blueprint $table) {
             $table->id();
-            $table->string('pricing_calculator_id')->nullable();
-            $table->string('type_id')->nullable();
-            $table->string('type');
+            $table->string('pricing_calculator_id')->nullable()->index();
+            $table->string('type_id')->nullable()->index();
+            $table->string('type')->index();
             $table->string('title');
             $table->string('price_title');
             $table->string('price');
