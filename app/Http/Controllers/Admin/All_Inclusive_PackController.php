@@ -193,6 +193,7 @@ class All_Inclusive_PackController extends Controller
 
         $inclusive_packages->theme_id = implode(',', $theme);
         $inclusive_packages->city_details = $request->input('cities_name');
+        $inclusive_packages->location_name = $request->input('district_name');
         $inclusive_packages->title = $request->input('title');
         $inclusive_packages->program_description = $request->input('program_description');
         $inclusive_packages->address = $request->input('address') ?? '';
@@ -449,6 +450,7 @@ class All_Inclusive_PackController extends Controller
         $inclusive_packages->theme_id = implode(',', $theme);
         $inclusive_packages->location = $request->input('location');
         $inclusive_packages->city_details = $request->input('cities_name');
+        $inclusive_packages->location_name = $request->input('district_name');
         $inclusive_packages->title = $request->input('title');
         $inclusive_packages->program_description = $request->input('program_description');
         $inclusive_packages->category = json_encode($request->input('prop_cat', []));
