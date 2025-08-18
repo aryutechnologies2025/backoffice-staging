@@ -267,6 +267,7 @@ class All_Inclusive_PackController extends Controller
         $selectedprogram = json_decode($package_details->category, true) ?? [];
         // Get the selected city ID
         $selectedCityId = $package_details->city_details;
+        $selectedLocationname = $package_details->location_name;
         $selectedgeo_featureId = $package_details->geo_feature;
         $selectedthemeId = $package_details->theme_id;
         $selectedCategoryId = $package_details->theme_cat_id;
@@ -284,7 +285,7 @@ class All_Inclusive_PackController extends Controller
         $title = ' Edit Program';
         //         echo"<pre>";
         // print_r($package_details);die;
-        return view('admin.inclusive_packages.inclusive_packagesedit', compact('package_details', 'title', 'cities_dts', 'themes', 'amenities_dts', 'foodBeverages_dts', 'activities_dts', 'safety_features_dts', 'selectedCityId', 'selectedAmenities', 'selectedthemeId', 'selectedfood_beverages', 'selectedactivities', 'selectedsafety_features', 'geo_feature_dts', 'selectedgeo_featureId', 'categories', 'dest_categories', 'selecteddesCategoryId', 'selectedCategoryId', 'selectedprogram'));
+        return view('admin.inclusive_packages.inclusive_packagesedit', compact('package_details', 'title', 'cities_dts', 'themes', 'amenities_dts', 'foodBeverages_dts', 'activities_dts', 'safety_features_dts', 'selectedCityId', 'selectedAmenities', 'selectedthemeId', 'selectedfood_beverages', 'selectedactivities', 'selectedsafety_features', 'geo_feature_dts', 'selectedgeo_featureId', 'categories', 'dest_categories', 'selecteddesCategoryId', 'selectedCategoryId', 'selectedprogram', 'selectedLocationname'));
     }
 
 
