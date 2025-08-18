@@ -79,7 +79,8 @@ return [
             'engine' => null,
             'options'   => [
                 PDO::ATTR_PERSISTENT => false,
-            ],
+                PDO::ATTR_TIMEOUT => 30, // Set connection timeout
+            ]
 
         ],
 
