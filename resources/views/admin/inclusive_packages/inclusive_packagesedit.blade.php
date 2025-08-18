@@ -200,6 +200,15 @@
                                         @endforeach
                                     </select>
                                 </div>
+
+                                 <div class="col-md-4">
+                                    <label class="mb-2">Location <span class="text-danger">*</span></label>
+                                    <select id="district_name" name="district_name"
+                                        class="form-select py-2 rounded-3 shadow-sm" required>
+                                        <option value="" disabled selected>Select Location</option>
+                                        <!-- Districts will be populated dynamically -->
+                                    </select>
+                                </div>
                                 <div class="col-lg-4">
                                     <label class="fw-bold mb-2">Title <span class="text-danger">*</span></label>
                                     <input type="text" placeholder="Title" id="title" name="title"
@@ -1166,16 +1175,16 @@
                 // Function to generate new photo upload field HTML
                 function createPhotoUploadField(count) {
                     return `
-                <div class="col-lg-2 photo-upload-field">
-                    <div class="form-input">
-                        <label for="file-ip-${count}" class="px-4 py-3 text-center">
-                            <img class="text-center mt-3" id="file-ip-${count}-preview" src="/assets/image/dashboard/innerpece_addpic_icon.svg" alt="Image Preview">
-                            <p class="text-center fw-light mt-3">Add Pic</p>
-                        </label>
-                        <input type="file" name="img_${count}" id="file-ip-${count}" data-number="${count}" accept="image/*">
+                    <div class="col-lg-2 photo-upload-field">
+                        <div class="form-input">
+                            <label for="file-ip-${count}" class="px-4 py-3 text-center">
+                                <img class="text-center mt-3" id="file-ip-${count}-preview" src="/assets/image/dashboard/innerpece_addpic_icon.svg" alt="Image Preview">
+                                <p class="text-center fw-light mt-3">Add Pic</p>
+                            </label>
+                            <input type="file" name="img_${count}" id="file-ip-${count}" data-number="${count}" accept="image/*">
+                        </div>
                     </div>
-                </div>
-                `;
+                    `;
                 }
 
                 // // Event listener for the "Add More Photos" button
@@ -1223,17 +1232,17 @@
                 var newField = document.createElement('div');
                 newField.className = 'row g-2 mb-4 camp-rule-field';
                 newField.innerHTML = `
-        <div class="col">
-            <input type="text" name="camp_rule[]" class="form-control py-3 rounded-3 shadow-sm" placeholder="Rule And Regulations" >
-        </div>
-        <div class="col-lg-1 mt-5 text-end">
-            <a class="table-link danger remove-plan" onclick="removeField(this)">
-                <span class="fa-stack">
-                    <i class="fa fa-square fa-stack-2x"></i>
-                    <i class="fa fa-trash-o fa-stack-1x fa-inverse"></i>
-                </span>
-            </a>
-        </div>`;
+                <div class="col">
+                    <input type="text" name="camp_rule[]" class="form-control py-3 rounded-3 shadow-sm" placeholder="Rule And Regulations" >
+                </div>
+                <div class="col-lg-1 mt-5 text-end">
+                    <a class="table-link danger remove-plan" onclick="removeField(this)">
+                        <span class="fa-stack">
+                            <i class="fa fa-square fa-stack-2x"></i>
+                            <i class="fa fa-trash-o fa-stack-1x fa-inverse"></i>
+                        </span>
+                    </a>
+                </div>`;
 
                 // Append the new field to the container
                 container.appendChild(newField);
@@ -1289,6 +1298,58 @@
                 // Prevent dropdown from closing when clicking checkboxes
                 document.querySelector('.dropdown-menu').addEventListener('click', function(e) {
                     e.stopPropagation();
+                });
+            });
+
+              $('#cities_name').change(function() {
+                alert('change');
+                const destination = $(this).val();
+                const districtSelect = $('#district_name');
+                if (!destination) {
+                    districtSelect.empty().append(
+                        '<option value="" disabled selected>Select District</option>'
+                    ).prop('disabled', true);
+                    return;
+                }
+
+                // Show loading state
+                districtSelect.empty().append(
+                    '<option value="" disabled>Loading districts...</option>'
+                ).prop('disabled', true);
+
+                // AJAX request
+                $.ajax({
+                    url: '/get-districts/' + encodeURIComponent(destination),
+                    type: 'GET',
+                    success: function(data) {
+                        console.log('Received data:', data); // Debugging
+
+                        districtSelect.empty().append(
+                            '<option value="" disabled selected>Select District</option>'
+                        );
+
+                        if (data && data.length > 0) {
+                            $.each(data, function(index, district) {
+                                districtSelect.append(
+                                    $('<option>', {
+                                        value: district,
+                                        text: district
+                                    })
+                                );
+                            });
+                            districtSelect.prop('disabled', false);
+                        } else {
+                            districtSelect.append(
+                                '<option value="" disabled>No districts found for this destination</option>'
+                            );
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('AJAX Error:', status, error); // Debugging
+                        districtSelect.empty().append(
+                            '<option value="" disabled>Error loading districts</option>'
+                        );
+                    }
                 });
             });
         </script>
