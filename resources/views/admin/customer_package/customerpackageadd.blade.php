@@ -67,6 +67,117 @@
                 </select>
             </div>
 
+
+           <div class="test">
+                <h4>Pricing Calculator</h4>
+                <div class="row gap-2">
+                    <!-- Theme and Destination -->
+                    <div class="col-md-4 ">
+                        <label class="mb-2">Destination</label>
+                        <select id="cities_name" name="cities_name"
+                            class="form-select py-2 rounded-3 shadow-sm" required>
+                            <option value="" disabled selected>Select Destination</option>
+                            @foreach($cities as $id => $name)
+                            <option value="{{ $name }}" @if(old('cities_name')=='{{ $id }}' ) selected @endif>
+                                {{ $name }}
+                            </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="mb-2">Location</label>
+                        <select id="district_name" name="district_name"
+                            class="form-select py-2 rounded-3 shadow-sm" required>
+                            <option value="" disabled selected>Select Location</option>
+                            <!-- Districts will be populated dynamically -->
+                        </select>
+                    </div>
+
+                </div>  
+                <!-- Stays Section -->
+                <div id="stays-section" class="row d-flex mt-3">
+                    <div class="col-md-4">
+                        <label class="mb-2">Stay Details</label>
+                        <div class="dropdown">
+                            <button class="btn btn-outline-secondary dropdown-toggle w-100 text-start d-flex justify-content-between align-items-center"
+                                type="button" id="stayDropdown" data-bs-toggle="dropdown"
+                                aria-expanded="false">
+                                <span id="stayDropdownText">Select stay</span>
+                            </button>
+                            <ul class="dropdown-menu w-100 p-2" aria-labelledby="stayDropdown"
+                                style="max-height: 200px; overflow-y: auto;">
+                                <!-- Stays will be populated here via JavaScript -->
+                            </ul>
+                        </div>
+                        <input type="hidden" name="stay_id" id="stayHiddenInput">
+                    </div>
+                    <div id="stays-details-container" class="mt-3"></div>
+
+
+                </div>
+
+                <!-- Activities Section -->
+                <div id="activities-section" class="row d-flex mt-3">
+                    <div class="col-md-4">
+                        <label class="mb-2">Activity</label>
+                        <div class="dropdown">
+                            <button class="btn btn-outline-secondary dropdown-toggle w-100 text-start d-flex justify-content-between align-items-center"
+                                type="button" id="activityDropdown" data-bs-toggle="dropdown"
+                                aria-expanded="false">
+                                <span id="activityDropdownText">Select activity</span>
+                            </button>
+                            <ul class="dropdown-menu w-100 p-2" aria-labelledby="activityDropdown"
+                                style="max-height: 200px; overflow-y: auto;">
+                                <!-- Activities will be populated here via JavaScript -->
+                            </ul>
+                        </div>
+                        <input type="hidden" name="activity_ids" id="activityHiddenInput">
+                    </div>
+                    <div id="activity-details-container" class="mt-3"></div>
+                </div>
+
+                <!-- Cabs Section -->
+                <div id="cabs-section" class="row d-flex mt-3">
+                    <div class="col-md-4">
+                        <label class="mb-2">Travel Mode</label>
+                        <div class="dropdown">
+                            <button class="btn btn-outline-secondary dropdown-toggle w-100 text-start d-flex justify-content-between align-items-center"
+                                type="button" id="cabDropdown" data-bs-toggle="dropdown"
+                                aria-expanded="false">
+                                <span id="cabDropdownText">Select option</span>
+                            </button>
+                            <ul class="dropdown-menu w-100 p-2" aria-labelledby="cabDropdown"
+                                style="max-height: 200px; overflow-y: auto;">
+                                <!-- Cabs will be populated here via JavaScript -->
+                            </ul>
+                        </div>
+                        <input type="hidden" name="cab_types" id="cabHiddenInput">
+                    </div>
+
+                    <!-- Cab details selection -->
+                    <div id="cabs-details-container" class="mt-3" style="display: none;">
+                        <div class="col-md-4">
+                            <label class="mb-2">Travel Details</label>
+                            <div class="dropdown">
+                                <button class="btn btn-outline-secondary dropdown-toggle w-100 text-start d-flex justify-content-between align-items-center"
+                                    type="button" id="cabDetailsDropdown" data-bs-toggle="dropdown"
+                                    aria-expanded="false">
+                                    <span id="cabDetailsDropdownText">Select options</span>
+                                </button>
+                                <ul class="dropdown-menu w-100 p-2" aria-labelledby="cabDetailsDropdown"
+                                    style="max-height: 200px; overflow-y: auto;">
+                                    <!-- Will be populated dynamically -->
+                                </ul>
+                            </div>
+                            <input type="hidden" name="selected_cab_options" id="cabDetailsHiddenInput">
+                        </div>
+                    </div>
+
+                    <!-- Cab price details display -->
+                    <div id="cabsdetails-container" class="mt-3"></div>
+                </div>
+            </div>
+
             <div class="test">
                 <h2>Package Details</h2>
                 <!-- 1.INFORMATION -->
@@ -492,7 +603,7 @@
                             </div>
                         </div> -->
 
-                    
+
                     <!-- 8. AMENITIES -->
                     <div class="row mb-2">
                         <div class="col">
