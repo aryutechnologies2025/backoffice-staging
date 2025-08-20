@@ -443,8 +443,21 @@ thead {
   color:#fff; 
          
 }
+.add_form label
+{
+    font-size:13px !important;
+    font-weight:600 !important;
+    color:#282833 !important;
+    font-family:'Poppins', sans-serif;
+}
 
-
+.add_head
+{
+     font-size:20px !important;
+    font-weight:600 !important;
+    color:#282833 !important;
+    font-family:'Poppins', sans-serif;
+}
 /* 
     .btn{
         
@@ -713,46 +726,71 @@ cursor: pointer;
   }
 
   .cancel-btn {
-    width: 12%;
-    padding: 1%;
-    border: 2px solid #021b32;
-    background: none;
-    border-radius: 50px;
-    /* border-color: #00B4F6; */
-    color: #021b32;
-    /* color: #FFF; */
+    color:#8b7eff;
+    font-size: 0.85rem;
+    font-size:14.6px;
+    background-color:rgb(139 126 255 / 10%);
+    border:1px solid rgb(139 126 255 / 10%);
+    padding:10px 35px;
+    box-shadow: none;
+    font-weight:600;
+    font-family: 'Poppins', sans-serif;
+    border-radius:5.6px;
+   
   }
+
+ .cancel-btn:hover
+{
+  background-color:rgb(139 126 255 / 80%);
+  border:1px solid rgb(139 126 255 / 80%);
+  color:#fff;     
+}
+
+.submit-btn {
+    color:#fff;
+    font-size: 0.85rem;
+    font-size:14.6px;
+    background-color:#8b7eff;
+    border:1px solid #8b7eff;
+    padding:10px 35px;
+    box-shadow: none;
+    font-weight:600;
+    font-family: 'Poppins', sans-serif;
+    border-radius:5.6px;
+  }
+
+ .submit-btn:hover
+{
+   background-color:rgb(139 126 255 / 10%);
+   border:1px solid rgb(139 126 255 / 10%);
+   color:#8b7eff;    
+}
+
   .error {
     color: #db1a17;
   }
-  .submit-btn {
-    width:12%;
-    padding: 1%;
-    border: 2px solid #021b32;
-    border-radius: 50px;
-    background-color: #021b32;
-    color: #FFF;
-  }
+  
   .form-check-label{
     line-height: 0px !important;
     color: #595960;
     font-size: 15px;
   }
-  .form-check-input{
-    margin-top: 5%;
-  }
+ 
   .form-check-input{
     margin-top: 10% !important;
   }
   .check_bx{
     margin-top:8px !important;
   }
-
+.form-switch{
+    margin-top:25px;
+    /* margin-left:20px; */
+}
   .form-body {
     background-color: #FFF;
-    width: 80% !important;
+    width: 98% !important;
     padding-bottom: 4%;
-    padding-top: 4% !important;
+    padding-top:2% !important;
 }
 
 .profile-details{
