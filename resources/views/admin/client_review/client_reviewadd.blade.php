@@ -61,10 +61,12 @@
                                             <img id="file-ip-1-preview" src="/assets/image/dashboard/innerpece_addpic_icon.svg">
                                             <p class="text-center fw-light mt-3">Add Pic</p>
                                         </label>
-                                        <input type="file" id="file-ip-1" name="image_1" accept="image/png, image/jpeg" onchange="validateImage(this)" required>
+                                        <!-- <input type="file" id="file-ip-1" name="image_1" accept="image/png, image/jpeg" onchange="validateImage(this)" required> -->
+
+                                        <input type="file" id="file-ip-1" name="image_1" accept="image/png, image/jpeg"  required>
                                         
                                         <div id="file-ip-1-error" class="text-danger"></div>
-                                        <label class="fw-bold mb-5 text-danger border-0"><small>* Upload size [640*120] *</small></label>
+                                        <!-- <label class="fw-bold mb-5 text-danger border-0"><small>* Upload size [640*120] *</small></label> -->
 
                                     </div>
                                 </div>
@@ -135,9 +137,11 @@
                                 </div>
                             </div>
                             <div class="row g-2 mb-4">
+
                                 <div class="add_form col-md-6">
                                     <label class="fw-bold mb-2" id="label_textarea">Review Date <span class="text-danger">*</span></label>
-                                    <input type="date" class="form-control py-2 rounded-3 shadow-sm" name="review_dt" id="review_dt" value="{{ old('review_dt') }}" required>
+                                    <input type="date" class="form-control py-2 rounded-3 shadow-sm" name="review_dt" id="review_dt" value="{{ old('review_dt') }}">
+
                                 </div>
                                 <div class="add_form col-md-6">
                                     <label class="fw-bold mb-2" id="label_textarea">Rating <span class="text-danger">*</span></label>

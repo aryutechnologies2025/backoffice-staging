@@ -12,7 +12,7 @@ class StayPriceController extends Controller
     public function list(Request $request)
     {
         $title = 'Stay Pricing List';
-        $stay_details = StayPricing::where('is_deleted', '0')->get();
+        $stay_details = StayPricing::where('is_deleted', '0')->orderBy('id', 'desc')->get();
 
         return view('admin.stay_pricing.staypricinglist', compact('title', 'stay_details'));
     }

@@ -255,7 +255,7 @@ class All_Inclusive_PackController extends Controller
         $geo_feature_dts = Geo_feature::where('status', "1")->where('is_deleted', "0")->pluck('geo_feature', 'id');
         $themes = Themes::where('status', "1")->where('is_deleted', "0")->pluck('themes_name', 'id');
 
-        // dd($themes);
+        // dd($package_details);
         if (!$package_details) {
             return redirect()->route('admin.inclusive_package_list')->with('error', 'Package not found');
         }

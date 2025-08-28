@@ -83,7 +83,7 @@ class ClientreviewController extends Controller
             'client_name' => 'required',
             // 'client_role' => 'required',
             'client_review' => 'required',
-            'review_dt' => 'required',
+            // 'review_dt' => 'required',
             'rating' => 'required',
         ]);
 
@@ -108,7 +108,7 @@ class ClientreviewController extends Controller
         $client_review->upload_image_name = $request->input('upload_image_name') ?? '';
 
         $client_review->comment = $request->input('client_review');
-        $client_review->review_dt = $request->input('review_dt');
+        $client_review->review_dt = $request->input('review_dt') ?: null;
         $client_review->rating = $request->input('rating');
         $client_review->client_pic = $filePath1;
         $client_review->status = $request->has('status') && $request->input('status') === 'on' ? '1' : '0';
@@ -140,7 +140,7 @@ class ClientreviewController extends Controller
             'client_name' => 'required',
             // 'client_role' => 'required',
             'client_review' => 'required',
-            'review_dt' => 'required',
+            // 'review_dt' => 'required',
             'rating' => 'required',
         ]);
 
@@ -173,7 +173,7 @@ class ClientreviewController extends Controller
         $client_review->upload_image_name = $request->input('upload_image_name');
     
         $client_review->comment = $request->input('client_review');
-        $client_review->review_dt = $request->input('review_dt');
+        $client_review->review_dt = $request->input('review_dt') ?: null;
         $client_review->rating = $request->input('rating');
         $client_review->updated_date = date('Y-m-d H:i:s');
         $client_review->status = $request->has('status') && $request->input('status') === 'on' ? '1' : '0';
