@@ -21,14 +21,16 @@ a {
     /* Consistent padding for both sides */
 }
 </style>
-<div class="container-wrapper pt-5">
-    <div class="row">
-        <b><a href="/dashboard">Dashboard</a> > <a href="/activities">Activities</a> > <a class="edit">Edit</a></b>
-        <br>
-        <br>
-        <h3 class="fw-bold">{{$title}}</h3>
+<div class="row body-sec py-3 px-5 justify-content-around">
+    <div class="text-start col-lg-6 ">
+        <h3 class="admin-title fw-bold">{{$title}}</h3>
     </div>
+    <div class="text-end col-lg-6 ">
+         <b><a href="/dashboard">Dashboard</a> > <a href="/activities">Activities</a> > <a class="edit">Edit</a></b>
+    </div>
+
 </div>
+
 <div class="row mb-5">
     <div class="col-lg-12">
         <div class="form-body px-4 mb-5 rounded-4">
@@ -81,16 +83,16 @@ a {
                                     });
                                 }
                                 </script>
-                                <div class="col-lg-6">
-                                    <label class="fw-bold mt-4">Upload Image Name <span
+                                <div class="add_form col-lg-6 pe-4">
+                                    <label class="fw-bold mt-4 mb-2">Upload Image Name <span
                                             class="text-danger">*</span></label>
                                     <input type="text" placeholder="Rename the Photo" id="upload_image_name"
                                         name="upload_image_name" value="{{$activities_details->upload_image_name }}"
                                         class="form-control py-2 rounded-3 shadow-sm  " required>
                                     <!-- Added mt-4 here -->
                                 </div>
-                                <div class="col-lg-6 ">
-                                    <label class="fw-bold mt-4">Alternate Image Name <span
+                                <div class="add_form col-lg-6 ">
+                                    <label class="fw-bold mt-4 mb-2">Alternate Image Name <span
                                             class="text-danger">*</span></label>
                                     <input type="text" placeholder="Alternate Name" id="alternate_image_name"
                                         name="alternate_image_name" value="{{$activities_details->alternate_name }}"
@@ -103,16 +105,16 @@ a {
                 </div>
 
                 <div class="row g-2 mb-4">
-                    <div class="col">
-                        <label class="fw-bold mb-4 "> Activities <span class="text-danger">*</span></label>
+                    <div class="add_form col-lg-6">
+                        <label class="fw-bold  mb-2"> Activities <span class="text-danger">*</span></label>
                         <input type="text" placeholder="Activities" id="activities" name="activities"
                             class="form-control py-2 rounded-3 shadow-sm" required
                             value="{{ $activities_details->activities }}">
                     </div>
 
-                    <div class="row g-2">
+                    <div class="row g-3">
                         <div class="col">
-                            <label class="fw-bold">Status</label>
+                            <label class="add_head fw-bold">Status</label>
                             <div class="form-check form-switch">
                                 <input class="form-check-input check_bx" type="checkbox" id="status" name="status"
                                     {{ $activities_details->status ? 'checked' : '' }}>
@@ -121,7 +123,7 @@ a {
                     </div>
                 </div>
 
-                <div class="col-lg-12 text-end mt-5">
+                <div class="col-lg-12 text-center mt-5">
                     <a href="{{ route('admin.activitieslist') }}">
                         <button type="button" class="cancel-btn"> Cancel </button>
                     </a>

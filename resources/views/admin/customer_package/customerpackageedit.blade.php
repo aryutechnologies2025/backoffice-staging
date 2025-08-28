@@ -13,99 +13,104 @@
         color: blue;
     }
 </style>
-<div class="container mt-5 mb-5">
-    <div class="col-lg-12">
-        <b><a href="/dashboard">Dashboard</a> > <a class="" href="/customer-package">Customer List</a></b> > 
-        <br><br>
-        <h3 class="fw-bold">{{$title}}</h3>
+<div class="row body-sec py-3 px-5 justify-content-around">
+    <div class="text-start col-lg-6 ">
+        <h3 class="admin-title fw-bold">{{$title}}</h3>
     </div>
-    @if(session('success'))
-    <div class="alert alert-success">{{ session('success') }}</div>
-    @endif
+    <div class="text-end col-lg-6 ">
+        <b><a href="/dashboard">Dashboard</a> > <a class="" href="/customer-package">Customer List</a></b> >
+    </div>
 
-    <form class="bg-white p-4 rounded-3" action="{{ route('admin.CustomerPackage_update', $customer->id) }}" method="POST" enctype="multipart/form-data">
-        @csrf
+</div>
 
-        <div class="row d-flex gap-5">
-            <div class="col-md-5 mb-3">
-                <label for="name" class="form-label">Full Name</label>
-                <input id="name" type="text" class="form-control" name="name" value="{{ $customer->name }}">
-            </div>
+<div class="row mb-5">
+    <div class="col-lg-12">
+        <div class="form-body px-4 mb-5 ms-4 me-5 rounded-4">
+            <form class="bg-white p-4 rounded-3" action="{{ route('admin.CustomerPackage_update', $customer->id) }}" method="POST" enctype="multipart/form-data">
+                @csrf
 
-            <div class="col-md-5 mb-3">
-                <label for="phone" class="form-label">Phone Number</label>
-                <input id="phone" type="number" class="form-control" name="phone_number" value="{{ $customer->phone_number }}">
-            </div>
+                <div class="row d-flex gap-5">
+                    <div class="add_form col-md-5 mb-3">
+                        <label for="name" class="form-label">Full Name</label>
+                        <input id="name" type="text" class="form-control" name="name" value="{{ $customer->name }}">
+                    </div>
 
-            <div class="col-md-5 mb-3">
-                <label for="email" class="form-label">Email Address</label>
-                <input id="email" type="email" class="form-control" name="email" value="{{ $customer->email }}">
-            </div>
+                    <div class="add_form col-md-5 mb-3">
+                        <label for="phone" class="form-label">Phone Number</label>
+                        <input id="phone" type="number" class="form-control" name="phone_number" value="{{ $customer->phone_number }}">
+                    </div>
 
-            <!-- <div class="col-md-5 mb-3">
+                    <div class="add_form col-md-5 mb-3">
+                        <label for="email" class="form-label">Email Address</label>
+                        <input id="email" type="email" class="form-control" name="email" value="{{ $customer->email }}">
+                    </div>
+
+                    <!-- <div class="col-md-5 mb-3">
                     <label for="type"  class="form-label">Package Type</label>
                     <input id="type" type="text" class="form-control" name="package_type" required>
                     
                 </div> -->
-            <!-- Package Type Selector -->
-            <div class="col-md-5 mb-3">
-                <label for="title_id" class="form-label">Select Package Type</label>
-                <br>
-                <label class="form-label text-danger">  Current: {{ $titless }}</label>
-                
-                <select class="package form-control" name="package_type" id="package">
-                    <option disabled {{ !$customer->package_type ? 'selected' : '' }}>Select Package Type</option>
-                    @foreach($titles as $id => $name)
-                    <option value="{{ json_encode(['id' => $id, 'name' => $name]) }}"
-                        {{ $customer->package_type == $id ? 'selected' : '' }}>
-                        {{ $name }}
-                    </option>
-                    @endforeach
-                </select>
-            </div>
+                    <!-- Package Type Selector -->
+                    <div class="add_form col-md-5 mb-3">
+                        <label for="title_id" class="form-label">Select Package Type</label>
+                        <br>
+                        <label class="form-label text-danger"> Current: {{ $titless }}</label>
 
-            <div class="col-md-5 mb-3">
-                <label for="title_id" class="form-label">Select Stays</label>
-                <select class="package" name="package_stay" id="package_stay" class="form-control">
-                    <option disabled selected>Select Package Type</option>
-                    @foreach($stay_details as $id => $name)
-                    <option value="{{ $name->id }}" {{ $customer->stay_details_id == $name->id ? 'selected' : '' }}>{{ $name->stay_title }}</option>
-
-                    @endforeach
-                </select>
-            </div>
-
-            <div class="test">
-                <h2>Package Details</h2>
-                <!-- 1.INFORMATION -->
-                <div class="row mb-3">
-                    <div class="col-lg-4">
-                        <label class="fw-bold mb-2">Title </label>
-                        <input type="text" placeholder="Title" id="title" name="title"
-                            class="form-control py-2 rounded-3 shadow-sm" value="{{ $customer->package_type }}">
+                        <select class="package form-control" name="package_type" id="package">
+                            <option disabled {{ !$customer->package_type ? 'selected' : '' }}>Select Package Type</option>
+                            @foreach($titles as $id => $name)
+                            <option value="{{ json_encode(['id' => $id, 'name' => $name]) }}"
+                                {{ $customer->package_type == $id ? 'selected' : '' }}>
+                                {{ $name }}
+                            </option>
+                            @endforeach
+                        </select>
                     </div>
 
+                    <div class="add_form col-md-5 mb-3">
+                        <label for="title_id" class="form-label">Select Stays</label>
+                        <select name="package_stay" id="package_stay" class="package form-control">
+                            <option disabled selected>Select Package Type</option>
+                            @foreach($stay_details as $id => $name)
+                            <option value="{{ $name->id }}" {{ $customer->stay_details_id == $name->id ? 'selected' : '' }}>{{ $name->stay_title }}</option>
+
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="test">
+                        <h2 class="add_head">Package Details</h2>
+                        <!-- 1.INFORMATION -->
+                        <div class="row mb-3">
+                            <div class="add_form col-lg-4">
+                                <label class="fw-bold mb-2">Title </label>
+                                <input type="text" placeholder="Title" id="title" name="title"
+                                    class="form-control py-2 rounded-3 shadow-sm" value="{{ $customer->package_type }}">
+                            </div>
 
 
-                    <!-- 2. LOCATION -->
 
-                    <div class="row mb-2">
-                        <div class="col">
-                            <div class="form-body px-5  rounded-4">
-                                <h4 class="fw-bold mb-3">01. Location</h4>
-                                <div class="mb-1">
-                                    <div class="row g-2 mb-1">
-                                        <div class="col">
-                                            <input type="hidden" id="location" name="location">
-                                            @php
-                                            $plain_text_important_info = html_entity_decode(
-                                            strip_tags($customer->location),
-                                            );
-                                            @endphp
-                                            <div class=" mt-1">
-                                                <div class="row">
-                                                    <div class="col-lg-12 ">
-                                                        <div id="summernote10" style="height: 200px;">{!! trim($customer->location, '"') !!}</div>
+                            <!-- 2. LOCATION -->
+
+                            <div class="row mb-2">
+                                <div class="col">
+                                    <div class="form-bodyrounded-4">
+                                        <h4 class="add_head fw-bold mb-3">01. Location</h4>
+                                        <div class="mb-1">
+                                            <div class="row g-2 mb-1">
+                                                <div class="col">
+                                                    <input type="hidden" id="location" name="location">
+                                                    @php
+                                                    $plain_text_important_info = html_entity_decode(
+                                                    strip_tags($customer->location),
+                                                    );
+                                                    @endphp
+                                                    <div class=" mt-1">
+                                                        <div class="row">
+                                                            <div class="col-lg-12 ">
+                                                                <div id="summernote10" style="height: 200px;">{!! trim($customer->location, '"') !!}</div>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -113,107 +118,109 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
 
 
 
-                    <div class="row mb-3">
-                        <div class="col">
-                            <div class="form-body px-5 rounded-4">
-                                <h4 class="fw-bold mb-2">02. Tour Planning <span class="text-danger">*</span></h4>
-                                <div id="day-wrapper">
+                            <div class="row mb-3">
+                                <div class="col">
+                                    <div class="form-body rounded-4">
+                                        <h4 class="add_head fw-bold mb-2">02. Tour Planning <span class="text-danger">*</span></h4>
+                                        <div id="day-wrapper">
                                             @php
-                                                $tourPlanning = [];
-                                                if (!empty($customer->tour_planning)) {
-                                                    $tourPlanning = is_array($customer->tour_planning)
-                                                        ? $customer->tour_planning
-                                                        : json_decode($customer->tour_planning, true);
-                                                }
+                                            $tourPlanning = [];
+                                            if (!empty($customer->tour_planning)) {
+                                            $tourPlanning = is_array($customer->tour_planning)
+                                            ? $customer->tour_planning
+                                            : json_decode($customer->tour_planning, true);
+                                            }
                                             @endphp
                                             @if (!empty($tourPlanning) && is_array($tourPlanning))
-                                                @foreach ($tourPlanning as $i => $day)
-                                                    <div class="row g-2 mb-2 day-block">
-                                                        <div class="col-md-5 mb-2">
-                                                            <label class="form-label fw-bold">Day Title <span class="text-danger">*</span></label>
-                                                            <input type="text"
-                                                                name="tour_planning[{{ $i }}][title]"
-                                                                class="form-control py-2 rounded-3 shadow-sm"
-                                                                placeholder="Day Title (e.g., Day {{ (int) $i + 1 }})"
-                                                                value="{{ $day['title'] ?? '' }}">
-                                                        </div>
-                                                        <div class="col-md-5 mb-2">
-                                                            <label class="form-label fw-bold">Day Subtitle <span class="text-danger">*</span></label>
-                                                            <input type="text"
-                                                                name="tour_planning[{{ $i }}][subtitle]"
-                                                                class="form-control py-2 rounded-3 shadow-sm"
-                                                                placeholder="Day Subtitle (e.g., Day {{ (int) $i + 1 }})"
-                                                                value="{{ $day['subtitle'] ?? '' }}">
-                                                        </div>
-                                                        <div class="col-md-10 mb-2">
-                                                            <label class="form-label fw-bold">Activity Description <span class="text-danger">*</span></label>
-                                                            <input type="hidden"
-                                                                name="tour_planning[{{ $i }}][description]"
-                                                                class="form-control py-2 rounded-3 shadow-sm tour-description-hidden"
-                                                                placeholder="Activity Description"
-                                                                value="{{ $day['description'] ?? '' }}">
-                                                            <div class="tour-description-editor"></div>
-                                                        </div>
-                                                        <div class="col-md-1 d-flex align-items-end">
-                                                            @if ($loop->first)
-                                                                <!-- No remove button for first row -->
-                                                            @else
-                                                                <button type="button" class="btn btn-danger remove-day"
-                                                                    onclick="removeDay(this)">
-                                                                    <i class="fa fa-trash"></i>
-                                                                </button>
-                                                            @endif
-                                                        </div>
-                                                    </div>
-                                                @endforeach
-                                                @php $tourPlanningIndex = count($tourPlanning); @endphp
-                                            @else
-                                                <div class="row g-2 mb-2 day-block">
-                                                    <div class="col-md-5 mb-2">
-                                                        <label class="form-label fw-bold">Day Title <span class="text-danger">*</span></label>
-                                                        <input type="text" name="tour_planning[0][title]"
-                                                            class="form-control py-2 rounded-3 shadow-sm"
-                                                            placeholder="Day Title (e.g., Day 1)">
-                                                    </div>
-                                                    <div class="col-md-5 mb-2">
-                                                        <label class="form-label fw-bold">Day Subtitle <span class="text-danger">*</span></label>
-                                                        <input type="text" name="tour_planning[0][subtitle]"
-                                                            class="form-control py-2 rounded-3 shadow-sm"
-                                                            placeholder="Day Subtitle ">
-                                                    </div>
-                                                    <div class="col-md-6 mb-2">
-                                                        <label class="form-label fw-bold">Activity Description <span class="text-danger">*</span></label>
-                                                        <input type="hidden" name="tour_planning[0][description]"
-                                                            class="form-control py-2 rounded-3 shadow-sm tour-description-hidden"
-                                                            placeholder="Activity Description">
-                                                        <div class="tour-description-editor"></div>
-                                                    </div>
-                                                    <div class="col-md-1 d-flex align-items-end">
-                                                        <!-- No remove button for first row -->
-                                                    </div>
+                                            @foreach ($tourPlanning as $i => $day)
+                                            <div class="row g-2 mb-2 day-block">
+                                                <div class="add_form  col-md-5 mb-2">
+                                                    <label class="form-label fw-bold">Day Title <span class="text-danger">*</span></label>
+                                                    <input type="text"
+                                                        name="tour_planning[{{ $i }}][title]"
+                                                        class="form-control py-2 rounded-3 shadow-sm"
+                                                        placeholder="Day Title (e.g., Day {{ (int) $i + 1 }})"
+                                                        value="{{ $day['title'] ?? '' }}">
                                                 </div>
-                                                @php $tourPlanningIndex = 1; @endphp
+                                                <div class="add_form  col-md-5 mb-2">
+                                                    <label class="form-label fw-bold">Day Subtitle <span class="text-danger">*</span></label>
+                                                    <input type="text"
+                                                        name="tour_planning[{{ $i }}][subtitle]"
+                                                        class="form-control py-2 rounded-3 shadow-sm"
+                                                        placeholder="Day Subtitle (e.g., Day {{ (int) $i + 1 }})"
+                                                        value="{{ $day['subtitle'] ?? '' }}">
+                                                </div>
+                                                <div class="add_form  col-md-10 mb-2">
+                                                    <label class="form-label fw-bold">Activity Description <span class="text-danger">*</span></label>
+                                                    <input type="hidden"
+                                                        name="tour_planning[{{ $i }}][description]"
+                                                        class="form-control py-2 rounded-3 shadow-sm tour-description-hidden"
+                                                        placeholder="Activity Description"
+                                                        value="{{ $day['description'] ?? '' }}">
+                                                    <div class="tour-description-editor"></div>
+                                                </div>
+                                                <div class="col-md-1 d-flex align-items-end">
+                                                    @if ($loop->first)
+                                                    <!-- No remove button for first row -->
+                                                    @else
+                                                    <button type="button" class="btn btn-danger remove-day"
+                                                        onclick="removeDay(this)">
+                                                        <i class="fa fa-trash"></i>
+                                                    </button>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                            @endforeach
+                                            @php $tourPlanningIndex = count($tourPlanning); @endphp
+                                            @else
+                                            <div class="row g-2 mb-2 day-block">
+                                                <div class="add_form  col-md-5 mb-2">
+                                                    <label class="form-label fw-bold">Day Title <span class="text-danger">*</span></label>
+                                                    <input type="text" name="tour_planning[0][title]"
+                                                        class="form-control py-2 rounded-3 shadow-sm"
+                                                        placeholder="Day Title (e.g., Day 1)">
+                                                </div>
+                                                <div class="add_form  col-md-5 mb-2">
+                                                    <label class="form-label fw-bold">Day Subtitle <span class="text-danger">*</span></label>
+                                                    <input type="text" name="tour_planning[0][subtitle]"
+                                                        class="form-control py-2 rounded-3 shadow-sm"
+                                                        placeholder="Day Subtitle ">
+                                                </div>
+                                                <div class="add_form col-md-6 mb-2">
+                                                    <label class="form-label fw-bold">Activity Description <span class="text-danger">*</span></label>
+                                                    <input type="hidden" name="tour_planning[0][description]"
+                                                        class="form-control py-2 rounded-3 shadow-sm tour-description-hidden"
+                                                        placeholder="Activity Description">
+                                                    <div class="tour-description-editor"></div>
+                                                </div>
+                                                <div class="col-md-1 d-flex align-items-end">
+                                                    <!-- No remove button for first row -->
+                                                </div>
+                                            </div>
+                                            @php $tourPlanningIndex = 1; @endphp
                                             @endif
                                         </div>
                                         <button type="button" class="btn-add rounded border-0 px-4 py-2 text-white mt-2"
                                             onclick="addDay()">
                                             <i class="fa fa-plus" aria-hidden="true"></i> Add More
                                         </button>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    </div>
-                       <script>
-                                let index = {{ $tourPlanningIndex ?? 1 }};
+                            <script>
+                                let index = {
+                                    {
+                                        $tourPlanningIndex ?? 1
+                                    }
+                                };
 
                                 function addDay() {
                                     const wrapper = document.getElementById('day-wrapper');
                                     const div = document.createElement('div');
-                                         div.classList.add('row', 'g-2', 'mb-2', 'day-block');
+                                    div.classList.add('row', 'g-2', 'mb-2', 'day-block');
                                     div.innerHTML = `
                                         <div class="col-md-5 mb-2">
                                             <input type="text" name="tour_planning[${index}][title]" class="form-control py-2 rounded-3 shadow-sm" placeholder="Day Title (e.g., Day ${index + 1})">
@@ -270,7 +277,7 @@
                                 });
                             </script>
 
-                    <!-- <div class="row mb-2">
+                            <!-- <div class="row mb-2">
                             <div class="col">
                                 <div class="form-body px-5 rounded-4">
                                     <h4 class="fw-bold mb-2">04.Tour Date & Time</h4>
@@ -301,8 +308,8 @@
                             </div>
                         </div> -->
 
-                    <!-- 4. Needed -->
-                    <!-- <div class="row mb-2">
+                            <!-- 4. Needed -->
+                            <!-- <div class="row mb-2">
                             <div class="col">
                                 <div class="form-body px-5 rounded-4">
                                     <h4 class="fw-bold mb-2">04.Rooms and Beds</h4>
@@ -338,116 +345,118 @@
 
 
 
-                    <!-- 5.PRICING -->
-                    <div class="row mb-3">
-                        <div class="col">
-                            <div class="form-body px-5  rounded-4 ">
-                                <h4 class="fw-bold mb-3">03. Pricing</h4>
-                                <div id="price-fields-container" class="mb-2">
-                                    <div class="mb-2">
-                                        @php
-                                        $priceTitle = json_decode($customer->price_title, true) ?? [];
-                                        $priceAmount = json_decode($customer->price_amount, true) ?? [];
-                                        $count = max(4, count($priceTitle), count($priceAmount));
-                                        @endphp
+                            <!-- 5.PRICING -->
+                            <div class="row mb-3">
+                                <div class="col">
+                                    <div class="form-body rounded-4 ">
+                                        <h4 class="add_head fw-bold mb-3">03. Pricing</h4>
+                                        <div id="price-fields-container" class="mb-2">
+                                            <div class="mb-2">
+                                                @php
+                                                $priceTitle = json_decode($customer->price_title, true) ?? [];
+                                                $priceAmount = json_decode($customer->price_amount, true) ?? [];
+                                                $count = max(4, count($priceTitle), count($priceAmount));
+                                                @endphp
 
-                                        @for ($i = 0; $i < $count; $i++)
-                                            <div class="row mb-2">
-                                            <div class="col-lg-6">
-                                                <label class="form-label form-label-top form-label-auto fw-bold mb-2">
-                                                    Title
-                                                </label>
-                                                <input type="text" name="price_title[]" class="form-control py-2 rounded-3 shadow-sm"
-                                                    placeholder="Title"
-                                                    value="{{ $priceTitle[$i] ?? '' }}">
+                                                @for ($i = 0; $i < $count; $i++)
+                                                    <div class="row mb-2">
+                                                    <div class="add_form  col-lg-6">
+                                                        <label class="form-label form-label-top form-label-auto fw-bold mb-2">
+                                                            Title
+                                                        </label>
+                                                        <input type="text" name="price_title[]" class="form-control py-2 rounded-3 shadow-sm"
+                                                            placeholder="Title"
+                                                            value="{{ $priceTitle[$i] ?? '' }}">
+                                                    </div>
+                                                    <div class="add_form  col-lg-6">
+                                                        <label class="fw-bold mb-2">Amount <span class="text-danger">*</span></label>
+                                                        <div class="position-relative">
+                                                            <span class="position-absolute top-50 start-0 translate-middle-y ps-3">₹</span>
+                                                            <input type="number" name="price_amount[]" class="form-control py-2 ps-5 rounded-3 shadow-sm"
+                                                                placeholder="Actual Amount"
+                                                                value="{{ $priceAmount[$i] ?? '' }}">
+                                                        </div>
+                                                    </div>
                                             </div>
-                                            <div class="col-lg-6">
-                                                <label class="fw-bold mb-2">Amount <span class="text-danger">*</span></label>
-                                                <div class="position-relative">
-                                                    <span class="position-absolute top-50 start-0 translate-middle-y ps-3">₹</span>
-                                                    <input type="number" name="price_amount[]" class="form-control py-2 ps-5 rounded-3 shadow-sm"
-                                                        placeholder="Actual Amount"
-                                                        value="{{ $priceAmount[$i] ?? '' }}">
+                                            @endfor
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 6. Payment Policy -->
+                            <div class="row mb-3">
+                                <div class="col">
+                                    <div class="form-bodyrounded-4">
+                                        <h4 class="add_head fw-bold mb-4 ps-0">04. Payment Policy</h4>
+                                        <div id="camp-rule-container">
+                                            @php
+                                            $campRuleArray = json_decode($customer->camp_rule, true);
+                                            if (is_array($campRuleArray)) {
+                                            $customer->camp_rule = $campRuleArray;
+                                            } else {
+                                            // Handle the error or initialize it to an empty array if it's not a valid JSON string
+                                            $customer->camp_rule = [];
+                                            }
+                                            @endphp
+                                            @if (is_array($customer->camp_rule))
+                                            @foreach ($customer->camp_rule as $rule)
+                                            <div class="row g-2 mb-2 camp-rule-field">
+                                                <div class="col">
+                                                    <input type="text" name="camp_rule[]"
+                                                        class="form-control py-2 rounded-3 shadow-sm"
+                                                        placeholder="Rule And Regulations"
+                                                        value="{{ $rule }}">
+                                                </div>
+                                                <div class="col-lg-1 mt-2 text-end">
+                                                    <a class="table-link danger remove-plan"
+                                                        onclick="removeField(this)">
+                                                        <span class="fa-stack">
+                                                            <i class="fa fa-square fa-stack-2x"></i>
+                                                            <i
+                                                                class="fa fa-trash-o fa-stack-1x fa-inverse"></i>
+                                                        </span>
+                                                    </a>
                                                 </div>
                                             </div>
-                                    </div>
-                                    @endfor
-
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- 6. Payment Policy -->
-                    <div class="row mb-3">
-                        <div class="col">
-                            <div class="form-body px-5 rounded-4">
-                                <h4 class="fw-bold mb-4 ps-0">04. Payment Policy</h4>
-                                <div id="camp-rule-container">
-                                    @php
-                                    $campRuleArray = json_decode($customer->camp_rule, true);
-                                    if (is_array($campRuleArray)) {
-                                    $customer->camp_rule = $campRuleArray;
-                                    } else {
-                                    // Handle the error or initialize it to an empty array if it's not a valid JSON string
-                                    $customer->camp_rule = [];
-                                    }
-                                    @endphp
-                                    @if (is_array($customer->camp_rule))
-                                    @foreach ($customer->camp_rule as $rule)
-                                    <div class="row g-2 mb-2 camp-rule-field">
-                                        <div class="col">
-                                            <input type="text" name="camp_rule[]"
-                                                class="form-control py-2 rounded-3 shadow-sm"
-                                                placeholder="Rule And Regulations"
-                                                value="{{ $rule }}">
+                                            @endforeach
+                                            @else
+                                            <p>No Rule And Regulations available.</p>
+                                            @endif
                                         </div>
-                                        <div class="col-lg-1 mt-2 text-end">
-                                            <a class="table-link danger remove-plan"
-                                                onclick="removeField(this)">
-                                                <span class="fa-stack">
-                                                    <i class="fa fa-square fa-stack-2x"></i>
-                                                    <i
-                                                        class="fa fa-trash-o fa-stack-1x fa-inverse"></i>
-                                                </span>
-                                            </a>
+                                        <div class="text-end">
+                                            <button type="button"
+                                                class="btn-add rounded border-0 px-5 py-2 text-white"
+                                                onclick="addCampRuleField()">
+                                                <i class="fa fa-plus" aria-hidden="true"></i> Add
+                                            </button>
                                         </div>
                                     </div>
-                                    @endforeach
-                                    @else
-                                    <p>No Rule And Regulations available.</p>
-                                    @endif
-                                </div>
-                                <div class="text-end">
-                                    <button type="button"
-                                        class="btn-add rounded border-0 px-5 py-2 text-white"
-                                        onclick="addCampRuleField()">
-                                        <i class="fa fa-plus" aria-hidden="true"></i> Add
-                                    </button>
                                 </div>
                             </div>
-                        </div>
-                    </div>
 
 
-                    <!-- 7.Important info -->
-                    <div class="row mb-2">
-                        <div class="col">
-                            <div class="form-body px-5  rounded-4">
-                                <h4 class="fw-bold mb-3">05. Notes <span class="text-danger">*</span></h4>
-                                <div class="mb-1">
-                                    <div class="row g-2 mb-1">
-                                        <div class="col">
-                                            <input type="hidden" id="important_info" name="important_info">
-                                            @php
-                                            $plain_text_important_info = html_entity_decode(
-                                            strip_tags($customer->important_info),
-                                            );
-                                            @endphp
-                                            <div class=" mt-1">
-                                                <div class="row">
-                                                    <div class="col-lg-12 ">
-                                                        <div id="summernote4" style="height: 200px;">{!! $customer->important_info !!}</div>
+                            <!-- 7.Important info -->
+                            <div class="row mb-2">
+                                <div class="col">
+                                    <div class="form-body rounded-4">
+                                        <h4 class="add_head fw-bold mb-3">05. Notes <span class="text-danger">*</span></h4>
+                                        <div class="mb-1">
+                                            <div class="row g-2 mb-1">
+                                                <div class="col">
+                                                    <input type="hidden" id="important_info" name="important_info">
+                                                    @php
+                                                    $plain_text_important_info = html_entity_decode(
+                                                    strip_tags($customer->important_info),
+                                                    );
+                                                    @endphp
+                                                    <div class=" mt-1">
+                                                        <div class="row">
+                                                            <div class="col-lg-12 ">
+                                                                <div id="summernote4" style="height: 200px;">{!! $customer->important_info !!}</div>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -455,27 +464,27 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
 
-                    <div class="row mb-1">
-                        <div class="col">
-                            <div class="form-body px-5  rounded-4">
-                                <h4 class="fw-bold mb-2">06. Package Inclusion </h4>
-                                <div class="mb-2">
-                                    <div class="row g-2 mb-2">
-                                        <div class="col">
-                                            <input type="hidden" id="program_inclusion" name="program_inclusion">
-                                            @php
-                                            $plain_text_program_inclusion = html_entity_decode(
-                                            strip_tags($customer->package_inclusion),
-                                            );
-                                            $inclusion =json_decode($customer->package_inclusion)
-                                            @endphp
-                                            <div class=" mt-2">
-                                                <div class="row">
-                                                    <div class="col-lg-12 ">
-                                                        <div id="summernote5" style="height: 200px;">{!! $inclusion !!}</div>
+                            <div class="row mb-1">
+                                <div class="col">
+                                    <div class="form-body rounded-4">
+                                        <h4 class="add_head fw-bold mb-2">06. Package Inclusion </h4>
+                                        <div class="mb-2">
+                                            <div class="row g-2 mb-2">
+                                                <div class="col">
+                                                    <input type="hidden" id="program_inclusion" name="program_inclusion">
+                                                    @php
+                                                    $plain_text_program_inclusion = html_entity_decode(
+                                                    strip_tags($customer->package_inclusion),
+                                                    );
+                                                    $inclusion =json_decode($customer->package_inclusion)
+                                                    @endphp
+                                                    <div class=" mt-2">
+                                                        <div class="row">
+                                                            <div class="col-lg-12 ">
+                                                                <div id="summernote5" style="height: 200px;">{!! $inclusion !!}</div>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -483,27 +492,27 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
 
-                    <div class="row mb-1">
-                        <div class="col">
-                            <div class="form-body px-5  rounded-4">
-                                <h4 class="fw-bold mb-2">07. Package Exclusion </h4>
-                                <div class="mb-2">
-                                    <div class="row g-2 mb-2">
-                                        <div class="col">
-                                            <input type="hidden" id="program_exclusion" name="program_exclusion">
-                                            @php
-                                            $plain_text_program_inclusion = html_entity_decode(
-                                            strip_tags($customer->package_exclusion),
-                                            );
-                                            $exclusion =json_decode($customer->package_exclusion)
-                                            @endphp
-                                            <div class=" mt-2">
-                                                <div class="row">
-                                                    <div class="col-lg-12 ">
-                                                        <div id="summernote9" style="height: 200px;">{!! $exclusion !!}</div>
+                            <div class="row mb-1">
+                                <div class="col">
+                                    <div class="form-bodyrounded-4">
+                                        <h4 class="add_head fw-bold mb-2">07. Package Exclusion </h4>
+                                        <div class="mb-2">
+                                            <div class="row g-2 mb-2">
+                                                <div class="col">
+                                                    <input type="hidden" id="program_exclusion" name="program_exclusion">
+                                                    @php
+                                                    $plain_text_program_inclusion = html_entity_decode(
+                                                    strip_tags($customer->package_exclusion),
+                                                    );
+                                                    $exclusion =json_decode($customer->package_exclusion)
+                                                    @endphp
+                                                    <div class=" mt-2">
+                                                        <div class="row">
+                                                            <div class="col-lg-12 ">
+                                                                <div id="summernote9" style="height: 200px;">{!! $exclusion !!}</div>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -511,10 +520,8 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
 
-                    <!-- <div class="row mb-3">
+                            <!-- <div class="row mb-3">
                             <div class="col">
                                 <div class="form-body px-1 py-3 rounded-4">
                                     <h4 class="fw-bold mb-3">9. Location</h4>
@@ -548,22 +555,22 @@
                             </div>
                         </div> -->
 
-                    <script>
-                        document.getElementById('google_map').addEventListener('input', function() {
-                            const inputValue = this.value;
-                            const iframeSrcMatch = inputValue.match(/src=["']([^"']+)["']/); // Extract the src attribute value
-                            const mapPreviewIframe = document.getElementById('map_preview');
+                            <script>
+                                document.getElementById('google_map').addEventListener('input', function() {
+                                    const inputValue = this.value;
+                                    const iframeSrcMatch = inputValue.match(/src=["']([^"']+)["']/); // Extract the src attribute value
+                                    const mapPreviewIframe = document.getElementById('map_preview');
 
-                            if (iframeSrcMatch && iframeSrcMatch[1]) {
-                                mapPreviewIframe.src = iframeSrcMatch[1]; // Set the extracted src to the iframe
-                            } else {
-                                mapPreviewIframe.removeAttribute('src'); // Clear the iframe if input is invalid
-                            }
-                        });
-                    </script>
+                                    if (iframeSrcMatch && iframeSrcMatch[1]) {
+                                        mapPreviewIframe.src = iframeSrcMatch[1]; // Set the extracted src to the iframe
+                                    } else {
+                                        mapPreviewIframe.removeAttribute('src'); // Clear the iframe if input is invalid
+                                    }
+                                });
+                            </script>
 
 
-                    <!-- <div class="row mb-3">
+                            <!-- <div class="row mb-3">
                             <div class="col">
                                 <div class="form-body px-5 rounded-4">
                                     <h4 class="fw-bold mb-3">08. Upload PDF</h4>
@@ -579,7 +586,7 @@
                             </div>
                         </div> -->
 
-                    <!-- <div class="row mb-2">
+                            <!-- <div class="row mb-2">
                             <div class="col">
                                 <div class="form-body px-5 rounded-4">
                                     <h4 class="fw-bold mb-3">09. Food Menu</h4>
@@ -626,126 +633,126 @@
                                 </div>
                             </div>
                         </div> -->
-                    <!-- 8. AMENITIES -->
-                    <div class="row mb-2">
-                        <div class="col">
-                            <div class="form-body px-5 py-3 rounded-4">
-                                <h4 class="fw-bold mb-3">08. Amenities</h4>
-                                <div class="d-flex flex-wrap">
-                                    @foreach($amenities as $index => $amenity)
-                                    <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
-                                        <div class="form-check d-flex align-items-center">
-                                            <input type="checkbox" class="me-2 custom-checkbox"
-                                                id="amenity-{{ $amenity->id }}" name="amenity_services[]"
-                                                value="{{ $amenity->id }}"
-                                                @if (in_array((string) $amenity->id, json_decode($customer->amenities))) checked @endif>
-                                            <label for="amenity-{{ $amenity->id }}"
-                                                class="mb-0">{{ $amenity->amenity_name }}</label>
+                            <!-- 8. AMENITIES -->
+                            <div class="row mb-2">
+                                <div class="col">
+                                    <div class="form-body py-3 rounded-4">
+                                        <h4 class="add_head fw-bold mb-3">08. Amenities</h4>
+                                        <div class="d-flex flex-wrap">
+                                            @foreach($amenities as $index => $amenity)
+                                            <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                                <div class="form-check d-flex align-items-center">
+                                                    <input type="checkbox" class="me-2 custom-checkbox"
+                                                        id="amenity-{{ $amenity->id }}" name="amenity_services[]"
+                                                        value="{{ $amenity->id }}"
+                                                        @if (in_array((string) $amenity->id, json_decode($customer->amenities))) checked @endif>
+                                                    <label for="amenity-{{ $amenity->id }}"
+                                                        class="mb-0">{{ $amenity->amenity_name }}</label>
+                                                </div>
+                                            </div>
+                                            @if(($index + 1) % 4 == 0)
+                                            <div class="w-100"></div> <!-- Forces a line break after every 4 items -->
+                                            @endif
+                                            @endforeach
                                         </div>
                                     </div>
-                                    @if(($index + 1) % 4 == 0)
-                                    <div class="w-100"></div> <!-- Forces a line break after every 4 items -->
-                                    @endif
-                                    @endforeach
                                 </div>
                             </div>
-                        </div>
-                    </div>
 
-                    <!-- 9. FOOD & BEVERAGES -->
-                    <div class="row mb-2">
-                        <div class="col">
-                            <div class="form-body px-5 py-3 rounded-4">
-                                <h4 class="fw-bold mb-3">09. Food and Beverages</h4>
-                                <div class="d-flex flex-wrap">
-                                    @foreach($foodBeverages as $index => $item)
-                                    <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
-                                        <div class="form-check d-flex align-items-center">
-                                            <input type="checkbox" class="me-2 custom-checkbox"
-                                                id="food-beverage-{{ $item->id }}" name="food_beverages[]"
-                                                value="{{ $item->id }}"
-                                                @if (in_array((string) $item->id, json_decode($customer->food_beverages))) checked @endif>
-                                            <label for="food-beverage-{{ $item->id }}"
-                                                class="mb-0">{{ $item->food_beverage }}</label>
+                            <!-- 9. FOOD & BEVERAGES -->
+                            <div class="row mb-2">
+                                <div class="col">
+                                    <div class="form-body py-3 rounded-4">
+                                        <h4 class="add_head fw-bold mb-3">09. Food and Beverages</h4>
+                                        <div class="d-flex flex-wrap">
+                                            @foreach($foodBeverages as $index => $item)
+                                            <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                                <div class="form-check d-flex align-items-center">
+                                                    <input type="checkbox" class="me-2 custom-checkbox"
+                                                        id="food-beverage-{{ $item->id }}" name="food_beverages[]"
+                                                        value="{{ $item->id }}"
+                                                        @if (in_array((string) $item->id, json_decode($customer->food_beverages))) checked @endif>
+                                                    <label for="food-beverage-{{ $item->id }}"
+                                                        class="mb-0">{{ $item->food_beverage }}</label>
+                                                </div>
+                                            </div>
+                                            @if(($index + 1) % 4 == 0)
+                                            <div class="w-100"></div> <!-- Forces a line break after every 4 items -->
+                                            @endif
+                                            @endforeach
                                         </div>
                                     </div>
-                                    @if(($index + 1) % 4 == 0)
-                                    <div class="w-100"></div> <!-- Forces a line break after every 4 items -->
-                                    @endif
-                                    @endforeach
                                 </div>
                             </div>
-                        </div>
-                    </div>
 
-                    <!-- 10. ACTIVITIES -->
-                    <div class="row mb-2">
-                        <div class="col">
-                            <div class="form-body px-5 py-3 rounded-4">
-                                <h4 class="fw-bold mb-3">10. Activities</h4>
-                                <div class="d-flex flex-wrap">
-                                    @foreach($activities as $index => $item)
-                                    <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
-                                        <div class="form-check d-flex align-items-center ">
-                                            <input type="checkbox" class="me-2 custom-checkbox"
-                                                id="activities-{{ $item->id }}" name="activities[]"
-                                                value="{{ $item->id }}"
-                                                @if (in_array((string) $item->id, json_decode($customer->activities))) checked @endif>
-                                            <label for="activities-{{ $item->id }}"
-                                                class="mb-0">{{ $item->activities }}</label>
+                            <!-- 10. ACTIVITIES -->
+                            <div class="row mb-2">
+                                <div class="col">
+                                    <div class="form-body py-3 rounded-4">
+                                        <h4 class="add_head fw-bold mb-3">10. Activities</h4>
+                                        <div class="d-flex flex-wrap">
+                                            @foreach($activities as $index => $item)
+                                            <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                                <div class="form-check d-flex align-items-center ">
+                                                    <input type="checkbox" class="me-2 custom-checkbox"
+                                                        id="activities-{{ $item->id }}" name="activities[]"
+                                                        value="{{ $item->id }}"
+                                                        @if (in_array((string) $item->id, json_decode($customer->activities))) checked @endif>
+                                                    <label for="activities-{{ $item->id }}"
+                                                        class="mb-0">{{ $item->activities }}</label>
+                                                </div>
+                                            </div>
+                                            @if(($index + 1) % 4 == 0)
+                                            <div class="w-100"></div> <!-- Forces a line break after every 4 items -->
+                                            @endif
+                                            @endforeach
                                         </div>
                                     </div>
-                                    @if(($index + 1) % 4 == 0)
-                                    <div class="w-100"></div> <!-- Forces a line break after every 4 items -->
-                                    @endif
-                                    @endforeach
                                 </div>
                             </div>
-                        </div>
-                    </div>
 
-                    <!-- 11. SAFETY FEATURES -->
-                    <div class="row mb-2">
-                        <div class="col">
-                            <div class="form-body px-5 py-3 rounded-4">
-                                <h4 class="fw-bold mb-3">11. Safety Features</h4>
-                                <div class="d-flex flex-wrap">
-                                    @foreach($safety_features as $index => $item)
-                                    <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
-                                        <div class="form-check d-flex align-items-center mb-1">
-                                            <input type="checkbox" class="me-2 custom-checkbox"
-                                                id="safety_features-{{ $item->id }}" name="safety_features[]"
-                                                value="{{ $item->id }}"
-                                                @if (in_array((string) $item->id, json_decode($customer->safety_features))) checked @endif>
-                                            <label for="safety_features-{{ $item->id }}"
-                                                class="mb-0">{{ $item->safety_features }}</label>
+                            <!-- 11. SAFETY FEATURES -->
+                            <div class="row mb-2">
+                                <div class="col">
+                                    <div class="form-body py-3 rounded-4">
+                                        <h4 class="add_head fw-bold mb-3">11. Safety Features</h4>
+                                        <div class="d-flex flex-wrap">
+                                            @foreach($safety_features as $index => $item)
+                                            <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                                <div class="form-check d-flex align-items-center mb-1">
+                                                    <input type="checkbox" class="me-2 custom-checkbox"
+                                                        id="safety_features-{{ $item->id }}" name="safety_features[]"
+                                                        value="{{ $item->id }}"
+                                                        @if (in_array((string) $item->id, json_decode($customer->safety_features))) checked @endif>
+                                                    <label for="safety_features-{{ $item->id }}"
+                                                        class="mb-0">{{ $item->safety_features }}</label>
+                                                </div>
+                                            </div>
+                                            @endforeach
                                         </div>
                                     </div>
-                                    @endforeach
                                 </div>
                             </div>
-                        </div>
-                    </div>
 
-                    <!-- Add custom CSS -->
-                    <style>
-                        .custom-checkbox {
-                            width: 18px;
-                            height: 18px;
-                        }
+                            <!-- Add custom CSS -->
+                            <style>
+                                .custom-checkbox {
+                                    width: 18px;
+                                    height: 18px;
+                                }
 
-                        /* Ensure responsiveness on all screen sizes */
-                        @media (max-width: 768px) {
-                            .custom-checkbox {
-                                width: 18px;
-                                height: 18px;
-                            }
-                        }
-                    </style>
+                                /* Ensure responsiveness on all screen sizes */
+                                @media (max-width: 768px) {
+                                    .custom-checkbox {
+                                        width: 18px;
+                                        height: 18px;
+                                    }
+                                }
+                            </style>
 
 
 
-                    <!-- 6.rule & Regulation
+                            <!-- 6.rule & Regulation
                 <div class="row mb-5">
                     <div class="col">
                         <div class="form-body px-5 rounded-4">
@@ -766,191 +773,186 @@
                                 </div>
                             </div> -->
 
-                    <br>
+                            <br>
 
-                    <div class="row g-2">
-                        <div class="col">
-                            <h4> <label class="fw-bold">Status</label></h4>
-                            <div class="form-check form-switch d-flex align-items-center">
-                                <input class="form-check-input check_bx" type="checkbox" id="status" name="status"
-                                    {{ $customer->status ? 'checked' : '' }}>
+                            <div class="row g-2">
+                                <div class="col">
+                                    <h4> <label class="add_head fw-bold">Status</label></h4>
+                                    <div class="form-check form-switch d-flex align-items-center">
+                                        <input class="form-check-input check_bx" type="checkbox" id="status" name="status"
+                                            {{ $customer->status ? 'checked' : '' }}>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row g-3">
+                                <div class="col-lg-3">
+                                    <label class="add_head fw-bold mb-3 ">Order</label>
+                                    <input type="number" placeholder="Order" id="list_order" name="list_order"
+                                        value="{{ $customer->list_order }}" class="form-control py-2 rounded-3 shadow-sm">
+                                </div>
+                            </div>
+
+                           
+
+                            <div class="col-lg-12 text-center mt-5">
+                                <a href="{{ route('admin.inclusive_package_list') }}">
+                                    <button type="button" class="cancel-btn"> Cancel </button>
+                                </a>
+                                <button class="submit-btn sbmtBtn ms-4 mb-5"> Submit </button>
                             </div>
                         </div>
-                    </div>
+            </form>
+        </div>
+    </div>
 
-                    <div class="row g-3">
-                        <div class="col-lg-3">
-                            <label class="fw-bold mb-3 ">Order</label>
-                            <input type="number" placeholder="Order" id="list_order" name="list_order"
-                                value="{{ $customer->list_order }}" class="form-control py-2 rounded-3 shadow-sm">
-                        </div>
-                    </div>
-
-                    <style>
-                        .form-check-input {
-                            transform: scale(1.5);
-                            /* Increase the size of the checkbox */
-                        }
-                    </style>
-
-                    <div class="col-lg-12 text-end mt-5">
-                        <a href="{{ route('admin.inclusive_package_list') }}">
-                            <button type="button" class="cancel-btn"> Cancel </button>
-                        </a>
-                        <button class="submit-btn sbmtBtn ms-4 mb-5"> Submit </button>
-                    </div>
-                </div>
-    </form>
-</div>
-</div>
-
-<script>
-    $(document).ready(function() {
-        $('#summernote1,#summernote2,#summernote3,#summernote4,#summernote5,#summernote6,#summernote7,#summernote8,#summernote9,#summernote10')
-            .summernote({
-                height: 200 // Set the height of the editor
+    <script>
+        $(document).ready(function() {
+            $('#summernote1,#summernote2,#summernote3,#summernote4,#summernote5,#summernote6,#summernote7,#summernote8,#summernote9,#summernote10')
+                .summernote({
+                    height: 200 // Set the height of the editor
+                });
+            $('#summernote1').summernote({
+                placeholder: 'Hello stand alone ui',
+                tabsize: 2,
+                height: 100,
+                toolbar: [
+                    ['style', ['style']],
+                    ['font', ['bold', 'underline', 'clear']],
+                    ['color', ['color']],
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    ['table', ['table']],
+                    ['insert', ['link', 'picture', 'video']],
+                    ['view', ['fullscreen', 'codeview', 'help']]
+                ]
             });
-        $('#summernote1').summernote({
-            placeholder: 'Hello stand alone ui',
-            tabsize: 2,
-            height: 100,
-            toolbar: [
-                ['style', ['style']],
-                ['font', ['bold', 'underline', 'clear']],
-                ['color', ['color']],
-                ['para', ['ul', 'ol', 'paragraph']],
-                ['table', ['table']],
-                ['insert', ['link', 'picture', 'video']],
-                ['view', ['fullscreen', 'codeview', 'help']]
-            ]
-        });
 
-        $('#summernote2').summernote({
-            placeholder: 'Hello stand alone ui',
-            tabsize: 2,
-            height: 100,
-            toolbar: [
-                ['style', ['style']],
-                ['font', ['bold', 'underline', 'clear']],
-                ['color', ['color']],
-                ['para', ['ul', 'ol', 'paragraph']],
-                ['table', ['table']],
-                ['insert', ['link', 'picture', 'video']],
-                ['view', ['fullscreen', 'codeview', 'help']]
-            ]
-        });
-        $('#summernote3').summernote({
-            placeholder: 'Hello stand alone ui',
-            tabsize: 2,
-            height: 100,
-            toolbar: [
-                ['style', ['style']],
-                ['font', ['bold', 'underline', 'clear']],
-                ['color', ['color']],
-                ['para', ['ul', 'ol', 'paragraph']],
-                ['table', ['table']],
-                ['insert', ['link', 'picture', 'video']],
-                ['view', ['fullscreen', 'codeview', 'help']]
-            ]
-        });
-        $('#summernote4').summernote({
-            placeholder: 'Hello stand alone ui',
-            tabsize: 2,
-            height: 100,
-            toolbar: [
-                ['style', ['style']],
-                ['font', ['bold', 'underline', 'clear']],
-                ['color', ['color']],
-                ['para', ['ul', 'ol', 'paragraph']],
-                ['table', ['table']],
-                ['insert', ['link', 'picture', 'video']],
-                ['view', ['fullscreen', 'codeview', 'help']]
-            ]
-        });
-        $('#summernote5').summernote({
-            placeholder: 'Hello stand alone ui',
-            tabsize: 2,
-            height: 100,
-            toolbar: [
-                ['style', ['style']],
-                ['font', ['bold', 'underline', 'clear']],
-                ['color', ['color']],
-                ['para', ['ul', 'ol', 'paragraph']],
-                ['table', ['table']],
-                ['insert', ['link', 'picture', 'video']],
-                ['view', ['fullscreen', 'codeview', 'help']]
-            ]
-        });
-        $('#summernote9').summernote({
-            placeholder: 'Hello stand alone ui',
-            tabsize: 2,
-            height: 100,
-            toolbar: [
-                ['style', ['style']],
-                ['font', ['bold', 'underline', 'clear']],
-                ['color', ['color']],
-                ['para', ['ul', 'ol', 'paragraph']],
-                ['table', ['table']],
-                ['insert', ['link', 'picture', 'video']],
-                ['view', ['fullscreen', 'codeview', 'help']]
-            ]
-        });
-        $('#summernote6').summernote({
-            placeholder: 'Hello stand alone ui',
-            tabsize: 2,
-            height: 100,
-            toolbar: [
-                ['style', ['style']],
-                ['font', ['bold', 'underline', 'clear']],
-                ['color', ['color']],
-                ['para', ['ul', 'ol', 'paragraph']],
-                ['table', ['table']],
-                ['insert', ['link', 'picture', 'video']],
-                ['view', ['fullscreen', 'codeview', 'help']]
-            ]
-        });
-        $('#summernote7').summernote({
-            placeholder: 'Hello stand alone ui',
-            tabsize: 2,
-            height: 100,
-            toolbar: [
-                ['style', ['style']],
-                ['font', ['bold', 'underline', 'clear']],
-                ['color', ['color']],
-                ['para', ['ul', 'ol', 'paragraph']],
-                ['table', ['table']],
-                ['insert', ['link', 'picture', 'video']],
-                ['view', ['fullscreen', 'codeview', 'help']]
-            ]
-        });
-        $('#summernote8').summernote({
-            placeholder: 'Hello stand alone ui',
-            tabsize: 2,
-            height: 100,
-            toolbar: [
-                ['style', ['style']],
-                ['font', ['bold', 'underline', 'clear']],
-                ['color', ['color']],
-                ['para', ['ul', 'ol', 'paragraph']],
-                ['table', ['table']],
-                ['insert', ['link', 'picture', 'video']],
-                ['view', ['fullscreen', 'codeview', 'help']]
-            ]
-        });
-        $('#summernote10').summernote({
-            placeholder: 'Hello stand alone ui',
-            tabsize: 2,
-            height: 100,
-            toolbar: [
-                ['style', ['style']],
-                ['font', ['bold', 'underline', 'clear']],
-                ['color', ['color']],
-                ['para', ['ul', 'ol', 'paragraph']],
-                ['table', ['table']],
-                ['insert', ['link', 'picture', 'video']],
-                ['view', ['fullscreen', 'codeview', 'help']]
-            ]
-        });
+            $('#summernote2').summernote({
+                placeholder: 'Hello stand alone ui',
+                tabsize: 2,
+                height: 100,
+                toolbar: [
+                    ['style', ['style']],
+                    ['font', ['bold', 'underline', 'clear']],
+                    ['color', ['color']],
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    ['table', ['table']],
+                    ['insert', ['link', 'picture', 'video']],
+                    ['view', ['fullscreen', 'codeview', 'help']]
+                ]
+            });
+            $('#summernote3').summernote({
+                placeholder: 'Hello stand alone ui',
+                tabsize: 2,
+                height: 100,
+                toolbar: [
+                    ['style', ['style']],
+                    ['font', ['bold', 'underline', 'clear']],
+                    ['color', ['color']],
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    ['table', ['table']],
+                    ['insert', ['link', 'picture', 'video']],
+                    ['view', ['fullscreen', 'codeview', 'help']]
+                ]
+            });
+            $('#summernote4').summernote({
+                placeholder: 'Hello stand alone ui',
+                tabsize: 2,
+                height: 100,
+                toolbar: [
+                    ['style', ['style']],
+                    ['font', ['bold', 'underline', 'clear']],
+                    ['color', ['color']],
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    ['table', ['table']],
+                    ['insert', ['link', 'picture', 'video']],
+                    ['view', ['fullscreen', 'codeview', 'help']]
+                ]
+            });
+            $('#summernote5').summernote({
+                placeholder: 'Hello stand alone ui',
+                tabsize: 2,
+                height: 100,
+                toolbar: [
+                    ['style', ['style']],
+                    ['font', ['bold', 'underline', 'clear']],
+                    ['color', ['color']],
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    ['table', ['table']],
+                    ['insert', ['link', 'picture', 'video']],
+                    ['view', ['fullscreen', 'codeview', 'help']]
+                ]
+            });
+            $('#summernote9').summernote({
+                placeholder: 'Hello stand alone ui',
+                tabsize: 2,
+                height: 100,
+                toolbar: [
+                    ['style', ['style']],
+                    ['font', ['bold', 'underline', 'clear']],
+                    ['color', ['color']],
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    ['table', ['table']],
+                    ['insert', ['link', 'picture', 'video']],
+                    ['view', ['fullscreen', 'codeview', 'help']]
+                ]
+            });
+            $('#summernote6').summernote({
+                placeholder: 'Hello stand alone ui',
+                tabsize: 2,
+                height: 100,
+                toolbar: [
+                    ['style', ['style']],
+                    ['font', ['bold', 'underline', 'clear']],
+                    ['color', ['color']],
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    ['table', ['table']],
+                    ['insert', ['link', 'picture', 'video']],
+                    ['view', ['fullscreen', 'codeview', 'help']]
+                ]
+            });
+            $('#summernote7').summernote({
+                placeholder: 'Hello stand alone ui',
+                tabsize: 2,
+                height: 100,
+                toolbar: [
+                    ['style', ['style']],
+                    ['font', ['bold', 'underline', 'clear']],
+                    ['color', ['color']],
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    ['table', ['table']],
+                    ['insert', ['link', 'picture', 'video']],
+                    ['view', ['fullscreen', 'codeview', 'help']]
+                ]
+            });
+            $('#summernote8').summernote({
+                placeholder: 'Hello stand alone ui',
+                tabsize: 2,
+                height: 100,
+                toolbar: [
+                    ['style', ['style']],
+                    ['font', ['bold', 'underline', 'clear']],
+                    ['color', ['color']],
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    ['table', ['table']],
+                    ['insert', ['link', 'picture', 'video']],
+                    ['view', ['fullscreen', 'codeview', 'help']]
+                ]
+            });
+            $('#summernote10').summernote({
+                placeholder: 'Hello stand alone ui',
+                tabsize: 2,
+                height: 100,
+                toolbar: [
+                    ['style', ['style']],
+                    ['font', ['bold', 'underline', 'clear']],
+                    ['color', ['color']],
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    ['table', ['table']],
+                    ['insert', ['link', 'picture', 'video']],
+                    ['view', ['fullscreen', 'codeview', 'help']]
+                ]
+            });
 
 
 
@@ -960,11 +962,11 @@
 
 
 
-        let photoCount = 1; // Start with existing photo field count
+            let photoCount = 1; // Start with existing photo field count
 
-        // Function to generate new photo upload field HTML
-        function createPhotoUploadField(count) {
-            return `
+            // Function to generate new photo upload field HTML
+            function createPhotoUploadField(count) {
+                return `
                 <div class="col-lg-2 photo-upload-field">
                     <div class="form-input">
                         <label for="file-ip-${count}" class="px-4 py-3 text-center">
@@ -975,121 +977,121 @@
                     </div>
                 </div>
             `;
-        }
+            }
 
-        // Event listener for the "Add More Photos" button
-        $('#add-photo-btn').on('click', function() {
-            photoCount++;
-            const newFieldHtml = createPhotoUploadField(photoCount);
-            $('#photo-upload-container').append(newFieldHtml);
-        });
+            // Event listener for the "Add More Photos" button
+            $('#add-photo-btn').on('click', function() {
+                photoCount++;
+                const newFieldHtml = createPhotoUploadField(photoCount);
+                $('#photo-upload-container').append(newFieldHtml);
+            });
 
-        // Function to show preview of selected image
-        function showPreview(event, number) {
-            var file = event.target.files[0];
-            var reader = new FileReader();
-            var previewId = "#file-ip-" + number + "-preview";
-            var errorMessageId = "#file-ip-" + number + "-error";
+            // Function to show preview of selected image
+            function showPreview(event, number) {
+                var file = event.target.files[0];
+                var reader = new FileReader();
+                var previewId = "#file-ip-" + number + "-preview";
+                var errorMessageId = "#file-ip-" + number + "-error";
 
-            reader.onload = function(e) {
-                $(previewId).attr('src', e.target.result);
-                $(errorMessageId).text(''); // Clear any previous error message
-            };
+                reader.onload = function(e) {
+                    $(previewId).attr('src', e.target.result);
+                    $(errorMessageId).text(''); // Clear any previous error message
+                };
 
-            if (file) {
-                if (file.size <= 2 * 1024 * 1024) { // 2 MB limit
-                    if (file.type === 'image/png' || file.type === 'image/jpeg') {
-                        reader.readAsDataURL(file);
+                if (file) {
+                    if (file.size <= 2 * 1024 * 1024) { // 2 MB limit
+                        if (file.type === 'image/png' || file.type === 'image/jpeg') {
+                            reader.readAsDataURL(file);
+                        } else {
+                            $(errorMessageId).text('Please upload a valid PNG or JPEG image.');
+                        }
                     } else {
-                        $(errorMessageId).text('Please upload a valid PNG or JPEG image.');
-                    }
-                } else {
-                    $(errorMessageId).text('File size exceeds 2 MB limit.');
-                }
-            }
-        }
-
-        // Delegate event binding for dynamically added file inputs
-        $('#photo-upload-container').on('change', 'input[type="file"]', function(event) {
-            var number = $(this).data('number'); // Use data attribute to get the number
-            showPreview(event, number);
-        });
-    });
-
-    document.addEventListener('DOMContentLoaded', function() {
-        let planCount = 1; // Initialize with existing plan count
-
-        // Function to clone the existing plan item
-        function createPlanFields() {
-            planCount++; // Increment plan count
-            const container = document.getElementById('plan-container');
-            const template = container.querySelector('.plan-item');
-
-            // Clone the template
-            const newPlan = template.cloneNode(true);
-
-            // Update IDs and Names for new plan items
-            newPlan.querySelectorAll('input, textarea, div').forEach((field) => {
-                if (field.id) {
-                    field.id = field.id + '-' + planCount;
-                }
-                if (field.name) {
-                    field.name = field.name.replace(/\[\]$/, '[]');
-                }
-            });
-
-            // Remove previous Summernote instance (if any)
-            const summernoteDiv = newPlan.querySelector('[id^="summernote3"]');
-            const hiddenInput = newPlan.querySelector('[id^="plan_description"]');
-
-            // Give unique IDs
-            const uniqueEditorId = `summernote3-${planCount}`;
-            const uniqueInputId = `plan_description-${planCount}`;
-
-            summernoteDiv.id = uniqueEditorId;
-            hiddenInput.id = uniqueInputId;
-
-            // Append the cloned item
-            container.appendChild(newPlan);
-
-            // Initialize Summernote for the new div
-            $('#' + uniqueEditorId).summernote({
-                height: 200,
-                callbacks: {
-                    onChange: function(contents) {
-                        // Sync to hidden input on change
-                        document.getElementById(uniqueInputId).value = contents;
+                        $(errorMessageId).text('File size exceeds 2 MB limit.');
                     }
                 }
-            });
-        }
-
-        // Event listener for the "Add" button
-        document.getElementById('add-plan-btn').addEventListener('click', function() {
-            createPlanFields();
-        });
-
-        // Event delegation to handle removal of plan items
-        document.getElementById('plan-container').addEventListener('click', function(event) {
-            if (event.target.closest('.remove-plan')) {
-                event.preventDefault();
-                const planItem = event.target.closest('.plan-item');
-                planItem.remove();
             }
+
+            // Delegate event binding for dynamically added file inputs
+            $('#photo-upload-container').on('change', 'input[type="file"]', function(event) {
+                var number = $(this).data('number'); // Use data attribute to get the number
+                showPreview(event, number);
+            });
         });
-    });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            let planCount = 1; // Initialize with existing plan count
+
+            // Function to clone the existing plan item
+            function createPlanFields() {
+                planCount++; // Increment plan count
+                const container = document.getElementById('plan-container');
+                const template = container.querySelector('.plan-item');
+
+                // Clone the template
+                const newPlan = template.cloneNode(true);
+
+                // Update IDs and Names for new plan items
+                newPlan.querySelectorAll('input, textarea, div').forEach((field) => {
+                    if (field.id) {
+                        field.id = field.id + '-' + planCount;
+                    }
+                    if (field.name) {
+                        field.name = field.name.replace(/\[\]$/, '[]');
+                    }
+                });
+
+                // Remove previous Summernote instance (if any)
+                const summernoteDiv = newPlan.querySelector('[id^="summernote3"]');
+                const hiddenInput = newPlan.querySelector('[id^="plan_description"]');
+
+                // Give unique IDs
+                const uniqueEditorId = `summernote3-${planCount}`;
+                const uniqueInputId = `plan_description-${planCount}`;
+
+                summernoteDiv.id = uniqueEditorId;
+                hiddenInput.id = uniqueInputId;
+
+                // Append the cloned item
+                container.appendChild(newPlan);
+
+                // Initialize Summernote for the new div
+                $('#' + uniqueEditorId).summernote({
+                    height: 200,
+                    callbacks: {
+                        onChange: function(contents) {
+                            // Sync to hidden input on change
+                            document.getElementById(uniqueInputId).value = contents;
+                        }
+                    }
+                });
+            }
+
+            // Event listener for the "Add" button
+            document.getElementById('add-plan-btn').addEventListener('click', function() {
+                createPlanFields();
+            });
+
+            // Event delegation to handle removal of plan items
+            document.getElementById('plan-container').addEventListener('click', function(event) {
+                if (event.target.closest('.remove-plan')) {
+                    event.preventDefault();
+                    const planItem = event.target.closest('.plan-item');
+                    planItem.remove();
+                }
+            });
+        });
 
 
 
 
-    function addCampRuleField() {
-        // Find the container where new fields will be added
-        var container = document.getElementById('camp-rule-container');
+        function addCampRuleField() {
+            // Find the container where new fields will be added
+            var container = document.getElementById('camp-rule-container');
 
-        // Create a new div for the new field
-        var newField = document.createElement('div');
-        newField.className = 'row g-2 mb-4 camp-rule-field';
-        newField.innerHTML = `<div class="col">
+            // Create a new div for the new field
+            var newField = document.createElement('div');
+            newField.className = 'row g-2 mb-4 camp-rule-field';
+            newField.innerHTML = `<div class="col">
                 <input type="text" name="camp_rule[]" class="form-control py-3 rounded-3 shadow-sm" placeholder="Payment Policy" >
             </div>
             <div class="col-lg-1 mt-5 text-end">
@@ -1101,126 +1103,126 @@
                 </a>
             </div>`;
 
-        // Append the new field to the container
-        container.appendChild(newField);
-    }
-
-    function removeField(element) {
-        // Find the parent element (field container) and remove it
-        var field = element.closest('.camp-rule-field');
-        if (field) {
-            field.remove();
+            // Append the new field to the container
+            container.appendChild(newField);
         }
-    }
 
-
-    // total duration
-    document.addEventListener('DOMContentLoaded', () => {
-        const startDateInput = document.getElementById('start_date');
-        const returnDateInput = document.getElementById('return_date');
-        const totalDaysInput = document.getElementById('total_days');
-
-        function calculateDays() {
-            const startDate = new Date(startDateInput.value);
-            const returnDate = new Date(returnDateInput.value);
-            if (startDate && returnDate && returnDate >= startDate) {
-                const diffTime = Math.abs(returnDate - startDate);
-                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-                totalDaysInput.value = diffDays;
-            } else {
-                totalDaysInput.value = '';
+        function removeField(element) {
+            // Find the parent element (field container) and remove it
+            var field = element.closest('.camp-rule-field');
+            if (field) {
+                field.remove();
             }
         }
 
-        startDateInput.addEventListener('change', calculateDays);
-        returnDateInput.addEventListener('change', calculateDays);
-    });
+
+        // total duration
+        document.addEventListener('DOMContentLoaded', () => {
+            const startDateInput = document.getElementById('start_date');
+            const returnDateInput = document.getElementById('return_date');
+            const totalDaysInput = document.getElementById('total_days');
+
+            function calculateDays() {
+                const startDate = new Date(startDateInput.value);
+                const returnDate = new Date(returnDateInput.value);
+                if (startDate && returnDate && returnDate >= startDate) {
+                    const diffTime = Math.abs(returnDate - startDate);
+                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                    totalDaysInput.value = diffDays;
+                } else {
+                    totalDaysInput.value = '';
+                }
+            }
+
+            startDateInput.addEventListener('change', calculateDays);
+            returnDateInput.addEventListener('change', calculateDays);
+        });
 
 
 
-    //package change
+        //package change
 
-    $(".package").change(function() {
-        var selectedOption = $(this).val();
-        var packageData = JSON.parse(selectedOption);
+        $(".package").change(function() {
+            var selectedOption = $(this).val();
+            var packageData = JSON.parse(selectedOption);
 
-        var package_id = packageData.id;
-        // var package_id = $('#package').val();
-        $.ajax({
-            url: '/customer-package/package-details',
-            type: 'POST',
-            data: {
-                id: package_id,
-            },
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            success: function(response) {
-                try {
-                    response = typeof response === 'string' ? JSON.parse(response) : response;
-                    const packageStaySelect = $('#package_stay');
+            var package_id = packageData.id;
+            // var package_id = $('#package').val();
+            $.ajax({
+                url: '/customer-package/package-details',
+                type: 'POST',
+                data: {
+                    id: package_id,
+                },
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(response) {
+                    try {
+                        response = typeof response === 'string' ? JSON.parse(response) : response;
+                        const packageStaySelect = $('#package_stay');
 
-                    packageStaySelect.empty().append(
-                        $('<option></option>')
-                        .val('')
-                        .text('Select Package Type')
-                        .prop('disabled', true)
-                        .prop('selected', true)
-                    );
-
-                    if (response && response.cities_details && Array.isArray(response.cities_details)) {
-                        const validStays = response.cities_details.filter(stay =>
-                            stay && stay.id !== undefined && stay.stay_title
+                        packageStaySelect.empty().append(
+                            $('<option></option>')
+                            .val('')
+                            .text('Select Package Type')
+                            .prop('disabled', true)
+                            .prop('selected', true)
                         );
 
-                        if (validStays.length > 0) {
-                            // Add each valid stay as an option
-                            validStays.forEach(stay => {
+                        if (response && response.cities_details && Array.isArray(response.cities_details)) {
+                            const validStays = response.cities_details.filter(stay =>
+                                stay && stay.id !== undefined && stay.stay_title
+                            );
+
+                            if (validStays.length > 0) {
+                                // Add each valid stay as an option
+                                validStays.forEach(stay => {
+                                    packageStaySelect.append(
+                                        $('<option></option>')
+                                        .val(stay.id)
+                                        .text(stay.stay_title)
+                                    );
+                                });
+
+                                // Enable select if it was disabled
+                                packageStaySelect.prop('disabled', false);
+                            } else {
+                                // No valid stays found
                                 packageStaySelect.append(
                                     $('<option></option>')
-                                    .val(stay.id)
-                                    .text(stay.stay_title)
+                                    .val('')
+                                    .text('No available stays')
                                 );
-                            });
-
-                            // Enable select if it was disabled
-                            packageStaySelect.prop('disabled', false);
+                                packageStaySelect.prop('disabled', true);
+                            }
                         } else {
-                            // No valid stays found
+                            // Invalid response structure
                             packageStaySelect.append(
                                 $('<option></option>')
                                 .val('')
-                                .text('No available stays')
+                                .text('Invalid data format')
                             );
                             packageStaySelect.prop('disabled', true);
+                            console.error('Invalid response structure:', response);
                         }
-                    } else {
-                        // Invalid response structure
-                        packageStaySelect.append(
-                            $('<option></option>')
-                            .val('')
-                            .text('Invalid data format')
-                        );
-                        packageStaySelect.prop('disabled', true);
-                        console.error('Invalid response structure:', response);
-                    }
-                    // Handle tour planning and location
-                    if (response.package_details) {
-                         var tourVal = typeof response.package_details.tour_planning === 'string' ?
-                            JSON.parse(response.package_details.tour_planning) :
-                            response.package_details.tour_planning;
+                        // Handle tour planning and location
+                        if (response.package_details) {
+                            var tourVal = typeof response.package_details.tour_planning === 'string' ?
+                                JSON.parse(response.package_details.tour_planning) :
+                                response.package_details.tour_planning;
 
-                        console.log(tourVal);
+                            console.log(tourVal);
 
-                        // First, clear all existing day blocks except the first one
-                        $('#day-wrapper').html('');
+                            // First, clear all existing day blocks except the first one
+                            $('#day-wrapper').html('');
 
-                        tourVal.forEach(function(day, i) {
-                            const wrapper = document.getElementById('day-wrapper');
-                            const div = document.createElement('div');
-                            div.classList.add('row', 'g-2', 'mb-2', 'day-block');
+                            tourVal.forEach(function(day, i) {
+                                const wrapper = document.getElementById('day-wrapper');
+                                const div = document.createElement('div');
+                                div.classList.add('row', 'g-2', 'mb-2', 'day-block');
 
-                            div.innerHTML = `
+                                div.innerHTML = `
         <div class="col-md-5 mb-2">
             <input type="text" name="tour_planning[${i}][title]" class="form-control py-2 rounded-3 shadow-sm" value="${day.title}" placeholder="Day Title (e.g., Day ${i + 1})">
         </div>
@@ -1238,49 +1240,49 @@
         </div>
     `;
 
-                            wrapper.appendChild(div);
+                                wrapper.appendChild(div);
 
-                            // Initialize Summernote and set saved HTML description
-                            const editor = $(div).find('.tour-description-editor');
-                            const hiddenInput = $(div).find('.tour-description-hidden');
+                                // Initialize Summernote and set saved HTML description
+                                const editor = $(div).find('.tour-description-editor');
+                                const hiddenInput = $(div).find('.tour-description-hidden');
 
-                            editor.summernote({
-                                height: 120,
-                                callbacks: {
-                                    onChange: function(contents) {
-                                        hiddenInput.val(contents);
+                                editor.summernote({
+                                    height: 120,
+                                    callbacks: {
+                                        onChange: function(contents) {
+                                            hiddenInput.val(contents);
+                                        }
                                     }
-                                }
+                                });
+
+                                // Set old saved description to Summernote and hidden field
+                                editor.summernote('code', day.description);
+                                hiddenInput.val(day.description);
                             });
+                            if (response.package_details.location) {
+                                $('#title').val(response.package_details.title)
+                                $('#summernote10').summernote('code', response.package_details.location);
 
-                            // Set old saved description to Summernote and hidden field
-                            editor.summernote('code', day.description);
-                            hiddenInput.val(day.description);
-                        });
-                        if (response.package_details.location) {
-                            $('#title').val(response.package_details.title)
-                            $('#summernote10').summernote('code', response.package_details.location);
+                                $('#summernote3').summernote('code', tourVal);
+                            }
 
-                            $('#summernote3').summernote('code', tourVal);
-                        }
+                            // Handle price fields
+                            var priceAmount = response.package_details.price_amount ?
+                                JSON.parse(response.package_details.price_amount) : [];
 
-                        // Handle price fields
-                        var priceAmount = response.package_details.price_amount ?
-                            JSON.parse(response.package_details.price_amount) : [];
-
-                        var priceTitle = response.package_details.price_tilte ?
-                            JSON.parse(response.package_details.price_tilte) : [];
+                            var priceTitle = response.package_details.price_tilte ?
+                                JSON.parse(response.package_details.price_tilte) : [];
 
 
-                        var count = Math.max(4, priceAmount.length, priceTitle.length);
-                        var priceContainer = $('#price-fields-container');
+                            var count = Math.max(4, priceAmount.length, priceTitle.length);
+                            var priceContainer = $('#price-fields-container');
 
 
-                        priceContainer.empty();
+                            priceContainer.empty();
 
-                        // Generate fields
-                        for (var i = 0; i < count; i++) {
-                            var fieldHtml = `
+                            // Generate fields
+                            for (var i = 0; i < count; i++) {
+                                var fieldHtml = `
                                         <div class="row mb-2">
                                             <div class="col-lg-6">
                                                 <label class="form-label form-label-top form-label-auto fw-bold mb-2">
@@ -1301,16 +1303,16 @@
                                             </div>
                                         </div>`;
 
-                            priceContainer.append(fieldHtml);
-                        }
+                                priceContainer.append(fieldHtml);
+                            }
 
-                        //camp rule
-                        var campRuleContainer = $('#camp-rule-container');
-                        var camp_rule = JSON.parse(response.package_details.camp_rule) ?? [''];
+                            //camp rule
+                            var campRuleContainer = $('#camp-rule-container');
+                            var camp_rule = JSON.parse(response.package_details.camp_rule) ?? [''];
 
-                        campRuleContainer.empty();
-                        for (var i = 0; i <= camp_rule.length - 1; i++) {
-                            var camp_ruleHTML = ` <div class="row g-2 mb-1 align-items-center camp-rule-field">
+                            campRuleContainer.empty();
+                            for (var i = 0; i <= camp_rule.length - 1; i++) {
+                                var camp_ruleHTML = ` <div class="row g-2 mb-1 align-items-center camp-rule-field">
                                         <label class="mb-1">Payment Policy <span
                                                 class="text-danger">*</span></label>
 
@@ -1331,98 +1333,98 @@
                                             </div>
                                     </div>`
 
-                            campRuleContainer.append(camp_ruleHTML);
+                                campRuleContainer.append(camp_ruleHTML);
+
+                            }
+                            //notes
+
+                            // var notes_val = typeof response.package_details.important_info === 'string' ?
+                            //     JSON.parse(response.package_details.important_info) :
+                            //     response.package_details.important_info;
+                            $('#summernote4').summernote('code', response.package_details.important_info); // notes
+                            $('#summernote5').summernote('code', response.package_details.program_inclusion); // program Inclusion
+                            $('#summernote9').summernote('code', response.package_details.program_exclusion); // program Exclusion
+
+
+                            //aminites
+                            if (response.selectedAmenities) {
+                                // Convert array to object for faster lookup
+                                const selectedAmenities = {};
+                                $.each(response.selectedAmenities, function(index, id) {
+                                    selectedAmenities[id] = true;
+                                });
+
+                                // Loop through all checkboxes just once
+                                $('input[name="amenity_services[]"]').each(function() {
+                                    $(this).prop('checked', selectedAmenities[$(this).val()] || false);
+                                });
+                            }
+                            //food beverages
+                            if (response.selectedfood_beverages) {
+                                const selectedFoodBeverages = {};
+                                $.each(response.selectedfood_beverages, function(index, id) {
+                                    selectedFoodBeverages[id] = true;
+                                });
+                                $('input[name="food_beverages[]"]').each(function() {
+                                    $(this).prop('checked', selectedFoodBeverages[$(this).val()] || false);
+                                });
+                            }
+                            //Activities
+                            if (response.selectedactivities) {
+                                const selectedactivities = {};
+                                $.each(response.selectedactivities, function(index, id) {
+                                    selectedactivities[id] = true;
+                                });
+                                $('input[name="activities[]"]').each(function() {
+                                    $(this).prop('checked', selectedactivities[$(this).val()] || false);
+                                });
+                            }
+
+                            //Safety Features
+                            if (response.selectedsafety_features) {
+                                const selectedsafety_features = {};
+                                $.each(response.selectedsafety_features, function(index, id) {
+                                    selectedsafety_features[id] = true;
+                                });
+                                $('input[name="safety_features[]"]').each(function() {
+                                    $(this).prop('checked', selectedsafety_features[$(this).val()] || false);
+                                });
+                            }
+
+                            //status
+                            if (response.package_details.status !== undefined) {
+                                $('input[name="status"]').prop('checked', true);
+                            }
+                            //order
+                            if (response.package_details.list_order !== null && response.package_details.list_order !== undefined) {
+                                $('input[name="list_order"]').val(response.package_details.list_order);
+                            }
+
+
+
 
                         }
-                        //notes
-
-                        // var notes_val = typeof response.package_details.important_info === 'string' ?
-                        //     JSON.parse(response.package_details.important_info) :
-                        //     response.package_details.important_info;
-                        $('#summernote4').summernote('code', response.package_details.important_info); // notes
-                        $('#summernote5').summernote('code', response.package_details.program_inclusion); // program Inclusion
-                        $('#summernote9').summernote('code', response.package_details.program_exclusion); // program Exclusion
-
-
-                        //aminites
-                        if (response.selectedAmenities) {
-                            // Convert array to object for faster lookup
-                            const selectedAmenities = {};
-                            $.each(response.selectedAmenities, function(index, id) {
-                                selectedAmenities[id] = true;
-                            });
-
-                            // Loop through all checkboxes just once
-                            $('input[name="amenity_services[]"]').each(function() {
-                                $(this).prop('checked', selectedAmenities[$(this).val()] || false);
-                            });
-                        }
-                        //food beverages
-                        if (response.selectedfood_beverages) {
-                            const selectedFoodBeverages = {};
-                            $.each(response.selectedfood_beverages, function(index, id) {
-                                selectedFoodBeverages[id] = true;
-                            });
-                            $('input[name="food_beverages[]"]').each(function() {
-                                $(this).prop('checked', selectedFoodBeverages[$(this).val()] || false);
-                            });
-                        }
-                        //Activities
-                        if (response.selectedactivities) {
-                            const selectedactivities = {};
-                            $.each(response.selectedactivities, function(index, id) {
-                                selectedactivities[id] = true;
-                            });
-                            $('input[name="activities[]"]').each(function() {
-                                $(this).prop('checked', selectedactivities[$(this).val()] || false);
-                            });
-                        }
-
-                        //Safety Features
-                        if (response.selectedsafety_features) {
-                            const selectedsafety_features = {};
-                            $.each(response.selectedsafety_features, function(index, id) {
-                                selectedsafety_features[id] = true;
-                            });
-                            $('input[name="safety_features[]"]').each(function() {
-                                $(this).prop('checked', selectedsafety_features[$(this).val()] || false);
-                            });
-                        }
-
-                        //status
-                        if (response.package_details.status !== undefined) {
-                            $('input[name="status"]').prop('checked', true);
-                        }
-                        //order
-                        if (response.package_details.list_order !== null && response.package_details.list_order !== undefined) {
-                            $('input[name="list_order"]').val(response.package_details.list_order);
-                        }
-
-
-
-
+                    } catch (e) {
+                        console.error('Error processing response:', e);
                     }
-                } catch (e) {
-                    console.error('Error processing response:', e);
-                }
-            },
+                },
 
-            error: function(xhr, status, error) {
-                alert('AJAX Error: ' + error);
-            }
+                error: function(xhr, status, error) {
+                    alert('AJAX Error: ' + error);
+                }
+            });
+
+
         });
 
+        // Update hidden input on form submission
+        $('form').on('submit', function() {
 
-    });
-
-    // Update hidden input on form submission
-    $('form').on('submit', function() {
-
-        $('#plan_description').val($('#summernote3').summernote('code'));
-        $('#location').val($('#summernote10').summernote('code'));
-        $('#important_info').val($('#summernote4').summernote('code'));
-        $('#program_inclusion').val($('#summernote5').summernote('code'));
-        $('#program_exclusion').val($('#summernote9').summernote('code'));
-    });
-</script>
-@endsection
+            $('#plan_description').val($('#summernote3').summernote('code'));
+            $('#location').val($('#summernote10').summernote('code'));
+            $('#important_info').val($('#summernote4').summernote('code'));
+            $('#program_inclusion').val($('#summernote5').summernote('code'));
+            $('#program_exclusion').val($('#summernote9').summernote('code'));
+        });
+    </script>
+    @endsection
