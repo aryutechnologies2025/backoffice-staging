@@ -8,7 +8,7 @@
     <!-- FORM -->
     <form id="form_valid" action="{{ route('admin.inclusive_package_insert') }}" method="POST" autocomplete="off" enctype="multipart/form-data">
         @csrf
-        <!-- 1.INFORMATION -->
+        <!-- 1.INFORMATION --> afdasfas
         <div class="row mb-5">
             <div class="col">
                 <div class="form-body px-5  rounded-4 m-auto ">
