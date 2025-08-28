@@ -23,10 +23,10 @@ jobs:
           server-dir: ${{ secrets.FTP_REMOTE_DIR }}
           local-dir: ./
           exclude: |
-            **/.git*
-            **/.github*
-            **/ node_modules/*
-             **/tests/*
-           **/  storage/logs/*
-            **/ storage/framework/*
-            **/ vendor/*
+              **/.git*
+              **/.github*
+              **/ node_modules/*
+              **/tests/*
+              **/  storage/logs/*
+              **/ storage/framework/*
+              **/ vendor/*
