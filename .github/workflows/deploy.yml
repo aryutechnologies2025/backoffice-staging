@@ -1,4 +1,4 @@
-name: 🚀 Innerpece(Laavel) Deploy to Hostinger via FTP
+name: 🚀 Innerpece(Laravel) Deploy to Hostinger via FTP
 
 on:
   push:
