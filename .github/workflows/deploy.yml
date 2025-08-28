@@ -22,7 +22,7 @@ jobs:
           port: 21
           server-dir: /
           protocol: ftp
-          dangerous-clean-slate: true
+          dangerous-clean-slate: false
           local-dir: ./
           exclude: |
               **/.git*
