@@ -46,7 +46,7 @@
                 <thead>
                     <tr class="rounded-top-4">
                         <th class="text-start">S.No</th>
-                        <th class="text-start">Location</th>
+                        <th class="text-start">Title</th>
                         <th class="text-start">Destination</th>
                         <th class="text-start">Status</th>
                         <th class="text-start">Action</th>
@@ -59,7 +59,7 @@
 
                     <tr>
                         <td class="text-start">{{ $loop->iteration }}</td>
-                        <td class="text-start">{{ $row->title }}</td>
+                        <td class="text-start">{{ ucfirst($row->title) }}</td>
                         <td class="text-start">{{ $row->destination_id }}</td>
                       
                         @php

@@ -41,6 +41,12 @@ Route::prefix('v1')->group(function () {
         Route::post('/login', [AuthController::class, 'login']);
         Route::post('/contact', [AuthController::class, 'store_contact']); // Contact Form
 
+        // Route to redirect to Google's OAuth page
+        Route::get('/auth/google/redirect', [GoogleAuthController::class, 'redirect'])->name('auth.google.redirect');
+
+        // Route to handle the callback from Google
+        Route::get('/auth/google/callback', [GoogleAuthController::class, 'callback'])->name('auth.google.callback');
+
         //assistance form
         Route::post('/assistance', [AssitanceController::class, 'store']);
 

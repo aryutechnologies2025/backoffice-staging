@@ -12,7 +12,7 @@ class CabController extends Controller
     public function list(Request $request)
     {
         $title = 'Cab List';
-        $stay_details = Cab::where('is_deleted', '0')->get();
+        $stay_details = Cab::where('is_deleted', '0')->orderBy('id', 'desc')->get();
         return view('admin.cabs.cablist', compact('title', 'stay_details'));
     }
 

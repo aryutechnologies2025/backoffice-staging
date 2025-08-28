@@ -12,6 +12,12 @@
     .enquiry {
         color: blue;
     }
+
+
+    .form-check-input {
+        transform: scale(1.5);
+        /* Increase the size of the checkbox */
+    }
 </style>
 <div class="container mt-5 mb-5">
     <div class="col-lg-12">
@@ -68,32 +74,20 @@
             </div>
 
 
-           <div class="test">
+            <div class="test">
                 <h4>Pricing Calculator</h4>
                 <div class="row gap-2">
                     <!-- Theme and Destination -->
-                    <div class="col-md-4 ">
-                        <label class="mb-2">Destination</label>
-                        <select id="cities_name" name="cities_name"
-                            class="form-select py-2 rounded-3 shadow-sm" required>
-                            <option value="" disabled selected>Select Destination</option>
-                            @foreach($cities as $id => $name)
-                            <option value="{{ $name }}" @if(old('cities_name')=='{{ $id }}' ) selected @endif>
-                                {{ $name }}
-                            </option>
-                            @endforeach
-                        </select>
-                    </div>
                     <div class="col-md-4">
-                        <label class="mb-2">Location</label>
-                        <select id="district_name" name="district_name"
+                        <label class="mb-2">Price Calculator List</label>
+                        <select id="pricing_calculator" name="pricing_calculator"
                             class="form-select py-2 rounded-3 shadow-sm" required>
                             <option value="" disabled selected>Select Location</option>
                             <!-- Districts will be populated dynamically -->
                         </select>
                     </div>
 
-                </div>  
+                </div>
                 <!-- Stays Section -->
                 <div id="stays-section" class="row d-flex mt-3">
                     <div class="col-md-4">
@@ -926,13 +920,6 @@
         });
 
 
-
-
-
-
-
-
-
         let photoCount = 1; // Start with existing photo field count
 
         // Function to generate new photo upload field HTML
@@ -1052,9 +1039,6 @@
         });
     });
 
-
-
-
     function addCampRuleField() {
         // Find the container where new fields will be added
         var container = document.getElementById('camp-rule-container');
@@ -1086,7 +1070,6 @@
         }
     }
 
-
     // total duration
     document.addEventListener('DOMContentLoaded', () => {
         const startDateInput = document.getElementById('start_date');
@@ -1108,8 +1091,6 @@
         startDateInput.addEventListener('change', calculateDays);
         returnDateInput.addEventListener('change', calculateDays);
     });
-
-
 
     //package change
 
@@ -1184,9 +1165,6 @@
                         var tourVal = typeof response.package_details.tour_planning === 'string' ?
                             JSON.parse(response.package_details.tour_planning) :
                             response.package_details.tour_planning;
-
-                        console.log(tourVal);
-
                         // First, clear all existing day blocks except the first one
                         $('#day-wrapper').html('');
 
@@ -1196,26 +1174,23 @@
                             div.classList.add('row', 'g-2', 'mb-2', 'day-block');
 
                             div.innerHTML = `
-                    <div class="col-md-5 mb-2">
-                        <input type="text" name="tour_planning[${i}][title]" class="form-control py-2 rounded-3 shadow-sm" value="${day.title}" placeholder="Day Title (e.g., Day ${i + 1})">
-                    </div>
-                    <div class="col-md-5 mb-2">
-                        <input type="text" name="tour_planning[${i}][subtitle]" class="form-control py-2 rounded-3 shadow-sm" value="${day.subtitle}" placeholder="Activity Subtitle">
-                    </div>
-                    <div class="col-md-10 mb-2">
-                        <input type="hidden" name="tour_planning[${i}][description]" class="tour-description-hidden">
-                        <div class="tour-description-editor"></div>
-                    </div>
-                    <div class="col-md-1 d-flex align-items-end">
-                        ${i > 0 ? `<button type="button" class="btn btn-danger remove-day" onclick="removeDay(this)">
-                            <i class="fa fa-trash"></i>
-                        </button>` : ''}
-                    </div>
-                `;
-
-
+                                <div class="col-md-5 mb-2">
+                                    <input type="text" name="tour_planning[${i}][title]" class="form-control py-2 rounded-3 shadow-sm" value="${day.title}" placeholder="Day Title (e.g., Day ${i + 1})">
+                                </div>
+                                <div class="col-md-5 mb-2">
+                                    <input type="text" name="tour_planning[${i}][subtitle]" class="form-control py-2 rounded-3 shadow-sm" value="${day.subtitle}" placeholder="Activity Subtitle">
+                                </div>
+                                <div class="col-md-10 mb-2">
+                                    <input type="hidden" name="tour_planning[${i}][description]" class="tour-description-hidden">
+                                    <div class="tour-description-editor"></div>
+                                </div>
+                                <div class="col-md-1 d-flex align-items-end">
+                                    ${i > 0 ? `<button type="button" class="btn btn-danger remove-day" onclick="removeDay(this)">
+                                        <i class="fa fa-trash"></i>
+                                    </button>` : ''}
+                                </div>
+                            `;
                             wrapper.appendChild(div);
-
                             // Initialize Summernote and set saved HTML description
                             const editor = $(div).find('.tour-description-editor');
                             const hiddenInput = $(div).find('.tour-description-hidden');
@@ -1233,8 +1208,6 @@
                             editor.summernote('code', day.description);
                             hiddenInput.val(day.description);
                         });
-
-
 
                         if (response.package_details.location) {
                             $('#title').val(response.package_details.title)
@@ -1367,6 +1340,53 @@
                             });
                         }
 
+                        //destination check
+                        // const selectElement = document.getElementById('cities_name');
+                        // if (selectElement && response.selectedCityId) {
+                        //     // Find the option with matching ID (data attribute approach)
+                        //     const option = $(`#cities_name option[data-id="${response.selectedCityId}"]`);
+                        //     if (option.length) {
+                        //         selectElement.value = option.val();
+                        //         $('#cities_name').trigger('change');
+                        //         $('#district_name').trigger('change');
+                        //     }
+                        // }
+                        // if (response.selectedLocationname) {
+                        //     districtState.value = response.selectedLocationname;
+                        //     console.log('District value set:', districtState.value);
+
+                        //     // Try to select the district immediately
+                        //     const districtSelect = $('#district_name');
+                        //     const option = $(`#district_name option[value="${districtState.value}"]`);
+
+                        //     if (option.length) {
+                        //         districtSelect.val(districtState.value).trigger('change');
+                        //     } else {
+                        //         // If district not found, trigger city change to reload districts
+                        //         const citySelect = $('#cities_name');
+                        //         if (citySelect.val()) {
+                        //             citySelect.trigger('change');
+                        //         }
+                        //     }
+                        // }
+
+                        //pricing caluculator lsit 
+                        if (response.pricingcalculator && response.pricingcalculator.length > 0) {
+                            const pricingSelect = $('#pricing_calculator');
+                            pricingSelect.empty().append(
+                                '<option value="" disabled selected>Select Price Calculator</option>'
+                            );
+
+                            // Add each pricing calculator option
+                            response.pricingcalculator.forEach(item => {
+                                pricingSelect.append(
+                                    $('<option></option>')
+                                    .val(item.id)
+                                    .text(item.title)
+                                );
+                            });
+                        }
+
                         //status
                         if (response.package_details.status !== undefined) {
                             $('input[name="status"]').prop('checked', true);
@@ -1401,8 +1421,575 @@
 
     });
 
+    // console.log('check init', initialDistrict);
+
     $(document).on('click', '.remove-day', function() {
         $(this).closest('.day-block').remove();
+    });
+
+    $(document).ready(function() {
+        $('#stays-section, #activities-section, #cabs-section').hide();
+        $('#pricing_calculator').change(function() {
+            const pricingval = $(this).val();
+
+            // Hide all sections initially
+            $('#stays-section, #activities-section, #cabs-section').hide();
+            $('#stayDropdownText').text('Select stays');
+            $('#activityDropdownText').text('Select activities');
+            $('#cabDropdownText').text('Select options');
+            $('#stayHiddenInput, #activityHiddenInput, #cabHiddenInput').val('');
+
+            $.ajax({
+                url: "{{ route('admin.c_pricing_details') }}",
+                type: 'POST',
+                data: {
+                    pricingval: pricingval,
+                    _token: "{{ csrf_token() }}"
+                },
+                success: function(data) {
+                    // Process Stays
+                    if (data.stays && Object.keys(data.stays).length > 0) {
+                        const staysSection = $('#stays-section');
+                        const staysDropdown = staysSection.find('.dropdown-menu');
+                        // const selectedStays = [];
+                        const selectedStays = data.pricing_stay_id;
+
+                        staysDropdown.empty();
+
+                        staysSection.css('display', 'block');
+
+                        $.each(data.stays, function(id, title) {
+                            staysDropdown.append(`
+                                    <li>
+                                        <div class="form-check">
+                                            <input type="checkbox" class="form-check-input stay-checkbox" 
+                                                id="stay-${id}" value="${id}" checked>
+                                            <label class="form-check-label" for="stay-${id}">${title}</label>
+                                        </div>
+                                    </li>
+                                `);
+                        });
+
+                        staysSection.show();
+
+
+                        // Update the dropdown text and hidden input initially
+                        $('#stayDropdownText').text(selectedStays.length > 0 ? `${selectedStays.length} selected` : 'Select stays');
+                        $('#stayHiddenInput').val(selectedStays.join(','));
+
+                        // Trigger change event for pre-checked boxes on initial load
+                        if (selectedStays.length > 0) {
+                            $('.stay-checkbox:checked').trigger('change');
+                        }
+
+                        $('.stay-checkbox').change(function() {
+                            const stayId = $(this).val();
+                            if ($(this).is(':checked')) {
+                                if (!selectedStays.includes(stayId)) selectedStays.push(stayId);
+                            } else {
+                                const index = selectedStays.indexOf(stayId);
+                                if (index > -1) selectedStays.splice(index, 1);
+                            }
+                            $('#stayDropdownText').text(selectedStays.length > 0 ? `${selectedStays.length} selected` : 'Select stays');
+                            $('#stayHiddenInput').val(selectedStays.join(','));
+                        });
+
+                        staysDropdown.on('click', '.form-check', function(e) {
+                            e.stopPropagation();
+                        });
+                    }
+
+                    // Process Activities
+                    if (data.activities && Object.keys(data.activities).length > 0) {
+                        const activitiesSection = $('#activities-section');
+                        const activitiesDropdown = activitiesSection.find('.dropdown-menu');
+                        // const selectedActivities = [];
+                        const selectedActivities = data.pricing_activity_id;
+
+                        activitiesDropdown.empty();
+
+                        $.each(data.activities, function(id, title) {
+                            activitiesDropdown.append(`
+                                    <li>
+                                        <div class="form-check">
+                                            <input type="checkbox" class="form-check-input activity-checkbox" 
+                                                id="activity-${id}" value="${id}" checked>
+                                            <label class="form-check-label" for="activity-${id}">${title}</label>
+                                        </div>
+                                    </li>
+                                `);
+                        });
+
+                        activitiesSection.show();
+
+                        // Update UI immediately
+                        $('#activityDropdownText').text(
+                            selectedActivities.length > 0 ?
+                            `${selectedActivities.length} selected` :
+                            'Select activities'
+                        );
+                        $('#activityHiddenInput').val(selectedActivities.join(','));
+
+                        // Trigger change event for pre-checked boxes on initial load
+                        if (selectedActivities.length > 0) {
+                            $('.activity-checkbox:checked').trigger('change');
+                        }
+
+                        $('.activity-checkbox').change(function() {
+                            const activityId = $(this).val();
+                            if ($(this).is(':checked')) {
+                                if (!selectedActivities.includes(activityId)) selectedActivities.push(activityId);
+                            } else {
+                                const index = selectedActivities.indexOf(activityId);
+                                if (index > -1) selectedActivities.splice(index, 1);
+                            }
+                            $('#activityDropdownText').text(selectedActivities.length > 0 ? `${selectedActivities.length} selected` : 'Select activities');
+                            $('#activityHiddenInput').val(selectedActivities.join(','));
+                        });
+
+                        activitiesDropdown.on('click', '.form-check', function(e) {
+                            e.stopPropagation();
+                        });
+                    }
+
+                    // Process Cabs
+                    if (data.cabs && Object.keys(data.cabs).length > 0) {
+                        const cabsSection = $('#cabs-section');
+                        const cabsDropdown = cabsSection.find('.dropdown-menu');
+                        // const selectedCabs = [];
+                        const selectedCabs = data.pricing_cabs ?
+                            Object.keys(data.pricing_cabs)
+                            .filter(key => data.cabs[key]) // Only keep keys that exist in current cabs
+                            .map(key => ({
+                                key: key,
+                                value: data.cabs[key]
+                            })) : [];
+
+                        cabsDropdown.empty();
+
+                        // Using Object.keys to iterate through the key-value pairs
+                        Object.keys(data.cabs).forEach(function(key) {
+                            const value = data.cabs[key];
+                            cabsDropdown.append(`
+                                    <li>
+                                        <div class="form-check">
+                                            <input type="checkbox" class="form-check-input cab-checkbox cab_details" 
+                                                id="cab-${key}" name="${key}" value="${key}" data-text="${value}" checked>
+                                            <label class="form-check-label" for="cab-${key}">${value}</label>
+                                        </div>
+                                    </li>
+                                `);
+                        });
+
+                        cabsSection.show();
+
+                        // Update UI with initial selections
+                        $('#cabDropdownText').text(
+                            selectedCabs.length > 0 ?
+                            selectedCabs.map(item => item.value).join(', ') :
+                            'Select options'
+                        );
+                        $('#cabHiddenInput').val(selectedCabs.map(item => item.key).join(','));
+
+                        if (selectedCabs.length > 0) {
+                            $('.cab-checkbox:checked').trigger('change');
+                        }
+
+                        $('.cab-checkbox').change(function() {
+                            const cabKey = $(this).val();
+                            const cabValue = $(this).data('text');
+
+                            if ($(this).is(':checked')) {
+                                if (!selectedCabs.some(item => item.key === cabKey)) {
+                                    selectedCabs.push({
+                                        key: cabKey,
+                                        value: cabValue
+                                    });
+                                }
+                            } else {
+                                const index = selectedCabs.findIndex(item => item.key === cabKey);
+                                if (index > -1) selectedCabs.splice(index, 1);
+                            }
+
+                            // Update button text with selected values
+                            $('#cabDropdownText').text(
+                                selectedCabs.length > 0 ?
+                                selectedCabs.map(item => item.value).join(', ') :
+                                'Select options'
+                            );
+
+                            // Store keys in hidden input
+                            $('#cabHiddenInput').val(selectedCabs.map(item => item.key).join(','));
+                        });
+
+                        cabsDropdown.on('click', '.form-check', function(e) {
+                            e.stopPropagation();
+                        });
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error:', error);
+                    $('#stays-section, #activities-section, #cabs-section').html('<div class="alert alert-danger">Error loading data</div>').show();
+                }
+            });
+        });
+        //stay details - stay-checkbox
+        $(document).on('change', '.stay-checkbox', function() {
+            const pricingval = $('#pricing_calculator').val();
+            const selectedStays = [];
+
+            $('.stay-checkbox:checked').each(function() {
+                selectedStays.push($(this).val());
+            });
+
+            if (selectedStays.length === 0) {
+                $('#stays-details-container').empty();
+                return;
+            }
+
+            $.ajax({
+                url: "{{ route('admin.c_stay_details') }}",
+                type: 'POST',
+                data: {
+                    pricingval: pricingval,
+                    staydetails: selectedStays,
+                    _token: "{{ csrf_token() }}"
+                },
+                success: function(data) {
+                    const container = $('#stays-details-container');
+                    container.empty();
+
+                    data.stays_details.forEach((stayGroup, index) => {
+                        const groupTitle = stayGroup[0]?.title || '';
+                        const groupHeaderHtml = `
+                            <div class="row stay-group-header mb-2">
+                                <div class="col-md-12">
+                                    <h5>${groupTitle}</h5>
+                                </div>
+                            </div>
+                        `;
+                        container.append(groupHeaderHtml);
+
+                        stayGroup.forEach((stay, subIndex) => {
+                            const stayHtml = `
+                                <div class="row stay-price-row mb-3" data-stay-id="${selectedStays[index]}">
+                                    <div class="col-md-4">
+                                        <input type="hidden" name="stays[${index}][${subIndex}][stay_id]" value="${stay.stay_id}">
+                                        <input type="hidden" name="stays[${index}][${subIndex}][title]" value="${stay.title}">
+                                        <!-- Title removed from display (already shown in header) -->
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="hidden" name="stays[${index}][${subIndex}][price_title]" value="${stay.price_title}">
+                                        <input type="text" class="form-control" value="${stay.price_title}" readonly>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="text" class="form-control price-input" 
+                                            name="stays[${index}][${subIndex}][price]" 
+                                            value="${stay.price}">
+                                    </div>
+                                </div>
+                            `;
+                            container.append(stayHtml);
+                        });
+                    });
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error:', error);
+                }
+            });
+        });
+
+        //activity details
+        $(document).on('change', '.activity-checkbox', function() {
+            const pricingval = $('#pricing_calculator').val();
+            const selectedStays = [];
+
+            $('.activity-checkbox:checked').each(function() {
+                selectedStays.push($(this).val());
+            });
+
+            if (selectedStays.length === 0) {
+                $('#activity-details-container').empty();
+                return;
+            }
+
+            $.ajax({
+                url: "{{ route('admin.c_activity_details') }}",
+                type: 'POST',
+                data: {
+                    pricingval: pricingval,
+                    staydetails: selectedStays,
+                    _token: "{{ csrf_token() }}"
+                },
+                success: function(data) {
+                    const container = $('#activity-details-container');
+                    container.empty();
+
+                    data.activity_details.forEach((activityGroup, groupIndex) => {
+                        // Add a group header showing the title just once
+                        if (activityGroup.length > 0) {
+                            const groupHeaderHtml = `
+                                <div class="row activity-group-header mb-2">
+                                    <div class="col-md-12">
+                                        <h5>${activityGroup[0].title}</h5>
+                                    </div>
+                                </div>
+                            `;
+                            container.append(groupHeaderHtml);
+                        }
+
+                        // Process each activity in the group
+                        activityGroup.forEach((activity, itemIndex) => {
+                            const activityHtml = `
+                                <div class="row activity-price-row mb-3" data-activity-id="${selectedStays[groupIndex]}">
+                                    <div class="col-md-4">
+                                        <input type="hidden" name="activity[${groupIndex}][${itemIndex}][activity_id]" value="${activity.activity_id}">
+                                        <input type="hidden" name="activity[${groupIndex}][${itemIndex}][title]" value="${activity.title}">
+                                        <!-- Title removed from display (shown in header) -->
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="hidden" name="activity[${groupIndex}][${itemIndex}][price_title]" value="${activity.price_title}">
+                                        <input type="text" class="form-control" value="${activity.price_title}" readonly>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="text" class="form-control price-input" 
+                                            name="activity[${groupIndex}][${itemIndex}][price]" 
+                                            value="${activity.price}">
+                                    </div>
+                                </div>
+                            `;
+                            container.append(activityHtml);
+                        });
+                    });
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error:', error);
+                }
+            });
+        });
+
+        // Handle main cab type selection
+        $(document).on('change', '.cab-checkbox', function() {
+            const pricingval = $('#pricing_calculator').val();
+            const selectedCabIds = [];
+
+            $('.cab-checkbox:checked').each(function() {
+                selectedCabIds.push($(this).val());
+            });
+
+            if (selectedCabIds.length === 0) {
+                $('#cabs-details-container, #cabsdetails-container').hide();
+                return;
+            }
+
+            $.ajax({
+                url: "{{ route('admin.c_travel_details') }}",
+                type: 'POST',
+                data: {
+                    pricingval: pricingval,
+                    travelmodes: selectedCabIds,
+                    _token: "{{ csrf_token() }}"
+                },
+                success: function(data) {
+                    updateCabDetailsDropdown(data.cabs, data.pricing_cab);
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error:', error);
+                    $('#cabs-details-container, #cabsdetails-container').hide();
+                }
+            });
+        });
+
+        // Handle cab details selection
+        $(document).on('change', '.cab-details-checkbox', function() {
+            const pricingval = $('#pricing_calculator').val();
+            const selectedCabDetails = [];
+
+            $('.cab-details-checkbox:checked').each(function() {
+                selectedCabDetails.push({
+                    id: $(this).val(),
+                    text: $(this).data('text')
+                });
+            });
+
+            if (selectedCabDetails.length === 0) {
+                $('#cabsdetails-container').empty().hide();
+                return;
+            }
+
+            const selectedCabIds = [];
+            $('.cab-checkbox:checked').each(function() {
+                selectedCabIds.push($(this).val());
+            });
+
+            $.ajax({
+                url: "{{ route('admin.c_cabs_details') }}",
+                type: 'POST',
+                data: {
+                    pricingval: pricingval,
+                    cabdetails: selectedCabDetails.map(d => d.id),
+                    travelmodes: selectedCabIds,
+                    _token: "{{ csrf_token() }}"
+                },
+                success: function(data) {
+                    displayCabDetails(data.activity_details);
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error:', error);
+                    $('#cabsdetails-container').empty().hide();
+                }
+            });
+        });
+
+        // Helper function to update cab details dropdown
+        function updateCabDetailsDropdown(cabsData, cabids) {
+            const container = $('#cabs-details-container');
+            const dropdownMenu = container.find('.dropdown-menu');
+            const dropdownText = container.find('#cabDetailsDropdownText');
+            const hiddenInput = container.find('#cabDetailsHiddenInput');
+
+            // Reset previous selections
+            dropdownMenu.empty();
+            hiddenInput.val(cabids);
+            dropdownText.text(cabids.length > 0 ? `${cabids.length} selected` : 'Select options');
+            $('#cabsdetails-container').empty().hide();
+
+            if (cabsData && Object.keys(cabsData).length > 0) {
+                const selectedCabDetails = cabids
+                    .filter(id => cabsData[id]) // Only keep IDs that exist in current data
+                    .map(id => ({
+                        id: id,
+                        text: cabsData[id]
+                    }));
+
+                $.each(cabsData, function(id, title) {
+                    const isChecked = cabids.includes(id.toString());
+                    dropdownMenu.append(`
+                            <li>
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input cab-details-checkbox" 
+                                        id="cab-detail-${id}" value="${id}" 
+                                        ${isChecked ? 'checked' : ''} 
+                                        data-text="${title}">
+                                    <label class="form-check-label" for="cab-detail-${id}">${title}</label>
+                                </div>
+                            </li>
+                        `);
+                });
+
+                // Update UI with initial selections
+                if (selectedCabDetails.length > 0) {
+                    dropdownText.text(selectedCabDetails.map(opt => opt.text).join(', '));
+                    hiddenInput.val(selectedCabDetails.map(opt => opt.id).join(','));
+                }
+
+                // Single unified change handler
+                $(document).off('change', '.cab-details-checkbox').on('change', '.cab-details-checkbox', function() {
+                    const pricingval = $('#pricing_calculator').val();
+                    const currentSelections = [];
+
+                    // Get all checked cab details
+                    $('.cab-details-checkbox:checked').each(function() {
+                        currentSelections.push({
+                            id: $(this).val(),
+                            text: $(this).data('text')
+                        });
+                    });
+
+                    // Get all checked main cab types
+                    const selectedCabIds = $('.cab-checkbox:checked').map(function() {
+                        return $(this).val();
+                    }).get();
+
+                    // Update UI
+                    dropdownText.text(
+                        currentSelections.length > 0 ?
+                        currentSelections.map(opt => opt.text).join(', ') :
+                        'Select options'
+                    );
+                    hiddenInput.val(currentSelections.map(opt => opt.id).join(','));
+
+                    // Make AJAX call if we have selections
+                    if (currentSelections.length > 0) {
+                        $.ajax({
+                            url: "{{ route('admin.c_cabs_details') }}",
+                            type: 'POST',
+                            data: {
+                                pricingval: pricingval,
+                                cabdetails: currentSelections.map(d => d.id),
+                                travelmodes: selectedCabIds,
+                                _token: "{{ csrf_token() }}"
+                            },
+                            success: function(data) {
+                                displayCabDetails(data.activity_details);
+                            },
+                            error: function(xhr, status, error) {
+                                console.error('Error:', error);
+                                $('#cabsdetails-container').empty().hide();
+                            }
+                        });
+                    } else {
+                        $('#cabsdetails-container').empty().hide();
+                    }
+                });
+
+                // Trigger change for pre-checked boxes
+                if (cabids.length > 0) {
+                    $('.cab-details-checkbox:checked').trigger('change');
+                }
+
+                container.show();
+            } else {
+                container.hide();
+            }
+        }
+
+        // Helper function to display cab details (unchanged)
+        function displayCabDetails(detailsData) {
+            const container = $('#cabsdetails-container');
+            container.empty();
+
+            if (detailsData && detailsData.length > 0) {
+                detailsData.forEach((cabGroup, groupIndex) => {
+                    // Add group header with title (shown once per group)
+                    if (cabGroup.length > 0) {
+                        container.append(`
+                            <div class="row cab-group-header mb-2">
+                                <div class="col-md-12">
+                                    <h5>${cabGroup[0].title}</h5>
+                                </div>
+                            </div>
+                        `);
+                    }
+
+                    // Add each cab detail (without repeating title)
+                    cabGroup.forEach((cab, itemIndex) => {
+                        container.append(`
+                            <div class="row cab-detail-row mb-3">
+                                <div class="col-md-4">
+                                    <input type="hidden" name="cabs[${groupIndex}][${itemIndex}][cab_id]" value="${cab.cab_id}">
+                                    <input type="hidden" name="cabs[${groupIndex}][${itemIndex}][title]" value="${cab.title}">
+                                    <!-- Title removed from display (shown in header) -->
+                                </div>
+                                <div class="col-md-4">
+                                    <input type="hidden" name="cabs[${groupIndex}][${itemIndex}][price_title]" value="${cab.price_title}">
+                                    <input type="text" class="form-control" value="${cab.price_title}" readonly>
+                                </div>
+                                <div class="col-md-4">
+                                    <input type="text" class="form-control price-input" 
+                                        name="cabs[${groupIndex}][${itemIndex}][price]" 
+                                        value="${cab.price}">
+                                </div>
+                            </div>
+                        `);
+                    });
+                });
+                container.show();
+            } else {
+                container.hide();
+            }
+        }
+
     });
 </script>
 @endsection

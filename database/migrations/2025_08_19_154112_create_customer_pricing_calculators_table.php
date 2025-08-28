@@ -1,0 +1,36 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('customer_pricing_calculators', function (Blueprint $table) {
+            $table->id();
+            $table->string('pricing_calculator_id')->nullable()->index();
+            $table->string('package_id')->nullable()->index();
+            $table->string('customer_package_id')->nullable()->index();
+            $table->string('stays_id')->nullable();
+            $table->string('activitys_id')->nullable();
+            $table->string('cab_details_id')->nullable();
+            $table->string('cab_type')->nullable();
+            $table->enum('status', ['1', '0'])->default('1');
+            $table->enum('is_deleted', ['0', '1'])->default('0');
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('customer_pricing_calculators');
+    }
+};

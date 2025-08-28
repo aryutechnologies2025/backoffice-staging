@@ -15,7 +15,7 @@
 </style>
 <div class="container mt-5 mb-5">
     <div class="col-lg-12">
-        <b><a href="/dashboard">Dashboard</a> > <a class="" href="/customer-package">Customer List</a></b> > 
+        <b><a href="/dashboard">Dashboard</a> > <a class="" href="/customer-package">Customer List</a></b> >
         <br><br>
         <h3 class="fw-bold">{{$title}}</h3>
     </div>
@@ -51,8 +51,8 @@
             <div class="col-md-5 mb-3">
                 <label for="title_id" class="form-label">Select Package Type</label>
                 <br>
-                <label class="form-label text-danger">  Current: {{ $titless }}</label>
-                
+                <label class="form-label text-danger"> Current: {{ $titless }}</label>
+
                 <select class="package form-control" name="package_type" id="package">
                     <option disabled {{ !$customer->package_type ? 'selected' : '' }}>Select Package Type</option>
                     @foreach($titles as $id => $name)
@@ -76,36 +76,141 @@
             </div>
 
             <div class="test">
-                <h2>Package Details</h2>
-                <!-- 1.INFORMATION -->
-                <div class="row mb-3">
-                    <div class="col-lg-4">
-                        <label class="fw-bold mb-2">Title </label>
-                        <input type="text" placeholder="Title" id="title" name="title"
-                            class="form-control py-2 rounded-3 shadow-sm" value="{{ $customer->package_type }}">
+                <h4>Pricing Calculator</h4>
+                <div class="row gap-2">
+                    <!-- Theme and Destination -->
+                    <input type="hidden" id="customer_id" name="customer_id" value="{{ $customer->customerpackage->pricing_calculator_id ?? '' }}">
+                    <div class="col-md-4">
+                        <div class="col-md-4">
+                            <label class="mb-2">Price Calculator List</label>
+                            <select id="pricing_calculator" name="pricing_calculator" class="form-select py-2 rounded-3 shadow-sm" required>
+                                <option value="" disabled selected>Select Location</option>
+                                @foreach($pricingcalculator as $id => $title)
+                                <option value="{{ $title->id }}"
+                                    {{ $customer->customerpackage && $customer->customerpackage->pricing_calculator_id == $title->id ? 'selected' : '' }}>
+                                    {{ $title->title }}
+                                </option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                    </div>
+                    <!-- Stays Section -->
+                    <div id="stays-section" class="row d-flex mt-3">
+                        <div class="col-md-4">
+                            <label class="mb-2">Stay Details</label>
+                            <div class="dropdown">
+                                <button class="btn btn-outline-secondary dropdown-toggle w-100 text-start d-flex justify-content-between align-items-center"
+                                    type="button" id="stayDropdown" data-bs-toggle="dropdown"
+                                    aria-expanded="false">
+                                    <span id="stayDropdownText">Select stay</span>
+                                </button>
+                                <ul class="dropdown-menu w-100 p-2" aria-labelledby="stayDropdown"
+                                    style="max-height: 200px; overflow-y: auto;">
+                                    <!-- Stays will be populated here via JavaScript -->
+                                </ul>
+                            </div>
+                            <input type="hidden" name="stay_id" id="stayHiddenInput">
+                        </div>
+                        <div id="stays-details-container" class="mt-3"></div>
+
+
                     </div>
 
+                    <!-- Activities Section -->
+                    <div id="activities-section" class="row d-flex mt-3">
+                        <div class="col-md-4">
+                            <label class="mb-2">Activity</label>
+                            <div class="dropdown">
+                                <button class="btn btn-outline-secondary dropdown-toggle w-100 text-start d-flex justify-content-between align-items-center"
+                                    type="button" id="activityDropdown" data-bs-toggle="dropdown"
+                                    aria-expanded="false">
+                                    <span id="activityDropdownText">Select activity</span>
+                                </button>
+                                <ul class="dropdown-menu w-100 p-2" aria-labelledby="activityDropdown"
+                                    style="max-height: 200px; overflow-y: auto;">
+                                    <!-- Activities will be populated here via JavaScript -->
+                                </ul>
+                            </div>
+                            <input type="hidden" name="activity_ids" id="activityHiddenInput">
+                        </div>
+                        <div id="activity-details-container" class="mt-3"></div>
+                    </div>
+
+                    <!-- Cabs Section -->
+                    <div id="cabs-section" class="row d-flex mt-3">
+                        <div class="col-md-4">
+                            <label class="mb-2">Travel Mode</label>
+                            <div class="dropdown">
+                                <button class="btn btn-outline-secondary dropdown-toggle w-100 text-start d-flex justify-content-between align-items-center"
+                                    type="button" id="cabDropdown" data-bs-toggle="dropdown"
+                                    aria-expanded="false">
+                                    <span id="cabDropdownText">Select option</span>
+                                </button>
+                                <ul class="dropdown-menu w-100 p-2" aria-labelledby="cabDropdown"
+                                    style="max-height: 200px; overflow-y: auto;">
+                                    <!-- Cabs will be populated here via JavaScript -->
+                                </ul>
+                            </div>
+                            <input type="hidden" name="cab_types" id="cabHiddenInput">
+                        </div>
+
+                        <!-- Cab details selection -->
+                        <div id="cabs-details-container" class="mt-3" style="display: none;">
+                            <div class="col-md-4">
+                                <label class="mb-2">Travel Details</label>
+                                <div class="dropdown">
+                                    <button class="btn btn-outline-secondary dropdown-toggle w-100 text-start d-flex justify-content-between align-items-center"
+                                        type="button" id="cabDetailsDropdown" data-bs-toggle="dropdown"
+                                        aria-expanded="false">
+                                        <span id="cabDetailsDropdownText">Select options</span>
+                                    </button>
+                                    <ul class="dropdown-menu w-100 p-2" aria-labelledby="cabDetailsDropdown"
+                                        style="max-height: 200px; overflow-y: auto;">
+                                        <!-- Will be populated dynamically -->
+                                    </ul>
+                                </div>
+                                <input type="hidden" name="selected_cab_options" id="cabDetailsHiddenInput">
+                            </div>
+                        </div>
+
+                        <!-- Cab price details display -->
+                        <div id="cabsdetails-container" class="mt-3"></div>
+                    </div>
+                </div>
+
+                <div class="test">
+                    <h2>Package Details</h2>
+                    <!-- 1.INFORMATION -->
+                    <div class="row mb-3">
+                        <div class="col-lg-4">
+                            <label class="fw-bold mb-2">Title </label>
+                            <input type="text" placeholder="Title" id="title" name="title"
+                                class="form-control py-2 rounded-3 shadow-sm" value="{{ $customer->package_type }}">
+                        </div>
 
 
-                    <!-- 2. LOCATION -->
 
-                    <div class="row mb-2">
-                        <div class="col">
-                            <div class="form-body px-5  rounded-4">
-                                <h4 class="fw-bold mb-3">01. Location</h4>
-                                <div class="mb-1">
-                                    <div class="row g-2 mb-1">
-                                        <div class="col">
-                                            <input type="hidden" id="location" name="location">
-                                            @php
-                                            $plain_text_important_info = html_entity_decode(
-                                            strip_tags($customer->location),
-                                            );
-                                            @endphp
-                                            <div class=" mt-1">
-                                                <div class="row">
-                                                    <div class="col-lg-12 ">
-                                                        <div id="summernote10" style="height: 200px;">{!! trim($customer->location, '"') !!}</div>
+                        <!-- 2. LOCATION -->
+
+                        <div class="row mb-2">
+                            <div class="col">
+                                <div class="form-body px-5  rounded-4">
+                                    <h4 class="fw-bold mb-3">01. Location</h4>
+                                    <div class="mb-1">
+                                        <div class="row g-2 mb-1">
+                                            <div class="col">
+                                                <input type="hidden" id="location" name="location">
+                                                @php
+                                                $plain_text_important_info = html_entity_decode(
+                                                strip_tags($customer->location),
+                                                );
+                                                @endphp
+                                                <div class=" mt-1">
+                                                    <div class="row">
+                                                        <div class="col-lg-12 ">
+                                                            <div id="summernote10" style="height: 200px;">{!! trim($customer->location, '"') !!}</div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -114,107 +219,110 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
 
 
 
-                    <div class="row mb-3">
-                        <div class="col">
-                            <div class="form-body px-5 rounded-4">
-                                <h4 class="fw-bold mb-2">02. Tour Planning <span class="text-danger">*</span></h4>
-                                <div id="day-wrapper">
-                                            @php
-                                                $tourPlanning = [];
-                                                if (!empty($customer->tour_planning)) {
-                                                    $tourPlanning = is_array($customer->tour_planning)
-                                                        ? $customer->tour_planning
-                                                        : json_decode($customer->tour_planning, true);
-                                                }
-                                            @endphp
-                                            @if (!empty($tourPlanning) && is_array($tourPlanning))
-                                                @foreach ($tourPlanning as $i => $day)
-                                                    <div class="row g-2 mb-2 day-block">
-                                                        <div class="col-md-5 mb-2">
-                                                            <label class="form-label fw-bold">Day Title <span class="text-danger">*</span></label>
-                                                            <input type="text"
-                                                                name="tour_planning[{{ $i }}][title]"
-                                                                class="form-control py-2 rounded-3 shadow-sm"
-                                                                placeholder="Day Title (e.g., Day {{ (int) $i + 1 }})"
-                                                                value="{{ $day['title'] ?? '' }}">
-                                                        </div>
-                                                        <div class="col-md-5 mb-2">
-                                                            <label class="form-label fw-bold">Day Subtitle <span class="text-danger">*</span></label>
-                                                            <input type="text"
-                                                                name="tour_planning[{{ $i }}][subtitle]"
-                                                                class="form-control py-2 rounded-3 shadow-sm"
-                                                                placeholder="Day Subtitle (e.g., Day {{ (int) $i + 1 }})"
-                                                                value="{{ $day['subtitle'] ?? '' }}">
-                                                        </div>
-                                                        <div class="col-md-10 mb-2">
-                                                            <label class="form-label fw-bold">Activity Description <span class="text-danger">*</span></label>
-                                                            <input type="hidden"
-                                                                name="tour_planning[{{ $i }}][description]"
-                                                                class="form-control py-2 rounded-3 shadow-sm tour-description-hidden"
-                                                                placeholder="Activity Description"
-                                                                value="{{ $day['description'] ?? '' }}">
-                                                            <div class="tour-description-editor"></div>
-                                                        </div>
-                                                        <div class="col-md-1 d-flex align-items-end">
-                                                            @if ($loop->first)
-                                                                <!-- No remove button for first row -->
-                                                            @else
-                                                                <button type="button" class="btn btn-danger remove-day"
-                                                                    onclick="removeDay(this)">
-                                                                    <i class="fa fa-trash"></i>
-                                                                </button>
-                                                            @endif
-                                                        </div>
-                                                    </div>
-                                                @endforeach
-                                                @php $tourPlanningIndex = count($tourPlanning); @endphp
-                                            @else
-                                                <div class="row g-2 mb-2 day-block">
-                                                    <div class="col-md-5 mb-2">
-                                                        <label class="form-label fw-bold">Day Title <span class="text-danger">*</span></label>
-                                                        <input type="text" name="tour_planning[0][title]"
-                                                            class="form-control py-2 rounded-3 shadow-sm"
-                                                            placeholder="Day Title (e.g., Day 1)">
-                                                    </div>
-                                                    <div class="col-md-5 mb-2">
-                                                        <label class="form-label fw-bold">Day Subtitle <span class="text-danger">*</span></label>
-                                                        <input type="text" name="tour_planning[0][subtitle]"
-                                                            class="form-control py-2 rounded-3 shadow-sm"
-                                                            placeholder="Day Subtitle ">
-                                                    </div>
-                                                    <div class="col-md-6 mb-2">
-                                                        <label class="form-label fw-bold">Activity Description <span class="text-danger">*</span></label>
-                                                        <input type="hidden" name="tour_planning[0][description]"
-                                                            class="form-control py-2 rounded-3 shadow-sm tour-description-hidden"
-                                                            placeholder="Activity Description">
-                                                        <div class="tour-description-editor"></div>
-                                                    </div>
-                                                    <div class="col-md-1 d-flex align-items-end">
-                                                        <!-- No remove button for first row -->
-                                                    </div>
-                                                </div>
-                                                @php $tourPlanningIndex = 1; @endphp
-                                            @endif
+                        <div class="row mb-3">
+                            <div class="col">
+                                <div class="form-body px-5 rounded-4">
+                                    <h4 class="fw-bold mb-2">02. Tour Planning <span class="text-danger">*</span></h4>
+                                    <div id="day-wrapper">
+                                        @php
+                                        $tourPlanning = [];
+                                        if (!empty($customer->tour_planning)) {
+                                        $tourPlanning = is_array($customer->tour_planning)
+                                        ? $customer->tour_planning
+                                        : json_decode($customer->tour_planning, true);
+                                        }
+                                        @endphp
+                                        @if (!empty($tourPlanning) && is_array($tourPlanning))
+                                        @foreach ($tourPlanning as $i => $day)
+                                        <div class="row g-2 mb-2 day-block">
+                                            <div class="col-md-5 mb-2">
+                                                <label class="form-label fw-bold">Day Title <span class="text-danger">*</span></label>
+                                                <input type="text"
+                                                    name="tour_planning[{{ $i }}][title]"
+                                                    class="form-control py-2 rounded-3 shadow-sm"
+                                                    placeholder="Day Title (e.g., Day {{ (int) $i + 1 }})"
+                                                    value="{{ $day['title'] ?? '' }}">
+                                            </div>
+                                            <div class="col-md-5 mb-2">
+                                                <label class="form-label fw-bold">Day Subtitle <span class="text-danger">*</span></label>
+                                                <input type="text"
+                                                    name="tour_planning[{{ $i }}][subtitle]"
+                                                    class="form-control py-2 rounded-3 shadow-sm"
+                                                    placeholder="Day Subtitle (e.g., Day {{ (int) $i + 1 }})"
+                                                    value="{{ $day['subtitle'] ?? '' }}">
+                                            </div>
+                                            <div class="col-md-10 mb-2">
+                                                <label class="form-label fw-bold">Activity Description <span class="text-danger">*</span></label>
+                                                <input type="hidden"
+                                                    name="tour_planning[{{ $i }}][description]"
+                                                    class="form-control py-2 rounded-3 shadow-sm tour-description-hidden"
+                                                    placeholder="Activity Description"
+                                                    value="{{ $day['description'] ?? '' }}">
+                                                <div class="tour-description-editor"></div>
+                                            </div>
+                                            <div class="col-md-1 d-flex align-items-end">
+                                                @if ($loop->first)
+                                                <!-- No remove button for first row -->
+                                                @else
+                                                <button type="button" class="btn btn-danger remove-day"
+                                                    onclick="removeDay(this)">
+                                                    <i class="fa fa-trash"></i>
+                                                </button>
+                                                @endif
+                                            </div>
                                         </div>
-                                        <button type="button" class="btn-add rounded border-0 px-4 py-2 text-white mt-2"
-                                            onclick="addDay()">
-                                            <i class="fa fa-plus" aria-hidden="true"></i> Add More
-                                        </button>
+                                        @endforeach
+                                        @php $tourPlanningIndex = count($tourPlanning); @endphp
+                                        @else
+                                        <div class="row g-2 mb-2 day-block">
+                                            <div class="col-md-5 mb-2">
+                                                <label class="form-label fw-bold">Day Title <span class="text-danger">*</span></label>
+                                                <input type="text" name="tour_planning[0][title]"
+                                                    class="form-control py-2 rounded-3 shadow-sm"
+                                                    placeholder="Day Title (e.g., Day 1)">
+                                            </div>
+                                            <div class="col-md-5 mb-2">
+                                                <label class="form-label fw-bold">Day Subtitle <span class="text-danger">*</span></label>
+                                                <input type="text" name="tour_planning[0][subtitle]"
+                                                    class="form-control py-2 rounded-3 shadow-sm"
+                                                    placeholder="Day Subtitle ">
+                                            </div>
+                                            <div class="col-md-6 mb-2">
+                                                <label class="form-label fw-bold">Activity Description <span class="text-danger">*</span></label>
+                                                <input type="hidden" name="tour_planning[0][description]"
+                                                    class="form-control py-2 rounded-3 shadow-sm tour-description-hidden"
+                                                    placeholder="Activity Description">
+                                                <div class="tour-description-editor"></div>
+                                            </div>
+                                            <div class="col-md-1 d-flex align-items-end">
+                                                <!-- No remove button for first row -->
+                                            </div>
+                                        </div>
+                                        @php $tourPlanningIndex = 1; @endphp
+                                        @endif
+                                    </div>
+                                    <button type="button" class="btn-add rounded border-0 px-4 py-2 text-white mt-2"
+                                        onclick="addDay()">
+                                        <i class="fa fa-plus" aria-hidden="true"></i> Add More
+                                    </button>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                       <script>
-                                let index = {{ $tourPlanningIndex ?? 1 }};
+                        <script>
+                            let index = {
+                                {
+                                    $tourPlanningIndex ?? 1
+                                }
+                            };
 
-                                function addDay() {
-                                    const wrapper = document.getElementById('day-wrapper');
-                                    const div = document.createElement('div');
-                                         div.classList.add('row', 'g-2', 'mb-2', 'day-block');
-                                    div.innerHTML = `
+                            function addDay() {
+                                const wrapper = document.getElementById('day-wrapper');
+                                const div = document.createElement('div');
+                                div.classList.add('row', 'g-2', 'mb-2', 'day-block');
+                                div.innerHTML = `
                                         <div class="col-md-5 mb-2">
                                             <input type="text" name="tour_planning[${index}][title]" class="form-control py-2 rounded-3 shadow-sm" placeholder="Day Title (e.g., Day ${index + 1})">
                                         </div>
@@ -231,46 +339,46 @@
                                             </button>
                                         </div>
                                     `;
-                                    wrapper.appendChild(div);
-                                    // Initialize Summernote for the new editor
-                                    $(div).find('.tour-description-editor').summernote({
+                                wrapper.appendChild(div);
+                                // Initialize Summernote for the new editor
+                                $(div).find('.tour-description-editor').summernote({
+                                    height: 120,
+                                    callbacks: {
+                                        onChange: function(contents) {
+                                            $(div).find('.tour-description-hidden').val(contents);
+                                        }
+                                    }
+                                });
+                                index++;
+                            }
+
+                            function removeDay(btn) {
+                                btn.closest('.day-block').remove();
+                            }
+
+                            // Initialize Summernote for all description editors on page load
+                            document.addEventListener('DOMContentLoaded', function() {
+                                $('#day-wrapper .day-block').each(function() {
+                                    var $block = $(this);
+                                    var $editor = $block.find('.tour-description-editor');
+                                    var $hidden = $block.find('.tour-description-hidden');
+                                    // Set initial content if exists
+                                    if ($hidden.val()) {
+                                        $editor.html($hidden.val());
+                                    }
+                                    $editor.summernote({
                                         height: 120,
                                         callbacks: {
                                             onChange: function(contents) {
-                                                $(div).find('.tour-description-hidden').val(contents);
+                                                $hidden.val(contents);
                                             }
                                         }
-                                    });
-                                    index++;
-                                }
-
-                                function removeDay(btn) {
-                                    btn.closest('.day-block').remove();
-                                }
-
-                                // Initialize Summernote for all description editors on page load
-                                document.addEventListener('DOMContentLoaded', function() {
-                                    $('#day-wrapper .day-block').each(function() {
-                                        var $block = $(this);
-                                        var $editor = $block.find('.tour-description-editor');
-                                        var $hidden = $block.find('.tour-description-hidden');
-                                        // Set initial content if exists
-                                        if ($hidden.val()) {
-                                            $editor.html($hidden.val());
-                                        }
-                                        $editor.summernote({
-                                            height: 120,
-                                            callbacks: {
-                                                onChange: function(contents) {
-                                                    $hidden.val(contents);
-                                                }
-                                            }
-                                        });
                                     });
                                 });
-                            </script>
+                            });
+                        </script>
 
-                    <!-- <div class="row mb-2">
+                        <!-- <div class="row mb-2">
                             <div class="col">
                                 <div class="form-body px-5 rounded-4">
                                     <h4 class="fw-bold mb-2">04.Tour Date & Time</h4>
@@ -301,8 +409,8 @@
                             </div>
                         </div> -->
 
-                    <!-- 4. Needed -->
-                    <!-- <div class="row mb-2">
+                        <!-- 4. Needed -->
+                        <!-- <div class="row mb-2">
                             <div class="col">
                                 <div class="form-body px-5 rounded-4">
                                     <h4 class="fw-bold mb-2">04.Rooms and Beds</h4>
@@ -338,116 +446,117 @@
 
 
 
-                    <!-- 5.PRICING -->
-                    <div class="row mb-3">
-                        <div class="col">
-                            <div class="form-body px-5  rounded-4 ">
-                                <h4 class="fw-bold mb-3">03. Pricing</h4>
-                                <div id="price-fields-container" class="mb-2">
-                                    <div class="mb-2">
+                        <!-- 5.PRICING -->
+                        <div class="row mb-3">
+                            <div class="col">
+                                <div class="form-body px-5  rounded-4 ">
+                                    <h4 class="fw-bold mb-3">03. Pricing</h4>
+                                    <div id="price-fields-container" class="mb-2">
+                                        <div class="mb-2">
+                                            @php
+                                            $priceTitle = json_decode($customer->price_title, true) ?? [];
+                                            $priceAmount = json_decode($customer->price_amount, true) ?? [];
+                                            $count = max(4, count($priceTitle), count($priceAmount));
+                                            @endphp
+
+                                            @for ($i = 0; $i < $count; $i++)
+                                                <div class="row mb-2">
+                                                <div class="col-lg-6">
+                                                    <label class="form-label form-label-top form-label-auto fw-bold mb-2">
+                                                        Title
+                                                    </label>
+                                                    <input type="text" name="price_title[]" class="form-control py-2 rounded-3 shadow-sm"
+                                                        placeholder="Title"
+                                                        value="{{ $priceTitle[$i] ?? '' }}">
+                                                </div>
+                                                <div class="col-lg-6">
+                                                    <label class="fw-bold mb-2">Amount <span class="text-danger">*</span></label>
+                                                    <div class="position-relative">
+                                                        <span class="position-absolute top-50 start-0 translate-middle-y ps-3">₹</span>
+                                                        <input type="number" name="price_amount[]" class="form-control py-2 ps-5 rounded-3 shadow-sm"
+                                                            placeholder="Actual Amount"
+                                                            value="{{ $priceAmount[$i] ?? '' }}">
+                                                    </div>
+                                                </div>
+                                        </div>
+                                        @endfor
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 6. Payment Policy -->
+                        <div class="row mb-3">
+                            <div class="col">
+                                <div class="form-body px-5 rounded-4">
+                                    <h4 class="fw-bold mb-4 ps-0">04. Payment Policy</h4>
+                                    <div id="camp-rule-container">
                                         @php
-                                        $priceTitle = json_decode($customer->price_title, true) ?? [];
-                                        $priceAmount = json_decode($customer->price_amount, true) ?? [];
-                                        $count = max(4, count($priceTitle), count($priceAmount));
+                                        $campRuleArray = json_decode($customer->camp_rule, true);
+                                        if (is_array($campRuleArray)) {
+                                        $customer->camp_rule = $campRuleArray;
+                                        } else {
+                                        // Handle the error or initialize it to an empty array if it's not a valid JSON string
+                                        $customer->camp_rule = [];
+                                        }
                                         @endphp
-
-                                        @for ($i = 0; $i < $count; $i++)
-                                            <div class="row mb-2">
-                                            <div class="col-lg-6">
-                                                <label class="form-label form-label-top form-label-auto fw-bold mb-2">
-                                                    Title
-                                                </label>
-                                                <input type="text" name="price_title[]" class="form-control py-2 rounded-3 shadow-sm"
-                                                    placeholder="Title"
-                                                    value="{{ $priceTitle[$i] ?? '' }}">
+                                        @if (is_array($customer->camp_rule))
+                                        @foreach ($customer->camp_rule as $rule)
+                                        <div class="row g-2 mb-2 camp-rule-field">
+                                            <div class="col">
+                                                <input type="text" name="camp_rule[]"
+                                                    class="form-control py-2 rounded-3 shadow-sm"
+                                                    placeholder="Rule And Regulations"
+                                                    value="{{ $rule }}">
                                             </div>
-                                            <div class="col-lg-6">
-                                                <label class="fw-bold mb-2">Amount <span class="text-danger">*</span></label>
-                                                <div class="position-relative">
-                                                    <span class="position-absolute top-50 start-0 translate-middle-y ps-3">₹</span>
-                                                    <input type="number" name="price_amount[]" class="form-control py-2 ps-5 rounded-3 shadow-sm"
-                                                        placeholder="Actual Amount"
-                                                        value="{{ $priceAmount[$i] ?? '' }}">
-                                                </div>
+                                            <div class="col-lg-1 mt-2 text-end">
+                                                <a class="table-link danger remove-plan"
+                                                    onclick="removeField(this)">
+                                                    <span class="fa-stack">
+                                                        <i class="fa fa-square fa-stack-2x"></i>
+                                                        <i
+                                                            class="fa fa-trash-o fa-stack-1x fa-inverse"></i>
+                                                    </span>
+                                                </a>
                                             </div>
+                                        </div>
+                                        @endforeach
+                                        @else
+                                        <p>No Rule And Regulations available.</p>
+                                        @endif
                                     </div>
-                                    @endfor
-
+                                    <div class="text-end">
+                                        <button type="button"
+                                            class="btn-add rounded border-0 px-5 py-2 text-white"
+                                            onclick="addCampRuleField()">
+                                            <i class="fa fa-plus" aria-hidden="true"></i> Add
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-
-                    <!-- 6. Payment Policy -->
-                    <div class="row mb-3">
-                        <div class="col">
-                            <div class="form-body px-5 rounded-4">
-                                <h4 class="fw-bold mb-4 ps-0">04. Payment Policy</h4>
-                                <div id="camp-rule-container">
-                                    @php
-                                    $campRuleArray = json_decode($customer->camp_rule, true);
-                                    if (is_array($campRuleArray)) {
-                                    $customer->camp_rule = $campRuleArray;
-                                    } else {
-                                    // Handle the error or initialize it to an empty array if it's not a valid JSON string
-                                    $customer->camp_rule = [];
-                                    }
-                                    @endphp
-                                    @if (is_array($customer->camp_rule))
-                                    @foreach ($customer->camp_rule as $rule)
-                                    <div class="row g-2 mb-2 camp-rule-field">
-                                        <div class="col">
-                                            <input type="text" name="camp_rule[]"
-                                                class="form-control py-2 rounded-3 shadow-sm"
-                                                placeholder="Rule And Regulations"
-                                                value="{{ $rule }}">
-                                        </div>
-                                        <div class="col-lg-1 mt-2 text-end">
-                                            <a class="table-link danger remove-plan"
-                                                onclick="removeField(this)">
-                                                <span class="fa-stack">
-                                                    <i class="fa fa-square fa-stack-2x"></i>
-                                                    <i
-                                                        class="fa fa-trash-o fa-stack-1x fa-inverse"></i>
-                                                </span>
-                                            </a>
-                                        </div>
-                                    </div>
-                                    @endforeach
-                                    @else
-                                    <p>No Rule And Regulations available.</p>
-                                    @endif
-                                </div>
-                                <div class="text-end">
-                                    <button type="button"
-                                        class="btn-add rounded border-0 px-5 py-2 text-white"
-                                        onclick="addCampRuleField()">
-                                        <i class="fa fa-plus" aria-hidden="true"></i> Add
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
 
 
-                    <!-- 7.Important info -->
-                    <div class="row mb-2">
-                        <div class="col">
-                            <div class="form-body px-5  rounded-4">
-                                <h4 class="fw-bold mb-3">05. Notes <span class="text-danger">*</span></h4>
-                                <div class="mb-1">
-                                    <div class="row g-2 mb-1">
-                                        <div class="col">
-                                            <input type="hidden" id="important_info" name="important_info">
-                                            @php
-                                            $plain_text_important_info = html_entity_decode(
-                                            strip_tags($customer->important_info),
-                                            );
-                                            @endphp
-                                            <div class=" mt-1">
-                                                <div class="row">
-                                                    <div class="col-lg-12 ">
-                                                        <div id="summernote4" style="height: 200px;">{!! $customer->important_info !!}</div>
+                        <!-- 7.Important info -->
+                        <div class="row mb-2">
+                            <div class="col">
+                                <div class="form-body px-5  rounded-4">
+                                    <h4 class="fw-bold mb-3">05. Notes <span class="text-danger">*</span></h4>
+                                    <div class="mb-1">
+                                        <div class="row g-2 mb-1">
+                                            <div class="col">
+                                                <input type="hidden" id="important_info" name="important_info">
+                                                @php
+                                                $plain_text_important_info = html_entity_decode(
+                                                strip_tags($customer->important_info),
+                                                );
+                                                @endphp
+                                                <div class=" mt-1">
+                                                    <div class="row">
+                                                        <div class="col-lg-12 ">
+                                                            <div id="summernote4" style="height: 200px;">{!! $customer->important_info !!}</div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -456,26 +565,26 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="row mb-1">
-                        <div class="col">
-                            <div class="form-body px-5  rounded-4">
-                                <h4 class="fw-bold mb-2">06. Package Inclusion </h4>
-                                <div class="mb-2">
-                                    <div class="row g-2 mb-2">
-                                        <div class="col">
-                                            <input type="hidden" id="program_inclusion" name="program_inclusion">
-                                            @php
-                                            $plain_text_program_inclusion = html_entity_decode(
-                                            strip_tags($customer->package_inclusion),
-                                            );
-                                            $inclusion =json_decode($customer->package_inclusion)
-                                            @endphp
-                                            <div class=" mt-2">
-                                                <div class="row">
-                                                    <div class="col-lg-12 ">
-                                                        <div id="summernote5" style="height: 200px;">{!! $inclusion !!}</div>
+                        <div class="row mb-1">
+                            <div class="col">
+                                <div class="form-body px-5  rounded-4">
+                                    <h4 class="fw-bold mb-2">06. Package Inclusion </h4>
+                                    <div class="mb-2">
+                                        <div class="row g-2 mb-2">
+                                            <div class="col">
+                                                <input type="hidden" id="program_inclusion" name="program_inclusion">
+                                                @php
+                                                $plain_text_program_inclusion = html_entity_decode(
+                                                strip_tags($customer->package_inclusion),
+                                                );
+                                                $inclusion =json_decode($customer->package_inclusion)
+                                                @endphp
+                                                <div class=" mt-2">
+                                                    <div class="row">
+                                                        <div class="col-lg-12 ">
+                                                            <div id="summernote5" style="height: 200px;">{!! $inclusion !!}</div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -484,26 +593,26 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="row mb-1">
-                        <div class="col">
-                            <div class="form-body px-5  rounded-4">
-                                <h4 class="fw-bold mb-2">07. Package Exclusion </h4>
-                                <div class="mb-2">
-                                    <div class="row g-2 mb-2">
-                                        <div class="col">
-                                            <input type="hidden" id="program_exclusion" name="program_exclusion">
-                                            @php
-                                            $plain_text_program_inclusion = html_entity_decode(
-                                            strip_tags($customer->package_exclusion),
-                                            );
-                                            $exclusion =json_decode($customer->package_exclusion)
-                                            @endphp
-                                            <div class=" mt-2">
-                                                <div class="row">
-                                                    <div class="col-lg-12 ">
-                                                        <div id="summernote9" style="height: 200px;">{!! $exclusion !!}</div>
+                        <div class="row mb-1">
+                            <div class="col">
+                                <div class="form-body px-5  rounded-4">
+                                    <h4 class="fw-bold mb-2">07. Package Exclusion </h4>
+                                    <div class="mb-2">
+                                        <div class="row g-2 mb-2">
+                                            <div class="col">
+                                                <input type="hidden" id="program_exclusion" name="program_exclusion">
+                                                @php
+                                                $plain_text_program_inclusion = html_entity_decode(
+                                                strip_tags($customer->package_exclusion),
+                                                );
+                                                $exclusion =json_decode($customer->package_exclusion)
+                                                @endphp
+                                                <div class=" mt-2">
+                                                    <div class="row">
+                                                        <div class="col-lg-12 ">
+                                                            <div id="summernote9" style="height: 200px;">{!! $exclusion !!}</div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -512,9 +621,8 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- <div class="row mb-3">
+                        <!-- <div class="row mb-3">
                             <div class="col">
                                 <div class="form-body px-1 py-3 rounded-4">
                                     <h4 class="fw-bold mb-3">9. Location</h4>
@@ -548,22 +656,22 @@
                             </div>
                         </div> -->
 
-                    <script>
-                        document.getElementById('google_map').addEventListener('input', function() {
-                            const inputValue = this.value;
-                            const iframeSrcMatch = inputValue.match(/src=["']([^"']+)["']/); // Extract the src attribute value
-                            const mapPreviewIframe = document.getElementById('map_preview');
+                        <script>
+                            document.getElementById('google_map').addEventListener('input', function() {
+                                const inputValue = this.value;
+                                const iframeSrcMatch = inputValue.match(/src=["']([^"']+)["']/); // Extract the src attribute value
+                                const mapPreviewIframe = document.getElementById('map_preview');
 
-                            if (iframeSrcMatch && iframeSrcMatch[1]) {
-                                mapPreviewIframe.src = iframeSrcMatch[1]; // Set the extracted src to the iframe
-                            } else {
-                                mapPreviewIframe.removeAttribute('src'); // Clear the iframe if input is invalid
-                            }
-                        });
-                    </script>
+                                if (iframeSrcMatch && iframeSrcMatch[1]) {
+                                    mapPreviewIframe.src = iframeSrcMatch[1]; // Set the extracted src to the iframe
+                                } else {
+                                    mapPreviewIframe.removeAttribute('src'); // Clear the iframe if input is invalid
+                                }
+                            });
+                        </script>
 
 
-                    <!-- <div class="row mb-3">
+                        <!-- <div class="row mb-3">
                             <div class="col">
                                 <div class="form-body px-5 rounded-4">
                                     <h4 class="fw-bold mb-3">08. Upload PDF</h4>
@@ -579,7 +687,7 @@
                             </div>
                         </div> -->
 
-                    <!-- <div class="row mb-2">
+                        <!-- <div class="row mb-2">
                             <div class="col">
                                 <div class="form-body px-5 rounded-4">
                                     <h4 class="fw-bold mb-3">09. Food Menu</h4>
@@ -626,126 +734,126 @@
                                 </div>
                             </div>
                         </div> -->
-                    <!-- 8. AMENITIES -->
-                    <div class="row mb-2">
-                        <div class="col">
-                            <div class="form-body px-5 py-3 rounded-4">
-                                <h4 class="fw-bold mb-3">08. Amenities</h4>
-                                <div class="d-flex flex-wrap">
-                                    @foreach($amenities as $index => $amenity)
-                                    <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
-                                        <div class="form-check d-flex align-items-center">
-                                            <input type="checkbox" class="me-2 custom-checkbox"
-                                                id="amenity-{{ $amenity->id }}" name="amenity_services[]"
-                                                value="{{ $amenity->id }}"
-                                                @if (in_array((string) $amenity->id, json_decode($customer->amenities))) checked @endif>
-                                            <label for="amenity-{{ $amenity->id }}"
-                                                class="mb-0">{{ $amenity->amenity_name }}</label>
+                        <!-- 8. AMENITIES -->
+                        <div class="row mb-2">
+                            <div class="col">
+                                <div class="form-body px-5 py-3 rounded-4">
+                                    <h4 class="fw-bold mb-3">08. Amenities</h4>
+                                    <div class="d-flex flex-wrap">
+                                        @foreach($amenities as $index => $amenity)
+                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                            <div class="form-check d-flex align-items-center">
+                                                <input type="checkbox" class="me-2 custom-checkbox"
+                                                    id="amenity-{{ $amenity->id }}" name="amenity_services[]"
+                                                    value="{{ $amenity->id }}"
+                                                    @if (in_array((string) $amenity->id, json_decode($customer->amenities))) checked @endif>
+                                                <label for="amenity-{{ $amenity->id }}"
+                                                    class="mb-0">{{ $amenity->amenity_name }}</label>
+                                            </div>
                                         </div>
+                                        @if(($index + 1) % 4 == 0)
+                                        <div class="w-100"></div> <!-- Forces a line break after every 4 items -->
+                                        @endif
+                                        @endforeach
                                     </div>
-                                    @if(($index + 1) % 4 == 0)
-                                    <div class="w-100"></div> <!-- Forces a line break after every 4 items -->
-                                    @endif
-                                    @endforeach
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- 9. FOOD & BEVERAGES -->
-                    <div class="row mb-2">
-                        <div class="col">
-                            <div class="form-body px-5 py-3 rounded-4">
-                                <h4 class="fw-bold mb-3">09. Food and Beverages</h4>
-                                <div class="d-flex flex-wrap">
-                                    @foreach($foodBeverages as $index => $item)
-                                    <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
-                                        <div class="form-check d-flex align-items-center">
-                                            <input type="checkbox" class="me-2 custom-checkbox"
-                                                id="food-beverage-{{ $item->id }}" name="food_beverages[]"
-                                                value="{{ $item->id }}"
-                                                @if (in_array((string) $item->id, json_decode($customer->food_beverages))) checked @endif>
-                                            <label for="food-beverage-{{ $item->id }}"
-                                                class="mb-0">{{ $item->food_beverage }}</label>
+                        <!-- 9. FOOD & BEVERAGES -->
+                        <div class="row mb-2">
+                            <div class="col">
+                                <div class="form-body px-5 py-3 rounded-4">
+                                    <h4 class="fw-bold mb-3">09. Food and Beverages</h4>
+                                    <div class="d-flex flex-wrap">
+                                        @foreach($foodBeverages as $index => $item)
+                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                            <div class="form-check d-flex align-items-center">
+                                                <input type="checkbox" class="me-2 custom-checkbox"
+                                                    id="food-beverage-{{ $item->id }}" name="food_beverages[]"
+                                                    value="{{ $item->id }}"
+                                                    @if (in_array((string) $item->id, json_decode($customer->food_beverages))) checked @endif>
+                                                <label for="food-beverage-{{ $item->id }}"
+                                                    class="mb-0">{{ $item->food_beverage }}</label>
+                                            </div>
                                         </div>
+                                        @if(($index + 1) % 4 == 0)
+                                        <div class="w-100"></div> <!-- Forces a line break after every 4 items -->
+                                        @endif
+                                        @endforeach
                                     </div>
-                                    @if(($index + 1) % 4 == 0)
-                                    <div class="w-100"></div> <!-- Forces a line break after every 4 items -->
-                                    @endif
-                                    @endforeach
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- 10. ACTIVITIES -->
-                    <div class="row mb-2">
-                        <div class="col">
-                            <div class="form-body px-5 py-3 rounded-4">
-                                <h4 class="fw-bold mb-3">10. Activities</h4>
-                                <div class="d-flex flex-wrap">
-                                    @foreach($activities as $index => $item)
-                                    <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
-                                        <div class="form-check d-flex align-items-center ">
-                                            <input type="checkbox" class="me-2 custom-checkbox"
-                                                id="activities-{{ $item->id }}" name="activities[]"
-                                                value="{{ $item->id }}"
-                                                @if (in_array((string) $item->id, json_decode($customer->activities))) checked @endif>
-                                            <label for="activities-{{ $item->id }}"
-                                                class="mb-0">{{ $item->activities }}</label>
+                        <!-- 10. ACTIVITIES -->
+                        <div class="row mb-2">
+                            <div class="col">
+                                <div class="form-body px-5 py-3 rounded-4">
+                                    <h4 class="fw-bold mb-3">10. Activities</h4>
+                                    <div class="d-flex flex-wrap">
+                                        @foreach($activities as $index => $item)
+                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                            <div class="form-check d-flex align-items-center ">
+                                                <input type="checkbox" class="me-2 custom-checkbox"
+                                                    id="activities-{{ $item->id }}" name="activities[]"
+                                                    value="{{ $item->id }}"
+                                                    @if (in_array((string) $item->id, json_decode($customer->activities))) checked @endif>
+                                                <label for="activities-{{ $item->id }}"
+                                                    class="mb-0">{{ $item->activities }}</label>
+                                            </div>
                                         </div>
+                                        @if(($index + 1) % 4 == 0)
+                                        <div class="w-100"></div> <!-- Forces a line break after every 4 items -->
+                                        @endif
+                                        @endforeach
                                     </div>
-                                    @if(($index + 1) % 4 == 0)
-                                    <div class="w-100"></div> <!-- Forces a line break after every 4 items -->
-                                    @endif
-                                    @endforeach
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- 11. SAFETY FEATURES -->
-                    <div class="row mb-2">
-                        <div class="col">
-                            <div class="form-body px-5 py-3 rounded-4">
-                                <h4 class="fw-bold mb-3">11. Safety Features</h4>
-                                <div class="d-flex flex-wrap">
-                                    @foreach($safety_features as $index => $item)
-                                    <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
-                                        <div class="form-check d-flex align-items-center mb-1">
-                                            <input type="checkbox" class="me-2 custom-checkbox"
-                                                id="safety_features-{{ $item->id }}" name="safety_features[]"
-                                                value="{{ $item->id }}"
-                                                @if (in_array((string) $item->id, json_decode($customer->safety_features))) checked @endif>
-                                            <label for="safety_features-{{ $item->id }}"
-                                                class="mb-0">{{ $item->safety_features }}</label>
+                        <!-- 11. SAFETY FEATURES -->
+                        <div class="row mb-2">
+                            <div class="col">
+                                <div class="form-body px-5 py-3 rounded-4">
+                                    <h4 class="fw-bold mb-3">11. Safety Features</h4>
+                                    <div class="d-flex flex-wrap">
+                                        @foreach($safety_features as $index => $item)
+                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                            <div class="form-check d-flex align-items-center mb-1">
+                                                <input type="checkbox" class="me-2 custom-checkbox"
+                                                    id="safety_features-{{ $item->id }}" name="safety_features[]"
+                                                    value="{{ $item->id }}"
+                                                    @if (in_array((string) $item->id, json_decode($customer->safety_features))) checked @endif>
+                                                <label for="safety_features-{{ $item->id }}"
+                                                    class="mb-0">{{ $item->safety_features }}</label>
+                                            </div>
                                         </div>
+                                        @endforeach
                                     </div>
-                                    @endforeach
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- Add custom CSS -->
-                    <style>
-                        .custom-checkbox {
-                            width: 18px;
-                            height: 18px;
-                        }
-
-                        /* Ensure responsiveness on all screen sizes */
-                        @media (max-width: 768px) {
+                        <!-- Add custom CSS -->
+                        <style>
                             .custom-checkbox {
                                 width: 18px;
                                 height: 18px;
                             }
-                        }
-                    </style>
+
+                            /* Ensure responsiveness on all screen sizes */
+                            @media (max-width: 768px) {
+                                .custom-checkbox {
+                                    width: 18px;
+                                    height: 18px;
+                                }
+                            }
+                        </style>
 
 
 
-                    <!-- 6.rule & Regulation
+                        <!-- 6.rule & Regulation
                 <div class="row mb-5">
                     <div class="col">
                         <div class="form-body px-5 rounded-4">
@@ -766,40 +874,40 @@
                                 </div>
                             </div> -->
 
-                    <br>
+                        <br>
 
-                    <div class="row g-2">
-                        <div class="col">
-                            <h4> <label class="fw-bold">Status</label></h4>
-                            <div class="form-check form-switch d-flex align-items-center">
-                                <input class="form-check-input check_bx" type="checkbox" id="status" name="status"
-                                    {{ $customer->status ? 'checked' : '' }}>
+                        <div class="row g-2">
+                            <div class="col">
+                                <h4> <label class="fw-bold">Status</label></h4>
+                                <div class="form-check form-switch d-flex align-items-center">
+                                    <input class="form-check-input check_bx" type="checkbox" id="status" name="status"
+                                        {{ $customer->status ? 'checked' : '' }}>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="row g-3">
-                        <div class="col-lg-3">
-                            <label class="fw-bold mb-3 ">Order</label>
-                            <input type="number" placeholder="Order" id="list_order" name="list_order"
-                                value="{{ $customer->list_order }}" class="form-control py-2 rounded-3 shadow-sm">
+                        <div class="row g-3">
+                            <div class="col-lg-3">
+                                <label class="fw-bold mb-3 ">Order</label>
+                                <input type="number" placeholder="Order" id="list_order" name="list_order"
+                                    value="{{ $customer->list_order }}" class="form-control py-2 rounded-3 shadow-sm">
+                            </div>
+                        </div>
+
+                        <style>
+                            .form-check-input {
+                                transform: scale(1.5);
+                                /* Increase the size of the checkbox */
+                            }
+                        </style>
+
+                        <div class="col-lg-12 text-end mt-5">
+                            <a href="{{ route('admin.inclusive_package_list') }}">
+                                <button type="button" class="cancel-btn"> Cancel </button>
+                            </a>
+                            <button class="submit-btn sbmtBtn ms-4 mb-5"> Submit </button>
                         </div>
                     </div>
-
-                    <style>
-                        .form-check-input {
-                            transform: scale(1.5);
-                            /* Increase the size of the checkbox */
-                        }
-                    </style>
-
-                    <div class="col-lg-12 text-end mt-5">
-                        <a href="{{ route('admin.inclusive_package_list') }}">
-                            <button type="button" class="cancel-btn"> Cancel </button>
-                        </a>
-                        <button class="submit-btn sbmtBtn ms-4 mb-5"> Submit </button>
-                    </div>
-                </div>
     </form>
 </div>
 </div>
@@ -1139,6 +1247,7 @@
 
 
     //package change
+    const customerid = "{{ $customer->id }}";
 
     $(".package").change(function() {
         var selectedOption = $(this).val();
@@ -1156,131 +1265,131 @@
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
             success: function(response) {
-                try {
-                    response = typeof response === 'string' ? JSON.parse(response) : response;
-                    const packageStaySelect = $('#package_stay');
 
-                    packageStaySelect.empty().append(
-                        $('<option></option>')
-                        .val('')
-                        .text('Select Package Type')
-                        .prop('disabled', true)
-                        .prop('selected', true)
+                response = typeof response === 'string' ? JSON.parse(response) : response;
+                const packageStaySelect = $('#package_stay');
+
+                packageStaySelect.empty().append(
+                    $('<option></option>')
+                    .val('')
+                    .text('Select Package Type')
+                    .prop('disabled', true)
+                    .prop('selected', true)
+                );
+
+                if (response && response.cities_details && Array.isArray(response.cities_details)) {
+                    const validStays = response.cities_details.filter(stay =>
+                        stay && stay.id !== undefined && stay.stay_title
                     );
 
-                    if (response && response.cities_details && Array.isArray(response.cities_details)) {
-                        const validStays = response.cities_details.filter(stay =>
-                            stay && stay.id !== undefined && stay.stay_title
-                        );
-
-                        if (validStays.length > 0) {
-                            // Add each valid stay as an option
-                            validStays.forEach(stay => {
-                                packageStaySelect.append(
-                                    $('<option></option>')
-                                    .val(stay.id)
-                                    .text(stay.stay_title)
-                                );
-                            });
-
-                            // Enable select if it was disabled
-                            packageStaySelect.prop('disabled', false);
-                        } else {
-                            // No valid stays found
+                    if (validStays.length > 0) {
+                        // Add each valid stay as an option
+                        validStays.forEach(stay => {
                             packageStaySelect.append(
                                 $('<option></option>')
-                                .val('')
-                                .text('No available stays')
+                                .val(stay.id)
+                                .text(stay.stay_title)
                             );
-                            packageStaySelect.prop('disabled', true);
-                        }
+                        });
+
+                        // Enable select if it was disabled
+                        packageStaySelect.prop('disabled', false);
                     } else {
-                        // Invalid response structure
+                        // No valid stays found
                         packageStaySelect.append(
                             $('<option></option>')
                             .val('')
-                            .text('Invalid data format')
+                            .text('No available stays')
                         );
                         packageStaySelect.prop('disabled', true);
-                        console.error('Invalid response structure:', response);
                     }
-                    // Handle tour planning and location
-                    if (response.package_details) {
-                         var tourVal = typeof response.package_details.tour_planning === 'string' ?
-                            JSON.parse(response.package_details.tour_planning) :
-                            response.package_details.tour_planning;
+                } else {
+                    // Invalid response structure
+                    packageStaySelect.append(
+                        $('<option></option>')
+                        .val('')
+                        .text('Invalid data format')
+                    );
+                    packageStaySelect.prop('disabled', true);
+                    console.error('Invalid response structure:', response);
+                }
+                // Handle tour planning and location
+                if (response.package_details) {
+                    var tourVal = typeof response.package_details.tour_planning === 'string' ?
+                        JSON.parse(response.package_details.tour_planning) :
+                        response.package_details.tour_planning;
 
-                        console.log(tourVal);
+                    console.log(tourVal);
 
-                        // First, clear all existing day blocks except the first one
-                        $('#day-wrapper').html('');
+                    // First, clear all existing day blocks except the first one
+                    $('#day-wrapper').html('');
 
-                        tourVal.forEach(function(day, i) {
-                            const wrapper = document.getElementById('day-wrapper');
-                            const div = document.createElement('div');
-                            div.classList.add('row', 'g-2', 'mb-2', 'day-block');
+                    tourVal.forEach(function(day, i) {
+                        const wrapper = document.getElementById('day-wrapper');
+                        const div = document.createElement('div');
+                        div.classList.add('row', 'g-2', 'mb-2', 'day-block');
 
-                            div.innerHTML = `
-        <div class="col-md-5 mb-2">
-            <input type="text" name="tour_planning[${i}][title]" class="form-control py-2 rounded-3 shadow-sm" value="${day.title}" placeholder="Day Title (e.g., Day ${i + 1})">
-        </div>
-        <div class="col-md-5 mb-2">
-            <input type="text" name="tour_planning[${i}][subtitle]" class="form-control py-2 rounded-3 shadow-sm" value="${day.subtitle}" placeholder="Activity Subtitle">
-        </div>
-        <div class="col-md-10 mb-2">
-            <input type="hidden" name="tour_planning[${i}][description]" class="tour-description-hidden">
-            <div class="tour-description-editor"></div>
-        </div>
-        <div class="col-md-1 d-flex align-items-end">
-            ${i > 0 ? `<button type="button" class="btn btn-danger remove-day" onclick="removeDay(this)">
-                <i class="fa fa-trash"></i>
-            </button>` : ''}
-        </div>
-    `;
+                        div.innerHTML = `
+                                <div class="col-md-5 mb-2">
+                                    <input type="text" name="tour_planning[${i}][title]" class="form-control py-2 rounded-3 shadow-sm" value="${day.title}" placeholder="Day Title (e.g., Day ${i + 1})">
+                                </div>
+                                <div class="col-md-5 mb-2">
+                                    <input type="text" name="tour_planning[${i}][subtitle]" class="form-control py-2 rounded-3 shadow-sm" value="${day.subtitle}" placeholder="Activity Subtitle">
+                                </div>
+                                <div class="col-md-10 mb-2">
+                                    <input type="hidden" name="tour_planning[${i}][description]" class="tour-description-hidden">
+                                    <div class="tour-description-editor"></div>
+                                </div>
+                                <div class="col-md-1 d-flex align-items-end">
+                                    ${i > 0 ? `<button type="button" class="btn btn-danger remove-day" onclick="removeDay(this)">
+                                        <i class="fa fa-trash"></i>
+                                    </button>` : ''}
+                                </div>
+                                `;
 
-                            wrapper.appendChild(div);
+                        wrapper.appendChild(div);
 
-                            // Initialize Summernote and set saved HTML description
-                            const editor = $(div).find('.tour-description-editor');
-                            const hiddenInput = $(div).find('.tour-description-hidden');
+                        // Initialize Summernote and set saved HTML description
+                        const editor = $(div).find('.tour-description-editor');
+                        const hiddenInput = $(div).find('.tour-description-hidden');
 
-                            editor.summernote({
-                                height: 120,
-                                callbacks: {
-                                    onChange: function(contents) {
-                                        hiddenInput.val(contents);
-                                    }
+                        editor.summernote({
+                            height: 120,
+                            callbacks: {
+                                onChange: function(contents) {
+                                    hiddenInput.val(contents);
                                 }
-                            });
-
-                            // Set old saved description to Summernote and hidden field
-                            editor.summernote('code', day.description);
-                            hiddenInput.val(day.description);
+                            }
                         });
-                        if (response.package_details.location) {
-                            $('#title').val(response.package_details.title)
-                            $('#summernote10').summernote('code', response.package_details.location);
 
-                            $('#summernote3').summernote('code', tourVal);
-                        }
+                        // Set old saved description to Summernote and hidden field
+                        editor.summernote('code', day.description);
+                        hiddenInput.val(day.description);
+                    });
+                    if (response.package_details.location) {
+                        $('#title').val(response.package_details.title)
+                        $('#summernote10').summernote('code', response.package_details.location);
 
-                        // Handle price fields
-                        var priceAmount = response.package_details.price_amount ?
-                            JSON.parse(response.package_details.price_amount) : [];
+                        $('#summernote3').summernote('code', tourVal);
+                    }
 
-                        var priceTitle = response.package_details.price_tilte ?
-                            JSON.parse(response.package_details.price_tilte) : [];
+                    // Handle price fields
+                    var priceAmount = response.package_details.price_amount ?
+                        JSON.parse(response.package_details.price_amount) : [];
+
+                    var priceTitle = response.package_details.price_tilte ?
+                        JSON.parse(response.package_details.price_tilte) : [];
 
 
-                        var count = Math.max(4, priceAmount.length, priceTitle.length);
-                        var priceContainer = $('#price-fields-container');
+                    var count = Math.max(4, priceAmount.length, priceTitle.length);
+                    var priceContainer = $('#price-fields-container');
 
 
-                        priceContainer.empty();
+                    priceContainer.empty();
 
-                        // Generate fields
-                        for (var i = 0; i < count; i++) {
-                            var fieldHtml = `
+                    // Generate fields
+                    for (var i = 0; i < count; i++) {
+                        var fieldHtml = `
                                         <div class="row mb-2">
                                             <div class="col-lg-6">
                                                 <label class="form-label form-label-top form-label-auto fw-bold mb-2">
@@ -1301,16 +1410,16 @@
                                             </div>
                                         </div>`;
 
-                            priceContainer.append(fieldHtml);
-                        }
+                        priceContainer.append(fieldHtml);
+                    }
 
-                        //camp rule
-                        var campRuleContainer = $('#camp-rule-container');
-                        var camp_rule = JSON.parse(response.package_details.camp_rule) ?? [''];
+                    //camp rule
+                    var campRuleContainer = $('#camp-rule-container');
+                    var camp_rule = JSON.parse(response.package_details.camp_rule) ?? [''];
 
-                        campRuleContainer.empty();
-                        for (var i = 0; i <= camp_rule.length - 1; i++) {
-                            var camp_ruleHTML = ` <div class="row g-2 mb-1 align-items-center camp-rule-field">
+                    campRuleContainer.empty();
+                    for (var i = 0; i <= camp_rule.length - 1; i++) {
+                        var camp_ruleHTML = ` <div class="row g-2 mb-1 align-items-center camp-rule-field">
                                         <label class="mb-1">Payment Policy <span
                                                 class="text-danger">*</span></label>
 
@@ -1331,82 +1440,96 @@
                                             </div>
                                     </div>`
 
-                            campRuleContainer.append(camp_ruleHTML);
-
-                        }
-                        //notes
-
-                        // var notes_val = typeof response.package_details.important_info === 'string' ?
-                        //     JSON.parse(response.package_details.important_info) :
-                        //     response.package_details.important_info;
-                        $('#summernote4').summernote('code', response.package_details.important_info); // notes
-                        $('#summernote5').summernote('code', response.package_details.program_inclusion); // program Inclusion
-                        $('#summernote9').summernote('code', response.package_details.program_exclusion); // program Exclusion
-
-
-                        //aminites
-                        if (response.selectedAmenities) {
-                            // Convert array to object for faster lookup
-                            const selectedAmenities = {};
-                            $.each(response.selectedAmenities, function(index, id) {
-                                selectedAmenities[id] = true;
-                            });
-
-                            // Loop through all checkboxes just once
-                            $('input[name="amenity_services[]"]').each(function() {
-                                $(this).prop('checked', selectedAmenities[$(this).val()] || false);
-                            });
-                        }
-                        //food beverages
-                        if (response.selectedfood_beverages) {
-                            const selectedFoodBeverages = {};
-                            $.each(response.selectedfood_beverages, function(index, id) {
-                                selectedFoodBeverages[id] = true;
-                            });
-                            $('input[name="food_beverages[]"]').each(function() {
-                                $(this).prop('checked', selectedFoodBeverages[$(this).val()] || false);
-                            });
-                        }
-                        //Activities
-                        if (response.selectedactivities) {
-                            const selectedactivities = {};
-                            $.each(response.selectedactivities, function(index, id) {
-                                selectedactivities[id] = true;
-                            });
-                            $('input[name="activities[]"]').each(function() {
-                                $(this).prop('checked', selectedactivities[$(this).val()] || false);
-                            });
-                        }
-
-                        //Safety Features
-                        if (response.selectedsafety_features) {
-                            const selectedsafety_features = {};
-                            $.each(response.selectedsafety_features, function(index, id) {
-                                selectedsafety_features[id] = true;
-                            });
-                            $('input[name="safety_features[]"]').each(function() {
-                                $(this).prop('checked', selectedsafety_features[$(this).val()] || false);
-                            });
-                        }
-
-                        //status
-                        if (response.package_details.status !== undefined) {
-                            $('input[name="status"]').prop('checked', true);
-                        }
-                        //order
-                        if (response.package_details.list_order !== null && response.package_details.list_order !== undefined) {
-                            $('input[name="list_order"]').val(response.package_details.list_order);
-                        }
-
-
-
+                        campRuleContainer.append(camp_ruleHTML);
 
                     }
-                } catch (e) {
-                    console.error('Error processing response:', e);
-                }
-            },
+                    //notes
 
+                    // var notes_val = typeof response.package_details.important_info === 'string' ?
+                    //     JSON.parse(response.package_details.important_info) :
+                    //     response.package_details.important_info;
+                    $('#summernote4').summernote('code', response.package_details.important_info); // notes
+                    $('#summernote5').summernote('code', response.package_details.program_inclusion); // program Inclusion
+                    $('#summernote9').summernote('code', response.package_details.program_exclusion); // program Exclusion
+
+
+                    //aminites
+                    if (response.selectedAmenities) {
+                        // Convert array to object for faster lookup
+                        const selectedAmenities = {};
+                        $.each(response.selectedAmenities, function(index, id) {
+                            selectedAmenities[id] = true;
+                        });
+
+                        // Loop through all checkboxes just once
+                        $('input[name="amenity_services[]"]').each(function() {
+                            $(this).prop('checked', selectedAmenities[$(this).val()] || false);
+                        });
+                    }
+                    //food beverages
+                    if (response.selectedfood_beverages) {
+                        const selectedFoodBeverages = {};
+                        $.each(response.selectedfood_beverages, function(index, id) {
+                            selectedFoodBeverages[id] = true;
+                        });
+                        $('input[name="food_beverages[]"]').each(function() {
+                            $(this).prop('checked', selectedFoodBeverages[$(this).val()] || false);
+                        });
+                    }
+                    //Activities
+                    if (response.selectedactivities) {
+                        const selectedactivities = {};
+                        $.each(response.selectedactivities, function(index, id) {
+                            selectedactivities[id] = true;
+                        });
+                        $('input[name="activities[]"]').each(function() {
+                            $(this).prop('checked', selectedactivities[$(this).val()] || false);
+                        });
+                    }
+
+                    //Safety Features
+                    if (response.selectedsafety_features) {
+                        const selectedsafety_features = {};
+                        $.each(response.selectedsafety_features, function(index, id) {
+                            selectedsafety_features[id] = true;
+                        });
+                        $('input[name="safety_features[]"]').each(function() {
+                            $(this).prop('checked', selectedsafety_features[$(this).val()] || false);
+                        });
+                    }
+
+                    //pricing caluculator lsit 
+                    if (response.pricingcalculator && response.pricingcalculator.length > 0) {
+                        const pricingSelect = $('#pricing_calculator');
+                        pricingSelect.empty().append(
+                            '<option value="" disabled selected>Select Price Calculator</option>'
+                        );
+
+                        // Add each pricing calculator option
+                        response.pricingcalculator.forEach(item => {
+                            pricingSelect.append(
+                                $('<option></option>')
+                                .val(item.id)
+                                .text(item.title)
+                            );
+                        });
+                    }
+
+                    //status
+                    if (response.package_details.status !== undefined) {
+                        $('input[name="status"]').prop('checked', true);
+                    }
+                    //order
+                    if (response.package_details.list_order !== null && response.package_details.list_order !== undefined) {
+                        $('input[name="list_order"]').val(response.package_details.list_order);
+                    }
+
+
+
+
+                }
+
+            },
             error: function(xhr, status, error) {
                 alert('AJAX Error: ' + error);
             }
@@ -1423,6 +1546,643 @@
         $('#important_info').val($('#summernote4').summernote('code'));
         $('#program_inclusion').val($('#summernote5').summernote('code'));
         $('#program_exclusion').val($('#summernote9').summernote('code'));
+    });
+
+    $(document).ready(function() {
+        $('#stays-section, #activities-section, #cabs-section').hide();
+        $('#pricing_calculator').change(function() {
+            const pricingval = $(this).val();
+
+            // Hide all sections initially
+            $('#stays-section, #activities-section, #cabs-section').hide();
+            $('#stayDropdownText').text('Select stays');
+            $('#activityDropdownText').text('Select activities');
+            $('#cabDropdownText').text('Select options');
+            $('#stayHiddenInput, #activityHiddenInput, #cabHiddenInput').val('');
+
+            $.ajax({
+                url: "{{ route('admin.c_pricing_details') }}",
+                type: 'POST',
+                data: {
+                    pricingval: pricingval,
+                    _token: "{{ csrf_token() }}"
+                },
+                success: function(data) {
+                    // Process Stays
+                    if (data.stays && Object.keys(data.stays).length > 0) {
+                        const staysSection = $('#stays-section');
+                        const staysDropdown = staysSection.find('.dropdown-menu');
+                        // const selectedStays = [];
+                        const selectedStays = data.pricing_stay_id;
+
+                        staysDropdown.empty();
+
+                        staysSection.css('display', 'block');
+
+                        $.each(data.stays, function(id, title) {
+                            staysDropdown.append(`
+                                    <li>
+                                        <div class="form-check">
+                                            <input type="checkbox" class="form-check-input stay-checkbox" 
+                                                id="stay-${id}" value="${id}" checked>
+                                            <label class="form-check-label" for="stay-${id}">${title}</label>
+                                        </div>
+                                    </li>
+                                `);
+                        });
+
+                        staysSection.show();
+
+
+                        // Update the dropdown text and hidden input initially
+                        $('#stayDropdownText').text(selectedStays.length > 0 ? `${selectedStays.length} selected` : 'Select stays');
+                        $('#stayHiddenInput').val(selectedStays.join(','));
+
+                        // Trigger change event for pre-checked boxes on initial load
+                        if (selectedStays.length > 0) {
+                            $('.stay-checkbox:checked').trigger('change');
+                        }
+
+                        $('.stay-checkbox').change(function() {
+                            const stayId = $(this).val();
+                            if ($(this).is(':checked')) {
+                                if (!selectedStays.includes(stayId)) selectedStays.push(stayId);
+                            } else {
+                                const index = selectedStays.indexOf(stayId);
+                                if (index > -1) selectedStays.splice(index, 1);
+                            }
+                            $('#stayDropdownText').text(selectedStays.length > 0 ? `${selectedStays.length} selected` : 'Select stays');
+                            $('#stayHiddenInput').val(selectedStays.join(','));
+                        });
+
+                        staysDropdown.on('click', '.form-check', function(e) {
+                            e.stopPropagation();
+                        });
+                    }
+
+                    // Process Activities
+                    if (data.activities && Object.keys(data.activities).length > 0) {
+                        const activitiesSection = $('#activities-section');
+                        const activitiesDropdown = activitiesSection.find('.dropdown-menu');
+                        // const selectedActivities = [];
+                        const selectedActivities = data.pricing_activity_id;
+
+                        activitiesDropdown.empty();
+
+                        $.each(data.activities, function(id, title) {
+                            activitiesDropdown.append(`
+                                    <li>
+                                        <div class="form-check">
+                                            <input type="checkbox" class="form-check-input activity-checkbox" 
+                                                id="activity-${id}" value="${id}" checked>
+                                            <label class="form-check-label" for="activity-${id}">${title}</label>
+                                        </div>
+                                    </li>
+                                `);
+                        });
+
+                        activitiesSection.show();
+
+                        // Update UI immediately
+                        $('#activityDropdownText').text(
+                            selectedActivities.length > 0 ?
+                            `${selectedActivities.length} selected` :
+                            'Select activities'
+                        );
+                        $('#activityHiddenInput').val(selectedActivities.join(','));
+
+                        // Trigger change event for pre-checked boxes on initial load
+                        if (selectedActivities.length > 0) {
+                            $('.activity-checkbox:checked').trigger('change');
+                        }
+
+                        $('.activity-checkbox').change(function() {
+                            const activityId = $(this).val();
+                            if ($(this).is(':checked')) {
+                                if (!selectedActivities.includes(activityId)) selectedActivities.push(activityId);
+                            } else {
+                                const index = selectedActivities.indexOf(activityId);
+                                if (index > -1) selectedActivities.splice(index, 1);
+                            }
+                            $('#activityDropdownText').text(selectedActivities.length > 0 ? `${selectedActivities.length} selected` : 'Select activities');
+                            $('#activityHiddenInput').val(selectedActivities.join(','));
+                        });
+
+                        activitiesDropdown.on('click', '.form-check', function(e) {
+                            e.stopPropagation();
+                        });
+                    }
+
+                    // Process Cabs
+                    if (data.cabs && Object.keys(data.cabs).length > 0) {
+                        const cabsSection = $('#cabs-section');
+                        const cabsDropdown = cabsSection.find('.dropdown-menu');
+                        // const selectedCabs = [];
+                        const selectedCabs = data.pricing_cabs ?
+                            Object.keys(data.pricing_cabs)
+                            .filter(key => data.cabs[key]) // Only keep keys that exist in current cabs
+                            .map(key => ({
+                                key: key,
+                                value: data.cabs[key]
+                            })) : [];
+
+                        cabsDropdown.empty();
+
+                        // Using Object.keys to iterate through the key-value pairs
+                        Object.keys(data.cabs).forEach(function(key) {
+                            const value = data.cabs[key];
+                            cabsDropdown.append(`
+                                    <li>
+                                        <div class="form-check">
+                                            <input type="checkbox" class="form-check-input cab-checkbox cab_details" 
+                                                id="cab-${key}" name="${key}" value="${key}" data-text="${value}" checked>
+                                            <label class="form-check-label" for="cab-${key}">${value}</label>
+                                        </div>
+                                    </li>
+                                `);
+                        });
+
+                        cabsSection.show();
+
+                        // Update UI with initial selections
+                        $('#cabDropdownText').text(
+                            selectedCabs.length > 0 ?
+                            selectedCabs.map(item => item.value).join(', ') :
+                            'Select options'
+                        );
+                        $('#cabHiddenInput').val(selectedCabs.map(item => item.key).join(','));
+
+                        if (selectedCabs.length > 0) {
+                            $('.cab-checkbox:checked').trigger('change');
+                        }
+
+                        $('.cab-checkbox').change(function() {
+                            const cabKey = $(this).val();
+                            const cabValue = $(this).data('text');
+
+                            if ($(this).is(':checked')) {
+                                if (!selectedCabs.some(item => item.key === cabKey)) {
+                                    selectedCabs.push({
+                                        key: cabKey,
+                                        value: cabValue
+                                    });
+                                }
+                            } else {
+                                const index = selectedCabs.findIndex(item => item.key === cabKey);
+                                if (index > -1) selectedCabs.splice(index, 1);
+                            }
+
+                            // Update button text with selected values
+                            $('#cabDropdownText').text(
+                                selectedCabs.length > 0 ?
+                                selectedCabs.map(item => item.value).join(', ') :
+                                'Select options'
+                            );
+
+                            // Store keys in hidden input
+                            $('#cabHiddenInput').val(selectedCabs.map(item => item.key).join(','));
+                        });
+
+                        cabsDropdown.on('click', '.form-check', function(e) {
+                            e.stopPropagation();
+                        });
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error:', error);
+                    $('#stays-section, #activities-section, #cabs-section').html('<div class="alert alert-danger">Error loading data</div>').show();
+                }
+            });
+        });
+
+        // Trigger change on page load if value exists
+        if ($('#pricing_calculator').val()) {
+            $('#pricing_calculator').trigger('change');
+        }
+
+        //stay details - stay-checkbox
+        $(document).on('change', '.stay-checkbox', function() {
+            const pricingval = $('#pricing_calculator').val();
+            const selectedStays = [];
+
+            $('.stay-checkbox:checked').each(function() {
+                selectedStays.push($(this).val());
+            });
+
+            if (selectedStays.length === 0) {
+                $('#stays-details-container').empty();
+                return;
+            }
+
+            $.ajax({
+                url: "{{ route('admin.ec_stay_details') }}",
+                type: 'POST',
+                data: {
+                    pricingval: pricingval,
+                    customerid: customerid,
+                    staydetails: selectedStays,
+                    _token: "{{ csrf_token() }}"
+                },
+                success: function(data) {
+                    const container = $('#stays-details-container');
+                    container.empty();
+
+                    data.stays_details.forEach((stayGroup, index) => {
+                        const groupTitle = stayGroup[0]?.title || '';
+                        const groupHeaderHtml = `
+                            <div class="row stay-group-header mb-2">
+                                <div class="col-md-12">
+                                    <h5>${groupTitle}</h5>
+                                </div>
+                            </div>
+                        `;
+                        container.append(groupHeaderHtml);
+
+                        stayGroup.forEach((stay, subIndex) => {
+                            const stayHtml = `
+                                <div class="row stay-price-row mb-3" data-stay-id="${selectedStays[index]}">
+                                    <div class="col-md-2">
+                                        <input type="hidden" name="stays[${index}][${subIndex}][stay_id]" value="${stay.stay_id}">
+                                        <input type="hidden" name="stays[${index}][${subIndex}][title]" value="${stay.title}">
+                                        <!-- Title removed from display (already shown in header) -->
+                                    </div>
+                                    <div class="col-md-2">
+                                        <input type="hidden" name="stays[${index}][${subIndex}][price_title]" value="${stay.price_title}">
+                                        <input type="text" class="form-control" value="${stay.price_title}" readonly>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <input type="text" class="form-control price-input" 
+                                            name="stays[${index}][${subIndex}][price]" 
+                                            value="${stay.price}">
+                                    </div>
+                                    <div class="col-md-2">
+                                        <button type="button" class="btn btn-outline-danger btn-sm deleterow" 
+                                            data-id="${stay.existingPricesid}" data-type="stay">
+                                            <i class="fas fa-times"></i> Remove
+                                        </button>
+                                    </div>
+                                </div>
+                            `;
+                            container.append(stayHtml);
+                        });
+                    });
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error:', error);
+                }
+            });
+        });
+
+        //activity details
+        $(document).on('change', '.activity-checkbox', function() {
+            const pricingval = $('#pricing_calculator').val();
+            const selectedStays = [];
+
+            $('.activity-checkbox:checked').each(function() {
+                selectedStays.push($(this).val());
+            });
+
+            if (selectedStays.length === 0) {
+                $('#activity-details-container').empty();
+                return;
+            }
+
+            $.ajax({
+                url: "{{ route('admin.ec_activity_details') }}",
+                type: 'POST',
+                data: {
+                    pricingval: pricingval,
+                    staydetails: selectedStays,
+                    customerid: customerid,
+                    _token: "{{ csrf_token() }}"
+                },
+                success: function(data) {
+                    const container = $('#activity-details-container');
+                    container.empty();
+
+                    data.activity_details.forEach((activityGroup, groupIndex) => {
+                        // Add a group header showing the title just once
+                        if (activityGroup.length > 0) {
+                            const groupHeaderHtml = `
+                                <div class="row activity-group-header mb-2">
+                                    <div class="col-md-12">
+                                        <h5>${activityGroup[0].title}</h5>
+                                    </div>
+                                </div>
+                            `;
+                            container.append(groupHeaderHtml);
+                        }
+
+                        // Process each activity in the group
+                        activityGroup.forEach((activity, itemIndex) => {
+                            const activityHtml = `
+                                <div class="row activity-price-row mb-3" data-activity-id="${selectedStays[groupIndex]}">
+                                    <div class="col-md-2">
+                                        <input type="hidden" name="activity[${groupIndex}][${itemIndex}][activity_id]" value="${activity.activity_id}">
+                                        <input type="hidden" name="activity[${groupIndex}][${itemIndex}][title]" value="${activity.title}">
+                                        <!-- Title removed from display (shown in header) -->
+                                    </div>
+                                    <div class="col-md-2">
+                                        <input type="hidden" name="activity[${groupIndex}][${itemIndex}][price_title]" value="${activity.price_title}">
+                                        <input type="text" class="form-control" value="${activity.price_title}" readonly>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <input type="text" class="form-control price-input" 
+                                            name="activity[${groupIndex}][${itemIndex}][price]" 
+                                            value="${activity.price}">
+                                    </div>
+
+                                     <div class="col-md-2">
+                                        <button type="button" class="btn btn-outline-danger btn-sm deleterow" 
+                                            data-id="${activity.existingPricesid}" data-type="activity">
+                                            <i class="fas fa-times"></i> Remove
+                                        </button>
+                                    </div>
+                                </div>
+                            `;
+                            container.append(activityHtml);
+                        });
+                    });
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error:', error);
+                }
+            });
+        });
+
+        // Handle main cab type selection
+        $(document).on('change', '.cab-checkbox', function() {
+            const pricingval = $('#pricing_calculator').val();
+            const selectedCabIds = [];
+
+            $('.cab-checkbox:checked').each(function() {
+                selectedCabIds.push($(this).val());
+            });
+
+            if (selectedCabIds.length === 0) {
+                $('#cabs-details-container, #cabsdetails-container').hide();
+                return;
+            }
+
+            $.ajax({
+                url: "{{ route('admin.c_travel_details') }}",
+                type: 'POST',
+                data: {
+                    pricingval: pricingval,
+                    travelmodes: selectedCabIds,
+                    _token: "{{ csrf_token() }}"
+                },
+                success: function(data) {
+                    updateCabDetailsDropdown(data.cabs, data.pricing_cab);
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error:', error);
+                    $('#cabs-details-container, #cabsdetails-container').hide();
+                }
+            });
+        });
+
+        // Handle cab details selection
+        $(document).on('change', '.cab-details-checkbox', function() {
+            const pricingval = $('#pricing_calculator').val();
+            const selectedCabDetails = [];
+
+            $('.cab-details-checkbox:checked').each(function() {
+                selectedCabDetails.push({
+                    id: $(this).val(),
+                    text: $(this).data('text')
+                });
+            });
+
+            if (selectedCabDetails.length === 0) {
+                $('#cabsdetails-container').empty().hide();
+                return;
+            }
+
+            const selectedCabIds = [];
+            $('.cab-checkbox:checked').each(function() {
+                selectedCabIds.push($(this).val());
+            });
+
+            $.ajax({
+                url: "{{ route('admin.ec_cabs_details') }}",
+                type: 'POST',
+                data: {
+                    pricingval: pricingval,
+                    cabdetails: selectedCabDetails.map(d => d.id),
+                    travelmodes: selectedCabIds,
+                    customerid: customerid,
+                    _token: "{{ csrf_token() }}"
+                },
+                success: function(data) {
+                    displayCabDetails(data.activity_details);
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error:', error);
+                    $('#cabsdetails-container').empty().hide();
+                }
+            });
+        });
+
+        // Helper function to update cab details dropdown
+        function updateCabDetailsDropdown(cabsData, cabids) {
+            const container = $('#cabs-details-container');
+            const dropdownMenu = container.find('.dropdown-menu');
+            const dropdownText = container.find('#cabDetailsDropdownText');
+            const hiddenInput = container.find('#cabDetailsHiddenInput');
+
+            // Reset previous selections
+            dropdownMenu.empty();
+            hiddenInput.val(cabids);
+            dropdownText.text(cabids.length > 0 ? `${cabids.length} selected` : 'Select options');
+            $('#cabsdetails-container').empty().hide();
+
+            if (cabsData && Object.keys(cabsData).length > 0) {
+                const selectedCabDetails = cabids
+                    .filter(id => cabsData[id]) // Only keep IDs that exist in current data
+                    .map(id => ({
+                        id: id,
+                        text: cabsData[id]
+                    }));
+
+                $.each(cabsData, function(id, title) {
+                    const isChecked = cabids.includes(id.toString());
+                    dropdownMenu.append(`
+                            <li>
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input cab-details-checkbox" 
+                                        id="cab-detail-${id}" value="${id}" 
+                                        ${isChecked ? 'checked' : ''} 
+                                        data-text="${title}">
+                                    <label class="form-check-label" for="cab-detail-${id}">${title}</label>
+                                </div>
+                            </li>
+                        `);
+                });
+
+                // Update UI with initial selections
+                if (selectedCabDetails.length > 0) {
+                    dropdownText.text(selectedCabDetails.map(opt => opt.text).join(', '));
+                    hiddenInput.val(selectedCabDetails.map(opt => opt.id).join(','));
+                }
+
+                // Single unified change handler
+                $(document).off('change', '.cab-details-checkbox').on('change', '.cab-details-checkbox', function() {
+                    const pricingval = $('#pricing_calculator').val();
+                    const currentSelections = [];
+
+                    // Get all checked cab details
+                    $('.cab-details-checkbox:checked').each(function() {
+                        currentSelections.push({
+                            id: $(this).val(),
+                            text: $(this).data('text')
+                        });
+                    });
+
+                    // Get all checked main cab types
+                    const selectedCabIds = $('.cab-checkbox:checked').map(function() {
+                        return $(this).val();
+                    }).get();
+
+                    // Update UI
+                    dropdownText.text(
+                        currentSelections.length > 0 ?
+                        currentSelections.map(opt => opt.text).join(', ') :
+                        'Select options'
+                    );
+                    hiddenInput.val(currentSelections.map(opt => opt.id).join(','));
+
+                    // Make AJAX call if we have selections
+                    if (currentSelections.length > 0) {
+                        $.ajax({
+                            url: "{{ route('admin.ec_cabs_details') }}",
+                            type: 'POST',
+                            data: {
+                                pricingval: pricingval,
+                                cabdetails: currentSelections.map(d => d.id),
+                                travelmodes: selectedCabIds,
+                                customerid: customerid,
+                                _token: "{{ csrf_token() }}"
+                            },
+                            success: function(data) {
+                                displayCabDetails(data.activity_details);
+                            },
+                            error: function(xhr, status, error) {
+                                console.error('Error:', error);
+                                $('#cabsdetails-container').empty().hide();
+                            }
+                        });
+                    } else {
+                        $('#cabsdetails-container').empty().hide();
+                    }
+                });
+
+                // Trigger change for pre-checked boxes
+                if (cabids.length > 0) {
+                    $('.cab-details-checkbox:checked').trigger('change');
+                }
+
+                container.show();
+            } else {
+                container.hide();
+            }
+        }
+
+        // Helper function to display cab details (unchanged)
+        function displayCabDetails(detailsData) {
+            const container = $('#cabsdetails-container');
+            container.empty();
+
+            if (detailsData && detailsData.length > 0) {
+                detailsData.forEach((cabGroup, groupIndex) => {
+                    // Add group header with title (shown once per group)
+                    if (cabGroup.length > 0) {
+                        container.append(`
+                            <div class="row cab-group-header mb-2">
+                                <div class="col-md-12">
+                                    <h5>${cabGroup[0].title}</h5>
+                                </div>
+                            </div>
+                        `);
+                    }
+
+                    // Add each cab detail (without repeating title)
+                    cabGroup.forEach((cab, itemIndex) => {
+                        container.append(`
+                            <div class="row cab-detail-row mb-3">
+                                <div class="col-md-2">
+                                    <input type="hidden" name="cabs[${groupIndex}][${itemIndex}][cab_id]" value="${cab.cab_id}">
+                                    <input type="hidden" name="cabs[${groupIndex}][${itemIndex}][title]" value="${cab.title}">
+                                    <!-- Title removed from display (shown in header) -->
+                                </div>
+                                <div class="col-md-2">
+                                    <input type="hidden" name="cabs[${groupIndex}][${itemIndex}][price_title]" value="${cab.price_title}">
+                                    <input type="text" class="form-control" value="${cab.price_title}" readonly>
+                                </div>
+                                <div class="col-md-2">
+                                    <input type="text" class="form-control price-input" 
+                                        name="cabs[${groupIndex}][${itemIndex}][price]" 
+                                        value="${cab.price}">
+                                </div>
+
+                                <div class="col-md-2">
+                                    <button type="button" class="btn btn-outline-danger btn-sm deleterow" 
+                                        data-id="${cab.existingPricesid}" data-type="cabs">
+                                        <i class="fas fa-times"></i> Remove
+                                    </button>
+                                </div>
+                            </div>
+                        `);
+                    });
+                });
+                container.show();
+            } else {
+                container.hide();
+            }
+        }
+
+        $(document).on('click', '.deleterow', function(e) {
+            e.preventDefault();
+
+            const button = $(this);
+            const customerid = button.data('id');
+            const type = button.data('type');
+
+            if (!customerid) {
+                alert('Invalid item ID');
+                return;
+            }
+
+            if (confirm('Are you sure you want to remove this item?')) {
+                // Show loading state
+                button.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Removing...');
+
+                $.ajax({
+                    url: "{{ route('admin.delete_customer_details') }}",
+                    type: 'POST',
+                    data: {
+                        customerid: customerid,
+                        type: type,
+                        _token: "{{ csrf_token() }}"
+                    },
+                    success: function(response) {
+                        button.closest('.row').fadeOut(300, function() {
+                            $(this).remove();
+                        });
+
+                        // Show success message
+                        toastr.success(response.message || 'Item removed successfully');
+
+                    },
+                    error: function(xhr) {
+                        console.error('Error:', xhr.responseText);
+                        alert('Error removing item. Please try again.');
+                        button.prop('disabled', false).html('<i class="fas fa-times"></i> Remove');
+                    }
+                });
+            }
+        });
+
     });
 </script>
 @endsection

@@ -146,6 +146,11 @@
 
                         <div class="mb-3 px-5">
 
+
+                            <div class="col-md-4">
+                                <label class="mb-2">Title <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control py-2 rounded-3 shadow-sm" id="title" name="title" required>
+                            </div>
                             <div class="row gap-2">
                                 <!-- Theme and Destination -->
                                 <div class="col-md-4 ">

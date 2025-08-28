@@ -121,14 +121,14 @@
     <div class="row">
         <div class="col-lg-12">
             <b><a href="/dashboard">Dashboard</a> > <a href="/pricingcalculator">Pricing</a> > <a
-                    class="add">Edi</a></b>
+                    class="add">Edit</a></b>
             <br>
             <br>
             <h3 class="fw-bold pb-2">Pricing Calculator</h3>
         </div>
 
         <!-- FORM -->
-        <form class="" id="form_valid" action="{{ route('admin.pricing_update', $destination_details->id) }}" method="POST" autocomplete="off"
+        <form class="" id="form_valid" action="{{ route('admin.pricing_update', $destination_details->id) }}" method="POST"  autocomplete="off"
             enctype="multipart/form-data">
             @csrf
             <!-- 1.INFORMATION -->
@@ -137,8 +137,11 @@
                     <div class="form-body p-4 rounded-4">
                         <h4 class="fw-bold mb-5 px-5 pt-5">Information</h4>
 
-
                         <div class="mb-3 px-5">
+                            <div class="col-md-4">
+                                <label class="mb-2">Title <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control py-2 rounded-3 shadow-sm" id="title" name="title" value="{{ $destination_details->title }}">
+                            </div>
 
                             <div class="row gap-2">
                                 <!-- Theme and Destination -->
@@ -675,9 +678,9 @@
                                 container.append(groupHeader);
                             }
 
-                        // Process each activity in the group
-                        activityGroup.forEach((activity, itemIndex) => {
-                            const activityHtml = `
+                            // Process each activity in the group
+                            activityGroup.forEach((activity, itemIndex) => {
+                                const activityHtml = `
                                 <div class="row activity-price-row mb-3" data-activity-id="${selectedStays[groupIndex]}">
                                     <div class="col-md-4">
                                         <input type="hidden" name="activity[${groupIndex}][${itemIndex}][activity_id]" value="${activity.activity_id}">
@@ -696,8 +699,8 @@
                                 </div>
                             `;
                                 container.append(activityHtml);
-                             });
-                        }); 
+                            });
+                        });
                     },
                     error: function(xhr, status, error) {
                         console.error('Error:', error);

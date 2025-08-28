@@ -18,6 +18,7 @@ class stays_destination_details extends Model
     public function stagReviews()
     {
         return $this->hasMany(StagReview::class, 'stag_id')
+        ->where('is_deleted', '0')
         ->with (['user' => function ($query) {
             $query->select('id','first_name','last_name', 'email','profile_image'); 
         }]);

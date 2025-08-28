@@ -58,8 +58,8 @@
 
                     <tr>
                         <td class="text-start">{{ $loop->iteration }}</td>
-                        <td class="text-start">{{ $row->title }}</td>
-                        <td class="text-start">{{ $row->destination_id }}</td>
+                        <td class="text-start">{{ ucfirst($row->title) }}</td>
+                        <td class="text-start">{{ ucfirst($row->destination_id) }}</td>
                         @php
                         $disp_status = 'In Active';
                         $actTitle = 'Click to activate';

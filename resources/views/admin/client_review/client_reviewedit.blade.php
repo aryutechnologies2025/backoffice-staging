@@ -64,9 +64,9 @@ width: 80%;
                                         <label for="file-ip-1" class="d-block text-center py-3" style="cursor: pointer;">
                                             <p class="text-center fw-light">Add Pic</p>
                                         </label>
-                                        <input type="file" id="file-ip-1" name="image_1" accept="image/png, image/jpeg" onchange="validateImage(this)" required>
+                                        <input type="file" id="file-ip-1" name="image_1" accept="image/png, image/jpeg" required>
                                         <div id="file-ip-1-error" class="text-danger"></div>
-                                        <label class="fw-bold mb-5 text-danger border-0"><small>* Upload size [640*120] *</small></label>
+                                        <!-- <label class="fw-bold mb-5 text-danger border-0"><small>* Upload size [640*120] *</small></label> -->
                                     </div>
                                 </div>
 
@@ -138,8 +138,8 @@ width: 80%;
 
                     <div class="row g-2 mb-4">
                         <div class="col-lg-6">
-                            <label class="fw-bold mb-4">Review Date <span class="text-danger">*</span></label>
-                            <input type="date" class="form-control py-2 rounded-3 shadow-sm" name="review_dt" id="review_dt" value="{{ old('review_dt', $client_details->review_dt) }}" required>
+                            <label class="fw-bold mb-4">Review Date</label>
+                            <input type="date" class="form-control py-2 rounded-3 shadow-sm" name="review_dt" id="review_dt" value="{{ old('review_dt', $client_details->review_dt) }}">
                         </div>
                         <div class="col-lg-6">
                             <label class="fw-bold mb-4">Rating <span class="text-danger">*</span></label>
