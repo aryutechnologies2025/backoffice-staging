@@ -32,19 +32,20 @@ width: 80%;
 }
 </style>
 
-<div class="container-wrapper pt-5">
-    <div class="row">
-        <b><a href="/dashboard">Dashboard</a> > <a href="/client_review">Client Review</a> > <a class="edit">Edit</a></b>
-        <br>
-        <br>
-        <h3 class="fw-bold">Client Review Edit</h3>
-    </div>
-</div>
-<!-- FORM -->
-<div class="row mb-3">
-    <div class="col-lg-12">
 
-        <div class="form-body px-4 mb-5 rounded-4">
+<div class="row body-sec py-3 px-5 justify-content-around">
+    <div class="text-start col-lg-6 ">
+        <h3 class="admin-title fw-bold">Client Review Edit</h3>
+    </div>
+    <div class="text-end col-lg-6 ">
+        <b><a href="/dashboard">Dashboard</a> > <a href="/client_review">Client Review</a> > <a class="edit">Edit</a></b>
+    </div>
+
+</div>
+
+<div class="row mb-5">
+    <div class="col-lg-12">
+        <div class="form-body px-4 mb-5 ms-4 me-5 rounded-4">
             <form id="form_valid" action="{{ route('admin.client_review_update', ['id'=>$client_details->id]) }}" method="POST" autocomplete="off" enctype="multipart/form-data">
                 @csrf
                 <div class="mb-3">
@@ -84,12 +85,12 @@ width: 80%;
                                         });
                                     }
                                 </script>   
-                                        <div class="col-lg-6">
-                                            <label class="fw-bold mt-4">Upload Image Name <span class="text-danger">*</span></label>
+                                        <div class="add_form col-lg-6">
+                                            <label class="fw-bold mt-4 pb-2">Upload Image Name <span class="text-danger">*</span></label>
                                             <input type="text" placeholder="Rename the Photo" id="upload_image_name" name="upload_image_name" value="{{ old('upload_image_name', $client_details->upload_image_name) }}" class="form-control py-2 rounded-3 shadow-sm">
                                         </div>
-                                        <div class="col-lg-6 px-4">
-                                            <label class="fw-bold mt-4">Alternate Image Name <span class="text-danger">*</span></label>
+                                        <div class="add_form  col-lg-6 px-4">
+                                            <label class="fw-bold mt-4 pb-2">Alternate Image Name <span class="text-danger">*</span></label>
                                             <input type="text" placeholder="Alternate Name" id="alternate_image_name" name="alternate_image_name" value="{{ old('alternate_image_name', $client_details->alternate_name) }}" class="form-control py-2 rounded-3 shadow-sm" >
                                         </div>
                                     </div>
@@ -98,8 +99,8 @@ width: 80%;
                         </div>
                     </div>
                     <div class="row g-2 mb-4">
-                        <div class="col-lg-6">
-                            <label class="fw-bold mb-4">Program Name <span class="text-danger">*</span></label>
+                        <div class="add_form col-lg-6">
+                            <label class="fw-bold mb-2">Program Name <span class="text-danger">*</span></label>
                             <select id="program_name" name="program_name" class="form-control py-2 rounded-3 shadow-sm" required>
                                 <option value="">Select Program</option>
                                 @foreach($program_dts as $id => $name)
@@ -109,8 +110,8 @@ width: 80%;
                                 @endforeach
                             </select>
                         </div>
-                        <div class="col-lg-6">
-                            <label class="fw-bold mb-4">Client Name <span class="text-danger">*</span></label>
+                        <div class="add_form col-lg-6">
+                            <label class="fw-bold mb-2">Client Name <span class="text-danger">*</span></label>
                             <select id="client_name" name="client_name" class="form-control py-2 rounded-3 shadow-sm" required>
                                     <option value="">Select User</option>
                                     @foreach($users as $id => $name)
@@ -125,8 +126,8 @@ width: 80%;
                     
 
                     <div class="g-2 mb-4">
-                        <div class="col">
-                            <label class="fw-bold mb-4">Client Review <span class="text-danger">*</span></label>
+                        <div class="add_form col">
+                            <label class="fw-bold mb-2">Client Review <span class="text-danger">*</span></label>
                             <input type="hidden" id="client_review" name="client_review" value="{{ old('client_review', strip_tags($client_details->client_review)) }}">
                             <div class="row">
                                 <div class="col-lg-12">
@@ -137,18 +138,19 @@ width: 80%;
                     </div>
 
                     <div class="row g-2 mb-4">
-                        <div class="col-lg-6">
-                            <label class="fw-bold mb-4">Review Date</label>
+
+                        <div class="add_form col-lg-6">
+                            <label class="fw-bold mb-2">Review Date <span class="text-danger">*</span></label>
                             <input type="date" class="form-control py-2 rounded-3 shadow-sm" name="review_dt" id="review_dt" value="{{ old('review_dt', $client_details->review_dt) }}">
                         </div>
-                        <div class="col-lg-6">
-                            <label class="fw-bold mb-4">Rating <span class="text-danger">*</span></label>
+                        <div class="add_form col-lg-6">
+                            <label class="fw-bold mb-2">Rating <span class="text-danger">*</span></label>
                             <input type="number" class="form-control py-2 rounded-3 shadow-sm" name="rating" id="rating" value="{{ old('rating', $client_details->rating) }}" required>
                         </div>
                     </div>
 
                     <div class="row g-2">
-                        <div class="col">
+                        <div class="add_form col">
                             <label class="fw-bold">Status</label>
                             <div class="form-check form-switch">
                                 <input class="form-check-input check_bx" type="checkbox" id="status" name="status" {{ old('status', $client_details->status) ? 'checked' : '' }}>
@@ -157,7 +159,7 @@ width: 80%;
                     </div>
                 </div>
 
-                <div class="col-lg-12 text-end mt-5">
+                <div class="col-lg-12 text-center mt-5">
                     <a href="{{ route('admin.client_review_list') }}">
                         <button type="button" class="cancel-btn">Cancel</button>
                     </a>
