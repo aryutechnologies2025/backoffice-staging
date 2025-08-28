@@ -19,16 +19,17 @@ jobs:
           server: ${{ secrets.FTP_HOST }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          port: ${{ secrets.FTP_PORT }}
-          server-dir: ${{ secrets.FTP_REMOTE_DIR }}
+          port: 21
+          server-dir: /
           protocol: ftp
           dangerous-clean-slate: false
           local-dir: ./
           exclude: |
               **/.git*
               **/.github*
-              **/ node_modules/*
-              **/tests/*
-              **/  storage/logs/*
-              **/ storage/framework/*
-              **/ vendor/*    
+              node_modules/**
+              tests/**
+              storage/logs/**
+              storage/framework/**
+              vendor/**
+
