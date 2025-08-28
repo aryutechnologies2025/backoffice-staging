@@ -15,7 +15,8 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\UserWelcomeMail;
 use App\Models\ContactUs;
 use App\Models\User;
-
+use Laravel\Socialite\Facades\Socialite;
+use Throwable;
 
 use Illuminate\Http\JsonResponse;
 
@@ -25,27 +26,28 @@ class AuthController extends Controller
     public function signup(Request $request)
     {
         // Validation rules
-        $validator = Validator::make($request->all(), [
-            'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
-            'image_1' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'email' => 'required|email|unique:users,email|max:255',
-            'password' => 'required|min:8|confirmed',
-            'dob' => 'required|date',
-            'phone' => 'required|string|max:15',
-            'street' => 'required|string|max:255',
-            'city' => 'required|string|max:255',
-            'state' => 'required|string|max:255',
-            'zip_province_code' => 'required|string|max:10',
-            'country' => 'required|string|max:255',
-            'preferred_lang' => 'required|string|max:255',
-        ]);
+        // $validator = Validator::make($request->all(), [
+        //     'first_name' => 'required|string|max:255',
+        //     'last_name' => 'required|string|max:255',
+        //     'image_1' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+        //     'email' => 'required|email|unique:users,email|max:255',
+        //     'password' => 'required|min:8|confirmed',
+        //     'dob' => 'required|date',
+        //     'phone' => 'required|string|max:15',
+        //     'street' => 'required|string|max:255',
+        //     'city' => 'required|string|max:255',
+        //     'state' => 'required|string|max:255',
+        //     'zip_province_code' => 'required|string|max:10',
+        //     'country' => 'required|string|max:255',
+        //     'preferred_lang' => 'required|string|max:255',
+        // ]);
 
-        if ($validator->fails()) {
-            return response()->json([
-                'errors' => $validator->errors(),
-            ], 422);
-        }
+        // if ($validator->fails()) {
+        //     return response()->json([
+        //         'errors' => $validator->errors(),
+        //     ], 422);
+        // }
+
 
         $profilePath = public_path('/uploads/profiles_pic');
 
@@ -117,7 +119,6 @@ class AuthController extends Controller
 
     public function user_update(Request $request, $id)
     {
-        // Find the user
         $details = User::find($id);
 
         if (!$details) {
@@ -179,9 +180,6 @@ class AuthController extends Controller
         ], 200);
     }
 
-
-
-
     public function login(Request $request)
     {
         // Validation
@@ -193,23 +191,8 @@ class AuthController extends Controller
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
-        // dump('check');
-
-        // dump($request->input('email'));
-        // echo '<pre>';
-        // print_r($user);
-        // echo '</pre>';
-
-
         // Find the user by email
         $user = User::where('email', $request->input('email'))->first();
-
-
-        // echo '<pre>';
-        // print_r($user);
-        // echo '</pre>';
-
-        // exit();
         // Check if the user exists
         if (!$user) {
             return response()->json(['error' => 'Unauthorized User '], 401);
@@ -219,11 +202,7 @@ class AuthController extends Controller
         if (!Auth::attempt($request->only('email', 'password'))) {
             return response()->json(['error' => 'Incorrect password'], 401);
         }
-
-        // Re-authenticate the user to get the updated user instance
         $user = Auth::user();
-
-        // Check user status and deletion status
         if ($user->is_deleted) {
             return response()->json(['error' => 'Your account has been deleted. Please contact admin.'], 403);
         }
@@ -257,16 +236,79 @@ class AuthController extends Controller
         ], 200);
     }
 
+    public function redirect()
+    {
+        return Socialite::driver('google')->redirect();
+    }
 
+    public function callback()
+    {
+        try {
+            // Get the user information from Google
+            $user = Socialite::driver('google')->user();
+        } catch (Throwable $e) {
+            return redirect('/')->with('error', 'Google authentication failed.');
+        }
 
+        // Check if the user already exists in the database
+        $existingUser = User::where('email', $user->email)->first();
 
+        if ($existingUser) {
+            // Log the user in if they already exist
+            // Auth::login($existingUser);
 
+            $userDetails = $existingUser->makeHidden([
+                'email_verified_at',
+                'status',
+                'is_deleted',
+                'created_date',
+                'created_by',
+                'updated_by',
+                'updated_date',
+                'status_changed_by',
+                'deleted_by',
+                'created_at',
+                'updated_at'
+            ]);
 
+            // Generate token
+            $token = $user->createToken('Personal Access Token')->plainTextToken;
+        } else {
+            // Otherwise, create a new user and log them in
+            $newUser = User::updateOrCreate([
+                'email' => $user->email
+            ], [
+                'first_name' => $user->name,
+                'profile_image' => $user->avatar,
+                'email_verified' => $user->email_verified,
+                'login_type' => 'google',
+                'email_verified_at' => now()
+            ]);
 
-    // public function getToken(): JsonResponse
-    // {
-    //     return response()->json(['csrfToken' => csrf_token()]);
-    // }
+            $userDetails = $existingUser->makeHidden([
+                'email_verified_at',
+                'status',
+                'is_deleted',
+                'created_date',
+                'created_by',
+                'updated_by',
+                'updated_date',
+                'status_changed_by',
+                'deleted_by',
+                'created_at',
+                'updated_at'
+            ]);
+
+            // Generate token
+            $token = $user->createToken('Personal Access Token')->plainTextToken;
+        }
+
+        return response()->json([
+            'message' => 'Login successful!',
+            'token' => $token,
+            'user_details' => $userDetails,
+        ], 200);
+    }
 
     public function getToken(): JsonResponse
     {

@@ -98,6 +98,7 @@ use Illuminate\Support\Facades\Http;
 Route::prefix('/')->group(function () {
     Route::get('/', [AdminController::class, 'index'])->name('admin.login');
     Route::get('/sign-up', [AdminController::class, 'signup_form'])->name('admin.signup');
+    
 
     Route::post('/register', [AdminController::class, 'register'])->name('admin.register');
     Route::post('/do-login', [AdminController::class, 'check_login'])->name('admin.doLogin');
@@ -170,6 +171,18 @@ Route::prefix('/')->group(function () {
 
                 Route::post('/package-details', 'package_details')->name('admin.CustomerPackage_details');
                 Route::post('/duplicate-entry-details', 'duplicatePackage')->name('admin.CustomerPackage_dupdetails');
+                Route::post('/pricing-details', 'pricing_details')->name('admin.c_pricing_details');
+                Route::post('/c_stay-details', 'stay_details')->name('admin.c_stay_details');
+                Route::post('/c_activity-details', 'activity_details')->name('admin.c_activity_details');
+                Route::post('/c_travel-details', 'travel_details')->name('admin.c_travel_details');
+                Route::post('/c_cabs-details', 'cabs_details')->name('admin.c_cabs_details');
+
+                //Edit stay
+
+                Route::post('/stay-details', 'edit_stay_details')->name('admin.ec_stay_details');
+                Route::post('/activity-details', 'edit_activity_details')->name('admin.ec_activity_details');
+                Route::post('/cabs-details', 'edit_cabs_details')->name('admin.ec_cabs_details');
+                Route::post('/delete-customer-details', 'delete_customer_details')->name('admin.delete_customer_details');
             });
         });
 
@@ -664,9 +677,7 @@ Route::prefix('/')->group(function () {
                 Route::post('/change-status', 'change_status')->name('admin.activity_change_status');
             });
         });
-
         //pricing calculator
-
         Route::controller(PricingCalculatorController::class)->group(function () {
             Route::prefix('pricingcalculator')->group(function () {
                 Route::get('/', 'list')->name('admin.pricinglist');

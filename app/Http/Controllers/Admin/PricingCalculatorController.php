@@ -17,6 +17,7 @@ class PricingCalculatorController extends Controller
     {
         $title = 'Pricing Calculator List';
         $pricingCalculators = PricingCalculator::where('is_deleted', '0')
+            ->orderBy('id', 'desc')
             ->withSum('priceLists as total_pricing', 'price')
             ->get();
         return view('admin.pricingcalculator.pricinglist', compact('title', 'pricingCalculators'));
@@ -33,23 +34,9 @@ class PricingCalculatorController extends Controller
 
     public function insert(Request $request)
     {
-        // dd($request->all());
-
-         $existingPricing = PricingCalculator::where('destination_id', $request->input('cities_name'))
-            ->where('district_id', $request->input('district_name'))
-            ->where('is_deleted', '0')
-            ->first();
-
-        if ($existingPricing) {
-            return redirect()->back()
-                ->withInput()
-                ->withErrors(['duplicate' => 'This destination and district combination already exists. Duplicate entries are not allowed.']);
-        }
-
-
         $pricingcalculator_v = new PricingCalculator();
-
         $pricingcalculator_v->destination_id = $request->cities_name;
+        $pricingcalculator_v->title = $request->title;
         $pricingcalculator_v->district_id = $request->district_name;
         $pricingcalculator_v->stays_id = $request->stay_id;
         $pricingcalculator_v->activitys_id = $request->activity_ids;
@@ -57,14 +44,12 @@ class PricingCalculatorController extends Controller
         $pricingcalculator_v->cab_type = $request->cab_types;
         $pricingcalculator_v->save();
 
-
         if (isset($request->stays) && count($request->stays) > 0) {
 
             $stays = $request->stays;
             foreach ($stays as $val) {
 
                 foreach ($val as $v) {
-                    //  dd($v['stay_id']);
                     $pricingcalculator = new PriceCalculatorList();
                     $pricingcalculator->pricing_calculator_id = $pricingcalculator_v->id;
                     $pricingcalculator->type = 'stay';
@@ -83,8 +68,6 @@ class PricingCalculatorController extends Controller
 
             foreach ($stays as $val) {
                 foreach ($val as $v) {
-
-                    // dd($v);
                     $pricingcalculator = new PriceCalculatorList();
                     $pricingcalculator->pricing_calculator_id = $pricingcalculator_v->id;
                     $pricingcalculator->type = 'activity';
@@ -115,8 +98,6 @@ class PricingCalculatorController extends Controller
             }
         }
 
-        // dd($request->all());
-
         return redirect()->route('admin.pricinglist')
             ->with('success', 'Pricing created successfully.');
     }
@@ -137,21 +118,9 @@ class PricingCalculatorController extends Controller
     public function update(Request $request, $id)
     {
 
-        // dd($request->all());
-         $existingPricing = PricingCalculator::where('destination_id', $request->input('cities_name'))
-            ->where('district_id', $request->input('district_name'))
-            ->where('is_deleted', '0')
-            ->where('id', '!=', $id)
-            ->first();
-
-        if ($existingPricing) {
-            return redirect()->back()
-                ->withInput()
-                ->withErrors(['duplicate' => 'This destination and district combination already exists. Duplicate entries are not allowed.']);
-        }
-
         $pricingcalculator_v = PricingCalculator::findOrFail($id);
         $pricingcalculator_v->destination_id = $request->cities_name;
+        $pricingcalculator_v->title = $request->title;
         $pricingcalculator_v->district_id = $request->district_name;
         $pricingcalculator_v->stays_id = $request->stay_id;
         $pricingcalculator_v->activitys_id = $request->activity_ids;

@@ -4,20 +4,20 @@
     a:hover {
         color: rgb(27, 108, 138);
     }
-    a{
+
+    a {
         font-family: 'Poppins', sans-serif;
-        font-weight:500;
-        color:#8B7eff;
-        font-size:13px;
-    }
-    
-    .city{
-         font-family: 'Poppins', sans-serif;
-        font-weight:600;
-        color:#282833;
-        font-size:13px;
+        font-weight: 500;
+        color: #8B7eff;
+        font-size: 13px;
     }
 
+    .city {
+        font-family: 'Poppins', sans-serif;
+        font-weight: 600;
+        color: #282833;
+        font-size: 13px;
+    }
 </style>
 
 <div class="row body-sec py-3 px-5 justify-content-around">
@@ -25,17 +25,17 @@
         <h3 class="admin-title fw-bold">{{$title}}</h3>
     </div>
     <div class="text-end col-lg-6 ">
-        <b><a href="/dashboard" >Dashboard</a> > <a class="city" href="" >Pricing Calculator</a></b>
+        <b><a href="/dashboard">Dashboard</a> > <a class="city" href="">Pricing Calculator</a></b>
     </div>
     <div class="mt-2 mb-2 col-lg-12">
         <div class="d-flex justify-content-end">
-             <a href="{{ route('admin.pricing_add_form') }}">
+            <a href="{{ route('admin.pricing_add_form') }}">
                 <button class="btn btn-add px-4" type="button">Add Pricing</button>
             </a>
         </div>
     </div>
 
-</div>  
+</div>
 
 
 <!-- EVENT LIST -->
@@ -46,24 +46,22 @@
                 <thead>
                     <tr class="rounded-top-4">
                         <th class="text-start">S.No</th>
+                        <th class="text-start">Title</th>
                         <th class="text-start">Destination</th>
-                        <th class="text-start">District</th>
                         <th class="text-start">Total</th>
                         <th class="text-start">Status</th>
                         <th class="text-start">Action</th>
                     </tr>
                 </thead>
 
-                    <tbody>
-                   
+                <tbody>
+
                     @foreach ($pricingCalculators as $row)
 
                     <tr>
                         <td class="text-start">{{ $loop->iteration }}</td>
-
+                        <td class="text-start">{{ ucfirst($row->title) }}</td>
                         <td class="text-start">{{ $row->destination_id }}</td>
-                       
-                        <td class="text-start">{{ $row->district_id }}</td>
                         <td class="text-start">{{ $row->total_pricing }}</td>
                         @php
                         $disp_status = 'In Active';
@@ -107,7 +105,7 @@
 
 @section('scripts')
 <script>
-     $(document).ready(function() {
+    $(document).ready(function() {
         $('#cityTable').DataTable({
             "pageLength": 10,
             "lengthChange": true,
@@ -115,12 +113,13 @@
             "searching": true,
             "language": {
                 "emptyTable": "No records found",
-                "searchPlaceholder": "Search cities...",  // 👈 Your placeholder text
-                "search": ""  // 👈 This removes the "Search:" label
+                "searchPlaceholder": "Search cities...", // 👈 Your placeholder text
+                "search": "" // 👈 This removes the "Search:" label
             },
-            "columnDefs": [
-                { "orderable": true, "targets": [0, 3] }
-            ]
+            "columnDefs": [{
+                "orderable": true,
+                "targets": [0, 3]
+            }]
         });
     });
 </script>

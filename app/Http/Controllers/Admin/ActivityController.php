@@ -12,7 +12,7 @@ class ActivityController extends Controller
     public function list(Request $request)
     {
         $title = 'Activity List';
-        $stay_details = ActivityP::where('is_deleted', '0')->get();
+        $stay_details = ActivityP::where('is_deleted', '0')->orderBy('id', 'desc')->get();
         return view('admin.activities_m.activitylist', compact('title', 'stay_details'));
     }
 
