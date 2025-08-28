@@ -283,7 +283,7 @@ class AuthController extends Controller
                 'email_verified' => $user->email_verified,
                 'login_type' => 'google',
                 'email_verified_at' => now()
-            ]);
+            ]); 
 
             $userDetails = $existingUser->makeHidden([
                 'email_verified_at',
