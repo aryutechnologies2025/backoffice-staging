@@ -29,5 +29,4 @@ jobs:
               **/tests/*
               **/  storage/logs/*
               **/ storage/framework/*
-              **/ vendor/*
-              
+              **/ vendor/*    
