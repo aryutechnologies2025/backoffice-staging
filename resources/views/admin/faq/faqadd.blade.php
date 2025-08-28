@@ -41,13 +41,13 @@
                     <div class="row g-3 mb-4">
 
                         <!-- Question -->
-                        <div class="col-md-6">
+                        <div class="add_form col-md-6">
                             <label class="fw-bold mb-2"> Question <span class="text-danger">*</span></label>
                             <input type="text" placeholder="Question" id="question" name="question" class="form-control py-2 rounded-3 shadow-sm" required value="{{ old('question') }}">
                         </div>
 
                         <!-- Answer -->
-                        <div class="col-md-6">
+                        <div class="add_form col-md-6">
                             <label class="fw-bold mb-2"> Answer <span class="text-danger">*</span></label>
                             <textarea id="textarea-description" class="form-control py-2 rounded-3 shadow-sm"  name="answer" placeholder="Answer" required style="height: 42px; resize: none;">{{ old('answer') }}</textarea>
                         </div>
@@ -55,7 +55,7 @@
                     </div>
                 <!-- Status (new row) -->
                 <div class="row g-2">
-                    <div class="col-md-6">
+                    <div class="add_form col-md-6">
                         <label class="fw-bold">Status</label>
                         <div class="form-check form-switch">
                             <input class="form-check-input check_bx" type="checkbox" id="status" name="status">

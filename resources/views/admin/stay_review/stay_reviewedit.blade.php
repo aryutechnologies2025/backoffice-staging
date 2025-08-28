@@ -27,31 +27,30 @@ padding-bottom: 1% !important;
 width: 100% !important;
 }
 
-.form-control {
-width: 80%;
-}
+
 </style>
 
-<div class="container-wrapper pt-5">
-    <div class="row">
-        <b><a href="/dashboard">Dashboard</a> > <a href="/client_review">Client Review</a> > <a class="edit">Edit</a></b>
-        <br>
-        <br>
-        <h3 class="fw-bold">Client Review Edit</h3>
+<div class="row body-sec py-3 px-5 justify-content-around">
+    <div class="text-start col-lg-6 ">
+        <h3 class="admin-title fw-bold">Client Review Edit</h3>
     </div>
-</div>
-<!-- FORM -->
-<div class="row mb-3">
-    <div class="col-lg-12">
+    <div class="text-end col-lg-6 ">
+        <b><a href="/dashboard">Dashboard</a> > <a href="/user">User</a> > <a class="edit">Edit</a></b>
+    </div>
 
-        <div class="form-body px-4 mb-5 rounded-4">
+</div>
+
+
+<div class="row mb-5">
+    <div class="col-lg-12">
+        <div class="form-body px-4 mb-5 ms-4 me-5 rounded-4">
             <form id="form_valid" action="{{ route('admin.stay_review_update', ['id'=>$client_details->id]) }}" method="POST" autocomplete="off" enctype="multipart/form-data">
                 @csrf
                 <div class="mb-3">
                 
                     <div class="row g-2 mb-4">
-                        <div class="col-lg-6">
-                            <label class="fw-bold mb-4">Stay Name <span class="text-danger">*</span></label>
+                        <div class="add_form col-lg-6 pe-4">
+                            <label class="fw-bold mb-2">Stay Name <span class="text-danger">*</span></label>
                             <select id="program_name" name="program_name" class="form-control py-2 rounded-3 shadow-sm" required>
                                 <option value="">Select Stay</option>
                                 @foreach($program_dts as $id => $name)
@@ -61,8 +60,8 @@ width: 80%;
                                 @endforeach
                             </select>
                         </div>
-                        <div class="col-lg-6">
-                            <label class="fw-bold mb-4">Client Name <span class="text-danger">*</span></label>
+                        <div class="add_form  col-lg-6">
+                            <label class="fw-bold mb-2">Client Name <span class="text-danger">*</span></label>
                             <select id="client_name" name="client_name" class="form-control py-2 rounded-3 shadow-sm" required>
                                     <option value="">Select User</option>
                                     @foreach($users as $id => $name)
@@ -77,8 +76,8 @@ width: 80%;
                     
 
                     <div class="g-2 mb-4">
-                        <div class="col">
-                            <label class="fw-bold mb-4">Client Review <span class="text-danger">*</span></label>
+                        <div class="add_form  col">
+                            <label class="fw-bold mb-2">Client Review <span class="text-danger">*</span></label>
                             <input type="hidden" id="client_review" name="client_review" value="{{ old('client_review', strip_tags($client_details->review)) }}">
                             <div class="row">
                                 <div class="col-lg-12">
@@ -90,8 +89,8 @@ width: 80%;
 
                     <div class="row g-2 mb-4">
                        
-                        <div class="col-lg-6">
-                            <label class="fw-bold mb-4">Rating <span class="text-danger">*</span></label>
+                        <div class="add_form  col-lg-6">
+                            <label class="fw-bold mb-2">Rating <span class="text-danger">*</span></label>
                             <input type="number" class="form-control py-2 rounded-3 shadow-sm" name="rating" id="rating" value="{{ old('rating', $client_details->rating) }}" required>
                         </div>
                     </div>
@@ -99,7 +98,7 @@ width: 80%;
                   
                 </div>
 
-                <div class="col-lg-12 text-end mt-5">
+                <div class="col-lg-12 text-center mt-5">
                     <a href="{{ route('admin.stay_review_list') }}">
                         <button type="button" class="cancel-btn">Cancel</button>
                     </a>
