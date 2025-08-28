@@ -21,21 +21,11 @@
         /* Consistent padding for both sides */
     }
 
-    .form-body {
-
-        padding-top: 1% !important;
-        padding-bottom: 1% !important;
-        width: 90% !important;
-    }
 
     .mb-1 {
         margin-bottom: .5rem !important;
     }
 
-
-    .form-control {
-        width: 80%;
-    }
 
     .btn-add {
         background-color: #2164c0 !important;
@@ -115,140 +105,136 @@
         }
     }
 
-    .form-check-input {
-        transform: scale(1.5);
-        /* Increase the size of the checkbox */
-    }
 </style>
-<div class="container-wrapper py-5">
-    <div class="row ">
-        <div class="col-lg-12 gap-2">
-            <b "><a href=" /dashboard">Dashboard</a> > <a href="/stay_list">Stay</a> > <a
-                    class="add">Edit</a></b>
-            </br>
-            </br>
-            <h3 class="fw-bold pb-2">Edit Stay Details</h3>
-        </div>
 
-        <!-- FORM -->
-        <form id="form_valid" action="{{ route('admin.stay_details_update', $stay_details->id) }}" method="POST" autocomplete="off" enctype="multipart/form-data">
-            @csrf
-            <!-- 1.INFORMATION -->
-            <div class="row mb-3">
-                <div class="col">
-                    <div class="form-body rounded-4 p-4 ">
-                        <h4 class="fw-bold mb-5 px-5 pt-5">Information</h4>
-                        <div class="mb-3 px-5">
-                            <div class="row gap-2">
+<div class="row body-sec py-3 px-5 justify-content-around">
+    <div class="text-start col-lg-6 ">
+        <h3 class="admin-title fw-bold pb-2">Edit Stay Details</h3>
+    </div>
+    <div class="text-end col-lg-6 ">
+        <b><a href=" /dashboard">Dashboard</a> > <a href="/stay_list">Stay</a> > <a
+                class="add">Edit</a></b>
+    </div>
 
-                                <div class="col-md-4 ">
-                                    <label class="mb-2 ">Destination <span class="text-danger">*</span></label>
-                                    <select id="cities_name" name="cities_name"
-                                        class="form-select py-2 rounded-3 shadow-sm">
-                                        <option value="" disabled>Select Destination</option>
-                                        @foreach($cities_dts as $id => $name)
-                                        <option value="{{ $name }}"
-                                            @if(old('cities_name', $stay_details->destination ?? '') == $name) selected @endif>
-                                            {{ $name }}
-                                        </option>
+</div>
+
+<div class="row mb-5">
+    <div class="col-lg-12">
+        <div class="form-body px-4 mb-5 ms-4 me-5 rounded-4">
+            <form id="form_valid" action="{{ route('admin.stay_details_update', $stay_details->id) }}" method="POST" autocomplete="off" enctype="multipart/form-data">
+                @csrf
+                            <h4 class="add_head fw-bold mb-5">Information</h4>
+                            <div class="mb-3">
+                                <div class="row gap-2">
+
+                                    <div class="add_form col-md-4 ">
+                                        <label class="mb-2 ">Destination <span class="text-danger">*</span></label>
+                                        <select id="cities_name" name="cities_name"
+                                            class="form-select py-2 rounded-3 shadow-sm">
+                                            <option value="" disabled>Select Destination</option>
+                                            @foreach($cities_dts as $id => $name)
+                                            <option value="{{ $name }}"
+                                                @if(old('cities_name', $stay_details->destination ?? '') == $name) selected @endif>
+                                                {{ $name }}
+                                            </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="add_form col-md-4">
+                                        <label class="mb-2">District <span class="text-danger">*</span></label>
+                                        <select id="district_name" name="district_name"
+                                            class="form-select py-2 rounded-3 shadow-sm">
+                                            <option value="" disabled selected>Select District</option>
+                                            @if ($stay_details->district)
+                                            <option value="" selected>{{$stay_details->district}}</option>
+                                            @endif
+
+
+                                        </select>
+                                    </div>
+                                    <div class="add_form col-md-4">
+                                        <label class=" mb-2 "> Title <span class="text-danger">*</span></label>
+                                        <input type="text" placeholder="Title" id="title" name="title" class="form-control py-2 rounded-3 shadow-sm" required value="{{$stay_details->stay_title}}">
+                                    </div>
+                                    <div class="add_form col-md-4 mt-2">
+                                        <label class="mb-2">Tag Line <span class="text-danger">*</span></label>
+                                        <input type="text" placeholder="Tag Line" id="tag_line" name="tag_line"
+                                            class="form-control w-100 py-2 rounded-3 shadow-sm"
+                                            value="{{ $stay_details->tag_line }}" required>
+
+                                    </div>
+
+                                    <div class="add_form col-md-6 mt-2">
+                                        <label class=" mb-2 "> Stay Location <span class="text-danger">*</span></label>
+                                        <input type="text" placeholder="Stay Location - iframe" id="stay_location" name="stay_location" class="form-control py-2 rounded-3 shadow-sm" required value="{{$stay_details->stay_location}}">
+                                    </div>
+
+                                    <div class="mt-5">
+                                        <div class="row">
+                                            <div class="add_form col-lg-12">
+                                                <label class="form-label form-label-top form-label-auto mb-2">Program Description <span class="text-danger">*</span></label>
+                                                <textarea id="description" class="container__textarea px-3 py-2 textarea-feild" name="description" style="display:none;">{{$stay_details->stay_description}}</textarea>
+
+                                                @php
+                                                $plain_text_description = is_array($stay_details->stay_description)
+                                                ? json_encode($stay_details->stay_description)
+                                                : strip_tags($stay_details->stay_description);
+                                                @endphp
+                                                <div id="summernote1" style="height: 200px;">{{$plain_text_description}}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                            </div>
+
+
+
+                            <!-- Existing Gallery Images -->
+                            <div class="row mt-4 py-5">
+                                <div class="col">
+                                    <h4 class="add_head py-3 fw-bold">Gallery Image - Room</h4>
+
+                                    <div id="photo-upload-container" class="row g-3">
+                                        @php
+                                        $galleryImages = json_decode($stay_details->gallery_image, true);
+                                        @endphp
+
+
+                                        {{-- Loop through existing images --}}
+                                        @if (!empty($galleryImages))
+                                        @foreach ($galleryImages as $index => $img)
+                                        <div class="col-lg-2 photo-upload-field existing-photo">
+                                            <div class="form-input">
+                                                <img src="{{ asset($img) }}" alt="Image {{ $index + 1 }}" class="img-fluid mb-2" />
+                                                <input type="hidden" name="existing_images[]" value="{{ $img }}">
+                                                <button type="button" class="btn btn-danger btn-sm" onclick="removeExistingPhoto(this)">Delete</button>
+                                            </div>
+                                        </div>
                                         @endforeach
-                                    </select>
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="mb-2">District <span class="text-danger">*</span></label>
-                                    <select id="district_name" name="district_name"
-                                        class="form-select py-2 rounded-3 shadow-sm">
-                                        <option value="" disabled selected>Select District</option>
-                                        @if ($stay_details->district)
-                                        <option value="" selected>{{$stay_details->district}}</option>
                                         @endif
+                                    </div>
 
-
-                                    </select>
-                                </div>
-                                <div class="col-md-4">
-                                    <label class=" mb-2 "> Title <span class="text-danger">*</span></label>
-                                    <input type="text" placeholder="Title" id="title" name="title" class="form-control py-2 rounded-3 shadow-sm" required value="{{$stay_details->stay_title}}">
-                                </div>
-                                <div class="col-md-4 mt-2">
-                                    <label class="mb-2">Tag Line <span class="text-danger">*</span></label>
-                                    <input type="text" placeholder="Tag Line" id="tag_line" name="tag_line"
-                                        class="form-control w-100 py-2 rounded-3 shadow-sm"
-                                        value="{{ $stay_details->tag_line }}" required>
-
-                                </div>
-
-                                <div class="col-md-6 mt-2">
-                                    <label class=" mb-2 "> Stay Location <span class="text-danger">*</span></label>
-                                    <input type="text" placeholder="Stay Location - iframe" id="stay_location" name="stay_location" class="form-control py-2 rounded-3 shadow-sm" required value="{{$stay_details->stay_location}}">
-                                </div>
-
-                                <div class="mt-5">
-                                    <div class="row">
-                                        <div class="col-lg-12">
-                                            <label class="form-label form-label-top form-label-auto mb-2">Program Description <span class="text-danger">*</span></label>
-                                            <textarea id="description" class="container__textarea px-3 py-2 textarea-feild" name="description" style="display:none;">{{$stay_details->stay_description}}</textarea>
-
-                                            @php
-                                            $plain_text_description = is_array($stay_details->stay_description)
-                                            ? json_encode($stay_details->stay_description)
-                                            : strip_tags($stay_details->stay_description);
-                                            @endphp
-                                            <div id="summernote1" style="height: 200px;">{{$plain_text_description}}</div>
-                                        </div>
+                                    <div class="text mt-3">
+                                        <button type="button" class="btn-add rounded border-0 px-3 py-3 text-white"
+                                            onclick="addPhotoField()">
+                                            <i class="fa fa-plus" aria-hidden="true"></i> Add Photo
+                                        </button>
                                     </div>
                                 </div>
-
-
                             </div>
-                        </div>
+                            <script>
+                                let photoCount = 100; // Start high to avoid ID clash with existing photos
 
+                                function addPhotoField() {
+                                    const container = document.getElementById('photo-upload-container');
+                                    photoCount++;
 
+                                    const photoField = document.createElement('div');
+                                    photoField.classList.add('col-lg-2', 'photo-upload-field');
 
-                        <!-- Existing Gallery Images -->
-                        <div class="row mt-4 px-5 py-5">
-                            <div class="col">
-                                <h4 class="py-3 fw-bold">Gallery Image - Room</h4>
-
-                                <div id="photo-upload-container" class="row g-3">
-                                    @php
-                                    $galleryImages = json_decode($stay_details->gallery_image, true);
-                                    @endphp
-
-
-                                    {{-- Loop through existing images --}}
-                                    @if (!empty($galleryImages))
-                                    @foreach ($galleryImages as $index => $img)
-                                    <div class="col-lg-2 photo-upload-field existing-photo">
-                                        <div class="form-input">
-                                            <img src="{{ asset($img) }}" alt="Image {{ $index + 1 }}" class="img-fluid mb-2" />
-                                            <input type="hidden" name="existing_images[]" value="{{ $img }}">
-                                            <button type="button" class="btn btn-danger btn-sm" onclick="removeExistingPhoto(this)">Delete</button>
-                                        </div>
-                                    </div>
-                                    @endforeach
-                                    @endif
-                                </div>
-
-                                <div class="text mt-3">
-                                    <button type="button" class="btn-add rounded border-0 px-3 py-3 text-white"
-                                        onclick="addPhotoField()">
-                                        <i class="fa fa-plus" aria-hidden="true"></i> Add Photo
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                        <script>
-                            let photoCount = 100; // Start high to avoid ID clash with existing photos
-
-                            function addPhotoField() {
-                                const container = document.getElementById('photo-upload-container');
-                                photoCount++;
-
-                                const photoField = document.createElement('div');
-                                photoField.classList.add('col-lg-2', 'photo-upload-field');
-
-                                photoField.innerHTML = `
+                                    photoField.innerHTML = `
             <div class="form-input">
                 <label for="file-ip-${photoCount}" class="px-4 py-2 text-center">
                     <img class="text-center mt-3" id="file-ip-${photoCount}-preview" src="/assets/image/dashboard/innerpece_addpic_icon.svg">
@@ -262,450 +248,447 @@
             </div>
         `;
 
-                                container.appendChild(photoField);
-                            }
-
-                            function previewImage(event, inputElement) {
-                                const file = event.target.files[0];
-                                const reader = new FileReader();
-
-                                reader.onload = function() {
-                                    const preview = inputElement.previousElementSibling.querySelector('img');
-                                    preview.src = reader.result;
-                                };
-
-                                if (file) {
-                                    reader.readAsDataURL(file);
+                                    container.appendChild(photoField);
                                 }
-                            }
 
-                            function deletePhoto(button) {
-                                const photoField = button.closest('.photo-upload-field');
-                                photoField.remove();
-                            }
+                                function previewImage(event, inputElement) {
+                                    const file = event.target.files[0];
+                                    const reader = new FileReader();
 
-                            function removeExistingPhoto(button) {
-                                const container = button.closest('.existing-photo');
-                                container.remove(); // remove the image div from DOM
-                            }
-                        </script>
+                                    reader.onload = function() {
+                                        const preview = inputElement.previousElementSibling.querySelector('img');
+                                        preview.src = reader.result;
+                                    };
+
+                                    if (file) {
+                                        reader.readAsDataURL(file);
+                                    }
+                                }
+
+                                function deletePhoto(button) {
+                                    const photoField = button.closest('.photo-upload-field');
+                                    photoField.remove();
+                                }
+
+                                function removeExistingPhoto(button) {
+                                    const container = button.closest('.existing-photo');
+                                    container.remove(); // remove the image div from DOM
+                                }
+                            </script>
 
 
 
 
-                        <!-- 5.PRICING -->
-                        <div class="row mb-3 mt-3">
-                            <div class="col">
-                                <div class="form-body px-5  rounded-4 ">
-                                    <h4 class="fw-bold mb-3"> Pricing</h4>
-                                    <div class="mb-2">
+                            <!-- 5.PRICING -->
+                            <div class="row mb-3 mt-3">
+                                <div class="col">
+                                    <div class="form-body rounded-4 ">
+                                        <h4 class="add_head fw-bold mb-3"> Pricing</h4>
+                                        <div class="mb-2">
 
-                                        <div class="row mb-2">
-                                            <div class="col-lg-6">
-                                                <label class="form-label form-label-top form-label-auto fw-bold mb-2">
-                                                    Days
-                                                </label>
-                                                <input type="number" name="price_title" class="form-control py-2 rounded-3 shadow-sm"
-                                                    placeholder="Title" value="{{$stay_details->no_of_days}}">
-                                            </div>
-                                            <div class="col-lg-6 ">
-                                                <label class="fw-bold mb-2">Actual Amount <span class="text-danger">*</span></label>
-                                                <div class="position-relative">
-                                                    <span class="position-absolute top-50 start-0 translate-middle-y ps-3">₹</span>
-                                                    <input type="number" name="actual_price_amount" class="form-control py-2 ps-5 rounded-3 shadow-sm"
-                                                        placeholder="Actual Amount" value="{{$stay_details->actual_price}}">
+                                            <div class="row mb-2">
+                                                <div class="add_form col-lg-6">
+                                                    <label class="form-label form-label-top form-label-auto fw-bold mb-2">
+                                                        Days
+                                                    </label>
+                                                    <input type="number" name="price_title" class="form-control py-2 rounded-3 shadow-sm"
+                                                        placeholder="Title" value="{{$stay_details->no_of_days}}">
+                                                </div>
+                                                <div class="add_form col-lg-6 ">
+                                                    <label class="fw-bold mb-2">Actual Amount <span class="text-danger">*</span></label>
+                                                    <div class="position-relative">
+                                                        <span class="position-absolute top-50 start-0 translate-middle-y ps-3">₹</span>
+                                                        <input type="number" name="actual_price_amount" class="form-control py-2 ps-5 rounded-3 shadow-sm"
+                                                            placeholder="Actual Amount" value="{{$stay_details->actual_price}}">
+                                                    </div>
+                                                </div>
+                                                <div class="add_formcol-lg-6 mt-2">
+                                                    <label class="fw-bold mb-2">Discount Amount <span class="text-danger">*</span></label>
+                                                    <div class="position-relative">
+                                                        <span class="position-absolute top-50 start-0 translate-middle-y ps-3">₹</span>
+                                                        <input type="number" name="price_amount" class="form-control py-2 ps-5 rounded-3 shadow-sm"
+                                                            placeholder="Discount Amount" value="{{$stay_details->discount_price}}">
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div class="col-lg-6 mt-2">
-                                                <label class="fw-bold mb-2">Discount Amount <span class="text-danger">*</span></label>
-                                                <div class="position-relative">
-                                                    <span class="position-absolute top-50 start-0 translate-middle-y ps-3">₹</span>
-                                                    <input type="number" name="price_amount" class="form-control py-2 ps-5 rounded-3 shadow-sm"
-                                                        placeholder="Discount Amount" value="{{$stay_details->discount_price}}">
-                                                </div>
-                                            </div>
-                                        </div>
 
 
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-
-
-
-                        <div class="row mb-3">
-                            <div class="col">
-                                <div class="form-body px-1 py-3 rounded-4">
-                                    <h4 class="fw-bold mb-3">Stays Inclusion</h4>
-                                    <div>
-                                        <input type="hidden" id="program_inclusion" name="program_inclusion">
-                                        @php
-                                        $plain_text_program_inclusion = html_entity_decode(
-                                        strip_tags($stay_details->package_inclusion),
-                                        );
-                                        @endphp
-                                        <div class="mt-2">
-                                            <div id="summernote5">{!! $plain_text_program_inclusion !!}</div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
 
 
 
-                        <div class="row mb-3">
-                            <div class="col">
-                                <div class="form-body px-1 py-3 rounded-4">
-                                    <h4 class="fw-bold mb-3">Stays Exclusion</h4>
-                                    <div>
-                                        <input type="hidden" id="program_exclusion" name="program_exclusion">
-                                        @php
-                                        $plain_text_program_inclusion = html_entity_decode(
-                                        strip_tags($stay_details->package_exclusion),
-                                        );
-                                        @endphp
-                                        <div class="mt-2">
-                                            <div id="summernote9">{!! $plain_text_program_inclusion !!}</div>
+
+                            <div class="row mb-1">
+                                <div class="col">
+                                    <div class="form-body  py-3 rounded-4">
+                                        <h4 class="add_head fw-bold mb-3">Stays Inclusion</h4>
+                                        <div>
+                                            <input type="hidden" id="program_inclusion" name="program_inclusion">
+                                            @php
+                                            $plain_text_program_inclusion = html_entity_decode(
+                                            strip_tags($stay_details->package_inclusion),
+                                            );
+                                            @endphp
+                                            <div class="mt-2">
+                                                <div id="summernote5">{!! $plain_text_program_inclusion !!}</div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <!-- 8.AMENITIES -->
-                        <div class="row mb-3">
-                            <div class="col">
-                                <div class="form-body px-5 rounded-4">
-                                    <h4 class="fw-bold mb-3">Amenities </h4>
-                                    <div class="row mb-4">
-                                        @foreach($amenities_dts->chunk(4) as $chunk)
-                                        <div class="row mb-3">
-                                            @foreach($chunk as $amenity)
-                                            <div class="col-lg-3 col-md-3 col-sm-4 mb-2">
-                                                <div class="form-check">
-                                                    <input type="checkbox" class=" custom-checkbox" id="amenity-{{ $amenity->id }}" name="amenity_services[]" value="{{ $amenity->id }}" @if(in_array((string) $amenity->id, $selectedAmenities)) checked @endif>
-                                                    <label class="mb-0" for="amenity-{{ $amenity->id }}">{{ $amenity->amenity_name }}</label>
+
+
+
+                            <div class="row mb-1">
+                                <div class="col">
+                                    <div class="form-body  py-3 rounded-4">
+                                        <h4 class="add_head fw-bold mb-3">Stays Exclusion</h4>
+                                        <div>
+                                            <input type="hidden" id="program_exclusion" name="program_exclusion">
+                                            @php
+                                            $plain_text_program_inclusion = html_entity_decode(
+                                            strip_tags($stay_details->package_exclusion),
+                                            );
+                                            @endphp
+                                            <div class="mt-2">
+                                                <div id="summernote9">{!! $plain_text_program_inclusion !!}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- 8.AMENITIES -->
+                            <div class="row mb-1">
+                                <div class="col">
+                                    <div class="form-body  rounded-4">
+                                        <h4 class="add_head fw-bold mb-3">Amenities </h4>
+                                        <div class="row mb-4">
+                                            @foreach($amenities_dts->chunk(4) as $chunk)
+                                            <div class="row mb-3">
+                                                @foreach($chunk as $amenity)
+                                                <div class="col-lg-3 col-md-3 col-sm-4 mb-2">
+                                                    <div class="form-check">
+                                                        <input type="checkbox" class=" custom-checkbox" id="amenity-{{ $amenity->id }}" name="amenity_services[]" value="{{ $amenity->id }}" @if(in_array((string) $amenity->id, $selectedAmenities)) checked @endif>
+                                                        <label class="mb-0" for="amenity-{{ $amenity->id }}">{{ $amenity->amenity_name }}</label>
+                                                    </div>
                                                 </div>
+                                                @endforeach
                                             </div>
                                             @endforeach
                                         </div>
-                                        @endforeach
                                     </div>
                                 </div>
                             </div>
-                        </div>
 
 
 
 
-                        <!-- 9.FOOD & BEVERAGES -->
-                        <div class="row mb-3">
-                            <div class="col">
-                                <div class="form-body px-5 rounded-4 ">
-                                    <h4 class="fw-bold mb-3"> Food and Beverages</h4>
-                                    <div class="row mb-4">
-                                        @foreach($foodBeverages_dts->chunk(6) as $chunk)
-                                        <div class="row mb-3">
-                                            @foreach($chunk as $item)
-                                            <div class="col-lg-3 col-md-3 col-sm-4 mb-2">
-                                                <div class="form-check">
-                                                    <input type="checkbox" class="custom-checkbox " id="food-beverage-{{ $item->id }}" name="food_beverages[]" value="{{ $item->id }}" @if(in_array((string) $item->id, $selectedfood_beverages)) checked @endif>
+                            <!-- 9.FOOD & BEVERAGES -->
+                            <div class="row mb-1">
+                                <div class="col">
+                                    <div class="form-body rounded-4 ">
+                                        <h4 class="add_head fw-bold mb-3"> Food and Beverages</h4>
+                                        <div class="row mb-4">
+                                            @foreach($foodBeverages_dts->chunk(6) as $chunk)
+                                            <div class="row mb-3">
+                                                @foreach($chunk as $item)
+                                                <div class="col-lg-3 col-md-3 col-sm-4 mb-2">
+                                                    <div class="form-check">
+                                                        <input type="checkbox" class="custom-checkbox " id="food-beverage-{{ $item->id }}" name="food_beverages[]" value="{{ $item->id }}" @if(in_array((string) $item->id, $selectedfood_beverages)) checked @endif>
 
-                                                    <label class="mb-0" for="food-beverage-{{ $item->id }}">{{ $item->food_beverage }}</label>
+                                                        <label class="mb-0" for="food-beverage-{{ $item->id }}">{{ $item->food_beverage }}</label>
+                                                    </div>
                                                 </div>
+                                                @endforeach
                                             </div>
                                             @endforeach
                                         </div>
-                                        @endforeach
                                     </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <!--10. ACTIVITIES -->
-                        <div class="row mb-3">
-                            <div class="col">
-                                <div class="form-body px-5  rounded-4  ">
-                                    <h4 class="fw-bold mb-3">Activities</h4>
-                                    <div class="row mb-4">
-                                        @foreach($activities_dts->chunk(6) as $chunk)
-                                        <div class="row mb-3">
-                                            @foreach($chunk as $item)
-                                            <div class="col-lg-3 col-md-3 col-sm-4 mb-2">
-                                                <div class="form-check">
-                                                    <input type="checkbox" class="custom-checkbox me-2" id="activities-{{ $item->id }}" name="activities[]" value="{{ $item->id }}" @if(in_array((string) $item->id, $selectedactivities)) checked @endif>
-                                                    <label class="mb-0" for="activities-{{ $item->id }}">{{ $item->activities }}</label>
+                            <!--10. ACTIVITIES -->
+                            <div class="row mb-1">
+                                <div class="col">
+                                    <div class="form-body rounded-4  ">
+                                        <h4 class="add_head fw-bold mb-3">Activities</h4>
+                                        <div class="row mb-4">
+                                            @foreach($activities_dts->chunk(6) as $chunk)
+                                            <div class="row mb-3">
+                                                @foreach($chunk as $item)
+                                                <div class="col-lg-3 col-md-3 col-sm-4 mb-2">
+                                                    <div class="form-check">
+                                                        <input type="checkbox" class="custom-checkbox me-2" id="activities-{{ $item->id }}" name="activities[]" value="{{ $item->id }}" @if(in_array((string) $item->id, $selectedactivities)) checked @endif>
+                                                        <label class="mb-0" for="activities-{{ $item->id }}">{{ $item->activities }}</label>
+                                                    </div>
                                                 </div>
+                                                @endforeach
                                             </div>
                                             @endforeach
                                         </div>
-                                        @endforeach
                                     </div>
                                 </div>
                             </div>
-                        </div>
 
 
 
-
-                        <!-- 11.SAFETY FEATURES  -->
-                        <div class="row mb-3">
-                            <div class="col">
-                                <div class="form-body px-5  rounded-4  ">
-                                    <h4 class="fw-bold mb-3">Safety Features</h4>
-                                    <div class="row mb-4">
-                                        @foreach($safety_features_dts->chunk(6) as $chunk)
-                                        <div class="row mb-3">
-                                            @foreach($chunk as $item)
-                                            <div class="col-lg-3 col-md-3 col-sm-4 mb-2">
-                                                <div class="form-check">
-                                                    <input type="checkbox" class="custom-checkbox " id="safety_features-{{ $item->id }}" name="safety_features[]" value="{{ $item->id }}" @if(in_array((string) $item->id, $selectedsafety_features)) checked @endif>
-                                                    <label class="mb-0" for="safety_features-{{ $item->id }}">{{ $item->safety_features }}</label>
+                            <!-- 11.SAFETY FEATURES  -->
+                            <div class="row mb-1">
+                                <div class="col">
+                                    <div class="form-body  rounded-4  ">
+                                        <h4 class="add_head fw-bold mb-3">Safety Features</h4>
+                                        <div class="row mb-4">
+                                            @foreach($safety_features_dts->chunk(6) as $chunk)
+                                            <div class="row mb-3">
+                                                @foreach($chunk as $item)
+                                                <div class="col-lg-3 col-md-3 col-sm-4 mb-2">
+                                                    <div class="form-check">
+                                                        <input type="checkbox" class="custom-checkbox " id="safety_features-{{ $item->id }}" name="safety_features[]" value="{{ $item->id }}" @if(in_array((string) $item->id, $selectedsafety_features)) checked @endif>
+                                                        <label class="mb-0" for="safety_features-{{ $item->id }}">{{ $item->safety_features }}</label>
+                                                    </div>
                                                 </div>
+                                                @endforeach
                                             </div>
                                             @endforeach
                                         </div>
-                                        @endforeach
-                                    </div>
 
-
-
-                                    <div class="row g-2 mt-3">
-                                        <div class="col">
-                                            <h4 class="fw-bold ">Status</h4>
-                                            <div class="form-check form-switch d-flex align-items-center">
-                                                <input class="form-check-input check_bx" name="status" type="checkbox" id="status" {{ $stay_details->status ? 'checked' : '' }}>
+                                        <div class="row g-2 mb-4">
+                                            <div class="col">
+                                                <label class="add_head fw-bold ">Status</label>
+                                                <div class="form-check form-switch">
+                                                    <input class="form-check-input check_bx" name="status" type="checkbox" id="status" {{ $stay_details->status ? 'checked' : '' }}>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
 
-                                    <div class="row g-3 mt-2">
-                                        <div class="col-lg-3">
-                                            <h4 class="fw-bold mb-2">Order</h4>
-                                            <input type="number" placeholder="Order" id="list_order" name="list_order"
-                                                value="{{$stay_details->order}}" class="form-control py-2 rounded-3 shadow-sm" required>
+                                        <div class="row g-3 mt-2">
+                                            <div class="col-lg-3">
+                                                <h4 class="add_head fw-bold mb-2">Order</h4>
+                                                <input type="number" placeholder="Order" id="list_order" name="list_order"
+                                                    value="{{$stay_details->order}}" class="form-control py-2 rounded-3 shadow-sm" required>
+                                            </div>
                                         </div>
+
                                     </div>
+                                    <div class="col-lg-12 text-center mt-5">
+                                        <a href="{{ route('admin.staylist') }}">
+                                            <button type="button" class="cancel-btn"> Cancel </button>
+                                        </a>
+                                        <button class="submit-btn sbmtBtn ms-4"> Submit </button>
+                                    </div>
+                                </div>
 
-                                </div>
-                                <div class="col-lg-12 text-end mt-5">
-                                    <a href="{{ route('admin.staylist') }}">
-                                        <button type="button" class="cancel-btn"> Cancel </button>
-                                    </a>
-                                    <button class="submit-btn sbmtBtn ms-4"> Submit </button>
-                                </div>
                             </div>
-
                         </div>
                     </div>
                 </div>
-            </div>
 
 
-        </form>
+            </form>
 
+        </div>
     </div>
-</div>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-    $(document).ready(function() {
-        $('#summernote1,#summernote9,#summernote5')
-            .summernote({
-                height: 200 // Set the height of the editor
-            });
-        $('#summernote1').summernote({
-            placeholder: 'Hello stand alone ui',
-            tabsize: 2,
-            height: 100,
-            toolbar: [
-                ['style', ['style']],
-                ['font', ['bold', 'underline', 'clear']],
-                ['color', ['color']],
-                ['para', ['ul', 'ol', 'paragraph']],
-                ['table', ['table']],
-                ['insert', ['link', 'picture', 'video']],
-                ['view', ['fullscreen', 'codeview', 'help']]
-            ],
-            callbacks: {
-                onChange: function(contents) {
-                    // Update the hidden textarea whenever content changes
-                    $('#description').val(contents);
-                },
-                onInit: function() {
-                    // Initialize the textarea with Summernote content
-                    $('#description').val($('#summernote1').summernote('code'));
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#summernote1,#summernote9,#summernote5')
+                .summernote({
+                    height: 200 // Set the height of the editor
+                });
+            $('#summernote1').summernote({
+                placeholder: 'Hello stand alone ui',
+                tabsize: 2,
+                height: 100,
+                toolbar: [
+                    ['style', ['style']],
+                    ['font', ['bold', 'underline', 'clear']],
+                    ['color', ['color']],
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    ['table', ['table']],
+                    ['insert', ['link', 'picture', 'video']],
+                    ['view', ['fullscreen', 'codeview', 'help']]
+                ],
+                callbacks: {
+                    onChange: function(contents) {
+                        // Update the hidden textarea whenever content changes
+                        $('#description').val(contents);
+                    },
+                    onInit: function() {
+                        // Initialize the textarea with Summernote content
+                        $('#description').val($('#summernote1').summernote('code'));
+                    }
                 }
-            }
-        });
+            });
 
-        $('#summernote5').summernote({
-            placeholder: 'Hello stand alone ui',
-            tabsize: 2,
-            height: 100,
-            toolbar: [
-                ['style', ['style']],
-                ['font', ['bold', 'underline', 'clear']],
-                ['color', ['color']],
-                ['para', ['ul', 'ol', 'paragraph']],
-                ['table', ['table']],
-                ['insert', ['link', 'picture', 'video']],
-                ['view', ['fullscreen', 'codeview', 'help']]
-            ]
-        });
+            $('#summernote5').summernote({
+                placeholder: 'Hello stand alone ui',
+                tabsize: 2,
+                height: 100,
+                toolbar: [
+                    ['style', ['style']],
+                    ['font', ['bold', 'underline', 'clear']],
+                    ['color', ['color']],
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    ['table', ['table']],
+                    ['insert', ['link', 'picture', 'video']],
+                    ['view', ['fullscreen', 'codeview', 'help']]
+                ]
+            });
 
-        $('#summernote9').summernote({
-            placeholder: 'Hello stand alone ui',
-            tabsize: 2,
-            height: 100,
-            toolbar: [
-                ['style', ['style']],
-                ['font', ['bold', 'underline', 'clear']],
-                ['color', ['color']],
-                ['para', ['ul', 'ol', 'paragraph']],
-                ['table', ['table']],
-                ['insert', ['link', 'picture', 'video']],
-                ['view', ['fullscreen', 'codeview', 'help']]
-            ]
-        });
+            $('#summernote9').summernote({
+                placeholder: 'Hello stand alone ui',
+                tabsize: 2,
+                height: 100,
+                toolbar: [
+                    ['style', ['style']],
+                    ['font', ['bold', 'underline', 'clear']],
+                    ['color', ['color']],
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    ['table', ['table']],
+                    ['insert', ['link', 'picture', 'video']],
+                    ['view', ['fullscreen', 'codeview', 'help']]
+                ]
+            });
 
-        // Also update the textarea before form submission
-        $('form').on('submit', function() {
-            $('#description').val($('#summernote1').summernote('code'));
-        });
+            // Also update the textarea before form submission
+            $('form').on('submit', function() {
+                $('#description').val($('#summernote1').summernote('code'));
+            });
 
-        $('#cities_name').change(function() {
-            const destination = $(this).val();
-            const districtSelect = $('#district_name');
+            $('#cities_name').change(function() {
+                const destination = $(this).val();
+                const districtSelect = $('#district_name');
 
-            console.log('Destination selected:', destination); // Debugging
+                console.log('Destination selected:', destination); // Debugging
 
-            if (!destination) {
-                districtSelect.empty().append(
-                    '<option value="" disabled selected>Select District</option>'
-                ).prop('disabled', true);
-                return;
-            }
-
-            // Show loading state
-            districtSelect.empty().append(
-                '<option value="" disabled>Loading districts...</option>'
-            ).prop('disabled', true);
-
-            // AJAX request
-            $.ajax({
-                url: '/get-districts/' + encodeURIComponent(destination),
-                type: 'GET',
-                success: function(data) {
-                    console.log('Received data:', data); // Debugging
-
+                if (!destination) {
                     districtSelect.empty().append(
                         '<option value="" disabled selected>Select District</option>'
-                    );
+                    ).prop('disabled', true);
+                    return;
+                }
 
-                    if (data && data.length > 0) {
-                        $.each(data, function(index, district) {
+                // Show loading state
+                districtSelect.empty().append(
+                    '<option value="" disabled>Loading districts...</option>'
+                ).prop('disabled', true);
+
+                // AJAX request
+                $.ajax({
+                    url: '/get-districts/' + encodeURIComponent(destination),
+                    type: 'GET',
+                    success: function(data) {
+                        console.log('Received data:', data); // Debugging
+
+                        districtSelect.empty().append(
+                            '<option value="" disabled selected>Select District</option>'
+                        );
+
+                        if (data && data.length > 0) {
+                            $.each(data, function(index, district) {
+                                districtSelect.append(
+                                    $('<option>', {
+                                        value: district,
+                                        text: district
+                                    })
+                                );
+                            });
+                            districtSelect.prop('disabled', false);
+                        } else {
                             districtSelect.append(
-                                $('<option>', {
-                                    value: district,
-                                    text: district
-                                })
+                                '<option value="" disabled>No districts found for this destination</option>'
                             );
-                        });
-                        districtSelect.prop('disabled', false);
-                    } else {
-                        districtSelect.append(
-                            '<option value="" disabled>No districts found for this destination</option>'
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('AJAX Error:', status, error); // Debugging
+                        districtSelect.empty().append(
+                            '<option value="" disabled>Error loading districts</option>'
                         );
                     }
-                },
-                error: function(xhr, status, error) {
-                    console.error('AJAX Error:', status, error); // Debugging
-                    districtSelect.empty().append(
-                        '<option value="" disabled>Error loading districts</option>'
-                    );
-                }
+                });
             });
+
+
         });
 
 
-    });
+        document.addEventListener('DOMContentLoaded', function() {
+            // updateTypeOptions(); // Call function to prepopulate the "Types" dropdown on page load
+        });
+
+        function updateTypeOptions() {
+            // Get the selected value from the first dropdown
+            var propCatValue = document.getElementById('prop_cat').value;
+
+            // Get the container and the second dropdown
+            var typeContainer = document.getElementById('type-container');
+            var typeSelect = document.getElementById('type');
+
+            // Define options based on the selected value
+            var options = [];
+            if (propCatValue === 'events') {
+                options = [{
+                        value: '',
+                        text: 'Select Types'
+                    },
+                    {
+                        value: 'upcoming_events',
+                        text: 'Upcoming Events'
+                    },
+                    {
+                        value: 'popular_events',
+                        text: 'Popular Events'
+                    }
+                ];
+            } else if (propCatValue === 'packages') {
+                options = [{
+                        value: '',
+                        text: 'Select Types'
+                    },
+                    {
+                        value: 'upcoming_packages',
+                        text: 'Upcoming Packages'
+                    },
+                    {
+                        value: 'popular_packages',
+                        text: 'Popular Packages'
+                    }
+                ];
+            }
+
+            // Populate the options in the second dropdown
+            typeSelect.innerHTML = ''; // Clear previous options
+            options.forEach(function(option) {
+                var opt = document.createElement('option');
+                opt.value = option.value;
+                opt.text = option.text;
+                typeSelect.add(opt);
+            });
 
 
-    document.addEventListener('DOMContentLoaded', function() {
-        // updateTypeOptions(); // Call function to prepopulate the "Types" dropdown on page load
-    });
 
-    function updateTypeOptions() {
-        // Get the selected value from the first dropdown
-        var propCatValue = document.getElementById('prop_cat').value;
-
-        // Get the container and the second dropdown
-        var typeContainer = document.getElementById('type-container');
-        var typeSelect = document.getElementById('type');
-
-        // Define options based on the selected value
-        var options = [];
-        if (propCatValue === 'events') {
-            options = [{
-                    value: '',
-                    text: 'Select Types'
-                },
-                {
-                    value: 'upcoming_events',
-                    text: 'Upcoming Events'
-                },
-                {
-                    value: 'popular_events',
-                    text: 'Popular Events'
-                }
-            ];
-        } else if (propCatValue === 'packages') {
-            options = [{
-                    value: '',
-                    text: 'Select Types'
-                },
-                {
-                    value: 'upcoming_packages',
-                    text: 'Upcoming Packages'
-                },
-                {
-                    value: 'popular_packages',
-                    text: 'Popular Packages'
-                }
-            ];
+            // Show or hide the second dropdown based on selection
+            typeContainer.style.display = propCatValue ? 'block' : 'none';
         }
 
-        // Populate the options in the second dropdown
-        typeSelect.innerHTML = ''; // Clear previous options
-        options.forEach(function(option) {
-            var opt = document.createElement('option');
-            opt.value = option.value;
-            opt.text = option.text;
-            typeSelect.add(opt);
-        });
-
-
-
-        // Show or hide the second dropdown based on selection
-        typeContainer.style.display = propCatValue ? 'block' : 'none';
-    }
 
 
 
 
 
 
+        function addCampRuleField() {
+            // Find the container where new fields will be added
+            var container = document.getElementById('camp-rule-container');
 
-    function addCampRuleField() {
-        // Find the container where new fields will be added
-        var container = document.getElementById('camp-rule-container');
-
-        // Create a new div for the new field
-        var newField = document.createElement('div');
-        newField.className = 'row g-2 mb-4 camp-rule-field';
-        newField.innerHTML = `
+            // Create a new div for the new field
+            var newField = document.createElement('div');
+            newField.className = 'row g-2 mb-4 camp-rule-field';
+            newField.innerHTML = `
         <div class="col">
             <input type="text" name="camp_rule[]" class="form-control py-3 rounded-3 shadow-sm" placeholder="Rule And Regulations" required>
         </div>
@@ -718,101 +701,101 @@
             </a>
         </div>`;
 
-        // Append the new field to the container
-        container.appendChild(newField);
-    }
-
-    function removeField(element) {
-        // Find the parent element (field container) and remove it
-        var field = element.closest('.camp-rule-field');
-        if (field) {
-            field.remove();
-        }
-    }
-
-    document.addEventListener('DOMContentLoaded', function() {
-        const themeSelect = document.getElementById('themes_name');
-        const categorySelect = document.getElementById('theme_cat');
-
-        function populateCategories(themeId) {
-            fetch(`/all-inclusive-package/theme-categories/${themeId}`)
-                .then(response => response.json())
-                .then(data => {
-                    categorySelect.innerHTML = '<option value="">Select Category</option>'; // Clear previous options
-                    Object.keys(data).forEach(id => {
-                        const option = document.createElement('option');
-                        option.value = id;
-                        option.textContent = data[id];
-                        categorySelect.appendChild(option);
-                    });
-
-                    // Pre-select the category
-                    @if($selectedCategoryId)
-                    categorySelect.value = '{{ $selectedCategoryId }}';
-                    @endif
-                })
-                .catch(error => console.error('Error fetching theme categories:', error));
+            // Append the new field to the container
+            container.appendChild(newField);
         }
 
-        // Initial population of categories if a theme is pre-selected
-        if (themeSelect.value) {
-            populateCategories(themeSelect.value);
-        }
-
-        // Add event listener for theme change
-        themeSelect.addEventListener('change', function() {
-            const themeId = this.value;
-            if (themeId) {
-                populateCategories(themeId);
-            } else {
-                categorySelect.innerHTML = '<option value="">Select Category</option>'; // Clear categories if no theme selected
+        function removeField(element) {
+            // Find the parent element (field container) and remove it
+            var field = element.closest('.camp-rule-field');
+            if (field) {
+                field.remove();
             }
-        });
-    });
+        }
 
-    $(document).ready(function() {
-        const $citiesSelect = $('#cities_name');
-        const $destinationCatSelect = $('#destination_cat');
-        const selectedDestinationCat = @json($selecteddesCategoryId); // Pass the initially selected destination category ID
+        document.addEventListener('DOMContentLoaded', function() {
+            const themeSelect = document.getElementById('themes_name');
+            const categorySelect = document.getElementById('theme_cat');
 
-        function populateDestinationCategories(cityId) {
-            $destinationCatSelect.empty().append('<option value="">Select Destination Category</option>');
-
-            if (cityId) {
-                $.ajax({
-                    url: '{{ route("admin.destination_categories") }}', // Use the route defined in web.php
-                    type: 'GET',
-                    data: {
-                        city_id: cityId
-                    },
-                    success: function(data) {
-                        $.each(data, function(id, name) {
-                            $destinationCatSelect.append(new Option(name, id));
+            function populateCategories(themeId) {
+                fetch(`/all-inclusive-package/theme-categories/${themeId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        categorySelect.innerHTML = '<option value="">Select Category</option>'; // Clear previous options
+                        Object.keys(data).forEach(id => {
+                            const option = document.createElement('option');
+                            option.value = id;
+                            option.textContent = data[id];
+                            categorySelect.appendChild(option);
                         });
 
-                        // Set the previously selected destination category
-                        if (selectedDestinationCat) {
-                            $destinationCatSelect.val(selectedDestinationCat);
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        console.error('Error fetching categories:', error);
-                    }
-                });
+                        // Pre-select the category
+                        @if($selectedCategoryId)
+                        categorySelect.value = '{{ $selectedCategoryId }}';
+                        @endif
+                    })
+                    .catch(error => console.error('Error fetching theme categories:', error));
             }
-        }
 
-        // Populate destination categories on city change
-        $citiesSelect.on('change', function() {
-            const cityId = $(this).val();
-            populateDestinationCategories(cityId);
+            // Initial population of categories if a theme is pre-selected
+            if (themeSelect.value) {
+                populateCategories(themeSelect.value);
+            }
+
+            // Add event listener for theme change
+            themeSelect.addEventListener('change', function() {
+                const themeId = this.value;
+                if (themeId) {
+                    populateCategories(themeId);
+                } else {
+                    categorySelect.innerHTML = '<option value="">Select Category</option>'; // Clear categories if no theme selected
+                }
+            });
         });
 
-        // Populate destination categories on page load if a city is selected
-        const initialCityId = $citiesSelect.val();
-        if (initialCityId) {
-            populateDestinationCategories(initialCityId);
-        }
-    });
-</script>
-@endsection
+        $(document).ready(function() {
+            const $citiesSelect = $('#cities_name');
+            const $destinationCatSelect = $('#destination_cat');
+            const selectedDestinationCat = @json($selecteddesCategoryId); // Pass the initially selected destination category ID
+
+            function populateDestinationCategories(cityId) {
+                $destinationCatSelect.empty().append('<option value="">Select Destination Category</option>');
+
+                if (cityId) {
+                    $.ajax({
+                        url: '{{ route("admin.destination_categories") }}', // Use the route defined in web.php
+                        type: 'GET',
+                        data: {
+                            city_id: cityId
+                        },
+                        success: function(data) {
+                            $.each(data, function(id, name) {
+                                $destinationCatSelect.append(new Option(name, id));
+                            });
+
+                            // Set the previously selected destination category
+                            if (selectedDestinationCat) {
+                                $destinationCatSelect.val(selectedDestinationCat);
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('Error fetching categories:', error);
+                        }
+                    });
+                }
+            }
+
+            // Populate destination categories on city change
+            $citiesSelect.on('change', function() {
+                const cityId = $(this).val();
+                populateDestinationCategories(cityId);
+            });
+
+            // Populate destination categories on page load if a city is selected
+            const initialCityId = $citiesSelect.val();
+            if (initialCityId) {
+                populateDestinationCategories(initialCityId);
+            }
+        });
+    </script>
+    @endsection
