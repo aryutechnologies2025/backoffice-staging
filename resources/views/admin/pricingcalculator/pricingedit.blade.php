@@ -21,21 +21,13 @@
         /* Consistent padding for both sides */
     }
 
-    .form-body {
-
-        padding-top: 1% !important;
-        padding-bottom: 1% !important;
-        width: 90% !important;
-    }
+  
 
     .mb-1 {
         margin-bottom: .5rem !important;
     }
 
 
-    .form-control {
-        width: 80%;
-    }
 
     .btn-add {
         background-color: #2164c0 !important;
@@ -116,152 +108,152 @@
             height: 18px;
         }
     }
-</style> 
-<div class="container-wrapper py-5">
-    <div class="row">
-        <div class="col-lg-12">
-            <b><a href="/dashboard">Dashboard</a> > <a href="/pricingcalculator">Pricing</a> > <a
-                    class="add">Edit</a></b>
-            <br>
-            <br>
-            <h3 class="fw-bold pb-2">Pricing Calculator</h3>
-        </div>
+</style>
 
-        <!-- FORM -->
-        <form class="" id="form_valid" action="{{ route('admin.pricing_update', $destination_details->id) }}" method="POST"  autocomplete="off"
-            enctype="multipart/form-data">
-            @csrf
-            <!-- 1.INFORMATION -->
-            <div class="row mb-3">
-                <div class="col">
-                    <div class="form-body p-4 rounded-4">
-                        <h4 class="fw-bold mb-5 px-5 pt-5">Information</h4>
+<div class="row body-sec py-3 px-5 justify-content-around">
+    <div class="text-start col-lg-6 ">
+        <h3 class="admin-title fw-bold">Pricing Calculator</h3>
+    </div>
+    <div class="text-end col-lg-6 ">
+        <b><a href="/dashboard">Dashboard</a> > <a href="/pricingcalculator">Pricing</a> > <a
+                class="add">Edit</a></b>
+    </div>
 
-                        <div class="mb-3 px-5">
-                            <div class="col-md-4">
-                                <label class="mb-2">Title <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control py-2 rounded-3 shadow-sm" id="title" name="title" value="{{ $destination_details->title }}">
+</div>
+
+<div class="row mb-5">
+    <div class="col-lg-12">
+        <div class="form-body px-4 mb-5 ms-4 me-5 rounded-4">
+            <form class="" id="form_valid" action="{{ route('admin.pricing_update', $destination_details->id) }}" method="POST" autocomplete="off"
+                enctype="multipart/form-data">
+                @csrf
+                 <h4 class="fw-bold mb-4">Information</h4>
+
+                <div class="mb-3">
+                    <div class="add_form col-md-4">
+                        <label class="mb-2">Title <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control py-2 rounded-3 shadow-sm" id="title" name="title" value="{{ $destination_details->title }}">
+                    </div>
+
+                    <div class="row gap-2">
+                        <!-- Theme and Destination -->
+                        <div class="add_form col-md-4 ">
+                            <label class="mb-2">Destination</label>
+                            <select id="cities_name" name="cities_name"
+                                class="form-select py-2 rounded-3 shadow-sm" required>
+                                <option value="" disabled selected>Select Destination</option>
+                                @foreach($cities as $id => $name)
+                                <option value="{{ $name }}"
+                                    @if(old('cities_name', $destination_details->destination_id ?? '') == $name) selected @endif>
+                                    {{ $name }}
+                                </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="add_form col-md-4">
+                            <label class="mb-2">Location</label>
+                            <select id="district_name" name="district_name"
+                                class="form-select py-2 rounded-3 shadow-sm" required>
+                                <option value="" disabled selected>Select Location</option>
+                                <!-- Districts will be populated dynamically -->
+                            </select>
+                        </div>
+
+                    </div>
+
+                    <br>
+
+                    <!-- Stays Section -->
+                    <div id="stays-section" class="row d-flex mt-3">
+                        <div class="add_form col-md-4">
+                            <label class="mb-2">Stay Details</label>
+                            <div class="dropdown">
+                                <button class="btn btn-outline-secondary dropdown-toggle w-100 text-start d-flex justify-content-between align-items-center"
+                                    type="button" id="stayDropdown" data-bs-toggle="dropdown"
+                                    aria-expanded="false">
+                                    <span id="stayDropdownText">Select stay</span>
+                                </button>
+                                <ul class="dropdown-menu w-100 p-2" aria-labelledby="stayDropdown"
+                                    style="max-height: 200px; overflow-y: auto;">
+                                    <!-- Stays will be populated here via JavaScript -->
+                                </ul>
                             </div>
+                            <input type="hidden" name="stay_id" id="stayHiddenInput">
+                        </div>
+                        <div id="stays-details-container" class="mt-3"></div>
 
-                            <div class="row gap-2">
-                                <!-- Theme and Destination -->
-                                <div class="col-md-4 ">
-                                    <label class="mb-2">Destination</label>
-                                    <select id="cities_name" name="cities_name"
-                                        class="form-select py-2 rounded-3 shadow-sm" required>
-                                        <option value="" disabled selected>Select Destination</option>
-                                        @foreach($cities as $id => $name)
-                                        <option value="{{ $name }}"
-                                            @if(old('cities_name', $destination_details->destination_id ?? '') == $name) selected @endif>
-                                            {{ $name }}
-                                        </option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="mb-2">Location</label>
-                                    <select id="district_name" name="district_name"
-                                        class="form-select py-2 rounded-3 shadow-sm" required>
-                                        <option value="" disabled selected>Select Location</option>
-                                        <!-- Districts will be populated dynamically -->
-                                    </select>
-                                </div>
 
+                    </div>
+
+                    <!-- Activities Section -->
+                    <div id="activities-section" class="row d-flex mt-3">
+                        <div class="add_form col-md-4">
+                            <label class="mb-2">Activity</label>
+                            <div class="dropdown">
+                                <button class="btn btn-outline-secondary dropdown-toggle w-100 text-start d-flex justify-content-between align-items-center"
+                                    type="button" id="activityDropdown" data-bs-toggle="dropdown"
+                                    aria-expanded="false">
+                                    <span id="activityDropdownText">Select activity</span>
+                                </button>
+                                <ul class="dropdown-menu w-100 p-2" aria-labelledby="activityDropdown"
+                                    style="max-height: 200px; overflow-y: auto;">
+                                    <!-- Activities will be populated here via JavaScript -->
+                                </ul>
                             </div>
+                            <input type="hidden" name="activity_ids" id="activityHiddenInput">
+                        </div>
+                        <div id="activity-details-container" class="mt-3"></div>
+                    </div>
 
-                            <br>
-
-                            <!-- Stays Section -->
-                            <div id="stays-section" class="row d-flex mt-3">
-                                <div class="col-md-4">
-                                    <label class="mb-2">Stay Details</label>
-                                    <div class="dropdown">
-                                        <button class="btn btn-outline-secondary dropdown-toggle w-100 text-start d-flex justify-content-between align-items-center"
-                                            type="button" id="stayDropdown" data-bs-toggle="dropdown"
-                                            aria-expanded="false">
-                                            <span id="stayDropdownText">Select stay</span>
-                                        </button>
-                                        <ul class="dropdown-menu w-100 p-2" aria-labelledby="stayDropdown"
-                                            style="max-height: 200px; overflow-y: auto;">
-                                            <!-- Stays will be populated here via JavaScript -->
-                                        </ul>
-                                    </div>
-                                    <input type="hidden" name="stay_id" id="stayHiddenInput">
-                                </div>
-                                <div id="stays-details-container" class="mt-3"></div>
-
-
+                    <!-- Cabs Section -->
+                    <div id="cabs-section" class="row d-flex mt-3">
+                        <div class="add_form col-md-4">
+                            <label class="mb-2">Travel Mode</label>
+                            <div class="dropdown">
+                                <button class="btn btn-outline-secondary dropdown-toggle w-100 text-start d-flex justify-content-between align-items-center"
+                                    type="button" id="cabDropdown" data-bs-toggle="dropdown"
+                                    aria-expanded="false">
+                                    <span id="cabDropdownText">Select option</span>
+                                </button>
+                                <ul class="dropdown-menu w-100 p-2" aria-labelledby="cabDropdown"
+                                    style="max-height: 200px; overflow-y: auto;">
+                                    <!-- Cabs will be populated here via JavaScript -->
+                                </ul>
                             </div>
+                            <input type="hidden" name="cab_types" id="cabHiddenInput">
+                        </div>
 
-                            <!-- Activities Section -->
-                            <div id="activities-section" class="row d-flex mt-3">
-                                <div class="col-md-4">
-                                    <label class="mb-2">Activity</label>
-                                    <div class="dropdown">
-                                        <button class="btn btn-outline-secondary dropdown-toggle w-100 text-start d-flex justify-content-between align-items-center"
-                                            type="button" id="activityDropdown" data-bs-toggle="dropdown"
-                                            aria-expanded="false">
-                                            <span id="activityDropdownText">Select activity</span>
-                                        </button>
-                                        <ul class="dropdown-menu w-100 p-2" aria-labelledby="activityDropdown"
-                                            style="max-height: 200px; overflow-y: auto;">
-                                            <!-- Activities will be populated here via JavaScript -->
-                                        </ul>
-                                    </div>
-                                    <input type="hidden" name="activity_ids" id="activityHiddenInput">
+                        <!-- Cab details selection -->
+                        <div id="cabs-details-container" class="mt-3" style="display: none;">
+                            <div class="add_form col-md-4">
+                                <label class="mb-2">Travel Details</label>
+                                <div class="dropdown">
+                                    <button class="btn btn-outline-secondary dropdown-toggle w-100 text-start d-flex justify-content-between align-items-center"
+                                        type="button" id="cabDetailsDropdown" data-bs-toggle="dropdown"
+                                        aria-expanded="false">
+                                        <span id="cabDetailsDropdownText">Select options</span>
+                                    </button>
+                                    <ul class="dropdown-menu w-100 p-2" aria-labelledby="cabDetailsDropdown"
+                                        style="max-height: 200px; overflow-y: auto;">
+                                        <!-- Will be populated dynamically -->
+                                    </ul>
                                 </div>
-                                <div id="activity-details-container" class="mt-3"></div>
-                            </div>
-
-                            <!-- Cabs Section -->
-                            <div id="cabs-section" class="row d-flex mt-3">
-                                <div class="col-md-4">
-                                    <label class="mb-2">Travel Mode</label>
-                                    <div class="dropdown">
-                                        <button class="btn btn-outline-secondary dropdown-toggle w-100 text-start d-flex justify-content-between align-items-center"
-                                            type="button" id="cabDropdown" data-bs-toggle="dropdown"
-                                            aria-expanded="false">
-                                            <span id="cabDropdownText">Select option</span>
-                                        </button>
-                                        <ul class="dropdown-menu w-100 p-2" aria-labelledby="cabDropdown"
-                                            style="max-height: 200px; overflow-y: auto;">
-                                            <!-- Cabs will be populated here via JavaScript -->
-                                        </ul>
-                                    </div>
-                                    <input type="hidden" name="cab_types" id="cabHiddenInput">
-                                </div>
-
-                                <!-- Cab details selection -->
-                                <div id="cabs-details-container" class="mt-3" style="display: none;">
-                                    <div class="col-md-4">
-                                        <label class="mb-2">Travel Details</label>
-                                        <div class="dropdown">
-                                            <button class="btn btn-outline-secondary dropdown-toggle w-100 text-start d-flex justify-content-between align-items-center"
-                                                type="button" id="cabDetailsDropdown" data-bs-toggle="dropdown"
-                                                aria-expanded="false">
-                                                <span id="cabDetailsDropdownText">Select options</span>
-                                            </button>
-                                            <ul class="dropdown-menu w-100 p-2" aria-labelledby="cabDetailsDropdown"
-                                                style="max-height: 200px; overflow-y: auto;">
-                                                <!-- Will be populated dynamically -->
-                                            </ul>
-                                        </div>
-                                        <input type="hidden" name="selected_cab_options" id="cabDetailsHiddenInput">
-                                    </div>
-                                </div>
-
-                                <!-- Cab price details display -->
-                                <div id="cabsdetails-container" class="mt-3"></div>
-                            </div>
-
-                            <div class="col-lg-12 text-end mt-5">
-                                <a href="{{ route('admin.pricinglist') }}">
-                                    <button type="button" class="cancel-btn"> Cancel </button>
-                                </a>
-                                <button class="submit-btn sbmtBtn ms-4 mb-5"> Submit </button>
+                                <input type="hidden" name="selected_cab_options" id="cabDetailsHiddenInput">
                             </div>
                         </div>
+
+                        <!-- Cab price details display -->
+                        <div id="cabsdetails-container" class="mt-3"></div>
                     </div>
+
+                    <div class="col-lg-12 text-center mt-5">
+                        <a href="{{ route('admin.pricinglist') }}">
+                            <button type="button" class="cancel-btn"> Cancel </button>
+                        </a>
+                        <button class="submit-btn sbmtBtn ms-4 mb-5"> Submit </button>
+                    </div>
+                </div>
+        </div>
 
 
 
