@@ -82,6 +82,7 @@ class StayreviewController extends Controller
         $client_review->user_id = $request->input('client_name');
         $client_review->review = $request->input('client_review');
         $client_review->rating = $request->input('rating');
+        $client_review->status = $request->has('status') && $request->input('status') === 'on' ? '1' : '0';
         $client_review->created_by = 'admin';
         $client_review->is_deleted = '0';
         $client_review->save();
@@ -115,6 +116,7 @@ class StayreviewController extends Controller
         $client_review->stag_id = $request->input('program_name');
         $client_review->user_id = $request->input('client_name');
         $client_review->review = $request->input('client_review');
+        $client_review->status = $request->has('status') && $request->input('status') === 'on' ? '1' : '0';
         $client_review->rating = $request->input('rating');
         $client_review->save();
 
