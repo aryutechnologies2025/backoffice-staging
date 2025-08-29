@@ -35,7 +35,7 @@ width: 100% !important;
         <h3 class="admin-title fw-bold">Client Review Edit</h3>
     </div>
     <div class="text-end col-lg-6 ">
-        <b><a href="/dashboard">Dashboard</a> > <a href="/user">User</a> > <a class="edit">Edit</a></b>
+        <b><a href="/dashboard">Dashboard</a> > <a href="/stay_review">Stay Review</a> > <a class="edit">Edit</a></b>
     </div>
 
 </div>
@@ -92,6 +92,15 @@ width: 100% !important;
                         <div class="add_form  col-lg-6">
                             <label class="fw-bold mb-2">Rating <span class="text-danger">*</span></label>
                             <input type="number" class="form-control py-2 rounded-3 shadow-sm" name="rating" id="rating" value="{{ old('rating', $client_details->rating) }}" required>
+                        </div>
+                    </div>
+
+                      <div class="row g-2">
+                        <div class="add_form col">
+                            <label class="fw-bold">Status</label>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input check_bx" type="checkbox" id="status" name="status" {{ old('status', $client_details->status) ? 'checked' : '' }}>
+                            </div>
                         </div>
                     </div>
 

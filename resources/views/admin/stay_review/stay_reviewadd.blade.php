@@ -37,7 +37,7 @@
         <h3 class="admin-title fw-bold">{{$title}}</h3>
     </div>
     <div class="text-end col-lg-6 ">
-          <b><a href="/dashboard">Dashboard</a> > <a href="/stay_review">Stay Review</a> > <a class="add">Add</a></b>
+        <b><a href="/dashboard">Dashboard</a> > <a href="/stay_review">Stay Review</a> > <a class="add">Add</a></b>
     </div>
 
 </div>
@@ -97,6 +97,16 @@
                                 </div>
 
 
+                                <div class="row g-2">
+                                    <div class="add_form col">
+                                        <label class="fw-bold ">Status</label>
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input check_bx" type="checkbox" id="status" name="status">
+                                        </div>
+                                    </div>
+                                </div>
+
+
                                 <div class="text-center  mt-4">
                                     <a href="{{ route('admin.stay_review_list') }}">
                                         <button type="button" class="cancel-btn"> Cancel </button>
@@ -141,7 +151,7 @@
 
                 img.onload = function() {
                     console.log('Image loaded with width: ' + img.width + ' and height: ' + img.height);
-                    
+
                     // Check if the image exceeds the limit of 600x120
                     if (img.width > 600 && img.height > 120) {
                         console.log("Dimensions exceed allowed size!"); // Debugging log
