@@ -219,9 +219,7 @@
                                             <p class="text-center fw-light mt-3"> Add Pic</p>
                                         </label>
                                         <input type="file" name="img_${photoCount}" id="file-ip-${photoCount}" data-number="${photoCount}" accept="image/png, image/jpeg, image/svg+xml" onchange="previewImage(event, this)">
-                                        <label class="mb-4 text-danger d-block w-100 text-center">
-                                            * Upload size [640*120] *
-                                        </label>
+                                        
                                         <button type="button" class="btn btn-danger mt-2" onclick="deletePhoto(this)">Delete</button>
                                     </div>
                                 `;

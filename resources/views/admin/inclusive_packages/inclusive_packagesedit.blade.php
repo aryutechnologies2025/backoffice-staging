@@ -308,8 +308,8 @@
                                             accept="image/png, image/jpeg, image/svg+xml"
                                             onchange="previewCoverImage(event)">
                                         <div id="file-cover-error" class="text-danger"></div>
-                                        <small class="text-danger d-block mt-2 text-center">* Upload size
-                                            [1200x120]</small>
+                                        <!-- <small class="text-danger d-block mt-2 text-center">* Upload size
+                                            [1200x120]</small> -->
                                     </div>
                                 </div>
                             </div>
