@@ -214,29 +214,39 @@
                 </div>
 
 
-
                 <!-- Flags -->
                 <div class="mb-4">
                     <label class="fw-bold mb-2">Flags</label>
                     <div class="d-flex gap-5 align-items-center">
 
-                        <div class="add_form d-flex gap-2 align-items-center">
-                            <input type="checkbox" id="popular_program" name="prop_cat[]"
-                                value="popular_program"
-                                {{ in_array('popular_program', $selectedprogram) ? 'checked' : '' }}>
-                            <label for="popular_program">Popular Program</label>
-                        </div>
-                        <div class="add_form d-flex gap-2 align-items-center">
-                            <input type="checkbox" id="upcoming_program" name="prop_cat[]"
-                                value="upcoming_program"
-                                {{ in_array('upcoming_program', $selectedprogram) ? 'checked' : '' }}>
-                            <label for="upcoming_program">Upcoming Program</label>
-                        </div>
-                        <div class="add_form d-flex gap-2 align-items-center">
-                            <input type="checkbox" id="featured" name="prop_cat[]" value="featured"
-                                {{ in_array('featured', $selectedprogram) ? 'checked' : '' }}>
-                            <label for="featured">Featured</label>
-                        </div>
+
+                            <!-- Cover Image -->
+                            <div class="row mt-4">
+                                <div class="col-md-2 h-25">
+                                    <label for="file-cover" class="form-label">Cover Image</label>
+                                    <div class="form-input text-start pt-2 pb-0">
+                                        <label for="file-cover" class="d-block pt-4">
+                                            @if ($package_details->cover_img)
+                                                <img id="file-cover-preview" src="{{ asset($package_details->cover_img) }}"
+                                                    alt="Cover Image" class="rounded-3 shadow-sm"
+                                                    style="max-width: 250px; max-height: 250px; object-fit: cover;">
+                                            @else
+                                                <img id="file-cover-preview"
+                                                    src="/assets/image/dashboard/innerpece_addpic_icon.svg" alt="Add Pic"
+                                                    class="rounded-3 shadow-sm"
+                                                    style="max-width: 250px; max-height: 250px;">
+                                            @endif
+                                            <p class="mt-2">Add Pic</p>
+                                        </label>
+                                        <input type="file" id="file-cover" name="cover_img" class="form-control"
+                                            accept="image/png, image/jpeg, image/svg+xml"
+                                            onchange="previewCoverImage(event)">
+                                        <div id="file-cover-error" class="text-danger"></div>
+                                        <!-- <small class="text-danger d-block mt-2 text-center">* Upload size
+                                            [1200x120]</small> -->
+                                    </div>
+                                </div>
+                            </div>
 
                     </div>
 

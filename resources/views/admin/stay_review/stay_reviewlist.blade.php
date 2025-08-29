@@ -50,6 +50,7 @@
                         <th class="text-start"><span> Client Name </span></th>
                         <th class="text-start"><span> Stay Name </span></th>
                         <th class="text-start"><span> Rating </span></th>
+                         <th class="text-start"><span> Status </span></th>
                         <th class="text-start"><span> Action </span></th>
                     </tr>
                 </thead>
@@ -67,6 +68,21 @@
                         <td class="text-start">{{ $row->user->first_name }} {{ $row->user->last_name }}</td>
                         <td class="text-start">{{ $row->stag ? $row->stag->stay_title : 'N/A' }}</td>
                         <td class="text-start">{{ $row->rating }}</td>
+
+                         @php
+                        $disp_status = 'In Active';
+                        $actTitle = 'Click to activate';
+                        $mode = 1;
+                        $btnColr = 'btn-hold';
+
+                        if (isset($row->status) && $row->status == '1') {
+                        $disp_status = 'Active';
+                        $mode = 0;
+                        $btnColr = 'btn-live';
+                        $actTitle = 'Click to deactivate';
+                        }
+                        @endphp
+                        <td class="text-start"><a data-toggle="tooltip" data-csrf_token="{{ csrf_token() }}" data-original-title="{{ $actTitle }}" class="stsconfirm" href="javascript:void(0);" data-row_id="{{ $row->id }}" data-act_url="{{ route('admin.stay_review_status') }}" data-stsmode="{{ $mode }}"><button type="button" class="btn {{ $btnColr }} px-5">{{ $disp_status }}</button></a></td>
                       
                         <td class="text-start" style="width: 20%;">
                             <a href="{{ route('admin.stay_review_edit_form',$row->id) }}" class="table-edit-link">

@@ -57,8 +57,8 @@ a {
                                 <input type="file" id="file-ip-1" name="image_1" accept="image/png, image/jpeg"
                                      required>
                                 <div id="file-ip-1-error" class="text-danger"></div>
-                                <label class="fw-bold mb-5 text-danger border-0"><small>* Upload size [30*30]
-                                        *</small></label>
+                                <!-- <label class="fw-bold mb-5 text-danger border-0"><small>* Upload size [30*30]
+                                        *</small></label> -->
 
                             </div>
                         </div>
