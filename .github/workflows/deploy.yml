@@ -22,14 +22,11 @@ jobs:
           port: 21
           server-dir: /
           protocol: ftp
+          active: true
           dangerous-clean-slate: false
           local-dir: ./
           exclude: |
-              **/.git*
-              **/.github*
-              node_modules/**
-              tests/**
-              storage/logs/**
-              storage/framework/**
-              vendor/**
+          **/vendor/**
+          **/vendor*/**
+          
 
