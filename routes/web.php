@@ -66,9 +66,9 @@ use Illuminate\Support\Facades\Http;
 |
 */
 
-// Route::get('/', function () {
-//     return view('welcome');
-// });
+Route::get('/update', function () {
+    return view('welcome');
+});
 
 
 // Route::get('/clear-all-caches', function () {
