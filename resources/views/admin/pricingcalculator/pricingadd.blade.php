@@ -22,21 +22,11 @@
         /* Consistent padding for both sides */
     }
 
-    .form-body {
-
-        padding-top: 1% !important;
-        padding-bottom: 1% !important;
-        width: 90% !important;
-    }
 
     .mb-1 {
         margin-bottom: .5rem !important;
     }
 
-
-    .form-control {
-        width: 80%;
-    }
 
     .btn-add {
         background-color: #2164c0 !important;
@@ -118,42 +108,38 @@
         }
     }
 
-    .form-check-input {
-        transform: scale(1.5);
-        /* Increase the size of the checkbox */
-    }
+   
 </style>
-<div class="container-wrapper py-5">
-    <div class="row">
-        <div class="col-lg-12">
-            <b><a href="/dashboard">Dashboard</a> > <a href="/pricingcalculator">Pricing</a> > <a
-                    class="add">Add</a></b>
-            <br>
-            <br>
-            <h3 class="fw-bold pb-2">Pricing Calculator</h3>
-        </div>
+<div class="row body-sec py-3 px-5 justify-content-around">
+    <div class="text-start col-lg-6 ">
+        <h3 class="admin-title fw-bold">Pricing Calculator</h3>
+    </div>
+    <div class="text-end col-lg-6 ">
+        <b><a href="/dashboard">Dashboard</a> > <a href="/food_beverage">Pricing</a> > <a class="edit">Edit</a></b>
+    </div>
 
-        <!-- FORM -->
+</div>
+
+<div class="row mb-5">
+    <div class="col-lg-12">
+        <div class="form-body px-4 mb-5 ms-4 me-5 rounded-4">
+    
         <form class="" id="form_valid" action="{{ route('admin.pricing_insert') }}" method="POST" autocomplete="off"
             enctype="multipart/form-data">
             @csrf
-            <!-- 1.INFORMATION -->
-            <div class="row mb-3">
-                <div class="col">
-                    <div class="form-body p-4 rounded-4">
-                        <h4 class="fw-bold mb-5 px-5 pt-5">Information</h4>
+         
+                        <h4 class="fw-bold mb-4">Information</h4>
 
 
-                        <div class="mb-3 px-5">
+                        <div class="mb-3 ">
 
-
-                            <div class="col-md-4">
+                            <div class="add_form col-md-4">
                                 <label class="mb-2">Title <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control py-2 rounded-3 shadow-sm" id="title" name="title" required>
                             </div>
-                            <div class="row gap-2">
+                            <div class="row gap-2 mt-3">
                                 <!-- Theme and Destination -->
-                                <div class="col-md-4 ">
+                                <div class="add_form col-md-4 ">
                                     <label class="mb-2">Destination</label>
                                     <select id="cities_name" name="cities_name"
                                         class="form-select py-2 rounded-3 shadow-sm" required>
@@ -165,7 +151,7 @@
                                         @endforeach
                                     </select>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="add_form col-md-4">
                                     <label class="mb-2">Location</label>
                                     <select id="district_name" name="district_name"
                                         class="form-select py-2 rounded-3 shadow-sm" required>
@@ -180,7 +166,7 @@
 
                             <!-- Stays Section -->
                             <div id="stays-section" class="row d-flex mt-3">
-                                <div class="col-md-4">
+                                <div class="add_form col-md-4">
                                     <label class="mb-2">Stay Details</label>
                                     <div class="dropdown">
                                         <button class="btn btn-outline-secondary dropdown-toggle w-100 text-start d-flex justify-content-between align-items-center"
@@ -202,7 +188,7 @@
 
                             <!-- Activities Section -->
                             <div id="activities-section" class="row d-flex mt-3">
-                                <div class="col-md-4">
+                                <div class="add_form col-md-4">
                                     <label class="mb-2">Activity</label>
                                     <div class="dropdown">
                                         <button class="btn btn-outline-secondary dropdown-toggle w-100 text-start d-flex justify-content-between align-items-center"
@@ -222,7 +208,7 @@
 
                             <!-- Cabs Section -->
                             <div id="cabs-section" class="row d-flex mt-3">
-                                <div class="col-md-4">
+                                <div class="add_form col-md-4">
                                     <label class="mb-2">Travel Mode</label>
                                     <div class="dropdown">
                                         <button class="btn btn-outline-secondary dropdown-toggle w-100 text-start d-flex justify-content-between align-items-center"
@@ -261,7 +247,7 @@
                                 <div id="cabsdetails-container" class="mt-3"></div>
                             </div>
 
-                            <div class="col-lg-12 text-end mt-5">
+                            <div class="col-lg-12 text-center mt-5">
                                 <a href="{{ route('admin.pricinglist') }}">
                                     <button type="button" class="cancel-btn"> Cancel </button>
                                 </a>
