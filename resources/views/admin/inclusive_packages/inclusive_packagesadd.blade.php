@@ -281,8 +281,8 @@
                                 accept="image/png, image/jpeg, image/svg+xml">
                             <div id="file-ip-1-error" class="text-danger"></div>
 
-                            <small class="text-danger d-block mt-2 text-center">* Upload size
-                                [1200x120]</small>
+                            <!-- <small class="text-danger d-block mt-2 text-center">* Upload size
+                                [1200x120]</small> -->
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -350,9 +350,6 @@
                                             <p class="text-center fw-light mt-3"> Add Pic</p>
                                         </label>
                                         <input type="file" name="img_${photoCount}" id="file-ip-${photoCount}" data-number="${photoCount}" accept="image/png, image/jpeg, image/svg+xml" onchange="previewImage(event, this)">
-                                        <label class="mb-4 text-danger d-block w-100 text-center">
-                                            * Upload size [640*120] *
-                                        </label>
                                         <button type="button" class="btn btn-danger mt-2" onclick="deletePhoto(this)">Delete</button>
                                     </div>
                                 `;

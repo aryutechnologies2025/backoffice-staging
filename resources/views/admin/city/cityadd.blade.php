@@ -59,7 +59,7 @@
                                 </label>
                                 <input type="file" id="file-ip-1" name="image_1" accept="image/png, image/jpeg" required>
                                 <div id="file-ip-1-error" class="error-message"></div>
-                                <label class="fw-bold mb-5 text-danger border-0"><small>* Upload size [56x56] *</small></label>
+                                <!-- <label class="fw-bold mb-5 text-danger border-0"><small>* Upload size [56x56] *</small></label> -->
                             </div>
                         </div>
                         <div class="col-lg-8">
