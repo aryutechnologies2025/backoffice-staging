@@ -22,7 +22,12 @@ jobs:
           port: 21
           server-dir: /
           protocol: ftp
+          active: true
           dangerous-clean-slate: false
           local-dir: ./
+          exclude: |
+          **/vendor/**
+          **/vendor*/**
+
           
 
