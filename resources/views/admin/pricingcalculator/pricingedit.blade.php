@@ -116,7 +116,7 @@
             height: 18px;
         }
     }
-</style>
+</style> 
 <div class="container-wrapper py-5">
     <div class="row">
         <div class="col-lg-12">
