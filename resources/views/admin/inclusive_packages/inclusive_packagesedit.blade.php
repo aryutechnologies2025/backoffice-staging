@@ -217,7 +217,7 @@
                                 <div class="col-md-4">
                                     <label class="mb-2">Location <span class="text-danger">*</span></label>
                                     <select id="district_name" name="district_name"
-                                        class="form-select py-2 rounded-3 shadow-sm" required>
+                                        class="form-select py-2 rounded-3 shadow-sm">
                                         <option value="" disabled selected>Select Location</option>
                                         <!-- Districts will be populated dynamically -->
                                     </select>
@@ -1003,7 +1003,7 @@
                                                         class="text-danger">*</span></label>
                                                 <input type="number" placeholder="Order" id="list_order"
                                                     name="list_order" value="{{ $package_details->list_order }}"
-                                                    class="form-control py-2 rounded-3 shadow-sm" required>
+                                                    class="form-control py-2 rounded-3 shadow-sm">
                                             </div>
                                         </div>
 
