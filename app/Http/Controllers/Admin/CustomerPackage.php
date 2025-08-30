@@ -143,72 +143,75 @@ class CustomerPackage extends Controller
         // ]));
 
         //pricing calculator update
-        $pricingcalculator_v = new CustomerPricingCalculator();
+       if ($request->has('pricing_calculator') && !empty($request->pricing_calculator)) {
 
-        $pricingcalculator_v->pricing_calculator_id = $request->pricing_calculator;
-        // $pricingcalculator_v->title = $request->title;
-        $pricingcalculator_v->package_id = $packageData['id'];
-        $pricingcalculator_v->customer_package_id = $customer_package->id;
-        $pricingcalculator_v->stays_id = $request->stay_id;
-        $pricingcalculator_v->activitys_id = $request->activity_ids;
-        $pricingcalculator_v->cab_details_id = $request->selected_cab_options;
-        $pricingcalculator_v->cab_type = $request->cab_types;
-        $pricingcalculator_v->save();
+            $pricingcalculator_v = new CustomerPricingCalculator();
+
+            $pricingcalculator_v->pricing_calculator_id = $request->pricing_calculator;
+            // $pricingcalculator_v->title = $request->title;
+            $pricingcalculator_v->package_id = $packageData['id'];
+            $pricingcalculator_v->customer_package_id = $customer_package->id;
+            $pricingcalculator_v->stays_id = $request->stay_id;
+            $pricingcalculator_v->activitys_id = $request->activity_ids;
+            $pricingcalculator_v->cab_details_id = $request->selected_cab_options;
+            $pricingcalculator_v->cab_type = $request->cab_types;
+            $pricingcalculator_v->save();
 
 
-        if (isset($request->stays) && count($request->stays) > 0) {
+            if (isset($request->stays) && count($request->stays) > 0) {
 
-            $stays = $request->stays;
-            foreach ($stays as $val) {
+                $stays = $request->stays;
+                foreach ($stays as $val) {
 
-                foreach ($val as $v) {
-                    //  dd($v['stay_id']);
-                    $pricingcalculator = new CustomerPriceCalculatorList();
-                    $pricingcalculator->customer_pricing_id = $pricingcalculator_v->id;
-                    $pricingcalculator->type = 'stay';
-                    $pricingcalculator->type_id = $v['stay_id'];
-                    $pricingcalculator->title = $v['title'];
-                    $pricingcalculator->price_title = $v['price_title'];
-                    $pricingcalculator->price = $v['price'];
-                    $pricingcalculator->save();
+                    foreach ($val as $v) {
+                        //  dd($v['stay_id']);
+                        $pricingcalculator = new CustomerPriceCalculatorList();
+                        $pricingcalculator->customer_pricing_id = $pricingcalculator_v->id;
+                        $pricingcalculator->type = 'stay';
+                        $pricingcalculator->type_id = $v['stay_id'];
+                        $pricingcalculator->title = $v['title'];
+                        $pricingcalculator->price_title = $v['price_title'];
+                        $pricingcalculator->price = $v['price'];
+                        $pricingcalculator->save();
+                    }
                 }
             }
-        }
 
-        if (isset($request->activity) && count($request->activity) > 0) {
+            if (isset($request->activity) && count($request->activity) > 0) {
 
-            $stays = $request->activity;
+                $stays = $request->activity;
 
-            foreach ($stays as $val) {
-                foreach ($val as $v) {
+                foreach ($stays as $val) {
+                    foreach ($val as $v) {
 
-                    // dd($v);
-                    $pricingcalculator = new CustomerPriceCalculatorList();
-                    $pricingcalculator->customer_pricing_id = $pricingcalculator_v->id;
-                    $pricingcalculator->type = 'activity';
-                    $pricingcalculator->type_id = $v['activity_id'];
-                    $pricingcalculator->title = $v['title'];
-                    $pricingcalculator->price_title = $v['price_title'];
-                    $pricingcalculator->price = $v['price'];
-                    $pricingcalculator->save();
+                        // dd($v);
+                        $pricingcalculator = new CustomerPriceCalculatorList();
+                        $pricingcalculator->customer_pricing_id = $pricingcalculator_v->id;
+                        $pricingcalculator->type = 'activity';
+                        $pricingcalculator->type_id = $v['activity_id'];
+                        $pricingcalculator->title = $v['title'];
+                        $pricingcalculator->price_title = $v['price_title'];
+                        $pricingcalculator->price = $v['price'];
+                        $pricingcalculator->save();
+                    }
                 }
             }
-        }
 
-        if (isset($request->cabs) && count($request->cabs) > 0) {
+            if (isset($request->cabs) && count($request->cabs) > 0) {
 
-            $stays = $request->cabs;
+                $stays = $request->cabs;
 
-            foreach ($stays as $val) {
-                foreach ($val as $v) {
-                    $pricingcalculator = new CustomerPriceCalculatorList();
-                    $pricingcalculator->customer_pricing_id = $pricingcalculator_v->id;
-                    $pricingcalculator->type = 'cabs';
-                    $pricingcalculator->type_id = $v['cab_id'];
-                    $pricingcalculator->title = $v['title'];
-                    $pricingcalculator->price_title = $v['price_title'];
-                    $pricingcalculator->price = $v['price'];
-                    $pricingcalculator->save();
+                foreach ($stays as $val) {
+                    foreach ($val as $v) {
+                        $pricingcalculator = new CustomerPriceCalculatorList();
+                        $pricingcalculator->customer_pricing_id = $pricingcalculator_v->id;
+                        $pricingcalculator->type = 'cabs';
+                        $pricingcalculator->type_id = $v['cab_id'];
+                        $pricingcalculator->title = $v['title'];
+                        $pricingcalculator->price_title = $v['price_title'];
+                        $pricingcalculator->price = $v['price'];
+                        $pricingcalculator->save();
+                    }
                 }
             }
         }
@@ -1343,7 +1346,7 @@ class CustomerPackage extends Controller
                             // dd($priceCabsId);
 
 
-                             if ($priceCabsId !=null) {
+                            if ($priceCabsId != null) {
                                 $formattedPrices[] = [
                                     'existingPricesid' => $priceCabsId,
                                     'cab_id' => $cab->id,

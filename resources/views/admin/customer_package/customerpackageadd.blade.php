@@ -60,161 +60,153 @@
                     <input id="type" type="text" class="form-control" name="package_type" required>
                     
                 </div> -->
-            <!-- Package Type Selector -->
-            <div class="add_form col-md-5 mb-3">
-                <label for="title_id" class="form-label">Select Package Type</label>
-                <select name="package_type" id="package" class="form-control package">
-                    <option disabled selected>Select Package Type</option>
-                    @foreach($titles as $id => $name)
-                    <option value="{{  json_encode(['id' => $id, 'name' => $name])  }}">{{ $name }}</option>
+                    <!-- Package Type Selector -->
+                    <div class="add_form col-md-5 mb-3">
+                        <label for="title_id" class="form-label">Select Package Type</label>
+                        <select name="package_type" id="package" class="form-control package">
+                            <option disabled selected>Select Package Type</option>
+                            @foreach($titles as $id => $name)
+                            <option value="{{  json_encode(['id' => $id, 'name' => $name])  }}">{{ $name }}</option>
 
-                    @endforeach
-                </select>
-            </div>
-
-            <div class="col-md-5 mb-3">
-                <label for="title_id" class="form-label">Select Stays</label>
-                <select class="package" name="package_stay" id="package_stay" class="form-control">
-                    <option disabled selected>Select Package Type</option>
-
-                </select>
-            </div>
-
-
-            <div class="test">
-                <h4>Pricing Calculator</h4>
-                <div class="row gap-2">
-                    <!-- Theme and Destination -->
-                    <div class="col-md-4">
-                        <label class="mb-2">Price Calculator List</label>
-                        <select id="pricing_calculator" name="pricing_calculator"
-                            class="form-select py-2 rounded-3 shadow-sm">
-                            <option value="" disabled selected>Select Location</option>
-                            <!-- Districts will be populated dynamically -->
+                            @endforeach
                         </select>
                     </div>
 
-                </div>
-                <!-- Stays Section -->
-                 <!-- Stays Section -->
-                            <div id="stays-section" class="row d-flex mt-3">
-                                <div class="add_form col-md-4">
-                                    <label class="mb-2">Stay Details</label>
-                                    <div class="dropdown">
-                                        <button class="btn btn-outline-secondary dropdown-toggle w-100 text-start d-flex justify-content-between align-items-center"
-                                            type="button" id="stayDropdown" data-bs-toggle="dropdown"
-                                            aria-expanded="false">
-                                            <span id="stayDropdownText">Select stay</span>
-                                        </button>
-                                        <ul class="dropdown-menu w-100 p-2" aria-labelledby="stayDropdown"
-                                            style="max-height: 200px; overflow-y: auto;">
-                                            <!-- Stays will be populated here via JavaScript -->
-                                        </ul>
-                                    </div>
-                                    <input type="hidden" name="stay_id" id="stayHiddenInput">
-                                </div>
-                                <div id="stays-details-container" class="mt-3"></div>
-
-
-                            </div>
-
-                            <!-- Activities Section -->
-                            <div id="activities-section" class="row d-flex mt-3">
-                                <div class="add_form col-md-4">
-                                    <label class="mb-2">Activity</label>
-                                    <div class="dropdown">
-                                        <button class="btn btn-outline-secondary dropdown-toggle w-100 text-start d-flex justify-content-between align-items-center"
-                                            type="button" id="activityDropdown" data-bs-toggle="dropdown"
-                                            aria-expanded="false">
-                                            <span id="activityDropdownText">Select activity</span>
-                                        </button>
-                                        <ul class="dropdown-menu w-100 p-2" aria-labelledby="activityDropdown"
-                                            style="max-height: 200px; overflow-y: auto;">
-                                            <!-- Activities will be populated here via JavaScript -->
-                                        </ul>
-                                    </div>
-                                    <input type="hidden" name="activity_ids" id="activityHiddenInput">
-                                </div>
-                                <div id="activity-details-container" class="mt-3"></div>
-                            </div>
-
-                            <!-- Cabs Section -->
-                            <div id="cabs-section" class="row d-flex mt-3">
-                                <div class="add_form col-md-4">
-                                    <label class="mb-2">Travel Mode</label>
-                                    <div class="dropdown">
-                                        <button class="btn btn-outline-secondary dropdown-toggle w-100 text-start d-flex justify-content-between align-items-center"
-                                            type="button" id="cabDropdown" data-bs-toggle="dropdown"
-                                            aria-expanded="false">
-                                            <span id="cabDropdownText">Select option</span>
-                                        </button>
-                                        <ul class="dropdown-menu w-100 p-2" aria-labelledby="cabDropdown"
-                                            style="max-height: 200px; overflow-y: auto;">
-                                            <!-- Cabs will be populated here via JavaScript -->
-                                        </ul>
-                                    </div>
-                                    <input type="hidden" name="cab_types" id="cabHiddenInput">
-                                </div>
-
-                                <!-- Cab details selection -->
-                                <div id="cabs-details-container" class="mt-3" style="display: none;">
-                                    <div class="add_form col-md-4">
-                                        <label class="mb-2">Travel Details</label>
-                                        <div class="dropdown">
-                                            <button class="btn btn-outline-secondary dropdown-toggle w-100 text-start d-flex justify-content-between align-items-center"
-                                                type="button" id="cabDetailsDropdown" data-bs-toggle="dropdown"
-                                                aria-expanded="false">
-                                                <span id="cabDetailsDropdownText">Select options</span>
-                                            </button>
-                                            <ul class="dropdown-menu w-100 p-2" aria-labelledby="cabDetailsDropdown"
-                                                style="max-height: 200px; overflow-y: auto;">
-                                                <!-- Will be populated dynamically -->
-                                            </ul>
-                                        </div>
-                                        <input type="hidden" name="selected_cab_options" id="cabDetailsHiddenInput">
-                                    </div>
-                                </div>
-
-                                <!-- Cab price details display -->
-                                <div id="cabsdetails-container" class="mt-3"></div>
-                            </div>
-
-<!-- 
-                    <div class="add_form col-md-5 mb-1">
+                    <div class="col-md-5 mb-3">
                         <label for="title_id" class="form-label">Select Stays</label>
-                        <select name="package_stay" id="package_stay" class="form-control package">
+                        <select class="package" name="package_stay" id="package_stay" class="form-control">
                             <option disabled selected>Select Package Type</option>
 
                         </select>
-                    </div> -->
+                    </div>
+
 
                     <div class="test">
-                        <h2 class="add_head mt-3">Package Details</h2>
-                        <!-- 1.INFORMATION -->
-                        <div class="row mb-3">
-                            <div class="add_form col-lg-5">
-                                <label class="fw-bold mb-2">Title </label>
-                                <input type="text" placeholder="Title" id="title" name="title"
-                                    class="form-control py-2 rounded-3 shadow-sm">
+                        <h4>Pricing Calculator</h4>
+                        <div class="row gap-2">
+                            <!-- Theme and Destination -->
+                            <div class="col-md-4">
+                                <label class="mb-2">Price Calculator List</label>
+                                <select id="pricing_calculator" name="pricing_calculator"
+                                    class="form-select py-2 rounded-3 shadow-sm">
+                                    <option value="" disabled selected>Select Location</option>
+                                    <!-- Districts will be populated dynamically -->
+                                </select>
                             </div>
 
+                        </div>
+                        <!-- Stays Section -->
+                        <div id="stays-section" class="row d-flex mt-3">
+                            <div class="add_form col-md-4">
+                                <label class="mb-2">Stay Details</label>
+                                <div class="dropdown">
+                                    <button class="btn btn-outline-secondary dropdown-toggle w-100 text-start d-flex justify-content-between align-items-center"
+                                        type="button" id="stayDropdown" data-bs-toggle="dropdown"
+                                        aria-expanded="false">
+                                        <span id="stayDropdownText">Select stay</span>
+                                    </button>
+                                    <ul class="dropdown-menu w-100 p-2" aria-labelledby="stayDropdown"
+                                        style="max-height: 200px; overflow-y: auto;">
+                                        <!-- Stays will be populated here via JavaScript -->
+                                    </ul>
+                                </div>
+                                <input type="hidden" name="stay_id" id="stayHiddenInput">
+                            </div>
+                            <div id="stays-details-container" class="mt-3"></div>
+                        </div>
+
+                        <!-- Activities Section -->
+                        <div id="activities-section" class="row d-flex mt-3">
+                            <div class="add_form col-md-4">
+                                <label class="mb-2">Activity</label>
+                                <div class="dropdown">
+                                    <button class="btn btn-outline-secondary dropdown-toggle w-100 text-start d-flex justify-content-between align-items-center"
+                                        type="button" id="activityDropdown" data-bs-toggle="dropdown"
+                                        aria-expanded="false">
+                                        <span id="activityDropdownText">Select activity</span>
+                                    </button>
+                                    <ul class="dropdown-menu w-100 p-2" aria-labelledby="activityDropdown"
+                                        style="max-height: 200px; overflow-y: auto;">
+                                        <!-- Activities will be populated here via JavaScript -->
+                                    </ul>
+                                </div>
+                                <input type="hidden" name="activity_ids" id="activityHiddenInput">
+                            </div>
+                            <div id="activity-details-container" class="mt-3"></div>
+                        </div>
+
+                        <!-- Cabs Section -->
+                        <div id="cabs-section" class="row d-flex mt-3">
+                            <div class="add_form col-md-4">
+                                <label class="mb-2">Travel Mode</label>
+                                <div class="dropdown">
+                                    <button class="btn btn-outline-secondary dropdown-toggle w-100 text-start d-flex justify-content-between align-items-center"
+                                        type="button" id="cabDropdown" data-bs-toggle="dropdown"
+                                        aria-expanded="false">
+                                        <span id="cabDropdownText">Select option</span>
+                                    </button>
+                                    <ul class="dropdown-menu w-100 p-2" aria-labelledby="cabDropdown"
+                                        style="max-height: 200px; overflow-y: auto;">
+                                        <!-- Cabs will be populated here via JavaScript -->
+                                    </ul>
+                                </div>
+                                <input type="hidden" name="cab_types" id="cabHiddenInput">
+                            </div>
+
+                            <!-- Cab details selection -->
+                            <div id="cabs-details-container" class="mt-3" style="display: none;">
+                                <div class="add_form col-md-4">
+                                    <label class="mb-2">Travel Details</label>
+                                    <div class="dropdown">
+                                        <button class="btn btn-outline-secondary dropdown-toggle w-100 text-start d-flex justify-content-between align-items-center"
+                                            type="button" id="cabDetailsDropdown" data-bs-toggle="dropdown"
+                                            aria-expanded="false">
+                                            <span id="cabDetailsDropdownText">Select options</span>
+                                        </button>
+                                        <ul class="dropdown-menu w-100 p-2" aria-labelledby="cabDetailsDropdown"
+                                            style="max-height: 200px; overflow-y: auto;">
+                                            <!-- Will be populated dynamically -->
+                                        </ul>
+                                    </div>
+                                    <input type="hidden" name="selected_cab_options" id="cabDetailsHiddenInput">
+                                </div>
+                            </div>
+
+                            <!-- Cab price details display -->
+                            <div id="cabsdetails-container" class="mt-3"></div>
+                        </div>
+                    </div>
 
 
-                            <!-- 2. LOCATION -->
 
-                            <div class="row mb-1">
-                                <div class="col-lg-12">
-                                    <!-- INFORMATION -->
-                                    <div class="form-body mb-2 mt-4 rounded-4">
-                                        <h4 class="add_head fw-bold mb-3">01. Location</h4>
-                                        <div class="mb-1">
-                                            <div class="row g-2 mb-1">
-                                                <div class="col">
-                                                    <input type="hidden" id="location" name="location">
-                                                    <div class=" mt-1">
-                                                        <div class="row">
-                                                            <div class="col-lg-12 ">
-                                                                <div id="summernote10" style="height: 200px;"></div>
+                        <div class="test">
+                            <h2 class="add_head mt-3">Package Details</h2>
+                            <!-- 1.INFORMATION -->
+                            <div class="row mb-3">
+                                <div class="add_form col-lg-5">
+                                    <label class="fw-bold mb-2">Title </label>
+                                    <input type="text" placeholder="Title" id="title" name="title"
+                                        class="form-control py-2 rounded-3 shadow-sm">
+                                </div>
+
+
+
+                                <!-- 2. LOCATION -->
+
+                                <div class="row mb-1">
+                                    <div class="col-lg-12">
+                                        <!-- INFORMATION -->
+                                        <div class="form-body mb-2 mt-4 rounded-4">
+                                            <h4 class="add_head fw-bold mb-3">01. Location</h4>
+                                            <div class="mb-1">
+                                                <div class="row g-2 mb-1">
+                                                    <div class="col">
+                                                        <input type="hidden" id="location" name="location">
+                                                        <div class=" mt-1">
+                                                            <div class="row">
+                                                                <div class="col-lg-12 ">
+                                                                    <div id="summernote10" style="height: 200px;"></div>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -223,27 +215,26 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
 
 
 
-                            <div class="row mb-3">
-                                <div class="col">
-                                    <div class="form-body rounded-4">
-                                        <h4 class="add_head fw-bold mb-2">02. Tour Planning <span class="text-danger">*</span></h4>
-                                        <div id="day-wrapper"></div>
-                                        <!-- Add New Plan Button -->
-                                        <!-- <div class="text-end ">
+                                <div class="row mb-3">
+                                    <div class="col">
+                                        <div class="form-body rounded-4">
+                                            <h4 class="add_head fw-bold mb-2">02. Tour Planning <span class="text-danger">*</span></h4>
+                                            <div id="day-wrapper"></div>
+                                            <!-- Add New Plan Button -->
+                                            <!-- <div class="text-end ">
                                         <button type="button" id="add-plan-btn"
                                             class="btn-add rounded-3 border-0 px-3 py-2 text-white">
                                             <i class="fa fa-plus" aria-hidden="true"></i> Add
                                         </button>
                                     </div> -->
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            <!-- <div class="row mb-2">
+                                <!-- <div class="row mb-2">
                             <div class="col">
                                 <div class="form-body px-5 rounded-4">
                                     <h4 class="fw-bold mb-2">04.Tour Date & Time</h4>
@@ -274,8 +265,8 @@
                             </div>
                         </div> -->
 
-                            <!-- 4. Needed -->
-                            <!-- <div class="row mb-2">
+                                <!-- 4. Needed -->
+                                <!-- <div class="row mb-2">
                             <div class="col">
                                 <div class="form-body px-5 rounded-4">
                                     <h4 class="fw-bold mb-2">04.Rooms and Beds</h4>
@@ -311,13 +302,13 @@
 
 
 
-                            <!-- 5.PRICING -->
-                            <div class="row mb-3">
-                                <div class="col">
-                                    <div class="form-body rounded-4">
-                                        <h4 class="add_head fw-bold mb-2">03. Pricing</h4>
-                                        <div id="price-fields-container" class="mb-2">
-                                            <!-- 
+                                <!-- 5.PRICING -->
+                                <div class="row mb-3">
+                                    <div class="col">
+                                        <div class="form-body rounded-4">
+                                            <h4 class="add_head fw-bold mb-2">03. Pricing</h4>
+                                            <div id="price-fields-container" class="mb-2">
+                                                <!-- 
                                     <div class="row mb-2">
                                         <div class="col-lg-6">
                                             <label class="form-label form-label-top form-label-auto fw-bold mb-2">
@@ -335,7 +326,7 @@
                                             </div>
                                         </div>
                                     </div> -->
-                                            <!-- <div class="row mb-2">
+                                                <!-- <div class="row mb-2">
                                         <div class="col-lg-6">
                                             <label class="form-label form-label-top form-label-auto fw-bold mb-2">
                                                 Title
@@ -387,18 +378,18 @@
                                         </div>
                                     </div> -->
 
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            <!-- 6. Payment Policy -->
-                            <div class="row mb-3">
-                                <div class="col">
-                                    <div class="form-body rounded-4">
-                                        <h4 class="add_head fw-bold mb-2">04. Payment Policy</h4>
-                                        <div id="camp-rule-container">
-                                            <!-- <div class="row g-2 mb-1 align-items-center camp-rule-field">
+                                <!-- 6. Payment Policy -->
+                                <div class="row mb-3">
+                                    <div class="col">
+                                        <div class="form-body rounded-4">
+                                            <h4 class="add_head fw-bold mb-2">04. Payment Policy</h4>
+                                            <div id="camp-rule-container">
+                                                <!-- <div class="row g-2 mb-1 align-items-center camp-rule-field">
                                     
                                         <label class="mb-1">Payment Policy <span
                                                 class="text-danger">*</span></label>
@@ -417,32 +408,33 @@
                                             </button>
                                         </div>
                                     </div> -->
-                                        </div>
-                                        <div class="text-end">
-                                            <button type="button"
-                                                class="btn-add rounded border-0 px-5 py-2 text-white"
-                                                onclick="addCampRuleField()">
-                                                <i class="fa fa-plus" aria-hidden="true"></i> Add
-                                            </button>
+                                            </div>
+                                            <div class="text-end">
+                                                <button type="button"
+                                                    class="btn-add rounded border-0 px-5 py-2 text-white"
+                                                    onclick="addCampRuleField()">
+                                                    <i class="fa fa-plus" aria-hidden="true"></i> Add
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
 
 
-                            <!-- 7.Important info -->
-                            <div class="row mb-2">
-                                <div class="col">
-                                    <div class="form-body rounded-4">
-                                        <h4 class="add_head fw-bold mb-2">05. Notes <span class="text-danger">*</span></h4>
-                                        <div class="mb-1">
-                                            <div class="row g-2 mb-1">
-                                                <div class="col">
-                                                    <input type="hidden" id="important_info" name="important_info">
-                                                    <div class=" mt-1">
-                                                        <div class="row">
-                                                            <div class="col-lg-12 ">
-                                                                <div id="summernote4" style="height: 200px;"></div>
+                                <!-- 7.Important info -->
+                                <div class="row mb-2">
+                                    <div class="col">
+                                        <div class="form-body rounded-4">
+                                            <h4 class="add_head fw-bold mb-2">05. Notes <span class="text-danger">*</span></h4>
+                                            <div class="mb-1">
+                                                <div class="row g-2 mb-1">
+                                                    <div class="col">
+                                                        <input type="hidden" id="important_info" name="important_info">
+                                                        <div class=" mt-1">
+                                                            <div class="row">
+                                                                <div class="col-lg-12 ">
+                                                                    <div id="summernote4" style="height: 200px;"></div>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -451,24 +443,24 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            <div class="row mb-1">
-                                <div class="col">
-                                    <div class="form-body rounded-4">
-                                        <h4 class="add_head fw-bold mb-2">06. Package Inclusion </h4>
-                                        <div class="mb-2">
-                                            <div class="row g-2 mb-2">
-                                                <div class="col">
-                                                    <input type="hidden" id="program_inclusion" name="program_inclusion">
-                                                    <!-- <textarea id="important_info" class="container__textarea p-5 textarea-feild" name="important_info" value="{{old('important_info')}}" required></textarea> -->
-                                                    <!-- <div class="mb-3">
+                                <div class="row mb-1">
+                                    <div class="col">
+                                        <div class="form-body rounded-4">
+                                            <h4 class="add_head fw-bold mb-2">06. Package Inclusion </h4>
+                                            <div class="mb-2">
+                                                <div class="row g-2 mb-2">
+                                                    <div class="col">
+                                                        <input type="hidden" id="program_inclusion" name="program_inclusion">
+                                                        <!-- <textarea id="important_info" class="container__textarea p-5 textarea-feild" name="important_info" value="{{old('important_info')}}" required></textarea> -->
+                                                        <!-- <div class="mb-3">
                                     <div id="commentEditor5" class="form-control" style="height: 200px;"></div>
                                 </div> -->
-                                                    <div class=" mt-2">
-                                                        <div class="row">
-                                                            <div class="col-lg-12 ">
-                                                                <div id="summernote5" style="height: 200px;"></div>
+                                                        <div class=" mt-2">
+                                                            <div class="row">
+                                                                <div class="col-lg-12 ">
+                                                                    <div id="summernote5" style="height: 200px;"></div>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -477,20 +469,20 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            <div class="row mb-1">
-                                <div class="col">
-                                    <div class="form-body rounded-4">
-                                        <h4 class="add_head fw-bold mb-2">07. Package Exclusion </h4>
-                                        <div class="mb-2">
-                                            <div class="row g-2 mb-2">
-                                                <div class="col">
-                                                    <input type="hidden" id="program_exclusion" name="program_exclusion">
-                                                    <div class=" mt-2">
-                                                        <div class="row">
-                                                            <div class="col-lg-12 ">
-                                                                <div id="summernote9" style="height: 200px;"></div>
+                                <div class="row mb-1">
+                                    <div class="col">
+                                        <div class="form-body rounded-4">
+                                            <h4 class="add_head fw-bold mb-2">07. Package Exclusion </h4>
+                                            <div class="mb-2">
+                                                <div class="row g-2 mb-2">
+                                                    <div class="col">
+                                                        <input type="hidden" id="program_exclusion" name="program_exclusion">
+                                                        <div class=" mt-2">
+                                                            <div class="row">
+                                                                <div class="col-lg-12 ">
+                                                                    <div id="summernote9" style="height: 200px;"></div>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -499,9 +491,8 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            <!-- <div class="row mb-3">
+                                <!-- <div class="row mb-3">
                             <div class="col">
                                 <div class="form-body px-1 py-3 rounded-4">
                                     <h4 class="fw-bold mb-3">9. Location</h4>
@@ -535,22 +526,22 @@
                             </div>
                         </div> -->
 
-                            <script>
-                                document.getElementById('google_map').addEventListener('input', function() {
-                                    const inputValue = this.value;
-                                    const iframeSrcMatch = inputValue.match(/src=["']([^"']+)["']/); // Extract the src attribute value
-                                    const mapPreviewIframe = document.getElementById('map_preview');
+                                <script>
+                                    document.getElementById('google_map').addEventListener('input', function() {
+                                        const inputValue = this.value;
+                                        const iframeSrcMatch = inputValue.match(/src=["']([^"']+)["']/); // Extract the src attribute value
+                                        const mapPreviewIframe = document.getElementById('map_preview');
 
-                                    if (iframeSrcMatch && iframeSrcMatch[1]) {
-                                        mapPreviewIframe.src = iframeSrcMatch[1]; // Set the extracted src to the iframe
-                                    } else {
-                                        mapPreviewIframe.removeAttribute('src'); // Clear the iframe if input is invalid
-                                    }
-                                });
-                            </script>
+                                        if (iframeSrcMatch && iframeSrcMatch[1]) {
+                                            mapPreviewIframe.src = iframeSrcMatch[1]; // Set the extracted src to the iframe
+                                        } else {
+                                            mapPreviewIframe.removeAttribute('src'); // Clear the iframe if input is invalid
+                                        }
+                                    });
+                                </script>
 
 
-                            <!-- <div class="row mb-3">
+                                <!-- <div class="row mb-3">
                             <div class="col">
                                 <div class="form-body px-5 rounded-4">
                                     <h4 class="fw-bold mb-3">08. Upload PDF</h4>
@@ -566,7 +557,7 @@
                             </div>
                         </div> -->
 
-                            <!-- <div class="row mb-2">
+                                <!-- <div class="row mb-2">
                             <div class="col">
                                 <div class="form-body px-5 rounded-4">
                                     <h4 class="fw-bold mb-3">09. Food Menu</h4>
@@ -615,122 +606,122 @@
                         </div> -->
 
 
-                            <!-- 8. AMENITIES -->
-                            <div class="row mb-2">
-                                <div class="col">
-                                    <div class="form-body rounded-4">
-                                        <h4 class="add_head fw-bold mb-2">08. Amenities</h4>
-                                        <div class="d-flex flex-wrap">
-                                            @foreach($amenities as $index => $amenity)
-                                            <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
-                                                <div class="form-check d-flex align-items-center">
-                                                    <input type="checkbox" class="me-2 custom-checkbox"
-                                                        id="amenity-{{ $amenity->id }}" name="amenity_services[]"
-                                                        value="{{ $amenity->id }}">
-                                                    <label for="amenity-{{ $amenity->id }}"
-                                                        class="mb-0">{{ $amenity->amenity_name }}</label>
+                                <!-- 8. AMENITIES -->
+                                <div class="row mb-2">
+                                    <div class="col">
+                                        <div class="form-body rounded-4">
+                                            <h4 class="add_head fw-bold mb-2">08. Amenities</h4>
+                                            <div class="d-flex flex-wrap">
+                                                @foreach($amenities as $index => $amenity)
+                                                <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                                    <div class="form-check d-flex align-items-center">
+                                                        <input type="checkbox" class="me-2 custom-checkbox"
+                                                            id="amenity-{{ $amenity->id }}" name="amenity_services[]"
+                                                            value="{{ $amenity->id }}">
+                                                        <label for="amenity-{{ $amenity->id }}"
+                                                            class="mb-0">{{ $amenity->amenity_name }}</label>
+                                                    </div>
                                                 </div>
+                                                @if(($index + 1) % 4 == 0)
+                                                <div class="w-100"></div> <!-- Forces a line break after every 4 items -->
+                                                @endif
+                                                @endforeach
                                             </div>
-                                            @if(($index + 1) % 4 == 0)
-                                            <div class="w-100"></div> <!-- Forces a line break after every 4 items -->
-                                            @endif
-                                            @endforeach
                                         </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            <!-- 9. FOOD & BEVERAGES -->
-                            <div class="row mb-2">
-                                <div class="col">
-                                    <div class="form-body rounded-4">
-                                        <h4 class="add_head fw-bold mb-2">09. Food and Beverages</h4>
-                                        <div class="d-flex flex-wrap">
-                                            @foreach($foodBeverages as $index => $item)
-                                            <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
-                                                <div class="form-check d-flex align-items-center">
-                                                    <input type="checkbox" class="me-2 custom-checkbox"
-                                                        id="food-beverage-{{ $item->id }}" name="food_beverages[]"
-                                                        value="{{ $item->id }}">
-                                                    <label for="food-beverage-{{ $item->id }}"
-                                                        class="mb-0">{{ $item->food_beverage }}</label>
+                                <!-- 9. FOOD & BEVERAGES -->
+                                <div class="row mb-2">
+                                    <div class="col">
+                                        <div class="form-body rounded-4">
+                                            <h4 class="add_head fw-bold mb-2">09. Food and Beverages</h4>
+                                            <div class="d-flex flex-wrap">
+                                                @foreach($foodBeverages as $index => $item)
+                                                <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                                    <div class="form-check d-flex align-items-center">
+                                                        <input type="checkbox" class="me-2 custom-checkbox"
+                                                            id="food-beverage-{{ $item->id }}" name="food_beverages[]"
+                                                            value="{{ $item->id }}">
+                                                        <label for="food-beverage-{{ $item->id }}"
+                                                            class="mb-0">{{ $item->food_beverage }}</label>
+                                                    </div>
                                                 </div>
+                                                @if(($index + 1) % 4 == 0)
+                                                <div class="w-100"></div> <!-- Forces a line break after every 4 items -->
+                                                @endif
+                                                @endforeach
                                             </div>
-                                            @if(($index + 1) % 4 == 0)
-                                            <div class="w-100"></div> <!-- Forces a line break after every 4 items -->
-                                            @endif
-                                            @endforeach
                                         </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            <!-- 10. ACTIVITIES -->
-                            <div class="row mb-2">
-                                <div class="col">
-                                    <div class="form-body rounded-4">
-                                        <h4 class="add_head fw-bold mb-3">10. Activities</h4>
-                                        <div class="d-flex flex-wrap">
-                                            @foreach($activities as $index => $item)
-                                            <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
-                                                <div class="form-check d-flex align-items-center ">
-                                                    <input type="checkbox" class="me-2 custom-checkbox"
-                                                        id="activities-{{ $item->id }}" name="activities[]"
-                                                        value="{{ $item->id }}">
-                                                    <label for="activities-{{ $item->id }}"
-                                                        class="mb-0">{{ $item->activities }}</label>
+                                <!-- 10. ACTIVITIES -->
+                                <div class="row mb-2">
+                                    <div class="col">
+                                        <div class="form-body rounded-4">
+                                            <h4 class="add_head fw-bold mb-3">10. Activities</h4>
+                                            <div class="d-flex flex-wrap">
+                                                @foreach($activities as $index => $item)
+                                                <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                                    <div class="form-check d-flex align-items-center ">
+                                                        <input type="checkbox" class="me-2 custom-checkbox"
+                                                            id="activities-{{ $item->id }}" name="activities[]"
+                                                            value="{{ $item->id }}">
+                                                        <label for="activities-{{ $item->id }}"
+                                                            class="mb-0">{{ $item->activities }}</label>
+                                                    </div>
                                                 </div>
+                                                @if(($index + 1) % 4 == 0)
+                                                <div class="w-100"></div> <!-- Forces a line break after every 4 items -->
+                                                @endif
+                                                @endforeach
                                             </div>
-                                            @if(($index + 1) % 4 == 0)
-                                            <div class="w-100"></div> <!-- Forces a line break after every 4 items -->
-                                            @endif
-                                            @endforeach
                                         </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            <!-- 11. SAFETY FEATURES -->
-                            <div class="row mb-1">
-                                <div class="col">
-                                    <div class="form-body rounded-4">
-                                        <h4 class="add_head fw-bold mb-3">11. Safety Features</h4>
-                                        <div class="d-flex flex-wrap">
-                                            @foreach($safety_features as $index => $item)
-                                            <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
-                                                <div class="form-check d-flex align-items-center mb-1">
-                                                    <input type="checkbox" class="me-2 custom-checkbox"
-                                                        id="safety_features-{{ $item->id }}" name="safety_features[]"
-                                                        value="{{ $item->id }}">
-                                                    <label for="safety_features-{{ $item->id }}"
-                                                        class="mb-0">{{ $item->safety_features }}</label>
+                                <!-- 11. SAFETY FEATURES -->
+                                <div class="row mb-1">
+                                    <div class="col">
+                                        <div class="form-body rounded-4">
+                                            <h4 class="add_head fw-bold mb-3">11. Safety Features</h4>
+                                            <div class="d-flex flex-wrap">
+                                                @foreach($safety_features as $index => $item)
+                                                <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                                    <div class="form-check d-flex align-items-center mb-1">
+                                                        <input type="checkbox" class="me-2 custom-checkbox"
+                                                            id="safety_features-{{ $item->id }}" name="safety_features[]"
+                                                            value="{{ $item->id }}">
+                                                        <label for="safety_features-{{ $item->id }}"
+                                                            class="mb-0">{{ $item->safety_features }}</label>
+                                                    </div>
                                                 </div>
+                                                @endforeach
                                             </div>
-                                            @endforeach
                                         </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            <!-- Add custom CSS -->
-                            <style>
-                                .custom-checkbox {
-                                    width: 18px;
-                                    height: 18px;
-                                }
-
-                                /* Ensure responsiveness on all screen sizes */
-                                @media (max-width: 768px) {
+                                <!-- Add custom CSS -->
+                                <style>
                                     .custom-checkbox {
                                         width: 18px;
                                         height: 18px;
                                     }
-                                }
-                            </style>
+
+                                    /* Ensure responsiveness on all screen sizes */
+                                    @media (max-width: 768px) {
+                                        .custom-checkbox {
+                                            width: 18px;
+                                            height: 18px;
+                                        }
+                                    }
+                                </style>
 
 
 
-                            <!-- 6.rule & Regulation
+                                <!-- 6.rule & Regulation
                 <div class="row mb-5">
                     <div class="col">
                         <div class="form-body px-5 rounded-4">
@@ -751,34 +742,34 @@
                                 </div>
                             </div> -->
 
-                            <br>
+                                <br>
 
-                            <div 
-                            class="row g-2">
-                                <div class="add_form col">
-                                    <h4> <label class="fw-bold">Status</label></h4>
-                                    <div class="form-check form-switch d-flex align-items-center">
-                                        <input class="form-check-input check_bx" type="checkbox" id="status" name="status">
+                                <div
+                                    class="row g-2">
+                                    <div class="add_form col">
+                                        <h4> <label class="fw-bold">Status</label></h4>
+                                        <div class="form-check form-switch d-flex align-items-center">
+                                            <input class="form-check-input check_bx" type="checkbox" id="status" name="status">
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
 
 
-                            <div class="row g-3">
-                                <div class="add_form col-lg-4">
-                                    <label class="fw-bold mb-3 ">Order</label>
-                                    <input type="number" placeholder="Order" id="list_order" name="list_order"
-                                        value="{{old('order')}}" class="form-control py-2 rounded-3 shadow-sm">
+                                <div class="row g-3">
+                                    <div class="add_form col-lg-4">
+                                        <label class="fw-bold mb-3 ">Order</label>
+                                        <input type="number" placeholder="Order" id="list_order" name="list_order"
+                                            value="{{old('order')}}" class="form-control py-2 rounded-3 shadow-sm">
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-12 text-center mt-5">
+                                    <a href="{{ route('admin.inclusive_package_list') }}">
+                                        <button type="button" class="cancel-btn"> Cancel </button>
+                                    </a>
+                                    <button class="submit-btn sbmtBtn ms-4 mb-5"> Submit </button>
                                 </div>
                             </div>
-
-                            <div class="col-lg-12 text-center mt-5">
-                                <a href="{{ route('admin.inclusive_package_list') }}">
-                                    <button type="button" class="cancel-btn"> Cancel </button>
-                                </a>
-                                <button class="submit-btn sbmtBtn ms-4 mb-5"> Submit </button>
-                            </div>
-                        </div>
             </form>
         </div>
     </div>
