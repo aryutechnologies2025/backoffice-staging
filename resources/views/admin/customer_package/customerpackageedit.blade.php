@@ -89,7 +89,7 @@
                             <div class="col-md-4">
                                 <div class="add_form col-md-4">
                                     <label class="mb-2">Price Calculator List</label>
-                                    <select id="pricing_calculator" name="pricing_calculator" class="form-select py-2 rounded-3 shadow-sm">
+                                    <select id="pricing_calculator" name="pricing_calculator" class="form-select py-2 rounded-3 shadow-sm" required>
                                         <option value="" disabled selected>Select Location</option>
                                         @foreach($pricingcalculator as $id => $title)
                                         <option value="{{ $title->id }}"
