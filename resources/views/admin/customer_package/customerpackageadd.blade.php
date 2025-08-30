@@ -88,7 +88,7 @@
                     <div class="col-md-4">
                         <label class="mb-2">Price Calculator List</label>
                         <select id="pricing_calculator" name="pricing_calculator"
-                            class="form-select py-2 rounded-3 shadow-sm" required>
+                            class="form-select py-2 rounded-3 shadow-sm">
                             <option value="" disabled selected>Select Location</option>
                             <!-- Districts will be populated dynamically -->
                         </select>
