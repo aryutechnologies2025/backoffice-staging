@@ -18,8 +18,15 @@ class DatabaseConnectionMiddleware
     {
         $response = $next($request);
 
-        // Explicitly close DB connection after request is handled
-        DB::disconnect();
+        // Check if connection exists before disconnecting
+        try {
+            if (DB::connection()->getPdo()) {
+                DB::disconnect();
+            }
+        } catch (\Exception $e) {
+            // Log error but don't throw exception
+            \Log::warning('Database disconnect warning: ' . $e->getMessage());
+        }
 
         return $response;
     }
