@@ -114,14 +114,14 @@
                     </div>
                     <div id="stays-details-container" class="mt-3"></div>
 
-
+<!-- 
                     <div class="add_form col-md-5 mb-1">
                         <label for="title_id" class="form-label">Select Stays</label>
                         <select name="package_stay" id="package_stay" class="form-control package">
                             <option disabled selected>Select Package Type</option>
 
                         </select>
-                    </div>
+                    </div> -->
 
                     <div class="test">
                         <h2 class="add_head mt-3">Package Details</h2>
