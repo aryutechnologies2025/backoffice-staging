@@ -17,6 +17,7 @@ use App\Models\ContactUs;
 use App\Models\User;
 use Laravel\Socialite\Facades\Socialite;
 use Throwable;
+use Illuminate\Validation\Rule;
 
 use Illuminate\Http\JsonResponse;
 
@@ -30,7 +31,15 @@ class AuthController extends Controller
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'image_1' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'email' => 'required|email|unique:users,email|max:255',
+            // 'email' => 'required|email|unique:users,email|max:255',
+            'email' => [
+                'required',
+                'email',
+                'max:255',
+                Rule::unique('users', 'email')->where(function ($query) {
+                    return $query->where('is_deleted', 0);
+                }),
+            ],
             'password' => 'required|min:8|confirmed',
             'dob' => 'required|date',
             'phone' => 'required|string|max:15',
@@ -284,7 +293,7 @@ class AuthController extends Controller
                 'email_verified' => $user->email_verified,
                 'login_type' => 'google',
                 'email_verified_at' => now()
-            ]); 
+            ]);
 
             $userDetails = $existingUser->makeHidden([
                 'email_verified_at',
