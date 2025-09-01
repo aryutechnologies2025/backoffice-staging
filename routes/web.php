@@ -145,7 +145,7 @@ Route::prefix('/')->group(function () {
                 Route::get('/add', 'add_form')->name('admin.inclusive_package_add_form');
                 Route::get('/{id}/edit', 'edit_form')->name('admin.inclusive_package_edit_form');
                 Route::post('/insert', 'insert')->name('admin.inclusive_package_insert');
-                Route::post('/{id}/update', 'update')->name('admin.inclusive_package_update')->middleware('increase.size');;
+                Route::post('/{id}/update', 'update')->name('admin.inclusive_package_update');
                 Route::post('/delete', 'delete')->name('admin.inclusive_package_delete');
                 Route::post('/change-status', 'change_status')->name('admin.inclusive_package_status');
                 Route::get('/theme-categories/{themeId}', 'getThemeCategories')->name('admin.theme_categories');
