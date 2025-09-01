@@ -15,13 +15,12 @@ class IncreaseRequestSize
      */
     public function handle(Request $request, Closure $next)
     {
-        // Increase PHP settings temporarily
-        ini_set('post_max_size', '100M');
-        ini_set('upload_max_filesize', '100M');
-        ini_set('max_execution_time', 300);
-        ini_set('max_input_time', 300);
-
-        ini_set('memory_limit', '512M');
+        // Increase PHP settings temporarily for this request
+        ini_set('post_max_size', '3072M');        // 3GB
+        ini_set('upload_max_filesize', '3072M');  // 3GB
+        ini_set('max_execution_time', 0);         // unlimited (or set a high value e.g., 3600 seconds)
+        ini_set('max_input_time', 0);             // unlimited
+        ini_set('memory_limit', '3072M');         // 3GB
 
         return $next($request);
     }
