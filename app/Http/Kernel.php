@@ -22,6 +22,7 @@ class Kernel extends HttpKernel
         \App\Http\Middleware\TrimStrings::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
         \App\Http\Middleware\DatabaseConnectionMiddleware::class,
+        \App\Http\Middleware\IncreaseRequestSize::class,
     ];
 
     /**
@@ -41,9 +42,9 @@ class Kernel extends HttpKernel
 
         'api' => [
             \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
-            \Illuminate\Routing\Middleware\ThrottleRequests::class.':api',
+            \Illuminate\Routing\Middleware\ThrottleRequests::class . ':api',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
-            
+
         ],
     ];
 
@@ -67,6 +68,8 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
     ];
 
-    
-    
+    protected $routeMiddleware = [
+        // Other middleware...
+        'increase.size' => \App\Http\Middleware\IncreaseRequestSize::class,
+    ];
 }
