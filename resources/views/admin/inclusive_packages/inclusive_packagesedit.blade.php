@@ -823,56 +823,6 @@
                                 </div>
                             </div>
 
-
-
-                            <script>
-                                // Function to extract the src attribute from the iframe input value
-                                function extractIframeSrc(iframeString) {
-                                    const match = iframeString.match(/src=["']([^"']+)["']/); // Regex to extract src
-                                    return match ? match[1] : null;
-                                }
-
-                                // Populate the iframe on page load
-                                document.addEventListener('DOMContentLoaded', function() {
-                                    const googleMapInput = document.getElementById('google_map');
-                                    const mapPreviewIframe = document.getElementById('map_preview');
-                                    const iframeSrc = extractIframeSrc(googleMapInput.value);
-
-                                    if (iframeSrc) {
-                                        mapPreviewIframe.src = iframeSrc;
-                                    }
-                                });
-
-                                // Update iframe dynamically as user changes input
-                                document.getElementById('google_map').addEventListener('input', function() {
-                                    const iframeSrc = extractIframeSrc(this.value);
-                                    const mapPreviewIframe = document.getElementById('map_preview');
-
-                                    if (iframeSrc) {
-                                        mapPreviewIframe.src = iframeSrc;
-                                    } else {
-                                        mapPreviewIframe.removeAttribute('src'); // Clear iframe if invalid input
-                                    }
-                                });
-                            </script>
-
-
-                            <script>
-                                document.getElementById('google_map').addEventListener('input', function() {
-                                    const inputValue = this.value;
-                                    const iframeSrcMatch = inputValue.match(/src=["']([^"']+)["']/); // Extract the src attribute value
-                                    const mapPreviewIframe = document.getElementById('map_preview');
-
-                                    if (iframeSrcMatch && iframeSrcMatch[1]) {
-                                        mapPreviewIframe.src = iframeSrcMatch[1]; // Set the extracted src to the iframe
-                                    } else {
-                                        mapPreviewIframe.removeAttribute('src'); // Clear the iframe if input is invalid
-                                    }
-                                });
-                            </script>
-
-
-
                             <!-- 10. Food Menu -->
 
 
