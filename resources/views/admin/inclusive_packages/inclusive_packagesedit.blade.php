@@ -1286,12 +1286,15 @@
         div.classList.add('row', 'g-2', 'mb-2', 'day-block');
         div.innerHTML = `
             <div class="col-md-5 mb-2">
+                <label class="form-label fw-bold">Day Title <span class="text-danger">*</span></label>
                 <input type="text" name="tour_planning[${index}][title]" class="form-control py-2 rounded-3 shadow-sm" placeholder="Day Title (e.g., Day ${index + 1})">
             </div>
             <div class="col-md-5 mb-2">
+                <label class="form-label fw-bold">Day Subtitle <span class="text-danger">*</span></label>
                 <input type="text" name="tour_planning[${index}][subtitle]" class="form-control py-2 rounded-3 shadow-sm" placeholder="Day Subtitle">
             </div>
             <div class="col-md-10 mb-2">
+                <label class="form-label fw-bold">Activity Description <span class="text-danger">*</span></label>
                 <input type="hidden" name="tour_planning[${index}][description]" class="form-control py-2 rounded-3 shadow-sm tour-description-hidden" placeholder="Activity Description">
                 <div class="tour-description-editor"></div>
             </div>
@@ -1308,10 +1311,16 @@
             height: 120,
             callbacks: {
                 onChange: function(contents) {
-                    // Remove extra spaces and empty <p> tags
-                    contents = contents.replace(/<p>(&nbsp;|\s)*<\/p>/g, '');
-                    contents = contents.replace(/\s+/g, ' ').trim();
-                    $(div).find('.tour-description-hidden').val(contents);
+                    // Clean HTML content to reduce size
+                    const cleanedContent = cleanHTMLContent(contents);
+                    $(div).find('.tour-description-hidden').val(cleanedContent);
+                },
+                onBlur: function() {
+                    // Clean content when editor loses focus
+                    const contents = $(div).find('.tour-description-editor').summernote('code');
+                    const cleanedContent = cleanHTMLContent(contents);
+                    $(div).find('.tour-description-editor').summernote('code', cleanedContent);
+                    $(div).find('.tour-description-hidden').val(cleanedContent);
                 }
             }
         });
@@ -1323,6 +1332,54 @@
         const $block = $(btn).closest('.day-block');
         $block.find('.tour-description-editor').summernote('destroy');
         $block.remove();
+    }
+
+    // Function to clean HTML content and reduce size
+    function cleanHTMLContent(html) {
+        if (!html) return '';
+        
+        // Create a temporary div to parse HTML
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = html;
+        
+        // Remove empty paragraphs
+        const paragraphs = tempDiv.querySelectorAll('p');
+        paragraphs.forEach(p => {
+            if (!p.textContent.trim() && !p.querySelector('img, iframe, object, embed')) {
+                p.remove();
+            }
+        });
+        
+        // Remove style attributes and classes that aren't necessary
+        const allElements = tempDiv.querySelectorAll('*');
+        allElements.forEach(el => {
+            // Remove style attributes
+            el.removeAttribute('style');
+            
+            // Remove empty class attributes
+            if (!el.className) {
+                el.removeAttribute('class');
+            }
+            
+            // Remove data attributes added by summernote
+            for (let i = el.attributes.length - 1; i >= 0; i--) {
+                const attr = el.attributes[i];
+                if (attr.name.startsWith('data-')) {
+                    el.removeAttribute(attr.name);
+                }
+            }
+        });
+        
+        // Get cleaned HTML
+        let cleanedHTML = tempDiv.innerHTML;
+        
+        // Remove extra spaces and line breaks
+        cleanedHTML = cleanedHTML.replace(/\s+/g, ' ').trim();
+        
+        // Remove specific summernote metadata if present
+        cleanedHTML = cleanedHTML.replace(/<!--\s*\{.*?\}\s*-->/g, '');
+        
+        return cleanedHTML;
     }
 
     // Initialize Summernote for all existing editors on page load
@@ -1341,9 +1398,14 @@
                 height: 120,
                 callbacks: {
                     onChange: function(contents) {
-                        contents = contents.replace(/<p>(&nbsp;|\s)*<\/p>/g, '');
-                        contents = contents.replace(/\s+/g, ' ').trim();
-                        $hidden.val(contents);
+                        const cleanedContent = cleanHTMLContent(contents);
+                        $hidden.val(cleanedContent);
+                    },
+                    onBlur: function() {
+                        const contents = $editor.summernote('code');
+                        const cleanedContent = cleanHTMLContent(contents);
+                        $editor.summernote('code', cleanedContent);
+                        $hidden.val(cleanedContent);
                     }
                 }
             });
@@ -1351,20 +1413,45 @@
 
         // Clean content before submit to reduce payload
         const form = $('form'); // Adjust selector if needed
-        form.on('submit', function() {
+        form.on('submit', function(e) {
+            // Prevent double submission
+            if (form.data('submitting')) {
+                e.preventDefault();
+                return;
+            }
+            form.data('submitting', true);
+            
+            // Show loading indicator
+            $('#submit-button').prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i> Processing...');
+            
+            // Clean all content before submission
             $('#day-wrapper .day-block').each(function() {
                 var $block = $(this);
                 var $hidden = $block.find('.tour-description-hidden');
-                var content = $hidden.val();
-
-                // Remove unwanted spaces, line breaks, tabs
-                content = content.replace(/\s+/g, ' ').trim();
-
-                // Remove empty HTML tags
-                content = content.replace(/<[^\/>][^>]*><\/[^>]+>/g, '');
-
+                var $editor = $block.find('.tour-description-editor');
+                
+                // Get and clean content
+                let content = $hidden.val();
+                if (!content && $editor.summernote('code')) {
+                    content = $editor.summernote('code');
+                }
+                
+                content = cleanHTMLContent(content);
                 $hidden.val(content);
             });
+            
+            // Optional: Show size information for debugging
+            const formData = new FormData(form[0]);
+            let totalSize = 0;
+            for (let [key, value] of formData.entries()) {
+                if (typeof value === 'string') {
+                    totalSize += value.length;
+                }
+            }
+            console.log('Approximate form data size:', totalSize, 'characters');
+            
+            // Continue with form submission
+            return true;
         });
     });
 </script>
