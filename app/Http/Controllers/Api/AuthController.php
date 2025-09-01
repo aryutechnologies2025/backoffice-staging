@@ -26,27 +26,27 @@ class AuthController extends Controller
     public function signup(Request $request)
     {
         // Validation rules
-        // $validator = Validator::make($request->all(), [
-        //     'first_name' => 'required|string|max:255',
-        //     'last_name' => 'required|string|max:255',
-        //     'image_1' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-        //     'email' => 'required|email|unique:users,email|max:255',
-        //     'password' => 'required|min:8|confirmed',
-        //     'dob' => 'required|date',
-        //     'phone' => 'required|string|max:15',
-        //     'street' => 'required|string|max:255',
-        //     'city' => 'required|string|max:255',
-        //     'state' => 'required|string|max:255',
-        //     'zip_province_code' => 'required|string|max:10',
-        //     'country' => 'required|string|max:255',
-        //     'preferred_lang' => 'required|string|max:255',
-        // ]);
+        $validator = Validator::make($request->all(), [
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'image_1' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'email' => 'required|email|unique:users,email|max:255',
+            'password' => 'required|min:8|confirmed',
+            'dob' => 'required|date',
+            'phone' => 'required|string|max:15',
+            'street' => 'required|string|max:255',
+            'city' => 'required|string|max:255',
+            'state' => 'required|string|max:255',
+            'zip_province_code' => 'required|string|max:10',
+            'country' => 'required|string|max:255',
+            'preferred_lang' => 'required|string|max:255',
+        ]);
 
-        // if ($validator->fails()) {
-        //     return response()->json([
-        //         'errors' => $validator->errors(),
-        //     ], 422);
-        // }
+        if ($validator->fails()) {
+            return response()->json([
+                'errors' => $validator->errors(),
+            ], 422);
+        }
 
 
         $profilePath = public_path('/uploads/profiles_pic');
@@ -58,6 +58,7 @@ class AuthController extends Controller
             }
         }
 
+        // $filePath1 = '';
         if ($request->hasFile('image_1')) {
             try {
                 $file1 = $request->file('image_1');
