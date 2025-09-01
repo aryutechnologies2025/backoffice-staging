@@ -204,7 +204,7 @@ class AuthController extends Controller
             return response()->json(['error' => 'Incorrect password'], 401);
         }
         $user = Auth::user();
-        if ($user->is_deleted) {
+        if ($user->is_deleted == 1) {
             return response()->json(['error' => 'Your account has been deleted. Please contact admin.'], 403);
         }
 
