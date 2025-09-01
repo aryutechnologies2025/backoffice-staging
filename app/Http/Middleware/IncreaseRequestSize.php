@@ -16,11 +16,11 @@ class IncreaseRequestSize
     public function handle(Request $request, Closure $next)
     {
         // Set "unlimited" values
-        ini_set('post_max_size', '-1');         // No limit
-        ini_set('upload_max_filesize', '-1');   // No limit
-        ini_set('max_execution_time', '0');     // Unlimited execution time
-        ini_set('max_input_time', '-1');        // No limit on input parsing time
-        ini_set('memory_limit', '-1');          // Unlimited memory
+        ini_set('post_max_size', '5120M');         // 5GB = 5120 MB
+        ini_set('upload_max_filesize', '5120M');   // 5GB = 5120 MB
+        ini_set('max_execution_time', '0');        // Unlimited execution time (or set to something like 3600 for 1h)
+        ini_set('max_input_time', '-1');           // No limit on input parsing time
+        ini_set('memory_limit', '6G');             // Set higher than upload size (e.g. 6GB)
 
         return $next($request);
     }
