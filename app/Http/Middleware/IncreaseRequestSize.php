@@ -21,7 +21,7 @@ class IncreaseRequestSize
         ini_set('max_execution_time', '0');        // Unlimited execution time (or set to something like 3600 for 1h)
         ini_set('max_input_time', '-1');           // No limit on input parsing time
         ini_set('memory_limit', '5120M');
-        ini_set('max_input_vars', '-1');             // Set higher than upload size (e.g. 6GB)
+        ini_set('max_input_vars', '200000');         // Set higher than upload size (e.g. 6GB)
 
         return $next($request);
     }
