@@ -143,9 +143,9 @@
             </div>
 
             <!-- FORM -->
-            <form id="form_valid" action="{{ route('admin.inclusive_package_update', $package_details->id) }}" method="POST"
-                autocomplete="off" enctype="multipart/form-data">
+            <form id="form_valid"  method="POST">
                 @csrf
+                <input type="hidden" name="package_id" id="package_id" value="{{$package_details->id}}">
 
                 <!-- 1.INFORMATION -->
                 <div class="row mb-4">
@@ -1334,6 +1334,65 @@
                     if ($('#cities_name').val()) {
                         $('#cities_name').trigger('change');
                     }
+
+                     $('#form_valid').on('submit', function(e) {
+            e.preventDefault();
+            var formData = new FormData(this);
+            formData.append('_token', '{{ csrf_token() }}');
+
+            $.ajax({
+                url: '{{ route("admin.inclusive_package_update_latest") }}',
+                type: 'POST',
+                data: formData,
+                processData: false, // Important for file uploads
+                contentType: false, // Important for file uploads
+                beforeSend: function() {
+                    // Show loading spinner
+                    $('#submit-btn').prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i> Processing...');
+                },
+                success: function(response) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success!',
+                        text: response.message,
+                        timer: 2000,
+                        showConfirmButton: false
+                    }).then(() => {
+                        // Redirect using the URL from response or default
+                        if (response.redirect_url) {
+                            window.location.href = response.redirect_url;
+                        } else {
+                            window.location.href = '{{ route("admin.inclusive_package_list") }}';
+                        }
+                    });
+                },
+                error: function(xhr, status, error) {
+                    let errorMessage = 'An error occurred while updating the package.';
+
+                    if (xhr.responseJSON && xhr.responseJSON.message) {
+                        errorMessage = xhr.responseJSON.message;
+                    } else if (xhr.responseJSON && xhr.responseJSON.errors) {
+                        // Display validation errors
+                        let errors = '';
+                        $.each(xhr.responseJSON.errors, function(key, value) {
+                            errors += value + '<br>';
+                        });
+                        errorMessage = errors;
+                    }
+
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        html: errorMessage
+                    });
+                },
+                complete: function() {
+                    // Re-enable submit button
+                    $('#submit-btn').prop('disabled', false).html('Update Package');
+                }
+            });
+        });
+
             });
 
 
