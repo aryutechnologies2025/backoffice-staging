@@ -291,6 +291,8 @@ class All_Inclusive_PackController extends Controller
 
     public function update(Request $request, $id)
     {
+
+
         $request->validate([
             'tour_planning' => 'required|array',
             'tour_planning.*.title' => 'required|string',
@@ -488,6 +490,185 @@ class All_Inclusive_PackController extends Controller
             ->with('success', 'Record updated successfully');
     }
 
+    public function updateNew(Request $request)
+    {
+
+        $id = $request->package_id;
+
+        // Find the record to update
+        $inclusive_packages = InclusivePackages::find($id);
+        if (!$inclusive_packages) {
+            return redirect()->route('admin.inclusive_package_list')
+                ->with('error', 'Record not found');
+        }
+
+        // Get current images for deletion tracking
+        $currentImages = json_decode($inclusive_packages->events_package_images, true);
+        if (!is_array($currentImages)) {
+            $currentImages = [];
+        }
+
+        // Handle dynamic image uploads
+        $imagePaths = $currentImages; // Start with existing images
+        $fileInputs = $request->file();
+
+        // Track deleted images
+        $deletedImages = $request->input('deleted_images', []);
+        $deletedImages = json_decode($deletedImages, true); // Decode the list of deleted images
+        foreach ($deletedImages as $deletedImage) {
+            if (in_array($deletedImage, $currentImages)) {
+                // Delete the image from the filesystem
+                $oldImagePath = public_path($deletedImage);
+                if (file_exists($oldImagePath)) {
+                    unlink($oldImagePath);
+                }
+                // Remove the image from the imagePaths array
+                $imagePaths = array_filter($imagePaths, fn($path) => $path !== $deletedImage);
+            }
+        }
+
+
+        // dd($fileInputs);
+
+        // Handle new image uploads
+        foreach ($fileInputs as $key => $files) {
+            if (strpos($key, 'img_') === 0) {
+                if (is_array($files)) {
+                    foreach ($files as $file) {
+                        if ($file->isValid()) {
+                            $fileName = time() . '_' . $file->getClientOriginalName();
+                            $destinationPath = public_path('/uploads/events_package_images');
+                            if (!file_exists($destinationPath)) {
+                                mkdir($destinationPath, 0755, true);
+                            }
+                            $file->move($destinationPath, $fileName);
+                            $imagePaths[] = '/uploads/events_package_images/' . $fileName;
+                        }
+                    }
+                } else {
+                    if ($files->isValid()) {
+                        $fileName = time() . '_' . $files->getClientOriginalName();
+                        $destinationPath = public_path('/uploads/events_package_images');
+                        if (!file_exists($destinationPath)) {
+                            mkdir($destinationPath, 0755, true);
+                        }
+                        $files->move($destinationPath, $fileName);
+                        $imagePaths[] = '/uploads/events_package_images/' . $fileName;
+                    }
+                }
+            }
+        }
+
+
+        // if ($request->hasFile('cover_img')) {
+
+
+        if ($request->hasFile('cover_img')) {
+            // Get the uploaded file
+            $coverImage = $request->file('cover_img');
+
+            // Sanitize the file name
+            $customFileName = preg_replace('/[^A-Za-z0-9_\-]/', '_', $request->input('upload_image_name', 'default_image_name'));
+            $customFileName = rand(1000, 9999) . '_' . time();
+            // $customFileName = $customFileName . '_' . $randomSuffix;
+            // Generate the final file name with extension
+            $coverImageName = $customFileName . '_cover.' . $coverImage->getClientOriginalExtension();
+
+            // Define the upload path
+            $coverImagePath = 'uploads/events_package_images/';
+
+            // dump($coverImagePath);
+            // dd($coverImageName);
+
+
+            // Move the file to the desired location
+            $coverImage->move(public_path($coverImagePath), $coverImageName);
+
+            // Save the file path in the database
+            $inclusive_packages->cover_img = $coverImagePath . $coverImageName;
+        }
+
+
+        // JSON encode complex fields
+        // $tourPlanningJson = json_encode([
+        //     // 'plan_title' => $request->input['plan_title'],
+        //     // 'plan_subtitle' => $request->input['plan_subtitle'],
+        //     'plan_description' => $request->input('plan_description')
+        // ]);
+
+
+        //storing the program_pdf file upload
+        $filename = null;
+        if ($request->hasFile('program_pdf')) {
+            $file = $request->file('program_pdf');
+            $extension = $file->getClientOriginalExtension();
+            $filename = time() . '.' . $extension;
+
+            $file->move(public_path('uploads/program_pdfs'), $filename);
+            $inclusive_packages->program_pdf = $filename;
+        }
+
+
+
+        $amenitiesJson = json_encode($request->input('amenity_services', []));
+        $foodBeveragesJson = json_encode($request->input('food_beverages', []));
+        $activitiesJson = json_encode($request->input('activities', []));
+        $safetyFeaturesJson = json_encode($request->input('safety_features', []));
+        $campRulesJson = json_encode($request->input('camp_rule'));
+        $theme = $request->input('themes_name', []);
+        // Update the model fields
+        // $inclusive_packages->program_pdf = $filePath;
+        $inclusive_packages->upload_image_name = $request->input('upload_image_name');
+        $inclusive_packages->alternate_name = $request->input('alternate_image_name');
+        $inclusive_packages->program_inclusion = $request->input('program_inclusion');
+        $inclusive_packages->program_exclusion = $request->input('program_exclusion');
+        $inclusive_packages->theme_id = implode(',', $theme);
+        $inclusive_packages->location = $request->input('location');
+        $inclusive_packages->city_details = $request->input('cities_name');
+        $inclusive_packages->location_name = $request->input('district_name');
+        $inclusive_packages->title = $request->input('title');
+        $inclusive_packages->program_description = $request->input('program_description');
+        $inclusive_packages->category = json_encode($request->input('prop_cat', []));
+        $inclusive_packages->tour_planning = json_encode($request->input('tour_planning'));
+        $inclusive_packages->start_date = $request->input('start_date');
+        $inclusive_packages->return_date = $request->input('return_date');
+        $inclusive_packages->total_days = $request->input('total_days');
+        //$inclusive_packages->member_capacity = $request->input['member_capacity'];
+        $inclusive_packages->price_tilte = json_encode($request->input('price_title', []));
+        $inclusive_packages->price_amount = json_encode($request->input('price_amount', []));
+        $inclusive_packages->camp_rule = $campRulesJson;
+        $inclusive_packages->important_info = $request->input('important_info');
+        //$inclusive_packages->google_map = $request->input['google_map'];
+        $inclusive_packages->events_package_images = json_encode(array_values($imagePaths));
+        // $inclusive_packages->total_room = $request->input['total_room'];
+        // $inclusive_packages->bath_room = $request->input['bath_room'];
+        // $inclusive_packages->bed_room = $request->input['bed_room'];
+        //  $inclusive_packages->hall = $request->input['hall'];
+        $inclusive_packages->amenity_details = $amenitiesJson;
+        $inclusive_packages->food_beverages = $foodBeveragesJson;
+        $inclusive_packages->activities = $activitiesJson;
+        $inclusive_packages->safety_features = $safetyFeaturesJson;
+        $inclusive_packages->list_order = $request->input('list_order');
+        $inclusive_packages->is_deleted = '0';
+        $inclusive_packages->updated_at = now();
+        $inclusive_packages->created_by = 'admin';
+        $inclusive_packages->status = $request->has('status') && $request->input('status') === 'on' ? '1' : '0';
+
+        // Save the updated record
+        $inclusive_packages->save();
+
+        // // Redirect with success message
+        // return redirect()->route('admin.inclusive_package_list')
+        //     ->with('success', 'Record updated successfully');
+
+        // Return JSON response for AJAX
+        return response()->json([
+            'success' => true,
+            'message' => 'Record updated successfully',
+            'redirect_url' => route('admin.inclusive_package_list') // Add redirect URL
+        ]);
+    }
+
     public function change_status(Request $request)
     {
 
@@ -646,7 +827,7 @@ class All_Inclusive_PackController extends Controller
             $customer_package->price_amount = $original->price_amount;
             $customer_package->list_order = $original->list_order;
 
-          
+
             $customer_package->save();
 
 

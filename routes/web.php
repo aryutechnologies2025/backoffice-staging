@@ -153,6 +153,8 @@ Route::prefix('/')->group(function () {
                 Route::get('/destination-categories',  'getDestinationCategories')->name('admin.destination_categories');
 
                 Route::post('/duplicate-entry-details', 'duplicatePackage')->name('admin.ProgramPackage_dupdetails');
+
+                Route::post('/update-latest', 'updateNew')->name('admin.inclusive_package_update_latest');
             });
         });
         //   Route::get('/dashboard', [All_Inclusive_PackController::class, 'showDashboard'])->name('dashboard');
