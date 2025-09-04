@@ -1,7 +1,5 @@
 @extends('layouts.app')
 @Section('content')
-<!-- Bootstrap CSS --><!-- Font Awesome -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
     a:hover {
         color: red;
@@ -60,24 +58,10 @@
         margin-bottom: 10px;
     }
 
-    .add_head {
-        color: #3B71CA;
-        padding-bottom: 10px;
-        border-bottom: 2px solid #e9ecef;
-    }
-
     .btn-add {
-        background-color: #3B71CA;
-        transition: all 0.3s;
-    }
-
-    .btn-add:hover {
-        background-color: #2b5da3;
-        transform: translateY(-2px);
-    }
-
-    .remove-day {
-        height: fit-content;
+        background-color: #007bff;
+        color: white;
+        font-weight: bold;
     }
 
     #summernote3 {
@@ -87,7 +71,7 @@
         background-color: #fff;
     }
 
-
+ 
 
     .form-input label {
         width: 150% !important;
@@ -103,76 +87,6 @@
             flex: 0 0 auto;
             width: 10.33333333%;
         }
-    }
-
-    .editor-toolbar {
-        background-color: #f8f9fa;
-        border: 1px solid #ced4da;
-        border-bottom: none;
-        border-radius: 8px 8px 0 0;
-        padding: 5px;
-        display: flex;
-        flex-wrap: wrap;
-        gap: 5px;
-    }
-
-    .editor-content {
-        min-height: 120px;
-        border: 1px solid #ced4da;
-        border-radius: 0 0 8px 8px;
-        padding: 10px;
-        margin-bottom: 15px;
-    }
-
-    .editor-content:focus {
-        outline: none;
-        border-color: #86b7fe;
-        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
-    }
-
-    .toolbar-btn {
-        background: none;
-        border: none;
-        padding: 5px 8px;
-        border-radius: 4px;
-        cursor: pointer;
-    }
-
-    .toolbar-btn:hover {
-        background-color: #e9ecef;
-    }
-
-    .day-block {
-        background-color: #f8f9fa;
-        padding: 15px;
-        border-radius: 8px;
-        margin-bottom: 15px;
-        border-left: 4px solid #3B71CA;
-    }
-
-    .rte-container {
-        margin-top: 10px;
-    }
-
-    .editor-content img {
-        max-width: 100%;
-        height: auto;
-    }
-
-    .editor-content ul {
-        list-style-type: disc !important;
-        /* make sure it's bullet */
-        padding-left: 20px;
-        /* add spacing so bullets are visible */
-        color: #000;
-        /* bullet + text color */
-    }
-
-    /* Ordered list style */
-    .editor-content ol {
-        list-style-type: decimal !important;
-        padding-left: 20px;
-        color: #000;
     }
 </style>
 
@@ -216,7 +130,7 @@
                                     <li>
                                         <div class="form-check">
                                             <input class="form-check-input" type="checkbox"
-                                                id="theme-{{ $id }}" class="themes_name" name="themes_name[]"
+                                                id="theme-{{ $id }}" name="themes_name[]"
                                                 value="{{ $id }}"
                                                 @if (is_array(old('themes_name', [])) && in_array($id, old('themes_name', []))) checked @endif>
                                             <label class="form-check-label w-100"
@@ -229,6 +143,43 @@
                                 </ul>
                             </div>
                         </div>
+
+                        <script>
+                            document.addEventListener('DOMContentLoaded', function() {
+                                const dropdownButton = document.getElementById('themeDropdown');
+                                const dropdownText = document.getElementById('themeDropdownText');
+                                const checkboxes = document.querySelectorAll('#themeDropdown ~ .dropdown-menu input[type="checkbox"]');
+
+                                // Initialize with any pre-checked boxes
+                                updateButtonText();
+
+                                // Update when checkboxes change
+                                checkboxes.forEach(checkbox => {
+                                    checkbox.addEventListener('change', updateButtonText);
+                                });
+
+                                function updateButtonText() {
+                                    const checked = Array.from(checkboxes).filter(cb => cb.checked);
+
+                                    if (checked.length === 0) {
+                                        dropdownText.textContent = 'Select Themes';
+                                    } else if (checked.length === 1) {
+                                        dropdownText.textContent = checked[0].nextElementSibling.textContent;
+                                    } else {
+                                        dropdownText.textContent = `${checked.length} themes selected`;
+                                    }
+                                }
+
+                                // Prevent dropdown from closing when clicking checkboxes
+                                document.querySelector('#themeDropdown ~ .dropdown-menu').addEventListener('click', function(e) {
+                                    if (e.target.type === 'checkbox') {
+                                        e.stopPropagation();
+                                    }
+                                });
+                            });
+                        </script>
+
+
 
                         <!-- Destination (Single Select) -->
                         <div class="add_form col-md-4">
@@ -458,41 +409,40 @@
 
 
                 <!-- 3. TOUR PLANNING -->
+
+
+
                 <div class="row mb-2">
                     <div class="col">
-                        <div class="form-body rounded-4">
+                        <div class="form-body  rounded-4">
                             <h4 class="add_head fw-bold mb-3">3. Tour Planning</h4>
                             <div id="day-wrapper">
-                                <div class="day-block">
-                                    <div class="row g-2 mb-2">
-                                        <div class="col-md-5 mb-2">
-                                            <label class="form-label fw-bold">Day Title</label>
-                                            <input type="text" name="tour_planning[0][title]" class="form-control" placeholder="Day Title (Day 1)">
-                                        </div>
-                                        <div class="col-md-5 mb-2">
-                                            <label class="form-label fw-bold">Day Subtitle</label>
-                                            <input type="text" name="tour_planning[0][subtitle]" class="form-control" placeholder="Subtitle">
-                                        </div>
-                                        <div class="col-md-10 mb-2">
-                                            <label class="form-label fw-bold">Activity Description</label>
-                                            <div class="rte-container">
-                                                <div class="editor-toolbar">
-                                                    <button type="button" class="toolbar-btn" data-command="bold"><i class="fas fa-bold"></i></button>
-                                                    <button type="button" class="toolbar-btn" data-command="italic"><i class="fas fa-italic"></i></button>
-                                                    <button type="button" class="toolbar-btn" data-command="underline"><i class="fas fa-underline"></i></button>
-                                                    <button type="button" class="toolbar-btn" data-command="insertUnorderedList"><i class="fas fa-list-ul"></i></button>
-                                                    <button type="button" class="toolbar-btn" data-command="insertOrderedList"><i class="fas fa-list-ol"></i></button>
-                                                    <button type="button" class="toolbar-btn" data-command="createLink"><i class="fas fa-link"></i></button>
-                                                </div>
-                                                <div class="editor-content" contenteditable="true" id="editor-0"></div>
-                                                <input type="hidden" name="tour_planning[0][description]" class="tour-description-hidden">
-                                            </div>
-                                        </div>
+                                <div class="row g-2 mb-2 day-block">
+                                    <div class="add_form col-md-5 mb-2">
+                                        <label class="form-label fw-bold">Day Title <span class="text-danger">*</span></label>
+                                        <input type="text" name="tour_planning[0][title]"
+                                            class="form-control py-2 rounded-3 shadow-sm"
+                                            placeholder="Day Title (e.g., Day 1)">
+                                    </div>
+                                    <div class="add_form col-md-5 mb-2">
+                                        <label class="form-label fw-bold">Day Subtitle <span class="text-danger">*</span></label>
+                                        <input type="text" name="tour_planning[0][subtitle]"
+                                            class="form-control py-2 rounded-3 shadow-sm"
+                                            placeholder="SubTitle">
+                                    </div>
+                                    <div class="add_form col-md-10 mb-2">
+                                        <label class="form-label fw-bold">Activity Description <span class="text-danger">*</span></label>
+                                        <input type="hidden" name="tour_planning[0][description]" class="tour-description-hidden">
+                                        <div class="tour-description-editor"></div>
+                                    </div>
+                                    <div class="col-md-1 d-flex align-items-end">
+                                        <!-- Remove button, hidden for the first row -->
                                     </div>
                                 </div>
                             </div>
-                            <button type="button" class="btn-add rounded border-0 px-4 py-2 text-white mt-2" onclick="addDay()">
-                                <i class="fa fa-plus"></i> Add More
+                            <button type="button" class="btn-add rounded border-0 px-4 py-2 text-white mt-2"
+                                onclick="addDay()">
+                                <i class="fa fa-plus" aria-hidden="true"></i> Add More
                             </button>
                         </div>
                     </div>
@@ -500,85 +450,131 @@
 
                 <script>
                     let index = 1;
-                    const editors = {};
-
-                    function initializeRTE(editorId, hiddenInputName) {
-                        const editor = document.getElementById(editorId);
-                        const hiddenInput = document.querySelector(`input[name="${hiddenInputName}"]`);
-
-                        // Toolbar click handler
-                        const toolbar = editor.previousElementSibling;
-                        toolbar.addEventListener("click", function(e) {
-                            const btn = e.target.closest("button");
-                            if (!btn) return;
-                            const command = btn.dataset.command;
-                            let value = null;
-                            if (command === "createLink") {
-                                value = prompt("Enter URL:", "https://");
-                                if (!value) return;
-                            }
-                            document.execCommand(command, false, value);
-                            hiddenInput.value = editor.innerHTML;
-                            editor.focus();
-                        });
-
-                        // Sync changes
-                        editor.addEventListener("input", () => {
-                            hiddenInput.value = editor.innerHTML;
-                        });
-                        editor.addEventListener("blur", () => {
-                            hiddenInput.value = editor.innerHTML;
-                        });
-
-                        editors[editorId] = editor;
-                    }
 
                     function addDay() {
-                        const wrapper = document.getElementById("day-wrapper");
-                        const div = document.createElement("div");
-                        div.classList.add("day-block");
+                        const wrapper = document.getElementById('day-wrapper');
+                        const div = document.createElement('div');
+                        div.classList.add('row', 'g-2', 'mb-2', 'day-block');
                         div.innerHTML = `
-                            <div class="row g-2 mb-2">
-                                <div class="col-md-5 mb-2">
-                                <input type="text" name="tour_planning[${index}][title]" class="form-control" placeholder="Day Title (Day ${index+1})">
-                                </div>
-                                <div class="col-md-5 mb-2">
-                                <input type="text" name="tour_planning[${index}][subtitle]" class="form-control" placeholder="Subtitle">
-                                </div>
-                                <div class="col-md-10 mb-2">
-                                <div class="rte-container">
-                                    <div class="editor-toolbar">
-                                    <button type="button" class="toolbar-btn" data-command="bold"><i class="fas fa-bold"></i></button>
-                                    <button type="button" class="toolbar-btn" data-command="italic"><i class="fas fa-italic"></i></button>
-                                    <button type="button" class="toolbar-btn" data-command="underline"><i class="fas fa-underline"></i></button>
-                                    <button type="button" class="toolbar-btn" data-command="insertUnorderedList"><i class="fas fa-list-ul"></i></button>
-                                    <button type="button" class="toolbar-btn" data-command="insertOrderedList"><i class="fas fa-list-ol"></i></button>
-                                    <button type="button" class="toolbar-btn" data-command="createLink"><i class="fas fa-link"></i></button>
-                                    </div>
-                                    <div class="editor-content" contenteditable="true" id="editor-${index}"></div>
-                                    <input type="hidden" name="tour_planning[${index}][description]" class="tour-description-hidden">
-                                </div>
-                                </div>
-                                <div class="col-md-1 d-flex align-items-end">
-                                <button type="button" class="btn btn-danger" onclick="removeDay(this)"><i class="fa fa-trash"></i></button>
-                                </div>
-                            </div>
-                            `;
+                                        <div class="col-md-5 mb-2">
+                                            <input type="text" name="tour_planning[${index}][title]" class="form-control py-2 rounded-3 shadow-sm" placeholder="Day Title (e.g., Day ${index + 1})">
+                                        </div>
+                                        <div class="col-md-5 mb-2">
+                                            <input type="text" name="tour_planning[${index}][subtitle]" class="form-control py-2 rounded-3 shadow-sm" placeholder="Activity Subtitle">
+                                        </div>
+                                        <div class="col-md-10 mb-2">
+                                            <input type="hidden" name="tour_planning[${index}][description]" class="tour-description-hidden">
+                                            <div class="tour-description-editor"></div>
+                                        </div>
+                                        <div class="col-md-1 d-flex align-items-end">
+                                            <button type="button" class="btn btn-danger remove-day" onclick="removeDay(this)">
+                                                <i class="fa fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    `;
                         wrapper.appendChild(div);
 
-                        // Initialize new editor
-                        initializeRTE(`editor-${index}`, `tour_planning[${index}][description]`);
+                        // Initialize Summernote for the new editor
+                        $(div).find('.tour-description-editor').summernote({
+                            height: 120,
+                            callbacks: {
+                                onChange: function(contents) {
+                                    $(div).find('.tour-description-hidden').val(contents);
+                                }
+                            }
+                        });
+
                         index++;
                     }
 
                     function removeDay(btn) {
-                        btn.closest(".day-block").remove();
+                        btn.closest('.day-block').remove();
                     }
 
-                    document.addEventListener("DOMContentLoaded", function() {
-                        initializeRTE("editor-0", "tour_planning[0][description]");
+                    // Initialize Summernote for the first description editor on page load
+                    document.addEventListener('DOMContentLoaded', function() {
+                        const firstBlock = document.querySelector('#day-wrapper .day-block');
+                        if (firstBlock) {
+                            $(firstBlock).find('.tour-description-editor').summernote({
+                                height: 120,
+                                callbacks: {
+                                    onChange: function(contents) {
+                                        $(firstBlock).find('.tour-description-hidden').val(contents);
+                                    }
+                                }
+                            });
+                        }
                     });
                 </script>
+
+
+                <!-- <div class="row mb-2">
+                                                <div class="col">
+                                                    <div class="form-body px-5 rounded-4">
+                                                        <h4 class="fw-bold mb-2">04.Tour Date & Time</h4>
+                                                        <div class="mb-3">
+                                                            <div class="row g-2 align-items-end">
+                                                                <div class="col-md-4">
+                                                                    <label class="mb-2">Start Date <span class="text-danger"></span></label>
+                                                                    <input type="date" class="form-control py-2 rounded-3 shadow-sm"
+                                                                        name="start_date" id="start_date" value="{{ old('start_date') }}"
+                                                                        >
+                                                                </div>
+                                                                <div class="col-md-4">
+                                                                    <label class=" mb-2">Return Date <span
+                                                                            class="text-danger"></span></label>
+                                                                    <input type="date" class="form-control py-2 rounded-3 shadow-sm"
+                                                                        name="return_date" id="return_date" value="{{ old('return_date') }}"
+                                                                        >
+                                                                </div>
+                                                                <div class="col-md-4">
+                                                                    <label class="mb-2">Total No. of Days</label>
+                                                                    <input type="number" class="form-control py-2 rounded-3 shadow-sm"
+                                                                        id="total_days" name="total_days" value="{{ old('total_days') }}"
+                                                                        readonly>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div> -->
+
+                <!-- 4. Needed -->
+                <!-- <div class="row mb-2">
+                                                <div class="col">
+                                                    <div class="form-body px-5 rounded-4">
+                                                        <h4 class="fw-bold mb-2">04.Rooms and Beds</h4>
+                                                        <div class="mb-3">
+                                                            <div class="row g-2 align-items-end">
+                                                                <div class="col-md-3">
+                                                                    <label class=" mb-2">Rooms<span class="text-danger"></span></label>
+                                                                    <input type="number" class="form-control py-2 rounded-3 shadow-sm"
+                                                                        name="total_room" id="total_room" value="{{ old('total_room') }}"
+                                                                        >
+                                                                </div>
+                                                                <div class="col-md-3">
+                                                                    <label class="mb-2">Bath Rooms<span class="text-danger"></span></label>
+                                                                    <input type="number" class="form-control py-2 rounded-3 shadow-sm"
+                                                                        name="bath_room" id="bath_room" value="{{ old('bath_room') }}"
+                                                                        >
+                                                                </div>
+                                                                <div class="col-md-3">
+                                                                    <label class=" mb-2">Bed Rooms</label>
+                                                                    <input type="number" class="form-control py-2 rounded-3 shadow-sm"
+                                                                        id="bed_room" name="bed_room" value="{{ old('bed_room') }}" >
+                                                                </div>
+                                                                <div class="col-md-3">
+                                                                    <label class=" mb-2">Hall</label>
+                                                                    <input type="number" class="form-control py-2 rounded-3 shadow-sm"
+                                                                        id="hall" name="hall" value="{{ old('hall') }}" >
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div> -->
+
+
 
                 <!-- 5.PRICING -->
                 <div class="row mb-3">
@@ -817,6 +813,41 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- <div class="row mb-3">
+                                                <div class="col">
+                                                    <div class="form-body px-1 py-3 rounded-4">
+                                                        <h4 class="fw-bold mb-3">9. Location</h4>
+                                                        <div>
+                                                            <div class="row align-items-start">
+                                                                <div class="col-lg-6">
+                                                                    <label for="google_map" class="fw-bold mb-3">Google Map<span class="text-danger">*</span></label>
+                                                                    <input
+                                                                        type="text"
+                                                                        id="google_map"
+                                                                        name="google_map"
+                                                                        class="form-control py-3 rounded-3 shadow-sm"
+                                                                        placeholder="Enter Google Map Embed Iframe">
+                                                                </div>
+                                                                <div class="col-lg-6">
+                                                                    <label class="fw-bold mb-3">Map Preview</label>
+                                                                    <iframe
+                                                                        id="map_preview"
+                                                                        width="100%"
+                                                                        height="250"
+                                                                        frameborder="0"
+                                                                        style="border:0;"
+                                                                        allowfullscreen
+                                                                        aria-hidden="false"
+                                                                        tabindex="0">
+                                                                    </iframe>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div> -->
+
                 <script>
                     document.getElementById('google_map').addEventListener('input', function() {
                         const inputValue = this.value;
@@ -830,6 +861,71 @@
                         }
                     });
                 </script>
+
+
+                <!-- <div class="row mb-3">
+                                                <div class="col">
+                                                    <div class="form-body px-5 rounded-4">
+                                                        <h4 class="fw-bold mb-3">08. Upload PDF</h4>
+                                                        <div class="mb-1">
+                                                            <div class="row g-2 mb-2">
+                                                                <div class="col">
+                                                                    <label class="form-label form-label-top form-label-auto mb-2">Upload PDF</label>
+                                                                    <input type="file" id="program_pdf" name="program_pdf" class="form-control py-2 rounded-3 shadow-sm" >
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div> -->
+
+                <!-- <div class="row mb-2">
+                                                <div class="col">
+                                                    <div class="form-body px-5 rounded-4">
+                                                        <h4 class="fw-bold mb-3">09. Food Menu</h4>
+                                                        <div class="mb-1">
+                                                            <div class="row g-2">
+                                                                <div class="col-lg-4">
+                                                                    <label
+                                                                        class="form-label form-label-top form-label-auto mb-2">Breakfast</label>
+                                                                    <input type="hidden" id="break_fast" name="break_fast">
+                                                                    <div class="mt-2">
+                                                                        <div class="row">
+                                                                            <div class="col-lg-12">
+                                                                                <div id="summernote6" style="height: 200px;"></div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-lg-4">
+                                                                    <label
+                                                                        class="form-label form-label-top form-label-auto  mb-2">Lunch</label>
+                                                                    <input type="hidden" id="lunch" name="lunch">
+                                                                    <div class="mt-2">
+                                                                        <div class="row">
+                                                                            <div class="col-lg-12">
+                                                                                <div id="summernote7" style="height: 200px;"></div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-lg-4">
+                                                                    <label
+                                                                        class="form-label form-label-top form-label-auto mb-2">Dinner</label>
+                                                                    <input type="hidden" id="dinner" name="dinner">
+                                                                    <div class="mt-2">
+                                                                        <div class="row">
+                                                                            <div class="col-lg-12">
+                                                                                <div id="summernote8" style="height: 200px;"></div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div> -->
                 <!-- 8. AMENITIES -->
                 <div class="row mb-2">
                     <div class="col">
@@ -945,6 +1041,30 @@
                         }
                     }
                 </style>
+
+
+
+                <!-- 6.rule & Regulation
+                                    <div class="row mb-5">
+                                        <div class="col">
+                                            <div class="form-body px-5 rounded-4">
+                                                <h4 class="fw-bold mb-5">14. Payment Policy</h4>
+                                                <div class="mb-3">
+                                                    <div id="camp-rule-container">
+                                                        <div class="row g-2 mb-4 camp-rule-field">
+                                                            <div class="col">
+                                                                <label class="fw-bold mb-4">Payment Policy <span class="text-danger">*</span></label>
+                                                                <input type="text" name="camp_rule[]" id="camp_rule" class="form-control py-3  px-3 rounded-3 shadow-sm" placeholder="Payment Policy" required>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="text-end">
+                                                        <button type="button" class="btn-add rounded border-0 px-5 py-3 text-white" onclick="addCampRuleField()">
+                                                            <i class="fa fa-plus" aria-hidden="true"></i> Add
+                                                        </button>
+                                                    </div>
+                                                </div> -->
+
                 <br>
 
                 <div class="row g-2">
@@ -966,7 +1086,7 @@
                     </div>
                 </div>
 
-
+              
 
                 <div class="col-lg-12 text-center mt-5">
                     <a href="{{ route('admin.inclusive_package_list') }}">
@@ -979,7 +1099,13 @@
     </div>
 </div>
 
+
+
+
+
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 <script>
     $(document).ready(function() {
         $('#summernote1,#summernote2,#summernote3,#summernote4,#summernote5,#summernote6,#summernote7,#summernote8,#summernote9,#summernote10')
@@ -1128,6 +1254,14 @@
             ]
         });
 
+
+
+
+
+
+
+
+
         let photoCount = 1; // Start with existing photo field count
 
         // Function to generate new photo upload field HTML
@@ -1237,18 +1371,6 @@
                 }
             });
         });
-
-        $('#themes_name').multiselect({
-            includeSelectAllOption: true,
-            enableFiltering: true,
-            buttonWidth: '100%',
-            maxHeight: 300,
-            numberDisplayed: 1,
-            nonSelectedText: 'Select Themes',
-            allSelectedText: 'All Selected',
-            selectAllText: 'Select All'
-        });
-
     });
 
     document.addEventListener('DOMContentLoaded', function() {
@@ -1424,40 +1546,19 @@
         const errorElement = document.getElementById('file-ip-1-error');
         errorElement.textContent = message;
     }
-</script>
 
 
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const dropdownButton = document.getElementById('themeDropdown');
-        const dropdownText = document.getElementById('themeDropdownText');
-        const checkboxes = document.querySelectorAll('#themeDropdown ~ .dropdown-menu input[type="checkbox"]');
 
-        // Initialize with any pre-checked boxes
-        updateButtonText();
-
-        // Update when checkboxes change
-        checkboxes.forEach(checkbox => {
-            checkbox.addEventListener('change', updateButtonText);
-        });
-
-        function updateButtonText() {
-            const checked = Array.from(checkboxes).filter(cb => cb.checked);
-
-            if (checked.length === 0) {
-                dropdownText.textContent = 'Select Themes';
-            } else if (checked.length === 1) {
-                dropdownText.textContent = checked[0].nextElementSibling.textContent;
-            } else {
-                dropdownText.textContent = `${checked.length} themes selected`;
-            }
-        }
-
-        // Prevent dropdown from closing when clicking checkboxes
-        document.querySelector('#themeDropdown ~ .dropdown-menu').addEventListener('click', function(e) {
-            if (e.target.type === 'checkbox') {
-                e.stopPropagation();
-            }
+    $(document).ready(function() {
+        $('#themes_name').multiselect({
+            includeSelectAllOption: true,
+            enableFiltering: true,
+            buttonWidth: '100%',
+            maxHeight: 300,
+            numberDisplayed: 1,
+            nonSelectedText: 'Select Themes',
+            allSelectedText: 'All Selected',
+            selectAllText: 'Select All'
         });
     });
 </script>

@@ -215,7 +215,11 @@ class HomeApiController extends Controller
                 $amenityDetails = json_decode($package->amenity_details, true);
                 $activities = json_decode($package->activities, true);
                 $safetyFeatures = json_decode($package->safety_features, true);
-                $themeIds = json_decode($package->theme_id, true) ?? [];
+                // $themeIds = json_decode($package->theme_id, true) ?? [];
+                $themeIds = !empty($package->theme_id)
+                    ? array_map('intval', explode(',', $package->theme_id))
+                    : [];
+
 
                 $price_title = json_decode($package->price_tilte, true);
 
@@ -246,6 +250,8 @@ class HomeApiController extends Controller
                 $category = json_decode($package->category, true) ?? [];
                 $formattedcategory = is_array($category) ? implode(', ', $category) : $category;
                 // Replace the theme processing section with:
+
+                // dd($themeIds);
                 if (is_array($themeIds)) {
                     $theme = Themes::whereIn('id', $themeIds)
                         ->get(['id', 'themes_name'])
@@ -262,6 +268,8 @@ class HomeApiController extends Controller
                 } else {
                     $theme = [];
                 }
+
+                // dd($theme);
                 // Return the formatted package data, including additional details
                 return [
                     'id' => $package->id,
@@ -277,7 +285,8 @@ class HomeApiController extends Controller
                     'end_date' => $formattedendDate,
                     // 'theme_id' => $package->theme ? $package->theme->id : null,
                     'theme_id' => $package->theme_id,
-                    'theme' =>  $package->theme->themes_name ?? null,
+                    // 'theme' =>  $theme->themes_name ?? null,
+                    'theme' =>  $theme ?? [],
                     'destination_id' => $package->destination ? $package->destination->id : null,
                     'destination' => $package->destination ? $package->destination->city_name : null,
                     'average_rating' => number_format($averageRating, 1),

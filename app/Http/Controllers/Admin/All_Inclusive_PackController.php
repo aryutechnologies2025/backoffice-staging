@@ -284,7 +284,8 @@ class All_Inclusive_PackController extends Controller
 
         $title = ' Edit Program';
         //         echo"<pre>";
-        // print_r($package_details);die;
+        // print_r($package_details->theme_id);die;
+
         return view('admin.inclusive_packages.inclusive_packagesedit', compact('package_details', 'title', 'cities_dts', 'themes', 'amenities_dts', 'foodBeverages_dts', 'activities_dts', 'safety_features_dts', 'selectedCityId', 'selectedAmenities', 'selectedthemeId', 'selectedfood_beverages', 'selectedactivities', 'selectedsafety_features', 'geo_feature_dts', 'selectedgeo_featureId', 'categories', 'dest_categories', 'selecteddesCategoryId', 'selectedCategoryId', 'selectedprogram', 'selectedLocationname'));
     }
 
@@ -293,36 +294,13 @@ class All_Inclusive_PackController extends Controller
     {
 
 
-        $request->validate([
-            'tour_planning' => 'required|array',
-            'tour_planning.*.title' => 'required|string',
-            'tour_planning.*.description' => 'required|string',
-        ]);
-
-        // dd($request->all());
-        // Validate the incoming data
-        // $validatedData = $request->validate([
-        //     'themes_name' => 'required',
-        //     'cities_name' => 'required',
-        //     'title' => 'required',
-        //     'program_description' => 'required',
-        //     'plan_title' => 'required',
-        //     'plan_subtitle' => 'required',
-        //     'plan_description' => 'required',
-        //     'total_days' => 'required',
-        //     'member_capacity' => 'required',
-        //     'price' => 'required',
-        //     'actual_price' => 'required',
-        //     'camp_rule' => 'required',
-        //     'important_info' => 'required',
-        //     'google_map' => 'required',
-        //     'total_room' => 'required',
-        //     'bath_room' => 'required',
-        //     'bed_room' => 'required',
-        //     'hall' => 'required',
-        //     'program_pdf' => 'file|max:10240'
+        // $request->validate([
+        //     'tour_planning' => 'required|array',
+        //     'tour_planning.*.title' => 'required|string',
+        //     'tour_planning.*.description' => 'required|string',
         // ]);
 
+        // dd($request->all());
         // Find the record to update
         $inclusive_packages = InclusivePackages::find($id);
         if (!$inclusive_packages) {
@@ -457,7 +435,21 @@ class All_Inclusive_PackController extends Controller
         $inclusive_packages->title = $request->input('title');
         $inclusive_packages->program_description = $request->input('program_description');
         $inclusive_packages->category = json_encode($request->input('prop_cat', []));
-        $inclusive_packages->tour_planning = json_encode($request->input('tour_planning'));
+        // $inclusive_packages->tour_planning = json_encode($request->input('tour_planning'));
+        // Clean and normalize tour_planning
+        $tourPlanningInput = $request->input('tour_planning', []);
+        $normalizedTourPlanning = [];
+
+        foreach ($tourPlanningInput as $day) {
+            $normalizedTourPlanning[] = [
+                'title'       => $day['title'] ?? '',
+                'subtitle'    => $day['subtitle'] ?? '',
+                'description' => !empty($day['description']) ? $day['description'] : '', // force empty string instead of null
+            ];
+        }
+
+        $inclusive_packages->tour_planning = json_encode($normalizedTourPlanning, JSON_UNESCAPED_UNICODE);
+
         $inclusive_packages->start_date = $request->input('start_date');
         $inclusive_packages->return_date = $request->input('return_date');
         $inclusive_packages->total_days = $request->input('total_days');
