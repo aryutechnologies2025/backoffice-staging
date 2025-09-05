@@ -258,11 +258,7 @@
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
         <script>
-            let fieldCounter = {
-                {
-                    count($camp_rules ?? []) > 0 ? count($camp_rules) : 0
-                }
-            };
+           let fieldCounter = {{ count($camp_rules ?? []) }};
 
             $(document).ready(function() {
 

@@ -21,7 +21,7 @@
         /* Consistent padding for both sides */
     }
 
-   
+
     .mb-1 {
         margin-bottom: .5rem !important;
     }
@@ -124,298 +124,295 @@
             <form class="" id="form_valid" action="{{ route('admin.staypricing_update', $destination_details->id) }}" method="POST" autocomplete="off"
                 enctype="multipart/form-data">
                 @csrf
-                            <h4 class="fw-bold mb-3">Information</h4>
+                <h4 class="fw-bold mb-3">Information</h4>
 
-                            <div class="mb-3">
-                                <div class="row gap-2">
-                                    <!-- Theme and Destination -->
-                                    <!-- Destination Dropdown -->
-                                    <div class="add_form col-md-4">
-                                        <label class="mb-2">Destination <span class="text-danger">*</span></label>
-                                        <select id="cities_name" name="cities_name" class="form-select py-2 rounded-3 shadow-sm" required>
-                                            <option value="" disabled selected>Select Destination</option>
-                                            @foreach($cities as $name)
-                                            <option value="{{ $name }}"
-                                                @if(old('cities_name', $destination_details->destination_id ?? '') == $name) selected @endif>
-                                                {{ $name }}
-                                            </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
+                <div class="mb-3">
+                    <div class="row gap-2">
+                        <!-- Theme and Destination -->
+                        <!-- Destination Dropdown -->
+                        <div class="add_form col-md-4">
+                            <label class="mb-2">Destination <span class="text-danger">*</span></label>
+                            <select id="cities_name" name="cities_name" class="form-select py-2 rounded-3 shadow-sm" required>
+                                <option value="" disabled selected>Select Destination</option>
+                                @foreach($cities as $name)
+                                <option value="{{ $name }}"
+                                    @if(old('cities_name', $destination_details->destination_id ?? '') == $name) selected @endif>
+                                    {{ $name }}
+                                </option>
+                                @endforeach
+                            </select>
+                        </div>
 
-                                    <!-- District Dropdown -->
-                                    <div class="add_form col-md-4">
-                                        <label class="mb-2">Location <span class="text-danger">*</span></label>
-                                        <select id="district_name" name="district_name" class="form-select py-2 rounded-3 shadow-sm" required>
-                                            <option value="" disabled selected>Select location</option>
-                                            @if(isset($destination_details->district_id))
-                                            <option value="{{ $destination_details->district_id }}" selected>
-                                                {{ $destination_details->district_id }}
-                                            </option>
-                                            @endif
-                                        </select>
-                                    </div>
-
-
-                                    <div class="add_form col-md-4">
-                                        <label class="mb-2">Title <span class="text-danger">*</span></label>
-                                        <input type="text" class="form-control py-2 rounded-3 shadow-sm" id="title" name="title" value="{{ $destination_details->title }}">
-                                    </div>
+                        <!-- District Dropdown -->
+                        <div class="add_form col-md-4">
+                            <label class="mb-2">Location <span class="text-danger">*</span></label>
+                            <select id="district_name" name="district_name" class="form-select py-2 rounded-3 shadow-sm" required>
+                                <option value="" disabled selected>Select location</option>
+                                @if(isset($destination_details->district_id))
+                                <option value="{{ $destination_details->district_id }}" selected>
+                                    {{ $destination_details->district_id }}
+                                </option>
+                                @endif
+                            </select>
+                        </div>
 
 
-                                    <div class="d-flex flex-column">
-                                        <!-- Initial fields -->
-                                        <div class="row mb-4">
-                                            <div class="add_form col-md-4">
-                                                <label class="mb-2">Title <span class="text-danger">*</span></label>
-                                                <input type="text" placeholder="Title"
-                                                    name="camp_rules[0][title]"
-                                                    class="form-control py-2 rounded-3 shadow-sm"
-                                                    value="{{ $camp_rules[0]['title'] ?? old('camp_rules.0.title') }}" required>
-                                            </div>
+                        <div class="add_form col-md-4">
+                            <label class="mb-2">Title <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control py-2 rounded-3 shadow-sm" id="title" name="title" value="{{ $destination_details->title }}">
+                        </div>
 
-                                            <div class="add_form col-md-4">
-                                                <label class="mb-2">Price <span class="text-danger">*</span></label>
-                                                <input type="text" placeholder="Price"
-                                                    name="camp_rules[0][price]"
-                                                    class="form-control py-2 rounded-3 shadow-sm"
-                                                    value="{{ $camp_rules[0]['price'] ?? old('camp_rules.0.price') }}" required>
-                                            </div>
 
-                                            <div class="col-md-2 d-flex align-items-end">
-                                                <button type="button" class="btn btn-primary" onclick="addPriceField()">
-                                                    <i class="fa fa-plus"></i> Add More
-                                                </button>
-                                            </div>
-                                        </div>
+                        <div class="d-flex flex-column">
+                            <!-- Initial fields -->
+                            <div class="row mb-4">
+                                <div class="add_form col-md-4">
+                                    <label class="mb-2">Title <span class="text-danger">*</span></label>
+                                    <input type="text" placeholder="Title"
+                                        name="camp_rules[0][title]"
+                                        class="form-control py-2 rounded-3 shadow-sm"
+                                        value="{{ $camp_rules[0]['title'] ?? old('camp_rules.0.title') }}" required>
+                                </div>
 
-                                        <!-- Container for dynamic fields -->
-                                        <div id="camp-rule-container">
-                                            @foreach(array_slice($camp_rules, 1) as $index => $rule)
-                                            <div class="camp-rule-field mb-4 p-3 border rounded">
-                                                <div class="row g-2">
-                                                    <div class="col-md-4">
-                                                        <label class="mb-2">Title <span class="text-danger">*</span></label>
-                                                        <input type="text" placeholder="Title"
-                                                            name="camp_rules[{{ $index + 1 }}][title]"
-                                                            class="form-control py-2 rounded-3 shadow-sm"
-                                                            value="{{ $rule['title'] ?? old('camp_rules.' . ($index + 1) . '.title') }}" required>
-                                                    </div>
+                                <div class="add_form col-md-4">
+                                    <label class="mb-2">Price <span class="text-danger">*</span></label>
+                                    <input type="text" placeholder="Price"
+                                        name="camp_rules[0][price]"
+                                        class="form-control py-2 rounded-3 shadow-sm"
+                                        value="{{ $camp_rules[0]['price'] ?? old('camp_rules.0.price') }}" required>
+                                </div>
 
-                                                    <div class="col-md-4">
-                                                        <label class="mb-2">Price <span class="text-danger">*</span></label>
-                                                        <input type="text" placeholder="Price"
-                                                            name="camp_rules[{{ $index + 1 }}][price]"
-                                                            class="form-control py-2 rounded-3 shadow-sm"
-                                                            value="{{ $rule['price'] ?? old('camp_rules.' . ($index + 1) . '.price') }}" required>
-                                                    </div>
-
-                                                    <div class="col-md-2 d-flex align-items-end">
-                                                        <button type="button" class="btn btn-danger" onclick="removeField(this)">
-                                                            <i class="fa fa-trash"></i> Remove
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            @endforeach
-                                        </div>
-                                    </div>
+                                <div class="col-md-2 d-flex align-items-end">
+                                    <button type="button" class="btn btn-primary" onclick="addPriceField()">
+                                        <i class="fa fa-plus"></i> Add More
+                                    </button>
                                 </div>
                             </div>
 
-                            <br>
+                            <!-- Container for dynamic fields -->
+                            <div id="camp-rule-container">
+                                @foreach(array_slice($camp_rules, 1) as $index => $rule)
+                                <div class="camp-rule-field mb-4 p-3 border rounded">
+                                    <div class="row g-2">
+                                        <div class="col-md-4">
+                                            <label class="mb-2">Title <span class="text-danger">*</span></label>
+                                            <input type="text" placeholder="Title"
+                                                name="camp_rules[{{ $index + 1 }}][title]"
+                                                class="form-control py-2 rounded-3 shadow-sm"
+                                                value="{{ $rule['title'] ?? old('camp_rules.' . ($index + 1) . '.title') }}" required>
+                                        </div>
 
-                            <div class="row g-2">
-                                <div class="col">
-                                    <h4> <label class="add_head fw-bold">Status</label></h4>
-                                    <div class="form-check form-switch d-flex align-items-center">
-                                        <input class="form-check-input check_bx" type="checkbox" id="status" name="status" {{ $destination_details->status ? 'checked' : '' }}>
+                                        <div class="col-md-4">
+                                            <label class="mb-2">Price <span class="text-danger">*</span></label>
+                                            <input type="text" placeholder="Price"
+                                                name="camp_rules[{{ $index + 1 }}][price]"
+                                                class="form-control py-2 rounded-3 shadow-sm"
+                                                value="{{ $rule['price'] ?? old('camp_rules.' . ($index + 1) . '.price') }}" required>
+                                        </div>
+
+                                        <div class="col-md-2 d-flex align-items-end">
+                                            <button type="button" class="btn btn-danger" onclick="removeField(this)">
+                                                <i class="fa fa-trash"></i> Remove
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-
-                            <div class="col-lg-12 text-center mt-5">
-                                <a href="{{ route('admin.staypricinglist') }}">
-                                    <button type="button" class="cancel-btn"> Cancel </button>
-                                </a>
-                                <button class="submit-btn sbmtBtn ms-4 mb-5"> Submit </button>
+                                @endforeach
                             </div>
                         </div>
                     </div>
+                </div>
 
+                <br>
 
+                <div class="row g-2">
+                    <div class="col">
+                        <h4> <label class="add_head fw-bold">Status</label></h4>
+                        <div class="form-check form-switch d-flex align-items-center">
+                            <input class="form-check-input check_bx" type="checkbox" id="status" name="status" {{ $destination_details->status ? 'checked' : '' }}>
+                        </div>
+                    </div>
+                </div>
 
-            </form>
-
+                <div class="col-lg-12 text-center mt-5">
+                    <a href="{{ route('admin.staypricinglist') }}">
+                        <button type="button" class="cancel-btn"> Cancel </button>
+                    </a>
+                    <button class="submit-btn sbmtBtn ms-4 mb-5"> Submit </button>
+                </div>
         </div>
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    </div>
 
-        <script>
-            // Initialize field counter properly
-            let fieldCounter = {
-                {
-                    count($camp_rules ?? []) > 0 ? count($camp_rules) : 0
-                }
-            };
 
-            $(document).ready(function() {
 
-                const $citiesSelect = $('#cities_name');
-                // Initialize with existing values if in edit mode
-                const initialDestination = "{{ $destination_details->destination_id ?? '' }}";
-                const initialDistrict = "{{ $destination_details->district_id ?? '' }}";
+    </form>
 
-                if (initialDestination) {
-                    // Trigger district load for existing destination
-                    loadDistricts(initialDestination, initialDistrict);
-                }
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-                $('#cities_name').change(function() {
-                    const destination = $(this).val();
-                    loadDistricts(destination);
-                });
+<script>
+    // Initialize field counter properly
+    let fieldCounter = {{ count($camp_rules ?? []) }};
 
-                function loadDistricts(destination, selectedDistrict = null) {
-                    const districtSelect = $('#district_name');
 
-                    if (!destination) {
-                        districtSelect.empty().append(
-                            '<option value="" disabled selected>Select District</option>'
-                        ).prop('disabled', true);
-                        return;
-                    }
+    $(document).ready(function() {
 
-                    // Show loading state
+        const $citiesSelect = $('#cities_name');
+        // Initialize with existing values if in edit mode
+        const initialDestination = "{{ $destination_details->destination_id ?? '' }}";
+        const initialDistrict = "{{ $destination_details->district_id ?? '' }}";
+
+        if (initialDestination) {
+            // Trigger district load for existing destination
+            loadDistricts(initialDestination, initialDistrict);
+        }
+
+        $('#cities_name').change(function() {
+            const destination = $(this).val();
+            loadDistricts(destination);
+        });
+
+        function loadDistricts(destination, selectedDistrict = null) {
+            const districtSelect = $('#district_name');
+
+            if (!destination) {
+                districtSelect.empty().append(
+                    '<option value="" disabled selected>Select District</option>'
+                ).prop('disabled', true);
+                return;
+            }
+
+            // Show loading state
+            districtSelect.empty().append(
+                '<option value="" disabled>Loading districts...</option>'
+            ).prop('disabled', true);
+
+            $.ajax({
+                url: '/get-districts/' + encodeURIComponent(destination),
+                type: 'GET',
+                success: function(data) {
                     districtSelect.empty().append(
-                        '<option value="" disabled>Loading districts...</option>'
-                    ).prop('disabled', true);
+                        '<option value="" disabled selected>Select District</option>'
+                    );
 
-                    $.ajax({
-                        url: '/get-districts/' + encodeURIComponent(destination),
-                        type: 'GET',
-                        success: function(data) {
-                            districtSelect.empty().append(
-                                '<option value="" disabled selected>Select District</option>'
+                    if (data && data.length > 0) {
+                        $.each(data, function(index, district) {
+                            const isSelected = (selectedDistrict && district === selectedDistrict);
+                            districtSelect.append(
+                                $('<option>', {
+                                    value: district,
+                                    text: district,
+                                    selected: isSelected
+                                })
                             );
-
-                            if (data && data.length > 0) {
-                                $.each(data, function(index, district) {
-                                    const isSelected = (selectedDistrict && district === selectedDistrict);
-                                    districtSelect.append(
-                                        $('<option>', {
-                                            value: district,
-                                            text: district,
-                                            selected: isSelected
-                                        })
-                                    );
-                                });
-                                districtSelect.prop('disabled', false);
-                            } else {
-                                districtSelect.append(
-                                    '<option value="" disabled>No districts found</option>'
-                                );
-                            }
-                        },
-                        error: function(xhr, status, error) {
-                            console.error('AJAX Error:', status, error);
-                            districtSelect.empty().append(
-                                '<option value="" disabled>Error loading districts</option>'
-                            );
-                        }
-                    });
-                }
-
-
-            });
-
-
-
-
-            // Function to add new price field
-            function addPriceField() {
-                const container = document.getElementById('camp-rule-container');
-                fieldCounter++;
-
-                const newField = document.createElement('div');
-                newField.className = 'camp-rule-field mb-4 p-3 border rounded';
-                newField.innerHTML = `
-        <div class="row g-2">
-            <div class="col-md-4">
-                <label class="mb-2">Title <span class="text-danger">*</span></label>
-                <input type="text" placeholder="Title" 
-                    name="camp_rules[${fieldCounter}][title]"
-                    class="form-control py-2 rounded-3 shadow-sm" required>
-            </div>
-            
-            <div class="col-md-4">
-                <label class="mb-2">Price <span class="text-danger">*</span></label>
-                <input type="text" placeholder="Price" 
-                    name="camp_rules[${fieldCounter}][price]"
-                    class="form-control py-2 rounded-3 shadow-sm" required>
-            </div>
-            
-            <div class="col-md-2 d-flex align-items-end">
-                <button type="button" class="btn btn-danger" onclick="removeField(this)">
-                    <i class="fa fa-trash"></i> Remove
-                </button>
-            </div>
-        </div>
-    `;
-
-                container.appendChild(newField);
-            }
-
-            // Function to remove field and mark as removed
-            function removeField(button) {
-                const fieldGroup = button.closest('.camp-rule-field');
-                if (fieldGroup) {
-                    // Instead of removing, we'll hide and add a hidden input to mark as removed
-                    fieldGroup.style.display = 'none';
-
-                    // Add hidden input to mark this field as removed
-                    const inputs = fieldGroup.querySelectorAll('input[name^="camp_rules"]');
-                    if (inputs.length > 0) {
-                        const inputName = inputs[0].name;
-                        const indexMatch = inputName.match(/\[(\d+)\]/);
-                        if (indexMatch && indexMatch[1]) {
-                            const index = indexMatch[1];
-                            const hiddenInput = document.createElement('input');
-                            hiddenInput.type = 'hidden';
-                            hiddenInput.name = `camp_rules[${index}][removed]`;
-                            hiddenInput.value = '1';
-                            fieldGroup.appendChild(hiddenInput);
-                        }
-                    }
-                }
-            }
-
-            // Before form submission, clean up removed items
-            document.getElementById('form_valid').addEventListener('submit', function(e) {
-                // Remove all hidden fields (they've already served their purpose)
-                document.querySelectorAll('.camp-rule-field [name$="[removed]"]').forEach(el => {
-                    el.remove();
-                });
-
-                // Remove all hidden field groups
-                document.querySelectorAll('.camp-rule-field').forEach(el => {
-                    if (el.style.display === 'none') {
-                        el.remove();
-                    }
-                });
-
-                // Reindex remaining fields to maintain sequential numbering
-                const remainingFields = document.querySelectorAll('.camp-rule-field:not([style*="display: none"])');
-                remainingFields.forEach((field, newIndex) => {
-                    // Skip the first field (index 0) as it's static
-                    if (newIndex >= 0) {
-                        const inputs = field.querySelectorAll('input[name^="camp_rules"]');
-                        inputs.forEach(input => {
-                            const oldName = input.name;
-                            const newName = oldName.replace(/\[(\d+)\]/, `[${newIndex + 1}]`);
-                            input.name = newName;
                         });
+                        districtSelect.prop('disabled', false);
+                    } else {
+                        districtSelect.append(
+                            '<option value="" disabled>No districts found</option>'
+                        );
                     }
-                });
+                },
+                error: function(xhr, status, error) {
+                    console.error('AJAX Error:', status, error);
+                    districtSelect.empty().append(
+                        '<option value="" disabled>Error loading districts</option>'
+                    );
+                }
             });
-        </script>
-        @endsection
+        }
+
+
+    });
+
+
+
+
+    // Function to add new price field
+    function addPriceField() {
+        const container = document.getElementById('camp-rule-container');
+        fieldCounter++;
+
+        const newField = document.createElement('div');
+        newField.className = 'camp-rule-field mb-4 p-3 border rounded';
+        newField.innerHTML = `
+                    <div class="row g-2">
+                        <div class="col-md-4">
+                            <label class="mb-2">Title <span class="text-danger">*</span></label>
+                            <input type="text" placeholder="Title" 
+                                name="camp_rules[${fieldCounter}][title]"
+                                class="form-control py-2 rounded-3 shadow-sm" required>
+                        </div>
+                        
+                        <div class="col-md-4">
+                            <label class="mb-2">Price <span class="text-danger">*</span></label>
+                            <input type="text" placeholder="Price" 
+                                name="camp_rules[${fieldCounter}][price]"
+                                class="form-control py-2 rounded-3 shadow-sm" required>
+                        </div>
+                        
+                        <div class="col-md-2 d-flex align-items-end">
+                            <button type="button" class="btn btn-danger" onclick="removeField(this)">
+                                <i class="fa fa-trash"></i> Remove
+                            </button>
+                        </div>
+                    </div>
+                    `;
+
+        container.appendChild(newField);
+    }
+
+    // Function to remove field and mark as removed
+    function removeField(button) {
+        const fieldGroup = button.closest('.camp-rule-field');
+        if (fieldGroup) {
+            // Instead of removing, we'll hide and add a hidden input to mark as removed
+            fieldGroup.style.display = 'none';
+
+            // Add hidden input to mark this field as removed
+            const inputs = fieldGroup.querySelectorAll('input[name^="camp_rules"]');
+            if (inputs.length > 0) {
+                const inputName = inputs[0].name;
+                const indexMatch = inputName.match(/\[(\d+)\]/);
+                if (indexMatch && indexMatch[1]) {
+                    const index = indexMatch[1];
+                    const hiddenInput = document.createElement('input');
+                    hiddenInput.type = 'hidden';
+                    hiddenInput.name = `camp_rules[${index}][removed]`;
+                    hiddenInput.value = '1';
+                    fieldGroup.appendChild(hiddenInput);
+                }
+            }
+        }
+    }
+
+    // Before form submission, clean up removed items
+    document.getElementById('form_valid').addEventListener('submit', function(e) {
+        // Remove all hidden fields (they've already served their purpose)
+        document.querySelectorAll('.camp-rule-field [name$="[removed]"]').forEach(el => {
+            el.remove();
+        });
+
+        // Remove all hidden field groups
+        document.querySelectorAll('.camp-rule-field').forEach(el => {
+            if (el.style.display === 'none') {
+                el.remove();
+            }
+        });
+
+        // Reindex remaining fields to maintain sequential numbering
+        const remainingFields = document.querySelectorAll('.camp-rule-field:not([style*="display: none"])');
+        remainingFields.forEach((field, newIndex) => {
+            // Skip the first field (index 0) as it's static
+            if (newIndex >= 0) {
+                const inputs = field.querySelectorAll('input[name^="camp_rules"]');
+                inputs.forEach(input => {
+                    const oldName = input.name;
+                    const newName = oldName.replace(/\[(\d+)\]/, `[${newIndex + 1}]`);
+                    input.name = newName;
+                });
+            }
+        });
+    });
+</script>
+@endsection
