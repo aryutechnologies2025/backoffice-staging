@@ -57,7 +57,7 @@ class CustomerPackage extends Controller
         // }
 
 
-        $titles = DB::table('inclusive_package_details')->where('is_deleted', '0')->pluck('title', 'id');
+        $titles = DB::table('inclusive_package_details')->where('is_deleted', '0')->where('status', '1')->pluck('title', 'id');
 
         return view('admin.customer_package.customerpackageadd', compact(
             'title',
@@ -475,7 +475,7 @@ class CustomerPackage extends Controller
         $safety_features = Safetyfeatures::where('status', "1")->where('is_deleted', "0")->get();
 
 
-        $titles = DB::table('inclusive_package_details')->where('is_deleted', '0')->pluck('title', 'id');
+        $titles = DB::table('inclusive_package_details')->where('is_deleted', '0')->where('status', '1')->pluck('title', 'id');
 
 
         $customer = customer_package::find($id);
