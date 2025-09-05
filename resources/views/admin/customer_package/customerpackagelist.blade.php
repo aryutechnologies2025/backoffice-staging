@@ -98,7 +98,7 @@
 
                             <a href="#"
                                 class="copy-link text-dark"
-                                data-link="https://innerpece.com/{{ $row->package_id }}/{{ str_replace(' ', '-', $row->package_type) }}#{{ $row->id }}@if($row->stay_details_id)#{{ $row->stay_details_id }} @endif"
+                                data-link="https://innerpece.com/{{ $row->package_id }}/{{ str_replace(' ', '-', $row->package_type) }}#{{ $row->id }}"
                                 title="Click to copy link">
                                 <i class="fa fa-clone" aria-hidden="true"></i> copy
                             </a>
