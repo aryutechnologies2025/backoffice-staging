@@ -201,6 +201,7 @@ class All_Inclusive_PackController extends Controller
         $inclusive_packages->location = $request->input('location');
         // $inclusive_packages->tour_planning = $tourPlanningJson;
         $inclusive_packages->tour_planning = json_encode($request->input('tour_planning'));
+        // $inclusive_packages->tour_planning = $request->input('tour_planning', []);
         $inclusive_packages->start_date = $request->input('start_date');
         $inclusive_packages->return_date = $request->input('return_date');
         $inclusive_packages->total_days = $request->input('total_days');
@@ -307,6 +308,8 @@ class All_Inclusive_PackController extends Controller
             return redirect()->route('admin.inclusive_package_list')
                 ->with('error', 'Record not found');
         }
+
+        $inclusive_packages->tour_planning = null;
 
         // Get current images for deletion tracking
         $currentImages = json_decode($inclusive_packages->events_package_images, true);
@@ -437,18 +440,21 @@ class All_Inclusive_PackController extends Controller
         $inclusive_packages->category = json_encode($request->input('prop_cat', []));
         // $inclusive_packages->tour_planning = json_encode($request->input('tour_planning'));
         // Clean and normalize tour_planning
-        $tourPlanningInput = $request->input('tour_planning', []);
-        $normalizedTourPlanning = [];
+        // $tourPlanningInput = $request->input('tour_planning', []);
+        // $normalizedTourPlanning = [];
 
-        foreach ($tourPlanningInput as $day) {
-            $normalizedTourPlanning[] = [
-                'title'       => $day['title'] ?? '',
-                'subtitle'    => $day['subtitle'] ?? '',
-                'description' => !empty($day['description']) ? $day['description'] : '', // force empty string instead of null
-            ];
-        }
+        // foreach ($tourPlanningInput as $day) {
+        //     $normalizedTourPlanning[] = [
+        //         'title'       => $day['title'] ?? '',
+        //         'subtitle'    => $day['subtitle'] ?? '',
+        //         'description' => !empty($day['description']) ? $day['description'] : '', // force empty string instead of null
+        //     ];
+        // }
 
-        $inclusive_packages->tour_planning = json_encode($normalizedTourPlanning, JSON_UNESCAPED_UNICODE);
+        // $inclusive_packages->tour_planning = json_encode($normalizedTourPlanning, JSON_UNESCAPED_UNICODE);
+
+        // $inclusive_packages->tour_planning = $request->input('tour_planning', []);
+        $inclusive_packages->tour_planning = json_encode($request->input('tour_planning'));
 
         $inclusive_packages->start_date = $request->input('start_date');
         $inclusive_packages->return_date = $request->input('return_date');

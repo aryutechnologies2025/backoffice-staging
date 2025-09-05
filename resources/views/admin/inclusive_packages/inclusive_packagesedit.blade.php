@@ -208,23 +208,23 @@
                                         @php
                                         $selectedthemeId = $package_details->theme_id ?? [];
 
+                                        // Case 1: JSON string (like '["14","15"]')
                                         if (is_string($selectedthemeId) && json_decode($selectedthemeId, true) !== null) {
                                         $selectedthemeId = json_decode($selectedthemeId, true);
                                         }
-                                        // If it's a comma-separated string ("14,15")
+                                        // Case 2: Comma-separated string ("14,15")
                                         elseif (is_string($selectedthemeId) && str_contains($selectedthemeId, ',')) {
                                         $selectedthemeId = explode(',', $selectedthemeId);
                                         }
-                                        // If it's a single value (int or string)
+                                        // Case 3: Single int or string
                                         elseif (!is_array($selectedthemeId)) {
                                         $selectedthemeId = [$selectedthemeId];
                                         }
 
-                                        // Normalize all values to string
-                                        $selectedthemeId = array_map('strval', $selectedthemeId);
-
-
+                                        // ✅ Ensure it's always an array before array_map
+                                        $selectedthemeId = array_map('strval', (array) $selectedthemeId);
                                         @endphp
+
 
 
                                         @foreach ($themes as $id => $name)
@@ -511,140 +511,149 @@
 
                         <!-- 3. TOUR PLANNING -->
 
-                       <div class="row mb-2">
-    <div class="col">
-        <div class="form-body px-5 rounded-4">
-            <h4 class="fw-bold mb-3">3. Tour Planning</h4>
+                        <div class="row mb-2">
+                            <div class="col">
+                                <div class="form-body px-5 rounded-4">
+                                    <h4 class="fw-bold mb-3">3. Tour Planning</h4>
 
-            <div id="day-wrapper">
-                @php
-                    $tourPlanning = [];
-                    if (!empty($package_details->tour_planning)) {
-                        $tourPlanning = is_array($package_details->tour_planning)
-                            ? $package_details->tour_planning
-                            : json_decode($package_details->tour_planning, true);
-                    }
-                @endphp
+                                    <div id="day-wrapper">
+                                        @php
+                                        $tourPlanning = [];
+                                        if (!empty($package_details->tour_planning)) {
+                                        $tourPlanning = is_array($package_details->tour_planning)
+                                        ? $package_details->tour_planning
+                                        : json_decode($package_details->tour_planning, true);
+                                        }
+                                        @endphp
 
-                @foreach ($tourPlanning as $i => $day)
-                <div class="row g-2 mb-2 day-block">
-                    <div class="col-md-5 mb-2">
-                        <label class="form-label fw-bold">Day Title</label>
-                        <input type="text" name="tour_planning[{{ $i }}][title]" 
-                               class="form-control" value="{{ $day['title'] ?? '' }}">
-                    </div>
-                    <div class="col-md-5 mb-2">
-                        <label class="form-label fw-bold">Day Subtitle</label>
-                        <input type="text" name="tour_planning[{{ $i }}][subtitle]" 
-                               class="form-control" value="{{ $day['subtitle'] ?? '' }}">
-                    </div>
-                    <div class="col-md-10 mb-2">
-                        <label class="form-label fw-bold">Activity Description</label>
-                        <div class="rte-container">
-                            <div class="editor-toolbar">
-                                <button type="button" class="toolbar-btn" data-command="bold"><i class="fas fa-bold"></i></button>
-                                <button type="button" class="toolbar-btn" data-command="italic"><i class="fas fa-italic"></i></button>
-                                <button type="button" class="toolbar-btn" data-command="underline"><i class="fas fa-underline"></i></button>
-                                <button type="button" class="toolbar-btn" data-command="insertUnorderedList"><i class="fas fa-list-ul"></i></button>
-                                <button type="button" class="toolbar-btn" data-command="insertOrderedList"><i class="fas fa-list-ol"></i></button>
+                                        @foreach ($tourPlanning as $i => $day)
+                                        <div class="row g-2 mb-2 day-block">
+                                            <div class="col-md-5 mb-2">
+                                                <label class="form-label fw-bold">Day Title</label>
+                                                <input type="text" name="tour_planning[{{ $i }}][title]"
+                                                    class="form-control" value="{{ $day['title'] ?? '' }}">
+                                            </div>
+                                            <div class="col-md-5 mb-2">
+                                                <label class="form-label fw-bold">Day Subtitle</label>
+                                                <input type="text" name="tour_planning[{{ $i }}][subtitle]"
+                                                    class="form-control" value="{{ $day['subtitle'] ?? '' }}">
+                                            </div>
+                                            <div class="col-md-10 mb-2">
+                                                <label class="form-label fw-bold">Activity Description</label>
+                                                <div class="rte-container">
+                                                    <div class="editor-toolbar">
+                                                        <button type="button" class="toolbar-btn" data-command="bold"><i class="fas fa-bold"></i></button>
+                                                        <button type="button" class="toolbar-btn" data-command="italic"><i class="fas fa-italic"></i></button>
+                                                        <button type="button" class="toolbar-btn" data-command="underline"><i class="fas fa-underline"></i></button>
+                                                        <button type="button" class="toolbar-btn" data-command="insertUnorderedList"><i class="fas fa-list-ul"></i></button>
+                                                        <button type="button" class="toolbar-btn" data-command="insertOrderedList"><i class="fas fa-list-ol"></i></button>
+                                                    </div>
+                                                    <div class="editor-content" contenteditable="true">{!! $day['description'] ?? '' !!}</div>
+                                                    <input type="hidden" name="tour_planning[{{ $i }}][description]" class="tour-description-hidden">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-1 d-flex align-items-end">
+                                                @if (!$loop->first)
+                                                <button type="button" class="btn btn-danger remove-day-btn"><i class="fa fa-trash"></i></button>
+                                                @endif
+                                            </div>
+                                        </div>
+                                        @endforeach
+                                    </div>
+
+                                    <button type="button" id="add-day-btn" class="btn btn-primary mt-2">
+                                        <i class="fa fa-plus"></i> Add More
+                                    </button>
+                                </div>
                             </div>
-                            <div class="editor-content" contenteditable="true">{!! $day['description'] ?? '' !!}</div>
-                            <input type="hidden" name="tour_planning[{{ $i }}][description]" class="tour-description-hidden">
                         </div>
-                    </div>
-                    <div class="col-md-1 d-flex align-items-end">
-                        @if (!$loop->first)
-                            <button type="button" class="btn btn-danger remove-day-btn"><i class="fa fa-trash"></i></button>
-                        @endif
-                    </div>
-                </div>
-                @endforeach
-            </div>
 
-            <button type="button" id="add-day-btn" class="btn btn-primary mt-2">
-                <i class="fa fa-plus"></i> Add More
-            </button>
-        </div>
-    </div>
-</div>
+                        <script>
+                            // ✅ Find the highest index from existing inputs
+                            let index = Math.max(
+                                -1,
+                                ...Array.from(document.querySelectorAll('[name^="tour_planning"]'))
+                                .map(el => {
+                                    let match = el.name.match(/tour_planning\[(\d+)\]/);
+                                    return match ? parseInt(match[1]) : -1;
+                                })
+                            ) + 1;
 
-<script>
-let index = {{ count($tourPlanning) ?? 0 }};
+                            function initializeRTE(container) {
+                                const editor = container.querySelector(".editor-content");
+                                const hidden = container.querySelector(".tour-description-hidden");
+                                const toolbar = container.querySelector(".editor-toolbar");
 
-// Init editor toolbar
-function initializeRTE(container) {
-    const editor = container.querySelector(".editor-content");
-    const hidden = container.querySelector(".tour-description-hidden");
-    const toolbar = container.querySelector(".editor-toolbar");
+                                toolbar.addEventListener("click", e => {
+                                    const btn = e.target.closest("button");
+                                    if (!btn) return;
+                                    const command = btn.dataset.command;
+                                    editor.focus();
+                                    document.execCommand(command, false, null);
+                                    hidden.value = editor.innerHTML;
+                                });
 
-    toolbar.addEventListener("click", e => {
-        const btn = e.target.closest("button");
-        if (!btn) return;
-        const command = btn.dataset.command;
-        editor.focus();
-        document.execCommand(command, false, null);
-        hidden.value = editor.innerHTML;
-    });
+                                editor.addEventListener("input", () => hidden.value = editor.innerHTML);
+                                hidden.value = editor.innerHTML;
+                            }
 
-    editor.addEventListener("input", () => hidden.value = editor.innerHTML);
-    hidden.value = editor.innerHTML;
-}
+                            // ✅ Add new block
+                            function addDay() {
+                                const wrapper = document.getElementById("day-wrapper");
+                                const div = document.createElement("div");
+                                div.classList.add("row", "g-2", "mb-2", "day-block");
 
-// Add new block
-function addDay() {
-    const wrapper = document.getElementById("day-wrapper");
-    const div = document.createElement("div");
-    div.classList.add("row", "g-2", "mb-2", "day-block");
+                                div.innerHTML = `
+                                <div class="col-md-5 mb-2">
+                                    <label class="form-label fw-bold">Day Title</label>
+                                    <input type="text" name="tour_planning[${index}][title]" class="form-control">
+                                </div>
+                                <div class="col-md-5 mb-2">
+                                    <label class="form-label fw-bold">Day Subtitle</label>
+                                    <input type="text" name="tour_planning[${index}][subtitle]" class="form-control">
+                                </div>
+                                <div class="col-md-10 mb-2">
+                                    <label class="form-label fw-bold">Activity Description</label>
+                                    <div class="rte-container">
+                                        <div class="editor-toolbar">
+                                            <button type="button" class="toolbar-btn" data-command="bold"><i class="fas fa-bold"></i></button>
+                                            <button type="button" class="toolbar-btn" data-command="italic"><i class="fas fa-italic"></i></button>
+                                            <button type="button" class="toolbar-btn" data-command="underline"><i class="fas fa-underline"></i></button>
+                                            <button type="button" class="toolbar-btn" data-command="insertUnorderedList"><i class="fas fa-list-ul"></i></button>
+                                            <button type="button" class="toolbar-btn" data-command="insertOrderedList"><i class="fas fa-list-ol"></i></button>
+                                        </div>
+                                        <div class="editor-content" contenteditable="true"></div>
+                                        <input type="hidden" name="tour_planning[${index}][description]" class="tour-description-hidden">
+                                    </div>
+                                </div>
+                                <div class="col-md-1 d-flex align-items-end">
+                                    <button type="button" class="btn btn-danger remove-day-btn"><i class="fa fa-trash"></i></button>
+                                </div>
+                            `;
 
-    div.innerHTML = `
-        <div class="col-md-5 mb-2">
-            <label class="form-label fw-bold">Day Title</label>
-            <input type="text" name="tour_planning[${index}][title]" class="form-control">
-        </div>
-        <div class="col-md-5 mb-2">
-            <label class="form-label fw-bold">Day Subtitle</label>
-            <input type="text" name="tour_planning[${index}][subtitle]" class="form-control">
-        </div>
-        <div class="col-md-10 mb-2">
-            <label class="form-label fw-bold">Activity Description</label>
-            <div class="rte-container">
-                <div class="editor-toolbar">
-                    <button type="button" class="toolbar-btn" data-command="bold"><i class="fas fa-bold"></i></button>
-                    <button type="button" class="toolbar-btn" data-command="italic"><i class="fas fa-italic"></i></button>
-                    <button type="button" class="toolbar-btn" data-command="underline"><i class="fas fa-underline"></i></button>
-                    <button type="button" class="toolbar-btn" data-command="insertUnorderedList"><i class="fas fa-list-ul"></i></button>
-                    <button type="button" class="toolbar-btn" data-command="insertOrderedList"><i class="fas fa-list-ol"></i></button>
-                </div>
-                <div class="editor-content" contenteditable="true"></div>
-                <input type="hidden" name="tour_planning[${index}][description]" class="tour-description-hidden">
-            </div>
-        </div>
-        <div class="col-md-1 d-flex align-items-end">
-            <button type="button" class="btn btn-danger remove-day-btn"><i class="fa fa-trash"></i></button>
-        </div>
-    `;
+                                wrapper.appendChild(div);
+                                initializeRTE(div.querySelector(".rte-container"));
 
-    wrapper.appendChild(div);
-    initializeRTE(div.querySelector(".rte-container"));
-    index++;
-}
+                                index++; // ✅ always move forward
+                            }
 
-// Remove block
-function removeDay(btn) {
-    btn.closest(".day-block").remove();
-}
+                            function removeDay(btn) {
+                                btn.closest(".day-block").remove();
+                            }
 
-// Init existing editors
-document.querySelectorAll(".rte-container").forEach(initializeRTE);
+                            // Initialize editors for existing ones
+                            document.querySelectorAll(".rte-container").forEach(initializeRTE);
 
-// Event listeners
-document.getElementById("add-day-btn").addEventListener("click", addDay);
-document.getElementById("day-wrapper").addEventListener("click", e => {
-    if (e.target.closest(".remove-day-btn")) {
-        removeDay(e.target.closest(".remove-day-btn"));
-    }
-});
-</script>
+                            // Event listeners
+                            document.getElementById("add-day-btn").addEventListener("click", addDay);
+                            document.getElementById("day-wrapper").addEventListener("click", e => {
+                                if (e.target.closest(".remove-day-btn")) {
+                                    removeDay(e.target.closest(".remove-day-btn"));
+                                }
+                            });
+                        </script>
+
+
 
 
 
