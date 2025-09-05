@@ -1797,7 +1797,7 @@ class ProgramApiController extends Controller
                     $stay_gallery = json_decode($stay_gallery_record->gallery_image, true) ?? [];
                 }
 
-                $stay_details_list = stays_destination_details::select('id', 'stay_title')
+                $stay_details_list = stays_destination_details::select('id', 'stay_title','tag_line')
                     ->where('id', $stay_details)
                     ->first();
             }
