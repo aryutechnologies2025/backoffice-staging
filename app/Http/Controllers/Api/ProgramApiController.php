@@ -95,13 +95,7 @@ class ProgramApiController extends Controller
                 ], 404);
             }
 
-            $stay_details_list = null;
 
-            if (!empty($stay_id)) {
-                $stay_details_list = stays_destination_details::select('id', 'stay_title')
-                    ->where('id', $stay_id)
-                    ->first();
-            }
 
 
             $amenityIds = json_decode($package->amenity_details, true) ?? [];
@@ -272,7 +266,7 @@ class ProgramApiController extends Controller
                 'current_location' => $package->location,
                 'price_title' => $price_title,
                 'price_amount' => $price_amount,
-                'stay_details_list' => $stay_details_list
+                // 'stay_details_list' => $stay_details_list
 
             ];
 
@@ -1787,6 +1781,7 @@ class ProgramApiController extends Controller
 
             // $stay_gallery = json_decode($stay_gallery->gallery_image, true) ?? [];
             $stay_gallery = [];
+            $stay_details_list = null;
 
             // Check if stay_details_id exists and is not null
             if (!empty($package->stay_details_id)) {
@@ -1801,6 +1796,10 @@ class ProgramApiController extends Controller
                 if ($stay_gallery_record && !empty($stay_gallery_record->gallery_image)) {
                     $stay_gallery = json_decode($stay_gallery_record->gallery_image, true) ?? [];
                 }
+
+                $stay_details_list = stays_destination_details::select('id', 'stay_title')
+                    ->where('id', $stay_details)
+                    ->first();
             }
             // dd($stay_gallery);
 
@@ -1944,7 +1943,8 @@ class ProgramApiController extends Controller
                 'reviews' => $reviews,
                 'review_count' => $reviewCount,
                 'price_title' => $price_title,
-                'price_amount' => $price_amount
+                'price_amount' => $price_amount,
+                'stay_details_list' => $stay_details_list
 
             ];
 
