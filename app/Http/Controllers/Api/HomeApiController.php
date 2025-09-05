@@ -206,6 +206,15 @@ class HomeApiController extends Controller
                 return json_decode($response->getContent(), true)['data'];
             };
 
+            if (!empty($theme)) {
+                $themeModel = Themes::find($theme);
+                $theme_d = $themeModel ? [['id' => $themeModel->id, 'name' => $themeModel->themes_name]] : [];
+            } else {
+                $theme_d= [];
+            }
+
+            // dd($theme_d);
+
             // Process each package to format the output
             $formattedPackages = $packages->map(function ($package) use ($getDetailsById) {
                 // Decode JSON fields
@@ -315,7 +324,8 @@ class HomeApiController extends Controller
             return response()->json([
                 'status' => 'success',
                 'message' => '' . str_replace('_', ' ', $program_type) . ' retrieved successfully.',
-                'data' => $formattedPackages
+                'data' => $formattedPackages,
+                'theme_details' => $theme_d
             ], 200);
         } catch (\Exception $e) {
 
