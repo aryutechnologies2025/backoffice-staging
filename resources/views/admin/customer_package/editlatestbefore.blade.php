@@ -1,6 +1,5 @@
 @extends('layouts.app')
 @section('content')
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
     a:hover {
         color: red;
@@ -10,168 +9,8 @@
         color: rgb(37, 150, 190);
     }
 
-    .add {
+    .enquiry {
         color: blue;
-    }
-
-    /* Align the form with the title */
-    .container-wrapper {
-        padding-left: 30px;
-        /* Adjust as per your layout */
-        padding-right: 30px;
-        /* Consistent padding for both sides */
-    }
-
-
-    .mb-1 {
-        margin-bottom: .5rem !important;
-    }
-
-    .btn-add {
-        background-color: #2164c0 !important;
-        border-radius: 15px !important;
-        color: #FFF !important;
-
-        padding: 10px 28px !important;
-        font-size: 12px !important;
-        border: none;
-
-    }
-
-
-    .form-input img {
-        width: 80%;
-    }
-
-    .form-check-input {
-        margin-top: 1% !important;
-    }
-
-    .form-check-input {
-        margin-top: 1% !important;
-    }
-
-    .plan-item .form-label {
-        font-weight: bold;
-    }
-
-    .plan-item input {
-        margin-bottom: 10px;
-    }
-
-    .add_head {
-        color: #3B71CA;
-        padding-bottom: 10px;
-        border-bottom: 2px solid #e9ecef;
-    }
-
-    .btn-add {
-        background-color: #3B71CA;
-        transition: all 0.3s;
-    }
-
-    .btn-add:hover {
-        background-color: #2b5da3;
-        transform: translateY(-2px);
-    }
-
-    .remove-day {
-        height: fit-content;
-    }
-
-    #summernote3 {
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        padding: 10px;
-        background-color: #fff;
-    }
-
-
-
-    .form-input label {
-        width: 150% !important;
-        border: 0px !important;
-    }
-
-    .forms {
-        margin-left: 38px;
-    }
-
-    @media (min-width: 768px) {
-        .col-md-1 {
-            flex: 0 0 auto;
-            width: 10.33333333%;
-        }
-    }
-
-    .editor-toolbar {
-        background-color: #f8f9fa;
-        border: 1px solid #ced4da;
-        border-bottom: none;
-        border-radius: 8px 8px 0 0;
-        padding: 5px;
-        display: flex;
-        flex-wrap: wrap;
-        gap: 5px;
-    }
-
-    .editor-content {
-        min-height: 120px;
-        border: 1px solid #ced4da;
-        border-radius: 0 0 8px 8px;
-        padding: 10px;
-        margin-bottom: 15px;
-    }
-
-    .editor-content:focus {
-        outline: none;
-        border-color: #86b7fe;
-        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
-    }
-
-    .toolbar-btn {
-        background: none;
-        border: none;
-        padding: 5px 8px;
-        border-radius: 4px;
-        cursor: pointer;
-    }
-
-    .toolbar-btn:hover {
-        background-color: #e9ecef;
-    }
-
-    .day-block {
-        background-color: #f8f9fa;
-        padding: 15px;
-        border-radius: 8px;
-        margin-bottom: 15px;
-        border-left: 4px solid #3B71CA;
-    }
-
-    .rte-container {
-        margin-top: 10px;
-    }
-
-    .editor-content img {
-        max-width: 100%;
-        height: auto;
-    }
-
-    .editor-content ul {
-        list-style-type: disc !important;
-        /* make sure it's bullet */
-        padding-left: 20px;
-        /* add spacing so bullets are visible */
-        color: #000;
-        /* bullet + text color */
-    }
-
-    /* Ordered list style */
-    .editor-content ol {
-        list-style-type: decimal !important;
-        padding-left: 20px;
-        color: #000;
     }
 </style>
 
@@ -383,7 +222,7 @@
                                     </div>
                                 </div>
 
-                                <div class="row mt-3">
+                                <div class="row  mt-3">
                                     <div class="col-lg-12">
                                         <div class="form-body mb-5 rounded-4">
                                             <h4 class="add_head fw-bold mb-3">02. Tour Planning <span class="text-danger">*</span></h4>
@@ -396,139 +235,217 @@
                                                 : json_decode($customer->tour_planning, true);
                                                 }
                                                 @endphp
-
+                                                @if (!empty($tourPlanning) && is_array($tourPlanning))
                                                 @foreach ($tourPlanning as $i => $day)
                                                 <div class="row g-2 mb-2 day-block">
-                                                    <div class="col-md-5 mb-2">
-                                                        <label class="form-label fw-bold">Day Title</label>
-                                                        <input type="text" name="tour_planning[{{ $i }}][title]"
-                                                            class="form-control" value="{{ $day['title'] ?? '' }}">
+                                                    <div class="add_form col-md-5 mb-2">
+                                                        <label class="form-label fw-bold">Day Title <span class="text-danger">*</span></label>
+                                                        <input type="text"
+                                                            name="tour_planning[{{ $i }}][title]"
+                                                            class="form-control py-2 rounded-3 shadow-sm"
+                                                            placeholder="Day Title (e.g., Day {{ (int) $i + 1 }})"
+                                                            value="{{ $day['title'] ?? '' }}">
                                                     </div>
-                                                    <div class="col-md-5 mb-2">
-                                                        <label class="form-label fw-bold">Day Subtitle</label>
-                                                        <input type="text" name="tour_planning[{{ $i }}][subtitle]"
-                                                            class="form-control" value="{{ $day['subtitle'] ?? '' }}">
+                                                    <div class="add_form col-md-5 mb-2">
+                                                        <label class="form-label fw-bold">Day Subtitle <span class="text-danger">*</span></label>
+                                                        <input type="text"
+                                                            name="tour_planning[{{ $i }}][subtitle]"
+                                                            class="form-control py-2 rounded-3 shadow-sm"
+                                                            placeholder="Day Subtitle (e.g., Day {{ (int) $i + 1 }})"
+                                                            value="{{ $day['subtitle'] ?? '' }}">
                                                     </div>
                                                     <div class="col-md-10 mb-2">
-                                                        <label class="form-label fw-bold">Activity Description</label>
-                                                        <div class="rte-container">
-                                                            <div class="editor-toolbar">
-                                                                <button type="button" class="toolbar-btn" data-command="bold"><i class="fas fa-bold"></i></button>
-                                                                <button type="button" class="toolbar-btn" data-command="italic"><i class="fas fa-italic"></i></button>
-                                                                <button type="button" class="toolbar-btn" data-command="underline"><i class="fas fa-underline"></i></button>
-                                                                <button type="button" class="toolbar-btn" data-command="insertUnorderedList"><i class="fas fa-list-ul"></i></button>
-                                                                <button type="button" class="toolbar-btn" data-command="insertOrderedList"><i class="fas fa-list-ol"></i></button>
-                                                            </div>
-                                                            <div class="editor-content" contenteditable="true">{!! $day['description'] ?? '' !!}</div>
-                                                            <input type="hidden" name="tour_planning[{{ $i }}][description]" class="tour-description-hidden" value="{{ $day['description'] ?? '' }}">
-                                                        </div>
+                                                        <label class="form-label fw-bold">Activity Description <span class="text-danger">*</span></label>
+                                                        <input type="hidden"
+                                                            name="tour_planning[{{ $i }}][description]"
+                                                            class="form-control py-2 rounded-3 shadow-sm tour-description-hidden"
+                                                            placeholder="Activity Description"
+                                                            value="{{ $day['description'] ?? '' }}">
+                                                        <div class="tour-description-editor"></div>
                                                     </div>
                                                     <div class="col-md-1 d-flex align-items-end">
-                                                        @if (!$loop->first)
-                                                        <button type="button" class="btn btn-danger remove-day-btn"><i class="fa fa-trash"></i></button>
+                                                        @if ($loop->first)
+                                                        <!-- No remove button for first row -->
+                                                        @else
+                                                        <button type="button" class="btn btn-danger remove-day"
+                                                            onclick="removeDay(this)">
+                                                            <i class="fa fa-trash"></i>
+                                                        </button>
                                                         @endif
                                                     </div>
                                                 </div>
                                                 @endforeach
+                                                @php $tourPlanningIndex = count($tourPlanning); @endphp
+                                                @else
+                                                <div class="row g-2 mb-2 day-block">
+                                                    <div class="col-md-5 mb-2">
+                                                        <label class="form-label fw-bold">Day Title <span class="text-danger">*</span></label>
+                                                        <input type="text" name="tour_planning[0][title]"
+                                                            class="form-control py-2 rounded-3 shadow-sm"
+                                                            placeholder="Day Title (e.g., Day 1)">
+                                                    </div>
+                                                    <div class="col-md-5 mb-2">
+                                                        <label class="form-label fw-bold">Day Subtitle <span class="text-danger">*</span></label>
+                                                        <input type="text" name="tour_planning[0][subtitle]"
+                                                            class="form-control py-2 rounded-3 shadow-sm"
+                                                            placeholder="Day Subtitle ">
+                                                    </div>
+                                                    <div class="col-md-6 mb-2">
+                                                        <label class="form-label fw-bold">Activity Description <span class="text-danger">*</span></label>
+                                                        <input type="hidden" name="tour_planning[0][description]"
+                                                            class="form-control py-2 rounded-3 shadow-sm tour-description-hidden"
+                                                            placeholder="Activity Description">
+                                                        <div class="tour-description-editor"></div>
+                                                    </div>
+                                                    <div class="col-md-1 d-flex align-items-end">
+                                                        <!-- No remove button for first row -->
+                                                    </div>
+                                                </div>
+                                                @php $tourPlanningIndex = 1; @endphp
+                                                @endif
                                             </div>
-                                            <button type="button" id="add-day-btn" class="btn-add rounded border-0 px-4 py-2 text-white mt-2">
+                                            <button type="button" class="btn-add rounded border-0 px-4 py-2 text-white mt-2"
+                                                onclick="addDay()">
                                                 <i class="fa fa-plus" aria-hidden="true"></i> Add More
                                             </button>
                                         </div>
                                     </div>
                                 </div>
-
                                 <script>
-                                    // ✅ Find the highest index from existing inputs
-                                    let index = Math.max(
-                                        -1,
-                                        ...Array.from(document.querySelectorAll('[name^="tour_planning"]'))
-                                        .map(el => {
-                                            let match = el.name.match(/tour_planning\[(\d+)\]/);
-                                            return match ? parseInt(match[1]) : -1;
-                                        })
-                                    ) + 1;
+                                    let index = {
+                                        {
+                                            $tourPlanningIndex ?? 1
+                                        }
+                                    };
 
-                                    function initializeRTE(container) {
-                                        const editor = container.querySelector(".editor-content");
-                                        const hidden = container.querySelector(".tour-description-hidden");
-                                        const toolbar = container.querySelector(".editor-toolbar");
-
-                                        toolbar.addEventListener("click", e => {
-                                            const btn = e.target.closest("button");
-                                            if (!btn) return;
-                                            const command = btn.dataset.command;
-                                            editor.focus();
-                                            document.execCommand(command, false, null);
-                                            hidden.value = editor.innerHTML;
-                                        });
-
-                                        editor.addEventListener("input", () => hidden.value = editor.innerHTML);
-                                        hidden.value = editor.innerHTML;
-                                    }
-
-                                    // ✅ Add new block
                                     function addDay() {
-                                        const wrapper = document.getElementById("day-wrapper");
-                                        const div = document.createElement("div");
-                                        div.classList.add("row", "g-2", "mb-2", "day-block");
-
+                                        const wrapper = document.getElementById('day-wrapper');
+                                        const div = document.createElement('div');
+                                        div.classList.add('row', 'g-2', 'mb-2', 'day-block');
                                         div.innerHTML = `
-                                            <div class="col-md-5 mb-2">
-                                                <label class="form-label fw-bold">Day Title</label>
-                                                <input type="text" name="tour_planning[${index}][title]" class="form-control">
-                                            </div>
-                                            <div class="col-md-5 mb-2">
-                                                <label class="form-label fw-bold">Day Subtitle</label>
-                                                <input type="text" name="tour_planning[${index}][subtitle]" class="form-control">
-                                            </div>
-                                            <div class="col-md-10 mb-2">
-                                                <label class="form-label fw-bold">Activity Description</label>
-                                                <div class="rte-container">
-                                                    <div class="editor-toolbar">
-                                                        <button type="button" class="toolbar-btn" data-command="bold"><i class="fas fa-bold"></i></button>
-                                                        <button type="button" class="toolbar-btn" data-command="italic"><i class="fas fa-italic"></i></button>
-                                                        <button type="button" class="toolbar-btn" data-command="underline"><i class="fas fa-underline"></i></button>
-                                                        <button type="button" class="toolbar-btn" data-command="insertUnorderedList"><i class="fas fa-list-ul"></i></button>
-                                                        <button type="button" class="toolbar-btn" data-command="insertOrderedList"><i class="fas fa-list-ol"></i></button>
-                                                    </div>
-                                                    <div class="editor-content" contenteditable="true"></div>
-                                                    <input type="hidden" name="tour_planning[${index}][description]" class="tour-description-hidden">
-                                                </div>
-                                            </div>
-                                            <div class="col-md-1 d-flex align-items-end">
-                                                <button type="button" class="btn btn-danger remove-day-btn"><i class="fa fa-trash"></i></button>
-                                            </div>
-                                        `;
-
+                                        <div class="col-md-5 mb-2">
+                                            <input type="text" name="tour_planning[${index}][title]" class="form-control py-2 rounded-3 shadow-sm" placeholder="Day Title (e.g., Day ${index + 1})">
+                                        </div>
+                                        <div class="col-md-5 mb-2">
+                                            <input type="text" name="tour_planning[${index}][subtitle]" class="form-control py-2 rounded-3 shadow-sm" placeholder="Day Subtitle">
+                                        </div>
+                                        <div class="col-md-10 mb-2">
+                                            <input type="hidden" name="tour_planning[${index}][description]" class="form-control py-2 rounded-3 shadow-sm tour-description-hidden" placeholder="Activity Description">
+                                            <div class="tour-description-editor"></div>
+                                        </div>
+                                        <div class="col-md-1 d-flex align-items-end">
+                                            <button type="button" class="btn btn-danger remove-day" onclick="removeDay(this)">
+                                                <i class="fa fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    `;
                                         wrapper.appendChild(div);
-                                        initializeRTE(div.querySelector(".rte-container"));
-
-                                        // Add event listener to the new remove button
-                                        div.querySelector('.remove-day-btn').addEventListener('click', function() {
-                                            removeDay(this);
+                                        // Initialize Summernote for the new editor
+                                        $(div).find('.tour-description-editor').summernote({
+                                            height: 120,
+                                            callbacks: {
+                                                onChange: function(contents) {
+                                                    $(div).find('.tour-description-hidden').val(contents);
+                                                }
+                                            }
                                         });
-
-                                        index++; // ✅ always move forward
+                                        index++;
                                     }
 
                                     function removeDay(btn) {
-                                        btn.closest(".day-block").remove();
+                                        btn.closest('.day-block').remove();
                                     }
 
-                                    // Initialize editors for existing ones
-                                    document.querySelectorAll(".rte-container").forEach(initializeRTE);
-
-                                    // Add event listener to the Add button
-                                    document.getElementById("add-day-btn").addEventListener("click", addDay);
-
-                                    // Add event listeners to existing remove buttons
-                                    document.querySelectorAll(".remove-day-btn").forEach(btn => {
-                                        btn.addEventListener("click", function() {
-                                            removeDay(this);
+                                    // Initialize Summernote for all description editors on page load
+                                    document.addEventListener('DOMContentLoaded', function() {
+                                        $('#day-wrapper .day-block').each(function() {
+                                            var $block = $(this);
+                                            var $editor = $block.find('.tour-description-editor');
+                                            var $hidden = $block.find('.tour-description-hidden');
+                                            // Set initial content if exists
+                                            if ($hidden.val()) {
+                                                $editor.html($hidden.val());
+                                            }
+                                            $editor.summernote({
+                                                height: 120,
+                                                callbacks: {
+                                                    onChange: function(contents) {
+                                                        $hidden.val(contents);
+                                                    }
+                                                }
+                                            });
                                         });
                                     });
                                 </script>
+
+                                <!-- <div class="row mb-2">
+                            <div class="col">
+                                <div class="form-body px-5 rounded-4">
+                                    <h4 class="fw-bold mb-2">04.Tour Date & Time</h4>
+                                    <div class="mb-3">
+                                        <div class="row g-2 align-items-end">
+                                            <div class="col-md-4">
+                                                <label class="mb-2">Start Date <span class="text-danger"></span></label>
+                                                <input type="date" class="form-control py-2 rounded-3 shadow-sm"
+                                                    name="start_date" id="start_date" value="{{old('start_date')}}"
+                                                    >
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label class=" mb-2">Return Date <span
+                                                        class="text-danger"></span></label>
+                                                <input type="date" class="form-control py-2 rounded-3 shadow-sm"
+                                                    name="return_date" id="return_date" value="{{old('return_date')}}"
+                                                    >
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label class="mb-2">Total No. of Days</label>
+                                                <input type="number" class="form-control py-2 rounded-3 shadow-sm"
+                                                    id="total_days" name="total_days" value="{{old('total_days')}}"
+                                                    readonly>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> -->
+
+                                <!-- 4. Needed -->
+                                <!-- <div class="row mb-2">
+                            <div class="col">
+                                <div class="form-body px-5 rounded-4">
+                                    <h4 class="fw-bold mb-2">04.Rooms and Beds</h4>
+                                    <div class="mb-3">
+                                        <div class="row g-2 align-items-end">
+                                            <div class="col-md-3">
+                                                <label class=" mb-2">Rooms<span class="text-danger"></span></label>
+                                                <input type="number" class="form-control py-2 rounded-3 shadow-sm"
+                                                    name="total_room" id="total_room" value="{{old('total_room')}}"
+                                                    >
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label class="mb-2">Bath Rooms<span class="text-danger"></span></label>
+                                                <input type="number" class="form-control py-2 rounded-3 shadow-sm"
+                                                    name="bath_room" id="bath_room" value="{{old('bath_room')}}"
+                                                    >
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label class=" mb-2">Bed Rooms</label>
+                                                <input type="number" class="form-control py-2 rounded-3 shadow-sm"
+                                                    id="bed_room" name="bed_room" value="{{old('bed_room')}}" >
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label class=" mb-2">Hall</label>
+                                                <input type="number" class="form-control py-2 rounded-3 shadow-sm"
+                                                    id="hall" name="hall" value="{{old('hall')}}" >
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> -->
+
+
+
                                 <!-- 5.PRICING -->
                                 <div class="row mb-5 mt-3">
                                     <div class="col-lg-12">
