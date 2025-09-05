@@ -262,9 +262,7 @@
     </div>
     <script>
         $(document).ready(function() {
-            // Initialize - just hide the sections, don't empty them
-            $('#stays-section, #activities-section, #cabs-section').hide();
-
+            
             const initialDistrict = "{{ $destination_details->district_id ?? '' }}";
             const initialvalId = "{{ $destination_details->id ?? '' }}";
             const initstayIds = "{{ $destination_details->stays_id ?? '' }}";
@@ -282,6 +280,10 @@
             //cab-details
             const initcabDetailIds = "{{ $destination_details->cab_details_id ?? '' }}";
             const initialSelectedCabDetails = initcabDetailIds ? initcabDetailIds.split(',') : [];
+
+            // Initialize - just hide the sections, don't empty them
+            $('#stays-section, #activities-section, #cabs-section').hide();
+
 
             $('#cities_name').change(function() {
                 const destination = $(this).val();
