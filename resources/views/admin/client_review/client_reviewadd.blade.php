@@ -139,7 +139,7 @@
                             <div class="row g-2 mb-4">
 
                                 <div class="add_form col-md-6">
-                                    <label class="fw-bold mb-2" id="label_textarea">Review Date <span class="text-danger">*</span></label>
+                                    <label class="fw-bold mb-2" id="label_textarea">Review Date </label>
                                     <input type="date" class="form-control py-2 rounded-3 shadow-sm" name="review_dt" id="review_dt" value="{{ old('review_dt') }}">
 
                                 </div>

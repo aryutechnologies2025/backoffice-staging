@@ -140,7 +140,7 @@ width: 80%;
                     <div class="row g-2 mb-4">
 
                         <div class="add_form col-lg-6">
-                            <label class="fw-bold mb-2">Review Date <span class="text-danger">*</span></label>
+                            <label class="fw-bold mb-2">Review Date</label>
                             <input type="date" class="form-control py-2 rounded-3 shadow-sm" name="review_dt" id="review_dt" value="{{ old('review_dt', $client_details->review_dt) }}">
                         </div>
                         <div class="add_form col-lg-6">

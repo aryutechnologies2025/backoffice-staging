@@ -8,17 +8,17 @@
 
     a {
         font-family: 'Poppins', sans-serif;
-        font-weight:500;
-        color:#8B7eff;
-        font-size:13px;
+        font-weight: 500;
+        color: #8B7eff;
+        font-size: 13px;
     }
 
 
     .city {
         font-family: 'Poppins', sans-serif;
-        font-weight:600;
-        color:#282833;
-        font-size:13px;
+        font-weight: 600;
+        color: #282833;
+        font-size: 13px;
     }
 </style>
 
@@ -27,17 +27,17 @@
         <h3 class="admin-title fw-bold">{{$title}}</h3>
     </div>
     <div class="text-end col-lg-6 ">
-       <b><a href="/dashboard">Dashboard</a> > <a class="city" href="">Customer Package</a></b>
+        <b><a href="/dashboard">Dashboard</a> > <a class="city" href="">Customer Package</a></b>
     </div>
     <div class="mt-2 mb-2 col-lg-12">
         <div class="d-flex justify-content-end">
-             <a href="{{ route('admin.CustomerPackage_form') }}">
+            <a href="{{ route('admin.CustomerPackage_form') }}">
                 <button class="btn btn-add px-5" type="button"> Create Customer </button>
             </a>
         </div>
     </div>
 
-</div>  
+</div>
 
 
 
@@ -95,17 +95,19 @@
                         <!-- <td class="text-center"><a href="https://innerpece.com/{{ $row->package_type }}/{{$row->package_type }}#{{$row->name}}">copy</a></td> -->
                         <td class="text-start text-primary">
                             @if(isset($row->status) && $row->status == '1')
-                                <a href="#"
-                                    class="copy-link text-dark"
-                                    data-link="https://innerpece.com/{{ $row->package_id }}/{{ str_replace(' ', '-', $row->package_type) }}#{{ $row->id }}"
-                                    title="Click to copy link">
-                                    <i class="fa fa-clone" aria-hidden="true"></i> copy
-                                </a>
-                                <span class="copy-feedback text-success small ms-2" style="display:none">Copied!</span>
+
+                            <a href="#"
+                                class="copy-link text-dark"
+                                data-link="https://innerpece.com/{{ $row->package_id }}/{{ str_replace(' ', '-', $row->package_type) }}#{{ $row->id }}@if($row->stay_details_id)#{{ $row->stay_details_id }} @endif"
+                                title="Click to copy link">
+                                <i class="fa fa-clone" aria-hidden="true"></i> copy
+                            </a>
+
+                            <span class="copy-feedback text-success small ms-2" style="display:none">Copied!</span>
                             @else
-                                <span class="text-muted" title="Inactive package">
-                                    <i class="fa fa-clone" aria-hidden="true"></i> copy
-                                </span>
+                            <span class="text-muted" title="Inactive package">
+                                <i class="fa fa-clone" aria-hidden="true"></i> copy
+                            </span>
                             @endif
                         </td>
                         <td class="text-start">
@@ -151,12 +153,13 @@
             "searching": true,
             "language": {
                 "emptyTable": "No records found",
-                "searchPlaceholder": "Search cities...",  // 👈 Your placeholder text
-                "search": ""  // 👈 This removes the "Search:" label
+                "searchPlaceholder": "Search cities...", // 👈 Your placeholder text
+                "search": "" // 👈 This removes the "Search:" label
             },
-            "columnDefs": [
-                { "orderable": true, "targets": [0, 3] }
-            ]
+            "columnDefs": [{
+                "orderable": true,
+                "targets": [0, 3]
+            }]
         });
     });
 
