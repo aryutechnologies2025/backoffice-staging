@@ -1598,7 +1598,7 @@
                                     <div class="col-md-4">
                                         <input type="text" class="form-control price-input" 
                                             name="stays[${index}][${subIndex}][price]" 
-                                            value="${stay.price}">
+                                            value="${stay.price}" required> 
                                     </div>
                                 </div>
                             `;
@@ -1667,7 +1667,7 @@
                                     <div class="col-md-4">
                                         <input type="text" class="form-control price-input" 
                                             name="activity[${groupIndex}][${itemIndex}][price]" 
-                                            value="${activity.price}">
+                                            value="${activity.price}" required>
                                     </div>
                                 </div>
                             `;
@@ -1891,7 +1891,7 @@
                                 <div class="col-md-4">
                                     <input type="text" class="form-control price-input" 
                                         name="cabs[${groupIndex}][${itemIndex}][price]" 
-                                        value="${cab.price}">
+                                        value="${cab.price}" required>
                                 </div>
                             </div>
                         `);
