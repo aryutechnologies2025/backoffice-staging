@@ -51,6 +51,8 @@ class ProgramApiController extends Controller
             $referenceId = $request->input('reference_id'); // e.g., INPC001
             $user_id = $request->input('user_id'); // Optional user_id
 
+            $stay_id = $request->input('stay_id');
+
             // Step 3: Find the program by ID
             $program = InclusivePackages::find($programId);
 
@@ -92,6 +94,15 @@ class ProgramApiController extends Controller
                     'data' => null
                 ], 404);
             }
+
+            $stay_details_list = null;
+
+            if (!empty($stay_id)) {
+                $stay_details_list = stays_destination_details::select('id', 'stay_title')
+                    ->where('id', $stay_id)
+                    ->first();
+            }
+
 
             $amenityIds = json_decode($package->amenity_details, true) ?? [];
             $foodBeverageIds = json_decode($package->food_beverages, true) ?? [];
@@ -260,7 +271,8 @@ class ProgramApiController extends Controller
                 'created_date' => $package->created_date,
                 'current_location' => $package->location,
                 'price_title' => $price_title,
-                'price_amount' => $price_amount
+                'price_amount' => $price_amount,
+                'stay_details_list' => $stay_details_list
 
             ];
 
