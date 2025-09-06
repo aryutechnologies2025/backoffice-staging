@@ -43,6 +43,8 @@ class User extends Authenticatable
         'is_deleted',
         'created_by',
         'created_date',
+        'login_type',
+        'email_verified'
     ];
 
     /**

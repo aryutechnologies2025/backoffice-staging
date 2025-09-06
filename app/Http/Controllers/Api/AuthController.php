@@ -253,7 +253,8 @@ class AuthController extends Controller
 
     public function callback(Request $request)
     {
-    
+        // dd($request->all());
+        // $request = $request->payload->email;
         try {
             // Check if the user already exists in the database with Google login type
             $existingUser = User::where('email', $request->email)
@@ -333,7 +334,7 @@ class AuthController extends Controller
             ], 200);
         } catch (\Exception $e) {
             \Log::error('Google OAuth callback error: ' . $e->getMessage());
-            return response()->json(['error' => 'Authentication failed. Please try again.'], 500);
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 
