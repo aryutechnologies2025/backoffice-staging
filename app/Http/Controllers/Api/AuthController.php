@@ -253,74 +253,88 @@ class AuthController extends Controller
 
     public function callback(Request $request)
     {
-        // try {
-        //     // Get the user information from Google
-        //     $user = Socialite::driver('google')->user();
-        // } catch (Throwable $e) {
-        //     return redirect('/')->with('error', 'Google authentication failed.');
-        // }
+    
+        try {
+            // Check if the user already exists in the database with Google login type
+            $existingUser = User::where('email', $request->email)
+                ->first();
 
+            if ($existingUser) {
+                // Log the user in
+                Auth::login($existingUser);
 
-        // $user = $request->all();
+                $userDetails = $existingUser->makeHidden([
+                    'email_verified_at',
+                    'status',
+                    'is_deleted',
+                    'created_date',
+                    'created_by',
+                    'updated_by',
+                    'updated_date',
+                    'status_changed_by',
+                    'deleted_by',
+                    'created_at',
+                    'updated_at'
+                ]);
 
-        // Check if the user already exists in the database
-        $existingUser = User::where('email', $request->email)->where('login_type','google')->first();
+                // Generate token
+                $token = $existingUser->createToken('Personal Access Token')->plainTextToken;
+            } else {
+                // Create a new user
+                $newUser = User::create([
+                    'first_name' => $request->name,
+                    'email' => $request->email,
+                    'profile_image' => $request->avatar ?? null,
+                    'email_verified' => $request->email_verified ?? false,
+                    'login_type' => 'google',
+                    'email_verified_at' => now(),
+                ]);
 
-        if ($existingUser) {
-            // Log the user in if they already exist
-            // Auth::login($existingUser);
+                // Log the new user in
+                Auth::login($newUser);
 
-            $userDetails = $existingUser->makeHidden([
-                'email_verified_at',
-                'status',
-                'is_deleted',
-                'created_date',
-                'created_by',
-                'updated_by',
-                'updated_date',
-                'status_changed_by',
-                'deleted_by',
-                'created_at',
-                'updated_at'
-            ]);
+                $userDetails = $newUser->makeHidden([
+                    'email_verified_at',
+                    'status',
+                    'is_deleted',
+                    'created_date',
+                    'created_by',
+                    'updated_by',
+                    'updated_date',
+                    'status_changed_by',
+                    'deleted_by',
+                    'created_at',
+                    'updated_at',
+                    'password'
+                ]);
 
-            // Generate token
-            $token = $existingUser->createToken('Personal Access Token')->plainTextToken;
-        } else {
-            // Otherwise, create a new user and log them in
-            $newUser = User::updateOrCreate([
-                'email' => $request->email
-            ], [
-                'first_name' => $request->name,
-                'profile_image' => $request->avatar,
-                'email_verified' => $request->email_verified,
-                'login_type' => 'google',
-                'email_verified_at' => now()
-            ]);
+                // Generate token
+                $token = $newUser->createToken('Personal Access Token')->plainTextToken;
+            }
 
-            $userDetails = $existingUser->makeHidden([
-                'email_verified_at',
-                'status',
-                'is_deleted',
-                'created_date',
-                'created_by',
-                'updated_by',
-                'updated_date',
-                'status_changed_by',
-                'deleted_by',
-                'created_at',
-                'updated_at'
-            ]);
+            $user = Auth::user();
 
-            // Generate token
-            $token = $newUser->createToken('Personal Access Token')->plainTextToken;
+            // Check if the user account is deleted
+            if ($user->is_deleted == 1) {
+                Auth::logout();
+                return response()->json(['error' => 'Your account has been deleted. Please contact admin.'], 403);
+            }
+
+            // Check if the user account is inactive
+            if ($user->status != 1) {
+                Auth::logout();
+                return response()->json(['error' => 'Your account is inactive. Please contact admin.'], 403);
+            }
+
+            return response()->json([
+                'message' => 'Login successful!',
+                'token' => $token,
+                'user_details' => $userDetails,
+            ], 200);
+        } catch (\Exception $e) {
+            \Log::error('Google OAuth callback error: ' . $e->getMessage());
+            return response()->json(['error' => 'Authentication failed. Please try again.'], 500);
         }
-
-        return response()->json([
-            'message' => 'Login successful!',
-            'token' => $token,
-            'user_details' => $userDetails,
-        ], 200);
     }
 
     public function getToken(): JsonResponse
