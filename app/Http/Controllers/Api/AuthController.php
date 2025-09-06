@@ -258,6 +258,7 @@ class AuthController extends Controller
         try {
             // Check if the user already exists in the database with Google login type
             $existingUser = User::where('email', $request->email)
+                ->where('is_deleted', '0')
                 ->first();
 
             if ($existingUser) {
@@ -280,6 +281,7 @@ class AuthController extends Controller
 
                 // Generate token
                 $token = $existingUser->createToken('Personal Access Token')->plainTextToken;
+                
             } else {
                 // Create a new user
                 $newUser = User::create([
