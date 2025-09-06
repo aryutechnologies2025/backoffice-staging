@@ -212,10 +212,10 @@ class AuthController extends Controller
         if (!Auth::attempt($request->only('email', 'password'))) {
             return response()->json(['error' => 'Incorrect password'], 401);
         }
-        $user = Auth::user();
-        if ($user->is_deleted == 1) {
-            return response()->json(['error' => 'Your account has been deleted. Please contact admin.'], 403);
-        }
+        // $user = Auth::user();
+        // if ($user->is_deleted == 1) {
+        //     return response()->json(['error' => 'Your account has been deleted. Please contact admin.'], 403);
+        // }
 
         if ($user->status != 1) {
             return response()->json(['error' => 'Your account is inactive. Please contact admin.'], 403);
@@ -315,11 +315,11 @@ class AuthController extends Controller
 
             $user = Auth::user();
 
-            // Check if the user account is deleted
-            if ($user->is_deleted == 1) {
-                Auth::logout();
-                return response()->json(['error' => 'Your account has been deleted. Please contact admin.'], 403);
-            }
+            // // Check if the user account is deleted
+            // if ($user->is_deleted == 1) {
+            //     Auth::logout();
+            //     return response()->json(['error' => 'Your account has been deleted. Please contact admin.'], 403);
+            // }
 
             // Check if the user account is inactive
             if ($user->status != 1) {
