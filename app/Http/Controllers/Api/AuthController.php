@@ -264,7 +264,7 @@ class AuthController extends Controller
         // $user = $request->all();
 
         // Check if the user already exists in the database
-        $existingUser = User::where('email', $request->email)->first();
+        $existingUser = User::where('email', $request->email)->where('login_type','google')->first();
 
         if ($existingUser) {
             // Log the user in if they already exist
