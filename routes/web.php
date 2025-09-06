@@ -46,6 +46,7 @@ use App\Http\Controllers\Admin\CabController;
 use App\Http\Controllers\Admin\ActivityController;
 use App\Http\Controllers\Admin\PricingCalculatorController;
 use App\Http\Controllers\Admin\StayreviewController;
+use App\Http\Controllers\Admin\ProgramEventsController;
 
 use App\Models\stay_desitination;
 use Illuminate\Support\Facades\Artisan;
@@ -99,7 +100,7 @@ Route::get('/update', function () {
 Route::prefix('/')->group(function () {
     Route::get('/', [AdminController::class, 'index'])->name('admin.login');
     Route::get('/sign-up', [AdminController::class, 'signup_form'])->name('admin.signup');
-    
+
 
     Route::post('/register', [AdminController::class, 'register'])->name('admin.register');
     Route::post('/do-login', [AdminController::class, 'check_login'])->name('admin.doLogin');
@@ -695,6 +696,15 @@ Route::prefix('/')->group(function () {
                 Route::post('/stay-details', 'stay_details')->name('admin.stay_details');
                 Route::post('/activity-details', 'activity_details')->name('admin.activity_details');
                 Route::post('/cabs-details', 'cabs_details')->name('admin.cabs_details');
+            });
+        });
+
+        //Event Modules
+        Route::controller(ProgramEventsController::class)->group(function () {
+            Route::prefix('program-events')->group(function () {
+                Route::get('/', 'list')->name('admin.programeventslist');
+                Route::get('/add', 'add')->name('admin.programeventsadd');
+               
             });
         });
     });
