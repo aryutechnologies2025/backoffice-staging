@@ -251,20 +251,20 @@ class AuthController extends Controller
         return Socialite::driver('google')->redirect();
     }
 
-    public function callback()
+    public function callback(Request $request)
     {
-        try {
-            // Get the user information from Google
-            $user = Socialite::driver('google')->user();
-        } catch (Throwable $e) {
-            return redirect('/')->with('error', 'Google authentication failed.');
-        }
+        // try {
+        //     // Get the user information from Google
+        //     $user = Socialite::driver('google')->user();
+        // } catch (Throwable $e) {
+        //     return redirect('/')->with('error', 'Google authentication failed.');
+        // }
 
 
-        dd($user);
+        // $user = $request->all();
 
         // Check if the user already exists in the database
-        $existingUser = User::where('email', $user->email)->first();
+        $existingUser = User::where('email', $request->email)->first();
 
         if ($existingUser) {
             // Log the user in if they already exist
@@ -285,15 +285,15 @@ class AuthController extends Controller
             ]);
 
             // Generate token
-            $token = $user->createToken('Personal Access Token')->plainTextToken;
+            $token = $existingUser->createToken('Personal Access Token')->plainTextToken;
         } else {
             // Otherwise, create a new user and log them in
             $newUser = User::updateOrCreate([
-                'email' => $user->email
+                'email' => $request->email
             ], [
-                'first_name' => $user->name,
-                'profile_image' => $user->avatar,
-                'email_verified' => $user->email_verified,
+                'first_name' => $request->name,
+                'profile_image' => $request->avatar,
+                'email_verified' => $request->email_verified,
                 'login_type' => 'google',
                 'email_verified_at' => now()
             ]);
@@ -313,7 +313,7 @@ class AuthController extends Controller
             ]);
 
             // Generate token
-            $token = $user->createToken('Personal Access Token')->plainTextToken;
+            $token = $newUser->createToken('Personal Access Token')->plainTextToken;
         }
 
         return response()->json([
