@@ -315,11 +315,11 @@ class AuthController extends Controller
 
             $user = Auth::user();
 
-            // Check if the user account is deleted
-            if ($user->is_deleted == 1) {
-                Auth::logout();
-                return response()->json(['error' => 'Your account has been deleted. Please contact admin.'], 403);
-            }
+            // // Check if the user account is deleted
+            // if ($user->is_deleted == 1) {
+            //     Auth::logout();
+            //     return response()->json(['error' => 'Your account has been deleted. Please contact admin.'], 403);
+            // }
 
             // Check if the user account is inactive
             if ($user->status != 1) {
