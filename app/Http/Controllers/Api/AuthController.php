@@ -281,7 +281,6 @@ class AuthController extends Controller
 
                 // Generate token
                 $token = $existingUser->createToken('Personal Access Token')->plainTextToken;
-                
             } else {
                 // Create a new user
                 $newUser = User::create([
@@ -315,8 +314,9 @@ class AuthController extends Controller
                 $token = $newUser->createToken('Personal Access Token')->plainTextToken;
             }
 
-            $user = Auth::user();
-
+            $user = User::where('email', $request->email)
+                ->where('is_deleted', '0')
+                ->first();
             // // Check if the user account is deleted
             // if ($user->is_deleted == 1) {
             //     Auth::logout();
