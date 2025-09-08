@@ -107,7 +107,7 @@ class UserController extends Controller
 
         // Check if old password is provided and matches the current password
         if ($request->old_password) {
-            if (!Hash::check($request->old_password, $admin->password)) {
+            if (!Hash::check($request->old_password, $user->password)) {
                 return redirect()->back()->withErrors(['old_password' => 'Old password is incorrect.']);
             }
         }
