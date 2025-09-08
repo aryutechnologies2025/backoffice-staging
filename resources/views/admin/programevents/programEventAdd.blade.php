@@ -122,6 +122,52 @@
             padding: 20px;
         }
     }
+
+    .input-section {
+        max-width: 600px;
+        margin: 24px auto
+    }
+
+    .input-field {
+        display: flex;
+        align-items: center;
+        border: 1px solid #ddd;
+        padding: 8px;
+        border-radius: 6px
+    }
+
+    .input-field input {
+        flex: 1;
+        border: 0;
+        outline: none;
+        padding: 8px
+    }
+
+    .search-results {
+        border: 1px solid #eee;
+        max-height: 220px;
+        overflow: auto;
+        margin-top: 6px;
+        border-radius: 6px
+    }
+
+    .search-results div {
+        padding: 10px;
+        cursor: pointer
+    }
+
+    .search-results div:hover {
+        background: #f5f5f5
+    }
+
+    #selectedLocationContainer {
+        max-width: 600px;
+        margin: 12px auto;
+        padding: 12px;
+        border-radius: 6px;
+        background: #fafafa;
+        border: 1px solid #eee
+    }
 </style>
 <div class="row body-sec py-3 px-5 justify-content-around">
     <div class="text-start col-lg-6 ">
@@ -180,7 +226,7 @@
 
                 <div class="mb-3">
                     <div class="row g-4">
-                        <div class="add_form col-md-4">
+                        <div class="add_form col-md-3">
                             <label for="datetimePicker" class="form-label">Start Date & Time</label>
                             <div class="input-group">
                                 <input type="text" class="form-control flatpickr-input" id="datetimePicker" placeholder="Select date and time">
@@ -188,11 +234,27 @@
                             </div>
                         </div>
 
-                        <div class="add_form col-md-4">
+                        <div class="add_form col-md-3">
                             <label for="datetimePicker" class="form-label">End Date & Time</label>
                             <div class="input-group">
                                 <input type="text" class="form-control flatpickr-input" id="endDatetimePicker" placeholder="Select end date and time">
                                 <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label>Enter location or virtual link</label>
+                            <div class="input-field">
+                                <i class="bi bi-search" style="margin-right:8px"></i>
+                                <input type="text" id="locationSearch" placeholder="Search for a location...">
+                            </div>
+                            <div id="searchResults" class="search-results"></div>
+
+                            <div class="section-title" style="max-width:600px;margin:20px auto;">
+                                <i class="bi bi-geo-alt"></i> <span style="margin-left:8px">Selected Location</span>
+                            </div>
+
+                            <div id="selectedLocationContainer">
+                                <div class="no-locations">Search for a location to select</div>
                             </div>
                         </div>
 
@@ -203,109 +265,135 @@
     </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<!-- Load Google Maps JS with Places library -->
+<script src="https://maps.googleapis.com/maps/api/js?key={{ config('services.google.maps_api_key') }}&libraries=places"></script>
 <script>
     $(document).ready(function() {
+        // ================== Select2 for timezone ==================
         $('#timezone').select2({
             placeholder: "Search for a timezone",
             allowClear: true
         });
-    });
 
-
-    // Initialize Flatpickr with datetime plugin
-    const datetimePicker = flatpickr("#datetimePicker", {
-        enableTime: true,
-        dateFormat: "Y-m-d h:i K", // This format shows AM/PM
-        altFormat: "F j, Y at h:i K", // Display format with AM/PM
-        time_24hr: false,
-        minuteIncrement: 1,
-        onChange: function(selectedDates, dateStr, instance) {
-            updatePreview();
-        }
-    });
-
-    const endDatetimePicker = flatpickr("#endDatetimePicker", {
-        enableTime: true,
-        dateFormat: "Y-m-d h:i K", // This format shows AM/PM
-        altFormat: "F j, Y at h:i K", // Display format with AM/PM
-        time_24hr: false,
-        minuteIncrement: 1,
-        onChange: function(selectedDates, dateStr, instance) {
-            updatePreview();
-        }
-    });
-
-    // Update preview in real-time
-    function updatePreview() {
-        const startDate = datetimePicker.selectedDates[0];
-        const endDate = endDatetimePicker.selectedDates[0];
-
-        if (startDate) {
-            const formattedStart = formatDateTime(startDate);
-            document.getElementById('previewStart').textContent = formattedStart;
-        } else {
-            document.getElementById('previewStart').textContent = 'Not selected';
-        }
-
-        if (endDate) {
-            const formattedEnd = formatDateTime(endDate);
-            document.getElementById('previewEnd').textContent = formattedEnd;
-
-            // Calculate duration if both dates are selected
-            if (startDate) {
-                const duration = calculateDuration(startDate, endDate);
-                document.getElementById('previewDuration').textContent = duration;
-            }
-        } else {
-            document.getElementById('previewEnd').textContent = 'Not selected';
-            document.getElementById('previewDuration').textContent = '-';
-        }
-    }
-
-    // Format date to readable string
-    function formatDateTime(date) {
-        return date.toLocaleString('en-US', {
-            weekday: 'short',
-            month: 'short',
-            day: 'numeric',
-            year: 'numeric',
-            hour: 'numeric',
-            minute: '2-digit',
-            hour12: true
+        // ================== Flatpickr ==================
+        const datetimePicker = flatpickr("#datetimePicker", {
+            enableTime: true,
+            dateFormat: "Y-m-d h:i K",
+            altFormat: "F j, Y at h:i K",
+            time_24hr: false,
+            minuteIncrement: 1,
+            onChange: updatePreview
         });
-    }
 
-    // Calculate duration between two dates
-    function calculateDuration(startDate, endDate) {
-        const diffMs = endDate - startDate;
-        const diffHrs = Math.floor((diffMs % 86400000) / 3600000);
-        const diffMins = Math.round(((diffMs % 86400000) % 3600000) / 60000);
+        const endDatetimePicker = flatpickr("#endDatetimePicker", {
+            enableTime: true,
+            dateFormat: "Y-m-d h:i K",
+            altFormat: "F j, Y at h:i K",
+            time_24hr: false,
+            minuteIncrement: 1,
+            onChange: updatePreview
+        });
 
-        if (diffMs < 0) {
-            return "End date must be after start date";
+        // ================== Preview Functions ==================
+        function updatePreview() {
+            const startDate = datetimePicker.selectedDates[0];
+            const endDate = endDatetimePicker.selectedDates[0];
+
+            document.getElementById('previewStart').textContent = startDate ? formatDateTime(startDate) : 'Not selected';
+            document.getElementById('previewEnd').textContent = endDate ? formatDateTime(endDate) : 'Not selected';
+
+            if (startDate && endDate) {
+                document.getElementById('previewDuration').textContent = calculateDuration(startDate, endDate);
+            } else {
+                document.getElementById('previewDuration').textContent = '-';
+            }
         }
 
-        return `${diffHrs} hours, ${diffMins} minutes`;
-    }
-
-    // Handle form submission
-    document.getElementById('datetimeForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-
-        if (!datetimePicker.selectedDates[0]) {
-            alert('Please select a start date and time');
-            return;
+        function formatDateTime(date) {
+            return date.toLocaleString('en-US', {
+                weekday: 'short',
+                month: 'short',
+                day: 'numeric',
+                year: 'numeric',
+                hour: 'numeric',
+                minute: '2-digit',
+                hour12: true
+            });
         }
 
-        const startDate = datetimePicker.selectedDates[0];
-        const endDate = endDatetimePicker.selectedDates[0];
+        function calculateDuration(startDate, endDate) {
+            const diffMs = endDate - startDate;
+            if (diffMs < 0) return "End date must be after start date";
 
-        if (endDate && endDate <= startDate) {
-            alert('End date must be after start date');
-            return;
+            const diffHrs = Math.floor((diffMs % 86400000) / 3600000);
+            const diffMins = Math.round(((diffMs % 86400000) % 3600000) / 60000);
+            return `${diffHrs} hours, ${diffMins} minutes`;
         }
 
-        alert('Date and time saved successfully!');
+        // ================== Form Submit ==================
+        document.getElementById('datetimeForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const startDate = datetimePicker.selectedDates[0];
+            const endDate = endDatetimePicker.selectedDates[0];
+
+            if (!startDate) {
+                alert('Please select a start date and time');
+                return;
+            }
+            if (endDate && endDate <= startDate) {
+                alert('End date must be after start date');
+                return;
+            }
+            alert('Date and time saved successfully!');
+        });
+
+        // ================== Google Places Autocomplete ==================
+
+    });
+
+    $(document).ready(function() {
+        const input = document.getElementById('locationSearch');
+        const selected = document.getElementById('selectedLocationContainer');
+
+        // ✅ Attach autocomplete ONCE to the input element (not on input.value)
+        const autocomplete = new google.maps.places.Autocomplete(input, {
+            types: ['geocode'], // or ['establishment']
+            // componentRestrictions: { country: "in" } // restrict to India if needed
+        });
+
+        // ✅ Listen when a suggestion is picked
+        autocomplete.addListener('place_changed', function() {
+            const place = autocomplete.getPlace();
+
+            if (!place.geometry) {
+                selected.innerHTML = '<div style="color:#c00">No details available</div>';
+                return;
+            }
+
+            const addr = place.formatted_address || place.name;
+            const lat = place.geometry.location.lat();
+            const lng = place.geometry.location.lng();
+
+            selected.innerHTML = `
+            <div style="max-width:600px;margin:0 auto;">
+                <strong>${addr}</strong>
+                <div>Lat: ${lat}</div>
+                <div>Lng: ${lng}</div>
+                <div style="margin-top:8px;">
+                    <button id="saveLocationBtn">Save to server</button>
+                </div>
+            </div>
+        `;
+
+            // ✅ Save button action
+            document.getElementById('saveLocationBtn').addEventListener('click', () =>
+                saveLocation({
+                    formatted_address: addr,
+                    latitude: lat,
+                    longitude: lng
+                })
+            );
+        });
     });
 </script>
 @endsection
