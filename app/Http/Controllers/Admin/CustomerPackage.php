@@ -29,7 +29,7 @@ use App\Models\ActivityP;
 use App\Models\PriceCalculatorList;
 use App\Models\CustomerPricingCalculator;
 use App\Models\CustomerPriceCalculatorList;
-
+use App\Models\stay_district;
 
 class CustomerPackage extends Controller
 {
@@ -353,11 +353,10 @@ class CustomerPackage extends Controller
         $selectedCityId = $package_details->city_details;
         $selectedLocationname = $package_details->location_name;
         //  dd($selectedCityId);
-        $distination = City::where('id', $selectedCityId)->where('is_deleted', '0')->where('status', '1')->latest()->first();
-
+        $distination = stay_district::where('id', $selectedCityId)->latest()->first();
 
         $pricingcalculator = [];
-        if ($distination && $selectedLocationname) {
+        if ($distination) {
             $pricingcalculator = PricingCalculator::where('destination_id', $distination->city_name)
                 // ->where('district_id', $selectedLocationname) // Removed extra space after district_id
                 ->where('is_deleted', '0')
