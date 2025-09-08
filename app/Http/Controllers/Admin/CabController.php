@@ -144,18 +144,18 @@ class CabController extends Controller
 
 
         
-        // Check for duplicates EXCLUDING the current record
-        $existingPricing = Cab::where('destination_id', $request->input('cities_name'))
-            ->where('district_id', $request->input('district_name'))
-            ->where('is_deleted', '0')
-            ->where('id', '!=', $id)  // Exclude current record
-            ->first();
+        // // Check for duplicates EXCLUDING the current record
+        // $existingPricing = Cab::where('destination_id', $request->input('cities_name'))
+        //     ->where('district_id', $request->input('district_name'))
+        //     ->where('is_deleted', '0')
+        //     ->where('id', '!=', $id)  // Exclude current record
+        //     ->first();
 
-        if ($existingPricing) {
-            return redirect()->back()
-                ->withInput()
-                ->withErrors(['duplicate' => 'This destination and district combination already exists. Duplicate entries are not allowed.']);
-        }
+        // if ($existingPricing) {
+        //     return redirect()->back()
+        //         ->withInput()
+        //         ->withErrors(['duplicate' => 'This destination and district combination already exists. Duplicate entries are not allowed.']);
+        // }
 
         // Filter out removed items and reindex array
         $campRules = array_values(array_filter($request->camp_rules, function ($rule) {
