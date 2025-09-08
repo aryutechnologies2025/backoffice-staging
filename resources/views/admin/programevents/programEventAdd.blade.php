@@ -1,6 +1,8 @@
 @extends('layouts.app')
 @Section('content')
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
 <style>
     .datetime-container {
         max-width: 600px;
@@ -168,6 +170,13 @@
         background: #fafafa;
         border: 1px solid #eee
     }
+
+    #eventdescription {
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        padding: 10px;
+        background-color: #fff;
+    }
 </style>
 <div class="row body-sec py-3 px-5 justify-content-around">
     <div class="text-start col-lg-6 ">
@@ -182,7 +191,7 @@
 <div class="row mb-5">
     <div class="col-lg-12">
         <div class="form-body px-4 mb-5 ms-4 me-5 rounded-4">
-            <form class="" id="form_valid" action="#" method="POST"
+            <form id="form_valid" action="{{ route('admin.programeventstore') }}" method="POST"
                 autocomplete="off" enctype="multipart/form-data">
                 @csrf
                 <div class="mb-3">
@@ -224,20 +233,135 @@
                     </div>
                 </div>
 
+
+                  <!-- Cover Image -->
+                <div class="row mt-4">
+                    <div class="col-md-2 h-25">
+                        <label for="file-ip-1" class="form-label ">Cover Image</label>
+                        <div class="form-input text-start pt-2 pb-0">
+                            <label for="file-ip-1" class="d-block pt-4">
+                                <img id="file-ip-1-preview"
+                                    src="/assets/image/dashboard/innerpece_addpic_icon.svg"
+                                    class="img-thumbnail">
+                                <p class="mt-2">Add Pic</p>
+                            </label>
+                            <input type="file" id="file-ip-1" name="cover_img" class="form-control"
+                                accept="image/png, image/jpeg, image/svg+xml">
+                            <div id="file-ip-1-error" class="text-danger"></div>
+
+                            <!-- <small class="text-danger d-block mt-2 text-center">* Upload size
+                                [1200x120]</small> -->
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="row g-3 pt-4">
+                            <div id="file-ip-1-error" class="text-danger"></div>
+                            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+                            <script>
+                                function showError(message) {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Oops...',
+                                        text: message,
+                                    });
+                                }
+                            </script>
+                            <div class="add_form col-12 pt-4 forms">
+                                <label class="">Upload Image Name <span
+                                        class="text-danger">*</span></label>
+                                <input type="text" id="upload_image_name" name="upload_image_name"
+                                    placeholder="Rename the Photo" value="{{ old('upload_image_name') }}"
+                                    class="form-control py-2 rounded-3 shadow-sm w-50">
+                            </div>
+                            <div class="add_form col-12 forms">
+                                <label class="">Alternate Image Name <span
+                                        class="text-danger">*</span></label>
+                                <input type="text" id="alternate_image_name" name="alternate_image_name"
+                                    placeholder="Alternate Name" value="{{ old('alternate_image_name') }}"
+                                    class="form-control py-2 rounded-3 shadow-sm w-50">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Gallery Images -->
+                <div class="row mt-4 py-5">
+                    <div class="add_form col">
+                        <label class="py-1">Gallery Image</label>
+                        <div id="photo-upload-container" class="row g-6">
+                            <!-- Dynamically added photo containers will go here -->
+                        </div>
+                        <div class="text mt-3">
+                            <button type="button" class="btn-add rounded border-0 px-3 py-3 text-white"
+                                onclick="addPhotoField()">
+                                <i class="fa fa-plus" aria-hidden="true"></i> Add Photo
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <script>
+                    // Function to add a new photo field dynamically
+                    let photoCount = 1; // Initialize photo count
+
+                    function addPhotoField() {
+                        const container = document.getElementById('photo-upload-container');
+                        photoCount++; // Increment photo count
+
+                        // Create a new photo upload field with delete button
+                        const photoField = document.createElement('div');
+                        photoField.classList.add('col-lg-2', 'photo-upload-field');
+
+                        photoField.innerHTML = `
+                                    <div class="form-input">
+                                        <label for="file-ip-${photoCount}" class="px-4 py-2 text-center">
+                                            <img class="text-center mt-3" id="file-ip-${photoCount}-preview" src="/assets/image/dashboard/innerpece_addpic_icon.svg">
+                                            <p class="text-center fw-light mt-3"> Add Pic</p>
+                                        </label>
+                                        <input type="file" name="img_${photoCount}" id="file-ip-${photoCount}" data-number="${photoCount}" accept="image/png, image/jpeg, image/svg+xml" onchange="previewImage(event, this)">
+                                        <button type="button" class="btn btn-danger mt-2" onclick="deletePhoto(this)">Delete</button>
+                                    </div>
+                                `;
+
+                        // Append the new photo field to the container
+                        container.appendChild(photoField);
+                    }
+
+                    // Function to preview the image after selection
+                    function previewImage(event, inputElement) {
+                        const file = event.target.files[0];
+                        const reader = new FileReader();
+
+                        reader.onload = function() {
+                            const preview = inputElement.previousElementSibling.querySelector('img');
+                            preview.src = reader.result;
+                        };
+
+                        if (file) {
+                            reader.readAsDataURL(file);
+                        }
+                    }
+
+                    // Function to delete the image container
+                    function deletePhoto(button) {
+                        const photoField = button.closest('.photo-upload-field');
+                        photoField.remove();
+                    }
+                </script>
+
                 <div class="mb-3">
                     <div class="row g-4">
                         <div class="add_form col-md-3">
                             <label for="datetimePicker" class="form-label">Start Date & Time</label>
                             <div class="input-group">
-                                <input type="text" class="form-control flatpickr-input" id="datetimePicker" placeholder="Select date and time">
+                                <input type="text" class="form-control flatpickr-input" name="start_datetime" id="datetimePicker" placeholder="Select date and time">
                                 <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
                             </div>
                         </div>
 
                         <div class="add_form col-md-3">
-                            <label for="datetimePicker" class="form-label">End Date & Time</label>
+                            <label for="endDatetimePicker" class="form-label">End Date & Time</label>
                             <div class="input-group">
-                                <input type="text" class="form-control flatpickr-input" id="endDatetimePicker" placeholder="Select end date and time">
+                                <input type="text" class="form-control flatpickr-input" name="end_datetime" id="endDatetimePicker" placeholder="Select end date and time">
                                 <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
                             </div>
                         </div>
@@ -245,17 +369,33 @@
                             <label>Enter location or virtual link</label>
                             <div class="input-field">
                                 <i class="bi bi-search" style="margin-right:8px"></i>
-                                <input type="text" id="locationSearch" placeholder="Search for a location...">
+                                <input type="text" id="locationSearch" name="location_name" placeholder="Search for a location...">
                             </div>
                             <div id="searchResults" class="search-results"></div>
 
-                            <div class="section-title" style="max-width:600px;margin:20px auto;">
-                                <i class="bi bi-geo-alt"></i> <span style="margin-left:8px">Selected Location</span>
-                            </div>
+                            <!-- ✅ Hidden fields that will be filled dynamically -->
+                            <input type="hidden" name="location_address" id="location_address">
+                            <input type="hidden" name="latitude" id="latitude">
+                            <input type="hidden" name="longitude" id="longitude">
+                            <input type="hidden" name="location_type" id="location_type">
 
                             <div id="selectedLocationContainer">
                                 <div class="no-locations">Search for a location to select</div>
                             </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <label class="form-label">Description</label>
+                            <textarea id="event_description" name="event_description" style="display:none;"></textarea>
+                            <div id="eventdescription" style="height: 200px;"></div>
+                        </div>
+
+
+                        <div class="col-lg-12 text-center mt-5">
+                            <a href="{{ route('admin.activitylist') }}">
+                                <button type="button" class="cancel-btn"> Cancel </button>
+                            </a>
+                            <button class="submit-btn sbmtBtn ms-4 mb-5"> Submit </button>
                         </div>
 
                     </div>
@@ -269,131 +409,201 @@
 <script src="https://maps.googleapis.com/maps/api/js?key={{ config('services.google.maps_api_key') }}&libraries=places"></script>
 <script>
     $(document).ready(function() {
-        // ================== Select2 for timezone ==================
+
+        $('#eventdescription')
+            .summernote({
+                height: 200 // Set the height of the editor
+            });
+        $('#eventdescription').summernote({
+            placeholder: 'Hello stand alone ui',
+            tabsize: 2,
+            height: 100,
+            toolbar: [
+                ['style', ['style']],
+                ['font', ['bold', 'underline', 'clear']],
+                ['color', ['color']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['table', ['table']],
+                ['insert', ['link', 'picture', 'video']],
+                ['view', ['fullscreen', 'codeview', 'help']]
+            ]
+        });
+
         $('#timezone').select2({
             placeholder: "Search for a timezone",
             allowClear: true
         });
-
-        // ================== Flatpickr ==================
-        const datetimePicker = flatpickr("#datetimePicker", {
-            enableTime: true,
-            dateFormat: "Y-m-d h:i K",
-            altFormat: "F j, Y at h:i K",
-            time_24hr: false,
-            minuteIncrement: 1,
-            onChange: updatePreview
-        });
-
-        const endDatetimePicker = flatpickr("#endDatetimePicker", {
-            enableTime: true,
-            dateFormat: "Y-m-d h:i K",
-            altFormat: "F j, Y at h:i K",
-            time_24hr: false,
-            minuteIncrement: 1,
-            onChange: updatePreview
-        });
-
-        // ================== Preview Functions ==================
-        function updatePreview() {
-            const startDate = datetimePicker.selectedDates[0];
-            const endDate = endDatetimePicker.selectedDates[0];
-
-            document.getElementById('previewStart').textContent = startDate ? formatDateTime(startDate) : 'Not selected';
-            document.getElementById('previewEnd').textContent = endDate ? formatDateTime(endDate) : 'Not selected';
-
-            if (startDate && endDate) {
-                document.getElementById('previewDuration').textContent = calculateDuration(startDate, endDate);
-            } else {
-                document.getElementById('previewDuration').textContent = '-';
-            }
-        }
-
-        function formatDateTime(date) {
-            return date.toLocaleString('en-US', {
-                weekday: 'short',
-                month: 'short',
-                day: 'numeric',
-                year: 'numeric',
-                hour: 'numeric',
-                minute: '2-digit',
-                hour12: true
-            });
-        }
-
-        function calculateDuration(startDate, endDate) {
-            const diffMs = endDate - startDate;
-            if (diffMs < 0) return "End date must be after start date";
-
-            const diffHrs = Math.floor((diffMs % 86400000) / 3600000);
-            const diffMins = Math.round(((diffMs % 86400000) % 3600000) / 60000);
-            return `${diffHrs} hours, ${diffMins} minutes`;
-        }
-
-        // ================== Form Submit ==================
-        document.getElementById('datetimeForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const startDate = datetimePicker.selectedDates[0];
-            const endDate = endDatetimePicker.selectedDates[0];
-
-            if (!startDate) {
-                alert('Please select a start date and time');
-                return;
-            }
-            if (endDate && endDate <= startDate) {
-                alert('End date must be after start date');
-                return;
-            }
-            alert('Date and time saved successfully!');
-        });
-
-        // ================== Google Places Autocomplete ==================
-
     });
+
+
+    // Initialize Flatpickr with datetime plugin
+    const datetimePicker = flatpickr("#datetimePicker", {
+        enableTime: true,
+        dateFormat: "Y-m-d h:i K", // This format shows AM/PM
+        altFormat: "F j, Y at h:i K", // Display format with AM/PM
+        time_24hr: false,
+        minuteIncrement: 1,
+        onChange: function(selectedDates, dateStr, instance) {
+            updatePreview();
+        }
+    });
+
+    const endDatetimePicker = flatpickr("#endDatetimePicker", {
+        enableTime: true,
+        dateFormat: "Y-m-d h:i K", // This format shows AM/PM
+        altFormat: "F j, Y at h:i K", // Display format with AM/PM
+        time_24hr: false,
+        minuteIncrement: 1,
+        onChange: function(selectedDates, dateStr, instance) {
+            updatePreview();
+        }
+    });
+
+    // Update preview in real-time
+    function updatePreview() {
+        const startDate = datetimePicker.selectedDates[0];
+        const endDate = endDatetimePicker.selectedDates[0];
+
+        if (startDate) {
+            const formattedStart = formatDateTime(startDate);
+            document.getElementById('previewStart').textContent = formattedStart;
+        } else {
+            document.getElementById('previewStart').textContent = 'Not selected';
+        }
+
+        if (endDate) {
+            const formattedEnd = formatDateTime(endDate);
+            document.getElementById('previewEnd').textContent = formattedEnd;
+
+            // Calculate duration if both dates are selected
+            if (startDate) {
+                const duration = calculateDuration(startDate, endDate);
+                document.getElementById('previewDuration').textContent = duration;
+            }
+        } else {
+            document.getElementById('previewEnd').textContent = 'Not selected';
+            document.getElementById('previewDuration').textContent = '-';
+        }
+    }
+
+    // Format date to readable string
+    function formatDateTime(date) {
+        return date.toLocaleString('en-US', {
+            weekday: 'short',
+            month: 'short',
+            day: 'numeric',
+            year: 'numeric',
+            hour: 'numeric',
+            minute: '2-digit',
+            hour12: true
+        });
+    }
+
+    // Calculate duration between two dates
+    function calculateDuration(startDate, endDate) {
+        const diffMs = endDate - startDate;
+        const diffHrs = Math.floor((diffMs % 86400000) / 3600000);
+        const diffMins = Math.round(((diffMs % 86400000) % 3600000) / 60000);
+
+        if (diffMs < 0) {
+            return "End date must be after start date";
+        }
+
+        return `${diffHrs} hours, ${diffMins} minutes`;
+    }
 
     $(document).ready(function() {
         const input = document.getElementById('locationSearch');
         const selected = document.getElementById('selectedLocationContainer');
+        let map, marker;
 
-        // ✅ Attach autocomplete ONCE to the input element (not on input.value)
         const autocomplete = new google.maps.places.Autocomplete(input, {
-            types: ['geocode'], // or ['establishment']
-            // componentRestrictions: { country: "in" } // restrict to India if needed
+            types: ['geocode'] // limit to addresses/places
         });
 
-        // ✅ Listen when a suggestion is picked
+        // ✅ Handle Google suggestion selection
         autocomplete.addListener('place_changed', function() {
             const place = autocomplete.getPlace();
 
             if (!place.geometry) {
-                selected.innerHTML = '<div style="color:#c00">No details available</div>';
+                // No coordinates → treat as custom
+                handleCustomAddress(input.value);
                 return;
             }
 
-            const addr = place.formatted_address || place.name;
-            const lat = place.geometry.location.lat();
-            const lng = place.geometry.location.lng();
+            // Show with map
+            showLocation(
+                place.formatted_address || place.name,
+                place.geometry.location.lat(),
+                place.geometry.location.lng()
+            );
+        });
 
+        // ✅ Handle Enter key for manual input (force custom)
+        input.addEventListener("keydown", function(e) {
+            if (e.key === "Enter") {
+                e.preventDefault();
+                handleCustomAddress(input.value);
+            }
+        });
+
+        // 🔹 Fills hidden inputs automatically
+        function saveLocation(location) {
+            document.getElementById('location_address').value = location.formatted_address;
+            document.getElementById('latitude').value = location.latitude ?? "";
+            document.getElementById('longitude').value = location.longitude ?? "";
+            document.getElementById('location_type').value = location.type;
+        }
+
+        // 🔹 Custom address → text only, no map
+        function handleCustomAddress(addr) {
+            if (!addr) return;
+            selected.innerHTML = `
+            <div style="max-width:600px;margin:0 auto;">
+                <strong>${addr}</strong> <span style="color:gray">(Custom Address)</span>
+            </div>
+        `;
+            saveLocation({
+                formatted_address: addr,
+                latitude: null,
+                longitude: null,
+                type: "custom"
+            });
+        }
+
+        // 🔹 Google suggestion → show map + marker
+        function showLocation(addr, lat, lng) {
             selected.innerHTML = `
             <div style="max-width:600px;margin:0 auto;">
                 <strong>${addr}</strong>
-                <div>Lat: ${lat}</div>
-                <div>Lng: ${lng}</div>
-                <div style="margin-top:8px;">
-                    <button id="saveLocationBtn">Save to server</button>
-                </div>
+                <div id="map" style="width:100%;height:300px;margin-top:10px;border-radius:8px;overflow:hidden"></div>
             </div>
         `;
 
-            // ✅ Save button action
-            document.getElementById('saveLocationBtn').addEventListener('click', () =>
-                saveLocation({
-                    formatted_address: addr,
-                    latitude: lat,
-                    longitude: lng
-                })
-            );
-        });
+            map = new google.maps.Map(document.getElementById("map"), {
+                center: {
+                    lat: lat,
+                    lng: lng
+                },
+                zoom: 15
+            });
+
+            marker = new google.maps.Marker({
+                position: {
+                    lat: lat,
+                    lng: lng
+                },
+                map: map,
+                title: addr
+            });
+
+            saveLocation({
+                formatted_address: addr,
+                latitude: lat,
+                longitude: lng,
+                type: "google"
+            });
+        }
     });
 </script>
 @endsection

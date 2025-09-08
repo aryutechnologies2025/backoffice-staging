@@ -18,4 +18,9 @@ class ProgramEventsController extends Controller
         $title = 'Add Event';
         return view('admin.programevents.programEventAdd', compact('title'));
     }
+
+    public function insert(Request $request)
+    {
+        dd($request->all());
+    }
 }
