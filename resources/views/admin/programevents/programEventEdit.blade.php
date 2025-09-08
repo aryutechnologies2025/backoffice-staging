@@ -199,7 +199,7 @@
                         <div class="add_form col-md-4">
                             <label class="mb-2">Title <span class="text-danger">*</span></label>
                             <input type="text" placeholder="Title" id="title" name="title"
-                                class="form-control py-2 rounded-3 shadow-sm" value="{{ old('title') }}">
+                                class="form-control py-2 rounded-3 shadow-sm" value="{{ $programdetails->title }}">
                         </div>
 
                         <div class="add_form col-md-4">
@@ -237,102 +237,120 @@
                 <!-- Cover Image -->
                 <div class="row mt-4">
                     <div class="col-md-2 h-25">
-                        <label for="file-ip-1" class="form-label ">Cover Image</label>
+                        <label for="file-cover" class="form-label">Cover Image</label>
                         <div class="form-input text-start pt-2 pb-0">
-                            <label for="file-ip-1" class="d-block pt-4">
-                                <img id="file-ip-1-preview"
-                                    src="/assets/image/dashboard/innerpece_addpic_icon.svg"
-                                    class="img-thumbnail">
+                            <label for="file-cover" class="d-block pt-4">
+                                @if ($programdetails->cover_img)
+                                <img id="file-cover-preview" src="{{ asset($programdetails->cover_img) }}"
+                                    alt="Cover Image" class="rounded-3 shadow-sm"
+                                    style="max-width: 250px; max-height: 250px; object-fit: cover;">
+                                @else
+                                <img id="file-cover-preview"
+                                    src="/assets/image/dashboard/innerpece_addpic_icon.svg" alt="Add Pic"
+                                    class="rounded-3 shadow-sm"
+                                    style="max-width: 250px; max-height: 250px;">
+                                @endif
                                 <p class="mt-2">Add Pic</p>
                             </label>
-                            <input type="file" id="file-ip-1" name="cover_img" class="form-control"
-                                accept="image/png, image/jpeg, image/svg+xml">
-                            <div id="file-ip-1-error" class="text-danger"></div>
-
+                            <input type="file" id="file-cover" name="cover_img" class="form-control"
+                                accept="image/png, image/jpeg, image/svg+xml"
+                                onchange="previewCoverImage(event)">
+                            <div id="file-cover-error" class="text-danger"></div>
                             <!-- <small class="text-danger d-block mt-2 text-center">* Upload size
-                                [1200x120]</small> -->
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="row g-3 pt-4">
-                            <div id="file-ip-1-error" class="text-danger"></div>
-                            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-                            <script>
-                                function showError(message) {
-                                    Swal.fire({
-                                        icon: 'error',
-                                        title: 'Oops...',
-                                        text: message,
-                                    });
-                                }
-                            </script>
-                            <div class="add_form col-12 pt-4 forms">
-                                <label class="">Upload Image Name <span
-                                        class="text-danger">*</span></label>
-                                <input type="text" id="upload_image_name" name="upload_image_name"
-                                    placeholder="Rename the Photo" value="{{ old('upload_image_name') }}"
-                                    class="form-control py-2 rounded-3 shadow-sm w-50">
-                            </div>
-                            <div class="add_form col-12 forms">
-                                <label class="">Alternate Image Name <span
-                                        class="text-danger">*</span></label>
-                                <input type="text" id="alternate_image_name" name="alternate_image_name"
-                                    placeholder="Alternate Name" value="{{ old('alternate_image_name') }}"
-                                    class="form-control py-2 rounded-3 shadow-sm w-50">
-                            </div>
+                                        [1200x120]</small> -->
                         </div>
                     </div>
                 </div>
+
+
                 <!-- Gallery Images -->
-                <div class="row mt-4 py-5">
-                    <div class="add_form col">
-                        <label class="py-1">Gallery Image</label>
-                        <div id="photo-upload-container" class="row g-6">
-                            <!-- Dynamically added photo containers will go here -->
-                        </div>
-                        <div class="text mt-3">
-                            <button type="button" class="btn-add rounded border-0 px-3 py-3 text-white"
-                                onclick="addPhotoField()">
-                                <i class="fa fa-plus" aria-hidden="true"></i> Add Photo
-                            </button>
+                <div id="photo-upload-container" class="row g-3">
+                    <label class="fw-bold mt-4">Gallery Image</label>
+
+                    @php
+                    $images = !empty($programdetails->events_package_images)
+                    ? json_decode($programdetails->events_package_images, true)
+                    : [];
+                    $imageCount = count($images);
+                    @endphp
+
+                    @if ($imageCount > 0)
+                    @foreach ($images as $key => $image)
+                    <div class="col-md-2 col-sm-4 col-6 photo-upload-field"
+                        id="photo-field-{{ $key }}">
+                        <div class="form-input text-center">
+                            <label for="file-ip-{{ $key }}">
+                                <img class="img-fluid mt-3" id="file-ip-{{ $key }}-preview"
+                                    src="{{ asset($image) }}" alt="Image Preview">
+                                <p class="fw-light mt-2">Edit Pic</p>
+                            </label>
+                            <input type="file" name="img_{{ $key }}"
+                                id="file-ip-{{ $key }}" data-number="{{ $key }}"
+                                accept="image/*" onchange="previewGalleryImage(event, this)">
+                            <button type="button" class="btn btn-danger btn-sm mt-2 delete-photo-btn"
+                                data-key="{{ $key }}"
+                                data-image="{{ $image }}">Delete</button>
                         </div>
                     </div>
+                    @endforeach
+                    @else
+                    <p>No images uploaded yet.</p>
+                    @endif
+                </div>
+
+                <!-- Hidden input to store deleted images -->
+                <input type="hidden" name="deleted_images" id="deleted-images" value="[]">
+
+                <div class="mt-3 mb-4">
+                    <button id="add-photo-btn" type="button" class="btn btn-primary">Add More
+                        Photos</button>
                 </div>
 
                 <script>
-                    // Function to add a new photo field dynamically
-                    let photoCount = 1; // Initialize photo count
+                    // Start photo counter from existing gallery photos
+                    let photoCount = @json($imageCount);
 
-                    function addPhotoField() {
+                    // Function to add a new gallery photo upload field
+                    document.getElementById('add-photo-btn').addEventListener('click', function() {
+                        photoCount++;
                         const container = document.getElementById('photo-upload-container');
-                        photoCount++; // Increment photo count
-
-                        // Create a new photo upload field with delete button
-                        const photoField = document.createElement('div');
-                        photoField.classList.add('col-lg-2', 'photo-upload-field');
-
-                        photoField.innerHTML = `
-                                    <div class="form-input">
-                                        <label for="file-ip-${photoCount}" class="px-4 py-2 text-center">
-                                            <img class="text-center mt-3" id="file-ip-${photoCount}-preview" src="/assets/image/dashboard/innerpece_addpic_icon.svg">
-                                            <p class="text-center fw-light mt-3"> Add Pic</p>
+                        const newFieldHtml = `
+                                <div class="col-md-2 col-sm-4 col-6 photo-upload-field" id="photo-field-${photoCount}">
+                                    <div class="form-input text-center">
+                                        <label for="file-ip-${photoCount}">
+                                            <img class="img-fluid mt-3" id="file-ip-${photoCount}-preview" src="/assets/image/dashboard/innerpece_addpic_icon.svg" alt="Image Preview">
+                                            <p class="fw-light mt-2">Add Pic</p>
                                         </label>
-                                        <input type="file" name="img_${photoCount}" id="file-ip-${photoCount}" data-number="${photoCount}" accept="image/png, image/jpeg, image/svg+xml" onchange="previewImage(event, this)">
-                                        <button type="button" class="btn btn-danger mt-2" onclick="deletePhoto(this)">Delete</button>
+                                        <input type="file" name="img_${photoCount}" id="file-ip-${photoCount}" data-number="${photoCount}" accept="image/*" onchange="previewGalleryImage(event, this)">
+                                        <button type="button" class="btn btn-danger btn-sm mt-2 delete-photo-btn" data-key="${photoCount}">Delete</button>
                                     </div>
-                                `;
+                                </div>`;
+                        container.insertAdjacentHTML('beforeend', newFieldHtml);
+                    });
 
-                        // Append the new photo field to the container
-                        container.appendChild(photoField);
-                    }
-
-                    // Function to preview the image after selection
-                    function previewImage(event, inputElement) {
+                    // Function to preview the cover image after file selection
+                    function previewCoverImage(event) {
+                        const preview = document.getElementById('file-cover-preview'); // Updated to preview the image element
                         const file = event.target.files[0];
                         const reader = new FileReader();
 
                         reader.onload = function() {
-                            const preview = inputElement.previousElementSibling.querySelector('img');
+                            preview.src = reader.result; // This updates the preview image
+                        };
+
+                        if (file) {
+                            reader.readAsDataURL(file); // This loads the selected file
+                        }
+                    }
+
+
+                    // Function to preview the gallery image after selection
+                    function previewGalleryImage(event, inputElement) {
+                        const preview = document.getElementById(`file-ip-${inputElement.getAttribute('data-number')}-preview`);
+                        const file = event.target.files[0];
+                        const reader = new FileReader();
+
+                        reader.onload = function() {
                             preview.src = reader.result;
                         };
 
@@ -341,11 +359,25 @@
                         }
                     }
 
-                    // Function to delete the image container
-                    function deletePhoto(button) {
-                        const photoField = button.closest('.photo-upload-field');
-                        photoField.remove();
-                    }
+                    // Function to delete photo field
+                    document.getElementById('photo-upload-container').addEventListener('click', function(event) {
+                        if (event.target.classList.contains('delete-photo-btn')) {
+                            const key = event.target.getAttribute('data-key');
+                            const photoField = document.querySelector(`#photo-field-${key}`);
+                            const imagePath = event.target.getAttribute('data-image');
+
+                            if (photoField) {
+                                // Add the image path to the hidden field
+                                const deletedImagesInput = document.getElementById('deleted-images');
+                                const deletedImages = JSON.parse(deletedImagesInput.value);
+                                deletedImages.push(imagePath); // Add the image path to the list
+                                deletedImagesInput.value = JSON.stringify(deletedImages);
+
+                                // Remove the photo field from the UI
+                                photoField.remove();
+                            }
+                        }
+                    });
                 </script>
 
                 <div class="mb-3">
