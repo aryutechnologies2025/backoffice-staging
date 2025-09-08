@@ -239,10 +239,10 @@
                         <span class="nav_name"> Programs </span>
                     </a>
 
-                    <a href="{{ route('admin.programeventslist') }}" class="nav_link {{ request()->routeIs(['admin.programeventslist', 'admin.programeventsadd']) ? 'active' : '' }} mb-3 text-white">
+                    <!-- <a href="{{ route('admin.programeventslist') }}" class="nav_link {{ request()->routeIs(['admin.programeventslist', 'admin.programeventsadd']) ? 'active' : '' }} mb-3 text-white">
                         <img src="/assets/image/dashboard/program.svg" alt="">
                         <span class="nav_name"> Programs Events</span>
-                    </a>
+                    </a> -->
                     <!-- <a href="{{ route('admin.address_list') }}" class="nav_link {{ request()->routeIs(['admin.address_list', 'admin.address_add_form', 'admin.address_edit_form']) ? 'active' : '' }} mb-3 text-white">
                         <img src="/assets/image/dashboard/program.svg" alt="">
                         <span class="nav_name"> Address </span>
