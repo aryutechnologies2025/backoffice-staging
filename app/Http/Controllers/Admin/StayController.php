@@ -25,7 +25,7 @@ class StayController extends Controller
     public function add_form()
     {
 
-        $cities = stay_district::where('status', "1")->where('is_deleted', "0")->pluck('city_name', 'id');
+        $cities = stay_district::where('status', "1")->where('is_deleted', "0")->pluck('destination', 'id');
         // $themes = Themes::where('status', "1")->where('is_deleted', "0")->pluck('themes_name', 'id');
         $amenities = Amenities::where('status', "1")->where('is_deleted', "0")->get();
         $foodBeverages = FoodBeverage::where('status', "1")->where('is_deleted', "0")->get();
@@ -254,7 +254,7 @@ class StayController extends Controller
     public function edit_form(Request $request, $id)
     {
         $stay_details = stays_destination_details::find($id);
-        $cities_dts = stay_district::where('status', "1")->where('is_deleted', "0")->pluck('city_name', 'id');
+        $cities_dts = stay_district::where('status', "1")->where('is_deleted', "0")->pluck('destination', 'id');
         $amenities_dts = Amenities::where('status', "1")->where('is_deleted', "0")->get();
         $foodBeverages_dts = FoodBeverage::where('status', "1")->where('is_deleted', "0")->get();
         $activities_dts = Activities::where('status', "1")->where('is_deleted', "0")->get();
