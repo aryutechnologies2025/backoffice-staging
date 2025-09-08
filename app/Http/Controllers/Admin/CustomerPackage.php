@@ -359,7 +359,7 @@ class CustomerPackage extends Controller
         $pricingcalculator = [];
         if ($distination && $selectedLocationname) {
             $pricingcalculator = PricingCalculator::where('destination_id', $distination->city_name)
-                ->where('district_id', $selectedLocationname) // Removed extra space after district_id
+                // ->where('district_id', $selectedLocationname) // Removed extra space after district_id
                 ->where('is_deleted', '0')
                 ->select('id', 'title')
                 ->where('status', '1')
