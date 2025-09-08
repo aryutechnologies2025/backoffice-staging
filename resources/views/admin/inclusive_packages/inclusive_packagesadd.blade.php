@@ -244,15 +244,14 @@
                                 @endforeach
                             </select>
                         </div>
-
+<!-- 
                         <div class="add_form col-md-4">
                             <label class="mb-2">Location <span class="text-danger">*</span></label>
                             <select id="district_name" name="district_name"
                                 class="form-select py-2 rounded-3 shadow-sm">
                                 <option value="" disabled selected>Select Location</option>
-                                <!-- Districts will be populated dynamically -->
                             </select>
-                        </div>
+                        </div> -->
 
                         <!-- Title -->
                         <div class="add_form col-md-4">

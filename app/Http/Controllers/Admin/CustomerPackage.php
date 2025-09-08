@@ -343,6 +343,8 @@ class CustomerPackage extends Controller
         // Get the selected city ID
         $selectedCityId = $package_details->city_details;
 
+        // dd($selectedCityId);
+
         $selectedgeo_featureId = $package_details->geo_feature;
         $selectedthemeId = $package_details->theme_id;
         $selectedCategoryId = $package_details->theme_cat_id;
@@ -353,7 +355,10 @@ class CustomerPackage extends Controller
         $selectedCityId = $package_details->city_details;
         $selectedLocationname = $package_details->location_name;
         //  dd($selectedCityId);
-        $distination = stay_district::where('id', $selectedCityId)->latest()->first();
+        $distination = City::where('id', $selectedCityId)->where('is_deleted', '0')->where('status', '1')->latest()->first();
+
+        // dd($distination);
+
 
         $pricingcalculator = [];
         if ($distination) {
