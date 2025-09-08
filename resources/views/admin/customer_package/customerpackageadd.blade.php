@@ -1047,42 +1047,42 @@
                             div.classList.add('row', 'g-2', 'mb-2', 'day-block');
 
                             div.innerHTML = `
-        <div class="col-md-5 mb-2">
-            <input type="text" name="tour_planning[${i}][title]" 
-                   class="form-control py-2 rounded-3 shadow-sm" 
-                   value="${day.title}" 
-                   placeholder="Day Title (e.g., Day ${i + 1})">
-        </div>
-        <div class="col-md-5 mb-2">
-            <input type="text" name="tour_planning[${i}][subtitle]" 
-                   class="form-control py-2 rounded-3 shadow-sm" 
-                   value="${day.subtitle}" 
-                   placeholder="Activity Subtitle">
-        </div>
-        <div class="col-md-10 mb-2">
-            <label class="form-label fw-bold">Activity Description</label>
-            <div class="rte-container">
-                <div class="editor-toolbar">
-                    <button type="button" class="toolbar-btn" data-command="bold"><i class="fas fa-bold"></i></button>
-                    <button type="button" class="toolbar-btn" data-command="italic"><i class="fas fa-italic"></i></button>
-                    <button type="button" class="toolbar-btn" data-command="underline"><i class="fas fa-underline"></i></button>
-                    <button type="button" class="toolbar-btn" data-command="insertUnorderedList"><i class="fas fa-list-ul"></i></button>
-                    <button type="button" class="toolbar-btn" data-command="insertOrderedList"><i class="fas fa-list-ol"></i></button>
-                    <button type="button" class="toolbar-btn" data-command="createLink"><i class="fas fa-link"></i></button>
-                </div>
-                <div class="editor-content" contenteditable="true" id="editor-${i}"></div>
-                <input type="hidden" name="tour_planning[${i}][description]" 
-                       class="tour-description-hidden">
-            </div>
-        </div>
-        <div class="col-md-1 d-flex align-items-end">
-            ${i > 0 ? `
-                <button type="button" class="btn btn-danger remove-day" onclick="removeDay(this)">
-                    <i class="fa fa-trash"></i>
-                </button>` : ''
-            }
-        </div>
-    `;
+                            <div class="col-md-5 mb-2">
+                                <input type="text" name="tour_planning[${i}][title]" 
+                                    class="form-control py-2 rounded-3 shadow-sm" 
+                                    value="${day.title}" 
+                                    placeholder="Day Title (e.g., Day ${i + 1})">
+                                        </div>
+                                        <div class="col-md-5 mb-2">
+                                            <input type="text" name="tour_planning[${i}][subtitle]" 
+                                                class="form-control py-2 rounded-3 shadow-sm" 
+                                                value="${day.subtitle}" 
+                                                placeholder="Activity Subtitle">
+                                        </div>
+                                        <div class="col-md-10 mb-2">
+                                            <label class="form-label fw-bold">Activity Description</label>
+                                            <div class="rte-container">
+                                                <div class="editor-toolbar">
+                                                    <button type="button" class="toolbar-btn" data-command="bold"><i class="fas fa-bold"></i></button>
+                                                    <button type="button" class="toolbar-btn" data-command="italic"><i class="fas fa-italic"></i></button>
+                                                    <button type="button" class="toolbar-btn" data-command="underline"><i class="fas fa-underline"></i></button>
+                                                    <button type="button" class="toolbar-btn" data-command="insertUnorderedList"><i class="fas fa-list-ul"></i></button>
+                                                    <button type="button" class="toolbar-btn" data-command="insertOrderedList"><i class="fas fa-list-ol"></i></button>
+                                                    <button type="button" class="toolbar-btn" data-command="createLink"><i class="fas fa-link"></i></button>
+                                                </div>
+                                                <div class="editor-content" contenteditable="true" id="editor-${i}"></div>
+                                                <input type="hidden" name="tour_planning[${i}][description]" 
+                                                    class="tour-description-hidden">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-1 d-flex align-items-end">
+                                            ${i > 0 ? `
+                                                <button type="button" class="btn btn-danger remove-day" onclick="removeDay(this)">
+                                                    <i class="fa fa-trash"></i>
+                                                </button>` : ''
+                                            }
+                                        </div>
+                                            `;
 
                             wrapper.appendChild(div);
 
