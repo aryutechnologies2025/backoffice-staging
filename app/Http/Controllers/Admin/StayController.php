@@ -26,6 +26,7 @@ class StayController extends Controller
     {
 
         $cities = stay_district::where('status', "1")->where('is_deleted', "0")->pluck('destination', 'id');
+        // $cities = City::where('status', "1")->where('is_deleted', "0")->pluck('city_name', 'id');
         // $themes = Themes::where('status', "1")->where('is_deleted', "0")->pluck('themes_name', 'id');
         $amenities = Amenities::where('status', "1")->where('is_deleted', "0")->get();
         $foodBeverages = FoodBeverage::where('status', "1")->where('is_deleted', "0")->get();

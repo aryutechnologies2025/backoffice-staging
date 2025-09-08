@@ -1282,7 +1282,7 @@
                         //         }
                         //     }
                         // }
-
+                        console.log('check response.pricingcalculator', response.pricingcalculator);
                         //pricing caluculator lsit 
                         if (response.pricingcalculator && response.pricingcalculator.length > 0) {
                             const pricingSelect = $('#pricing_calculator');

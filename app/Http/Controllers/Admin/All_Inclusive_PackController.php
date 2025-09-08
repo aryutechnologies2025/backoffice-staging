@@ -16,6 +16,7 @@ use App\Models\Geo_feature;
 use App\Models\Themes;
 use App\Models\Themes_category;
 use App\Models\Destination_category;
+use App\Models\stay_district;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
 
@@ -54,6 +55,7 @@ class All_Inclusive_PackController extends Controller
     {
         $title = 'Add Program';
         $cities = City::where('status', "1")->where('is_deleted', "0")->pluck('city_name', 'id');
+        // $cities = stay_district::where('status', "1")->where('is_deleted', "0")->pluck('destination', 'id');
         $themes = Themes::where('status', "1")->where('is_deleted', "0")->pluck('themes_name', 'id');
         $amenities = Amenities::where('status', "1")->where('is_deleted', "0")->get();
         $foodBeverages = FoodBeverage::where('status', "1")->where('is_deleted', "0")->get();
@@ -193,7 +195,7 @@ class All_Inclusive_PackController extends Controller
 
         $inclusive_packages->theme_id = implode(',', $theme);
         $inclusive_packages->city_details = $request->input('cities_name');
-        $inclusive_packages->location_name = $request->input('district_name');
+        // $inclusive_packages->location_name = $request->input('district_name');
         $inclusive_packages->title = $request->input('title');
         $inclusive_packages->program_description = $request->input('program_description');
         $inclusive_packages->address = $request->input('address') ?? '';
@@ -249,6 +251,7 @@ class All_Inclusive_PackController extends Controller
     {
         $package_details = InclusivePackages::find($id);
         $cities_dts = City::where('status', "1")->where('is_deleted', "0")->pluck('city_name', 'id');
+        // $cities_dts = stay_district::where('status', "1")->where('is_deleted', "0")->pluck('destination', 'id');
         $amenities_dts = Amenities::where('status', "1")->where('is_deleted', "0")->get();
         $foodBeverages_dts = FoodBeverage::where('status', "1")->where('is_deleted', "0")->get();
         $activities_dts = Activities::where('status', "1")->where('is_deleted', "0")->get();
@@ -434,7 +437,7 @@ class All_Inclusive_PackController extends Controller
         $inclusive_packages->theme_id = implode(',', $theme);
         $inclusive_packages->location = $request->input('location');
         $inclusive_packages->city_details = $request->input('cities_name');
-        $inclusive_packages->location_name = $request->input('district_name');
+        // $inclusive_packages->location_name = $request->input('district_name');
         $inclusive_packages->title = $request->input('title');
         $inclusive_packages->program_description = $request->input('program_description');
         $inclusive_packages->category = json_encode($request->input('prop_cat', []));
