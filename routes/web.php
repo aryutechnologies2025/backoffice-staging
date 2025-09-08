@@ -705,6 +705,7 @@ Route::prefix('/')->group(function () {
                 Route::get('/', 'list')->name('admin.programeventslist');
                 Route::get('/add', 'add')->name('admin.programeventsadd');
                 Route::post('/insert', 'insert')->name('admin.programeventstore');
+                Route::get('/{id}/edit', 'edit')->name('admin.programeventedit');
             });
         });
     });
