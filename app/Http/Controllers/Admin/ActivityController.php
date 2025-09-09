@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\ActivityP;
 use App\Models\City;
+use App\Models\stay_district;
 
 class ActivityController extends Controller
 {
@@ -18,7 +19,7 @@ class ActivityController extends Controller
 
     public function add_form()
     {
-        $cities = City::where('status', "1")->where('is_deleted', "0")->pluck('city_name', 'id');
+        $cities = stay_district::where('status', "1")->where('is_deleted', "0")->pluck('destination', 'id');
 
         $title = 'Add Activity';
 
@@ -125,7 +126,7 @@ class ActivityController extends Controller
     public function edit_form(Request $request, $id)
     {
         $destination_details = ActivityP::find($id);
-        $cities = City::where('status', "1")->where('is_deleted', "0")->pluck('city_name', 'id');
+        $cities = stay_district::where('status', "1")->where('is_deleted', "0")->pluck('destination', 'id');
         $title = 'Edit Activity';
 
         $camp_rules = json_decode($destination_details->title_price, true);

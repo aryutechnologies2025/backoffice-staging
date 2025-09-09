@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\StayPricing;
 use Illuminate\Http\Request;
 use App\Models\City;
+use App\Models\stay_district;
 
 class StayPriceController extends Controller
 {
@@ -19,7 +20,7 @@ class StayPriceController extends Controller
 
     public function add_form()
     {
-        $cities = City::where('status', "1")->where('is_deleted', "0")->pluck('city_name', 'id');
+        $cities = stay_district::where('status', "1")->where('is_deleted', "0")->pluck('destination', 'id');
 
         $title = 'Add Stay Pricing';
 
@@ -125,7 +126,7 @@ class StayPriceController extends Controller
     public function edit_form(Request $request, $id)
     {
         $destination_details = StayPricing::find($id);
-        $cities = City::where('status', "1")->where('is_deleted', "0")->pluck('city_name', 'id');
+        $cities = stay_district::where('status', "1")->where('is_deleted', "0")->pluck('destination', 'id');
         $title = 'Edit Stay Pricing';
 
         $camp_rules = json_decode($destination_details->title_price, true);
@@ -167,17 +168,6 @@ class StayPriceController extends Controller
             ->with('success', 'Pricing updated successfully.');
     }
 
-    public function get_stay_destination(Request $request)
-    {
-        $city_dts = stay_desitination::where('is_deleted', '0')
-            ->where('status', '1')
-            ->select('id', 'city_name', 'city_image', 'upload_image_name', 'alternate_name')->get();
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Stays city successfully retrieved.',
-            'data' => $city_dts,
-        ]);
-    }
 }
 
 

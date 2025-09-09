@@ -10,6 +10,7 @@ use App\Models\StayPricing;
 use App\Models\Cab;
 use App\Models\ActivityP;
 use App\Models\PriceCalculatorList;
+use App\Models\stay_district;
 
 class PricingCalculatorController extends Controller
 {
@@ -25,7 +26,7 @@ class PricingCalculatorController extends Controller
 
     public function add_form()
     {
-        $cities = City::where('status', "1")->where('is_deleted', "0")->pluck('city_name', 'id');
+        $cities = stay_district::where('status', "1")->where('is_deleted', "0")->pluck('destination', 'id');
 
         $title = 'Add Pricing Calculator';
 
@@ -110,7 +111,7 @@ class PricingCalculatorController extends Controller
         $stay_details = PriceCalculatorList::where('pricing_calculator_id', $id)->where('type', 'stay')->get();
 
         // dd($stay_details);
-        $cities = City::where('status', "1")->where('is_deleted', "0")->pluck('city_name', 'id');
+        $cities = stay_district::where('status', "1")->where('is_deleted', "0")->pluck('destination', 'id');
         $title = 'Edit Pricing';
         return view('admin.pricingcalculator.pricingedit', compact('destination_details', 'title', 'cities'));
     }

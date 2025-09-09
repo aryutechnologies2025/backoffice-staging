@@ -706,6 +706,9 @@ Route::prefix('/')->group(function () {
                 Route::get('/add', 'add')->name('admin.programeventsadd');
                 Route::post('/insert', 'insert')->name('admin.programeventstore');
                 Route::get('/{id}/edit', 'edit')->name('admin.programeventedit');
+                Route::post('/{id}/update', 'update')->name('admin.programeventupdate');
+                Route::post('/delete', 'delete')->name('admin.programeventdelete');
+                Route::post('/change-status', 'change_status')->name('admin.programeventstatus');
             });
         });
     });
