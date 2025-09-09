@@ -191,7 +191,7 @@
 <div class="row mb-5">
     <div class="col-lg-12">
         <div class="form-body px-4 mb-5 ms-4 me-5 rounded-4">
-            <form id="form_valid" action="{{ route('admin.programeventstore') }}" method="POST"
+            <form id="form_valid" action="{{ route('admin.programeventupdate', $programdetails->id) }}" method="POST"
                 autocomplete="off" enctype="multipart/form-data">
                 @csrf
                 <div class="mb-3">
@@ -207,28 +207,65 @@
                             <select id="event_type" name="event_type"
                                 class="form-select py-2 rounded-3 shadow-sm" required>
                                 <option value="" disabled selected>Select Type</option>
-                                <option value="public">Public</option>
-                                <option value="private">Private</option>
+                                <option value="public" {{ $programdetails->event_type == 'public' ? 'selected' : '' }}>Public</option>
+                                <option value="private" {{ $programdetails->event_type == 'private' ? 'selected' : '' }}>Private</option>
                             </select>
                         </div>
 
                         <div class="add_form col-md-4">
                             <label for="timezone" class="form-label">Select Timezone</label>
                             <select id="timezone" name="timezone" class="form-select">
-                                <option value="" disabled selected>Select Timezone</option>
-                                <option value="america_los_angeles">Pacific Time - Los Angeles (GMT-07:00)</option>
-                                <option value="america_chicago">Central Time - Chicago (GMT-05:00)</option>
-                                <option value="america_toronto">Eastern Time - Toronto (GMT-04:00)</option>
-                                <option value="america_new_york">Eastern Time - New York (GMT-04:00)</option>
-                                <option value="america_sao_paulo">Brasilia Standard Time - Sao Paulo (GMT-03:00)</option>
-                                <option value="europe_london">United Kingdom Time - London (GMT+01:00)</option>
-                                <option value="europe_madrid">Central European Time - Madrid (GMT+02:00)</option>
-                                <option value="europe_paris">Central European Time - Paris (GMT+02:00)</option>
-                                <option value="asia_dubai">Gulf Standard Time - Dubai (GMT+04:00)</option>
-                                <option value="asia_kolkata">India Standard Time - Kolkata (GMT+05:30)</option>
-                                <option value="asia_singapore">Singapore Standard Time - Singapore (GMT+08:00)</option>
-                                <option value="asia_tokyo">Japan Standard Time - Tokyo (GMT+09:00)</option>
+                                <option value="" disabled {{ empty($programdetails->timezone) ? 'selected' : '' }}>Select Timezone</option>
+
+                                <option value="america_los_angeles" {{ $programdetails->timezone == 'america_los_angeles' ? 'selected' : '' }}>
+                                    Pacific Time - Los Angeles (GMT-07:00)
+                                </option>
+
+                                <option value="america_chicago" {{ $programdetails->timezone == 'america_chicago' ? 'selected' : '' }}>
+                                    Central Time - Chicago (GMT-05:00)
+                                </option>
+
+                                <option value="america_toronto" {{ $programdetails->timezone == 'america_toronto' ? 'selected' : '' }}>
+                                    Eastern Time - Toronto (GMT-04:00)
+                                </option>
+
+                                <option value="america_new_york" {{ $programdetails->timezone == 'america_new_york' ? 'selected' : '' }}>
+                                    Eastern Time - New York (GMT-04:00)
+                                </option>
+
+                                <option value="america_sao_paulo" {{ $programdetails->timezone == 'america_sao_paulo' ? 'selected' : '' }}>
+                                    Brasilia Standard Time - Sao Paulo (GMT-03:00)
+                                </option>
+
+                                <option value="europe_london" {{ $programdetails->timezone == 'europe_london' ? 'selected' : '' }}>
+                                    United Kingdom Time - London (GMT+01:00)
+                                </option>
+
+                                <option value="europe_madrid" {{ $programdetails->timezone == 'europe_madrid' ? 'selected' : '' }}>
+                                    Central European Time - Madrid (GMT+02:00)
+                                </option>
+
+                                <option value="europe_paris" {{ $programdetails->timezone == 'europe_paris' ? 'selected' : '' }}>
+                                    Central European Time - Paris (GMT+02:00)
+                                </option>
+
+                                <option value="asia_dubai" {{ $programdetails->timezone == 'asia_dubai' ? 'selected' : '' }}>
+                                    Gulf Standard Time - Dubai (GMT+04:00)
+                                </option>
+
+                                <option value="asia_kolkata" {{ $programdetails->timezone == 'asia_kolkata' ? 'selected' : '' }}>
+                                    India Standard Time - Kolkata (GMT+05:30)
+                                </option>
+
+                                <option value="asia_singapore" {{ $programdetails->timezone == 'asia_singapore' ? 'selected' : '' }}>
+                                    Singapore Standard Time - Singapore (GMT+08:00)
+                                </option>
+
+                                <option value="asia_tokyo" {{ $programdetails->timezone == 'asia_tokyo' ? 'selected' : '' }}>
+                                    Japan Standard Time - Tokyo (GMT+09:00)
+                                </option>
                             </select>
+
                         </div>
                     </div>
                 </div>
@@ -385,7 +422,7 @@
                         <div class="add_form col-md-3">
                             <label for="datetimePicker" class="form-label">Start Date & Time</label>
                             <div class="input-group">
-                                <input type="text" class="form-control flatpickr-input" name="start_datetime" id="datetimePicker" placeholder="Select date and time">
+                                <input type="text" class="form-control flatpickr-input" name="start_datetime" id="datetimePicker" placeholder="Select date and time" value="{{ $programdetails->start_datetime }}">
                                 <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
                             </div>
                         </div>
@@ -393,7 +430,7 @@
                         <div class="add_form col-md-3">
                             <label for="endDatetimePicker" class="form-label">End Date & Time</label>
                             <div class="input-group">
-                                <input type="text" class="form-control flatpickr-input" name="end_datetime" id="endDatetimePicker" placeholder="Select end date and time">
+                                <input type="text" class="form-control flatpickr-input" name="end_datetime" id="endDatetimePicker" placeholder="Select end date and time" value="{{ $programdetails->end_datetime }}">
                                 <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
                             </div>
                         </div>
@@ -401,15 +438,15 @@
                             <label>Enter location or virtual link</label>
                             <div class="input-field">
                                 <i class="bi bi-search" style="margin-right:8px"></i>
-                                <input type="text" id="locationSearch" name="location_name" placeholder="Search for a location...">
+                                <input type="text" id="locationSearch" name="location_name" placeholder="Search for a location..." value="{{$programdetails->location_name}}">
                             </div>
                             <div id="searchResults" class="search-results"></div>
 
                             <!-- ✅ Hidden fields that will be filled dynamically -->
-                            <input type="hidden" name="location_address" id="location_address">
-                            <input type="hidden" name="latitude" id="latitude">
-                            <input type="hidden" name="longitude" id="longitude">
-                            <input type="hidden" name="location_type" id="location_type">
+                            <input type="hidden" name="location_address" id="location_address" value="{{$programdetails->	location_address}}">
+                            <input type="hidden" name="latitude" id="latitude" value="{{$programdetails->latitude}}">
+                            <input type="hidden" name="longitude" id="longitude" value="{{$programdetails->	longitude}}">
+                            <input type="hidden" name="location_type" id="location_type" value="{{$programdetails->	location_type}}">
 
                             <div id="selectedLocationContainer">
                                 <div class="no-locations">Search for a location to select</div>
@@ -419,12 +456,12 @@
                         <div class="col-md-12">
                             <label class="form-label">Description</label>
                             <textarea id="event_description" name="event_description" style="display:none;"></textarea>
-                            <div id="eventdescription" style="height: 200px;"></div>
+                            <div id="eventdescription" style="height: 200px;"> {!! old('event_description', $programdetails->event_description) !!}</div>
                         </div>
 
 
                         <div class="col-lg-12 text-center mt-5">
-                            <a href="{{ route('admin.activitylist') }}">
+                            <a href="{{ route('admin.programeventslist') }}">
                                 <button type="button" class="cancel-btn"> Cancel </button>
                             </a>
                             <button class="submit-btn sbmtBtn ms-4 mb-5"> Submit </button>
@@ -558,12 +595,10 @@
             const place = autocomplete.getPlace();
 
             if (!place.geometry) {
-                // No coordinates → treat as custom
                 handleCustomAddress(input.value);
                 return;
             }
 
-            // Show with map
             showLocation(
                 place.formatted_address || place.name,
                 place.geometry.location.lat(),
@@ -571,7 +606,7 @@
             );
         });
 
-        // ✅ Handle Enter key for manual input (force custom)
+        // ✅ Handle Enter key for manual input
         input.addEventListener("keydown", function(e) {
             if (e.key === "Enter") {
                 e.preventDefault();
@@ -579,15 +614,15 @@
             }
         });
 
-        // 🔹 Fills hidden inputs automatically
+        // 🔹 Save hidden inputs
         function saveLocation(location) {
-            document.getElementById('location_address').value = location.formatted_address;
-            document.getElementById('latitude').value = location.latitude ?? "";
-            document.getElementById('longitude').value = location.longitude ?? "";
-            document.getElementById('location_type').value = location.type;
+            $("#location_address").val(location.formatted_address);
+            $("#latitude").val(location.latitude ?? "");
+            $("#longitude").val(location.longitude ?? "");
+            $("#location_type").val(location.type);
         }
 
-        // 🔹 Custom address → text only, no map
+        // 🔹 Custom address
         function handleCustomAddress(addr) {
             if (!addr) return;
             selected.innerHTML = `
@@ -603,7 +638,7 @@
             });
         }
 
-        // 🔹 Google suggestion → show map + marker
+        // 🔹 Google address → show map
         function showLocation(addr, lat, lng) {
             selected.innerHTML = `
             <div style="max-width:600px;margin:0 auto;">
@@ -635,6 +670,20 @@
                 longitude: lng,
                 type: "google"
             });
+        }
+
+        // ✅ Preload location on edit (if values exist)
+        const existingLat = parseFloat($("#latitude").val());
+        const existingLng = parseFloat($("#longitude").val());
+        const existingAddr = $("#location_address").val();
+        const existingType = $("#location_type").val();
+
+        if (existingAddr) {
+            if (existingType === "google" && !isNaN(existingLat) && !isNaN(existingLng)) {
+                showLocation(existingAddr, existingLat, existingLng);
+            } else {
+                handleCustomAddress(existingAddr);
+            }
         }
     });
 </script>
