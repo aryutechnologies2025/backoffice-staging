@@ -1808,7 +1808,10 @@ class ProgramApiController extends Controller
             $activityIds = json_decode($package->activities, true) ?? [];
             $safetyFeatureIds = json_decode($package->safety_features, true) ?? [];
             // $eventsPackageImages = json_decode($package->events_package_images, true) ?? [];
+            // $tourPlanning = json_decode($package->tour_planning, true) ?? [];
             $tourPlanning = json_decode($package->tour_planning, true) ?? [];
+            $tourPlanning = array_values($tourPlanning);
+
             $campRule = json_decode($package->camp_rule, true) ?? [];
 
             $price_title = json_decode($package->price_title, true) ?? [];
