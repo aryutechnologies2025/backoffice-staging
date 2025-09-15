@@ -364,15 +364,18 @@
                                                 <div class="row g-2 mb-1">
                                                     <div class="col">
                                                         <input type="hidden" id="location" name="location">
+                                                     
+
                                                         @php
-                                                        $plain_text_important_info = html_entity_decode(
+                                                        $plain_text_program_inclusion = html_entity_decode(
                                                         strip_tags($customer->location),
                                                         );
+                                                        $inclusion =json_decode($customer->location)
                                                         @endphp
                                                         <div class=" mt-1">
                                                             <div class="row">
                                                                 <div class="col-lg-12 ">
-                                                                    <div id="summernote10" style="height: 200px;">{!! trim($customer->location, '"') !!}</div>
+                                                                    <div id="summernote10" style="height: 200px;">{!! $inclusion !!}</div>
                                                                 </div>
                                                             </div>
                                                         </div>

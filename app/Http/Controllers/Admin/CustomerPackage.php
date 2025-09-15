@@ -129,7 +129,7 @@ class CustomerPackage extends Controller
         // $location = trim($location);
         // $location = str_replace('&nbsp;', ' ', $location); // Replace HTML spaces
         // $location = html_entity_decode($location);
-        $location = $request->input('location');
+        $location = json_encode($request->input('location'));
 
         $customer_package->location =  json_encode($location);
         $customer_package->save();
@@ -144,7 +144,7 @@ class CustomerPackage extends Controller
         // ]));
 
         //pricing calculator update
-       if ($request->has('pricing_calculator') && !empty($request->pricing_calculator)) {
+        if ($request->has('pricing_calculator') && !empty($request->pricing_calculator)) {
 
             $pricingcalculator_v = new CustomerPricingCalculator();
 
@@ -621,9 +621,19 @@ class CustomerPackage extends Controller
         // $location = trim($location);
         // $location = str_replace('&nbsp;', ' ', $location); // Replace HTML spaces
         // $location = html_entity_decode($location);
-        $location = $request->input('location');
+        // $location = $request->input('location');
 
-        $customer_package->location =  json_encode($location);
+        // $customer_package->location =  json_encode($location);
+
+        $location = $request->location ?? '';
+        $location = strip_tags($location); // Replace HTML spaces
+        $location = html_entity_decode($location);
+
+        // Save as JSON (to preserve special chars properly)
+        $customer_package->location = json_encode($location, JSON_UNESCAPED_UNICODE);
+        // $customer_package->save();
+
+
         $customer_package->save();
 
         // Mail::to($customer_package->email) // or use a different recipient
