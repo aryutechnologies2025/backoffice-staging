@@ -515,7 +515,7 @@ Route::prefix('/')->group(function () {
                 Route::post('/delete', 'delete')->name('admin.home_enquiry_delete');
 
                 Route::get('/{id}/stay_view', 'stay_view_form')->name('admin.stay_enquiry_view');
-                Route::post('/delete', 'staydelete')->name('admin.stay_enquiry_delete');
+                Route::post('/stay-delete', 'staydelete')->name('admin.stay_enquiry_delete');
             });
         });
 
