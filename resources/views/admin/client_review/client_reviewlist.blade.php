@@ -4,21 +4,21 @@
     a:hover {
         color: rgb(27, 108, 138);
     }
-    a{
+
+    a {
         font-family: 'Poppins', sans-serif;
-        font-weight:500;
-        color:#8B7eff;
-        font-size:13px;
-    }
-  
-
-    .user{
-      font-family: 'Poppins', sans-serif;
-        font-weight:600;
-        color:#282833;
-        font-size:13px;
+        font-weight: 500;
+        color: #8B7eff;
+        font-size: 13px;
     }
 
+
+    .user {
+        font-family: 'Poppins', sans-serif;
+        font-weight: 600;
+        color: #282833;
+        font-size: 13px;
+    }
 </style>
 
 <div class="row body-sec py-3 px-5 justify-content-around">
@@ -26,7 +26,7 @@
         <h3 class="admin-title fw-bold">{{$title}}</h3>
     </div>
     <div class="text-end col-lg-6 ">
-            <b><a href="/dashboard" >Dashboard</a> > <a class="user" href="/client_review" >Client Review</a></b>
+        <b><a href="/dashboard">Dashboard</a> > <a class="user" href="/client_review">Client Review</a></b>
     </div>
     <div class="mt-2 mb-2 col-lg-12">
         <div class="d-flex justify-content-end">
@@ -36,7 +36,7 @@
         </div>
     </div>
 
-</div>  
+</div>
 
 
 <!-- EVENT LIST -->
@@ -63,9 +63,12 @@
                     @else
                     @foreach ($review_dts as $row)
                     <tr>
-                    <td class="text-start">{{ $loop->iteration }}</td>
+                        <td class="text-start">{{ $loop->iteration }}</td>
 
-                        <td class="text-start">{{ $row->user->first_name }} {{ $row->user->last_name }}</td>
+                        <td class="text-start">
+                            {{ optional($row->user)->first_name ?? '' }}
+                            {{ optional($row->user)->last_name ?? '' }}
+                        </td>
                         <td class="text-start">{{ $row->package ? $row->package->title : 'N/A' }}</td>
                         <td class="text-start">{{ $row->rating }}</td>
                         @php
@@ -103,7 +106,7 @@
 
                 </tbody>
             </table>
-          
+
         </div>
     </div>
 </div>
@@ -119,12 +122,13 @@
             "searching": true,
             "language": {
                 "emptyTable": "No records found",
-                "searchPlaceholder": "Search cities...",  // 👈 Your placeholder text
-                "search": ""  // 👈 This removes the "Search:" label
+                "searchPlaceholder": "Search cities...", // 👈 Your placeholder text
+                "search": "" // 👈 This removes the "Search:" label
             },
-            "columnDefs": [
-                { "orderable": true, "targets": [0, 3] }
-            ]
+            "columnDefs": [{
+                "orderable": true,
+                "targets": [0, 3]
+            }]
         });
     });
 </script>
