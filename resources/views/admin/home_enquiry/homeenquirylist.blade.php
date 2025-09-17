@@ -108,7 +108,7 @@
                                 <i class="bi bi-eye-fill" style="color:#000 !important;"></i>
                             </a>
                             <a href="{{ route('admin.enquiry.followups', $row->id) }}" class="btn"><i class="bi bi-list-check" style="color:blue !important;"></i></a>
-                            <a href="javascript:void(0);" class="table-link danger delconfirm" data-row_id="{{ $row->id }}" data-act_url="{{ route('admin.stay_enquiry_delete') }}" data-csrf_token="{{ csrf_token() }}">
+                            <a href="javascript:void(0);" class="table-link danger delconfirm" data-row_id="{{ $row->id }}" data-act_url="{{ route('admin.home_enquiry_delete') }}" data-csrf_token="{{ csrf_token() }}">
                                 <span class="fa-stack">
                                     <i class="fa fa-trash-o fa-stack-1x fa-inverse" style="color:red !important;"></i>
                                 </span>
