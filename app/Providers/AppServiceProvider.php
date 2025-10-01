@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Providers;
+
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\ServiceProvider;
 use App\Models\Settings;
@@ -25,14 +26,16 @@ class AppServiceProvider extends ServiceProvider
     // }
     public function boot(): void
     {
-        $settings = Cache::remember('settings', 86400, function () {
-            return Settings::first();
-        });
+        try {
+            $settings = Cache::remember('settings', 86400, function () {
+                return Settings::first();
+            });
 
-        View::share('settings', $settings);
+            View::share('settings', $settings);
+        } catch (\Exception $e) {
+            // Log the error but don't break the application
+            \Log::error('Settings loading failed: ' . $e->getMessage());
+            View::share('settings', null);
+        }
     }
-
 }
-
-
-
