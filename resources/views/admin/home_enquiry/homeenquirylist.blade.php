@@ -37,7 +37,7 @@
         <h3 class="admin-title fw-bold">{{$title}}</h3>
     </div>
     <div class="text-end col-lg-6 ">
-          <b><a href="/dashboard">Dashboard</a> > <a class="enquiry" href="/enquiry">Enquiry</a></b>
+          <b><a href="/dashboard">Dashboard</a> > <a class="enquiry" href="/home-enquiry">Enquiry</a></b>
     </div>
     <div class="mt-2 mb-2 col-lg-12">
         <div class="d-flex justify-content-end">

@@ -97,6 +97,10 @@ class ProgramApiController extends Controller
 
 
 
+            // dd($package->stays_name);
+
+
+
 
             $amenityIds = json_decode($package->amenity_details, true) ?? [];
             $foodBeverageIds = json_decode($package->food_beverages, true) ?? [];
@@ -222,6 +226,52 @@ class ProgramApiController extends Controller
             // $program_exclusionPlainText = strip_tags(html_entity_decode($package->program_exclusion, ENT_QUOTES, 'UTF-8'));
             // $program_exclusionPlainText = str_replace(["<br>", "<br/>", "<br />"], "\n", $program_exclusionPlainText);
 
+            $stay_gallery = [];
+            $stay_details_list = collect(); // Initialize as empty collection
+
+            // Check if stay_details_id exists and is not null
+            if (!empty($package->stays_name)) {
+                try {
+                    $stay_details = array_map('trim', explode(',', $package->stays_name));
+
+                    // Remove any empty values
+                    $stay_details = array_filter($stay_details);
+
+                    if (!empty($stay_details)) {
+                        // Get stay details list
+                        $stay_details_list = stays_destination_details::select('id', 'stay_title', 'tag_line')
+                            ->whereIn('id', $stay_details)
+                            ->get();
+
+                        // Get gallery images
+                        $stay_gallery_record = stays_destination_details::whereIn('id', $stay_details)
+                            ->select('id', 'gallery_image')
+                            ->get();
+
+                        // Process gallery images in the new format: [{id: []}, {id: []}]
+                        $stay_gallery = [];
+                        foreach ($stay_gallery_record as $record) {
+                            $gallery_array = [];
+
+                            if (!empty($record->gallery_image)) {
+                                $decoded_gallery = json_decode($record->gallery_image, true);
+                                $gallery_array = is_array($decoded_gallery) ? $decoded_gallery : [];
+                            }
+
+                            // Create object format: {id: gallery_array}
+                            $stay_gallery[] = [
+                                'id' => $record->id,
+                                'gallery' => $gallery_array
+                            ];
+                        }
+                    }
+                } catch (\Exception $e) {
+                    // Log error or handle appropriately
+                    \Log::error('Error processing stay details: ' . $e->getMessage());
+                }
+            }
+
+            // dd($stay_details_list);
 
             $responseData = [
                 'id' => $package->id,
@@ -266,7 +316,8 @@ class ProgramApiController extends Controller
                 'current_location' => $package->location,
                 'price_title' => $price_title,
                 'price_amount' => $price_amount,
-                // 'stay_details_list' => $stay_details_list
+                'stay_details_list' => $stay_details_list,
+                'stay_images' => $stay_gallery
 
             ];
 
@@ -1119,6 +1170,7 @@ class ProgramApiController extends Controller
             'male_count' => 'required|integer',
             'female_count' => 'required|integer',
             'travel_date' => 'required|date',
+            'travel_enddate' => 'required|date',
             'rooms_count' => 'required|integer',
             'child_count' => 'required|integer|min:0',
             'child_age' => 'required_if:child_count,<,1|array|min:' . ($request->input('child_count') > 0 ? $request->input('child_count') : 0),
@@ -1136,6 +1188,7 @@ class ProgramApiController extends Controller
 
         $enquiryData = $request->all();
         $enquiryData['child_age'] = json_encode($request->input('child_age')); // Convert child_age to JSON
+        $enquiryData['status'] = 'pending';
 
         $enquiry = EnquiryDetail::create($enquiryData);
         // Find matching program PDF
@@ -1311,6 +1364,7 @@ class ProgramApiController extends Controller
             'male_count' => 'required',
             'female_count' => 'required',
             'travel_date' => 'required',
+            'travel_enddate' => 'required',
             'rooms_count' => 'required|integer',
             'child_count' => 'required|integer|min:0',
             'child_age' => 'required_if:child_count,<,1|array|min:' . ($request->input('child_count') > 0 ? $request->input('child_count') : 0),
@@ -1797,7 +1851,7 @@ class ProgramApiController extends Controller
                     $stay_gallery = json_decode($stay_gallery_record->gallery_image, true) ?? [];
                 }
 
-                $stay_details_list = stays_destination_details::select('id', 'stay_title','tag_line')
+                $stay_details_list = stays_destination_details::select('id', 'stay_title', 'tag_line')
                     ->where('id', $stay_details)
                     ->first();
             }

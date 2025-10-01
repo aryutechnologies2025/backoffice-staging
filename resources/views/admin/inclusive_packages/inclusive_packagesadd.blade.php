@@ -244,7 +244,7 @@
                                 @endforeach
                             </select>
                         </div>
-<!-- 
+                        <!-- 
                         <div class="add_form col-md-4">
                             <label class="mb-2">Location <span class="text-danger">*</span></label>
                             <select id="district_name" name="district_name"
@@ -451,6 +451,37 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+                </div>
+
+
+                <!-- stays (multi-checkbox) -->
+                <div class="add_form col-md-4">
+                    <label class="mb-2">Stays</label>
+                    <div class="dropdown">
+                        <button
+                            class="btn btn-outline-secondary dropdown-toggle w-100 text-start d-flex justify-content-between align-items-center"
+                            type="button" id="stayDropdown" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            <span id="stayDropdownText">Select Stays</span>
+                        </button>
+                        <ul class="dropdown-menu w-100 p-2" aria-labelledby="stayDropdown"
+                            style="max-height: 200px; overflow-y: auto;">
+                            @foreach ($stay_details as $id => $val)
+                            <li>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox"
+                                        id="theme-{{ $val->id }}" class="stays_name" name="stays_name[]"
+                                        value="{{ $val->id }}"
+                                        @if (is_array(old('stays_name', [])) && in_array($val->id, old('stays_name', []))) checked @endif>
+                                    <label class="form-check-label w-100"
+                                        for="theme-{{ $val->id }}">
+                                        {{ $val->stay_title }}
+                                    </label>
+                                </div>
+                            </li>
+                            @endforeach
+                        </ul>
                     </div>
                 </div>
 
@@ -1427,36 +1458,54 @@
 
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const dropdownButton = document.getElementById('themeDropdown');
-        const dropdownText = document.getElementById('themeDropdownText');
-        const checkboxes = document.querySelectorAll('#themeDropdown ~ .dropdown-menu input[type="checkbox"]');
+document.addEventListener('DOMContentLoaded', function() {
+    // ======================
+    // THEME DROPDOWN
+    // ======================
+    const themeDropdownText = document.getElementById('themeDropdownText');
+    const themeCheckboxes = document.querySelectorAll('#themeDropdown ~ .dropdown-menu input[type="checkbox"]');
 
-        // Initialize with any pre-checked boxes
-        updateButtonText();
-
-        // Update when checkboxes change
-        checkboxes.forEach(checkbox => {
-            checkbox.addEventListener('change', updateButtonText);
-        });
-
-        function updateButtonText() {
-            const checked = Array.from(checkboxes).filter(cb => cb.checked);
-
-            if (checked.length === 0) {
-                dropdownText.textContent = 'Select Themes';
-            } else if (checked.length === 1) {
-                dropdownText.textContent = checked[0].nextElementSibling.textContent;
-            } else {
-                dropdownText.textContent = `${checked.length} themes selected`;
-            }
+    function updateThemeButtonText() {
+        const checked = Array.from(themeCheckboxes).filter(cb => cb.checked);
+        if (checked.length === 0) {
+            themeDropdownText.textContent = 'Select Themes';
+        } else if (checked.length === 1) {
+            themeDropdownText.textContent = checked[0].nextElementSibling.textContent.trim();
+        } else {
+            themeDropdownText.textContent = `${checked.length} themes selected`;
         }
+    }
 
-        // Prevent dropdown from closing when clicking checkboxes
-        document.querySelector('#themeDropdown ~ .dropdown-menu').addEventListener('click', function(e) {
-            if (e.target.type === 'checkbox') {
-                e.stopPropagation();
-            }
-        });
+    // Init + Bind
+    updateThemeButtonText();
+    themeCheckboxes.forEach(cb => cb.addEventListener('change', updateThemeButtonText));
+    document.querySelector('#themeDropdown ~ .dropdown-menu').addEventListener('click', function(e) {
+        if (e.target.type === 'checkbox') e.stopPropagation();
     });
+
+
+    // ======================
+    // STAY DROPDOWN
+    // ======================
+    const stayDropdownText = document.getElementById('stayDropdownText');
+    const stayCheckboxes = document.querySelectorAll('#stayDropdown ~ .dropdown-menu input[type="checkbox"]');
+
+    function updateStayButtonText() {
+        const checked = Array.from(stayCheckboxes).filter(cb => cb.checked);
+        if (checked.length === 0) {
+            stayDropdownText.textContent = 'Select Stays';
+        } else if (checked.length === 1) {
+            stayDropdownText.textContent = checked[0].nextElementSibling.textContent.trim();
+        } else {
+            stayDropdownText.textContent = `${checked.length} stays selected`;
+        }
+    }
+
+    // Init + Bind
+    updateStayButtonText();
+    stayCheckboxes.forEach(cb => cb.addEventListener('change', updateStayButtonText));
+    document.querySelector('#stayDropdown ~ .dropdown-menu').addEventListener('click', function(e) {
+        if (e.target.type === 'checkbox') e.stopPropagation();
+    });
+});
 </script>

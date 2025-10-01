@@ -86,7 +86,7 @@
 
     .forms {
         margin-left: 38px;
-    } 
+    }
 
     @media (min-width: 768px) {
         .col-md-1 {
@@ -171,6 +171,16 @@
                                 </div>
                             </div>
 
+
+                            <!-- Stay Location -->
+                            <div class="row mt-4 px-2">
+                                <div class="add_form col-md-6">
+                                    <label class="mb-2">Location Name <span class="text-danger">*</span></label>
+                                    <input type="text" placeholder="Stay Location - Name" id="stay_location_title" name="stay_location_title"
+                                            class="form-control py-2 rounded-3 shadow-sm"
+                                            value="{{ old('stay_location_title') }}" required>
+                                </div>
+                            </div>
 
                             <!-- Program Description -->
                             <div class="row mt-4 px-2">

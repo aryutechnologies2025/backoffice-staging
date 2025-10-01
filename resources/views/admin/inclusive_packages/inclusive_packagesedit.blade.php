@@ -508,6 +508,60 @@
                             </div>
                         </div>
 
+                        <!-- stays (multi-checkbox) -->
+                        <div class="row mb-2">
+                            <div class="col-md-6">
+                                <div class="form-body px-5  rounded-4">
+                                    <label class="fw-bold mb-3">Stays</label>
+                                    <div class="dropdown">
+                                        <button class="btn btn-outline-secondary dropdown-toggle w-100 text-start d-flex justify-content-between align-items-center"
+                                            type="button" id="stayDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                            <span id="stayDropdownText">Select Stays</span>
+                                        </button>
+                                        <ul class="dropdown-menu w-100" aria-labelledby="stayDropdown"
+                                            style="max-height: 200px; overflow-y: auto;">
+                                            @php
+                                            $selectedthemeId = $package_details->stays_name ?? [];
+
+                                            // Case 1: JSON string (like '["14","15"]')
+                                            if (is_string($selectedthemeId) && json_decode($selectedthemeId, true) !== null) {
+                                            $selectedthemeId = json_decode($selectedthemeId, true);
+                                            }
+                                            // Case 2: Comma-separated string ("14,15")
+                                            elseif (is_string($selectedthemeId) && str_contains($selectedthemeId, ',')) {
+                                            $selectedthemeId = explode(',', $selectedthemeId);
+                                            }
+                                            // Case 3: Single int or string
+                                            elseif (!is_array($selectedthemeId)) {
+                                            $selectedthemeId = [$selectedthemeId];
+                                            }
+
+                                            // ✅ Ensure it's always an array before array_map
+                                            $selectedthemeId = array_map('strval', (array) $selectedthemeId);
+                                            @endphp
+
+                                            @foreach ($stay_details as $id => $val)
+                                            <li>
+                                                <div class="form-check dropdown-item">
+                                                    <input class="form-check-input" type="checkbox"
+                                                        id="theme-{{ $val->id }}" name="stays_name[]"
+                                                        value="{{ $val->id }}"
+                                                        {{ in_array((string) $val->id, $selectedthemeId, true) ? 'checked' : '' }}>
+                                                    <label class="form-check-label w-100" for="theme-{{ $val->id }}">
+                                                        {{ $val->stay_title }}
+                                                    </label>
+                                                </div>
+                                            </li>
+                                            @endforeach
+
+
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
                         <!-- 3. TOUR PLANNING -->
 
                         <div class="row mb-2">
@@ -1261,6 +1315,37 @@
         document.querySelector('.dropdown-menu').addEventListener('click', function(e) {
             e.stopPropagation();
         });
+
+        const stayDropdownButton = document.getElementById('stayDropdown');
+        const stayDropdownText = document.getElementById('stayDropdownText');
+        const stayCheckboxes = document.querySelectorAll('input[name="stays_name[]"]');
+
+        // Update button text when checkboxes change
+        stayCheckboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', updateStayButtonText);
+        });
+
+        function updateStayButtonText() {
+            const checked = document.querySelectorAll('input[name="stays_name[]"]:checked');
+            if (checked.length === 0) {
+                stayDropdownText.textContent = 'Select Stays';
+            } else if (checked.length === 1) {
+                stayDropdownText.textContent = checked[0].nextElementSibling.textContent;
+            } else {
+                stayDropdownText.textContent = `${checked.length} stays selected`;
+            }
+        }
+
+        // Initialize button text
+        updateStayButtonText();
+
+        // Prevent dropdown from closing when clicking checkboxes
+        document.querySelector('#stayDropdown + .dropdown-menu').addEventListener('click', function(e) {
+            e.stopPropagation();
+        });
+
+
+
     });
 
 

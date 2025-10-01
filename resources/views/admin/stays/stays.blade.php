@@ -33,7 +33,7 @@
     <div class="mt-2 mb-2 col-lg-12">
         <div class="d-flex justify-content-end">
            <a href="{{ route('admin.stays_add_form') }}">
-                <button class="btn btn-add px-4" type="button">Add Stay</button>
+                <button class="btn btn-add px-4" type="button">Add Stays</button>
             </a>
         </div>
     </div>

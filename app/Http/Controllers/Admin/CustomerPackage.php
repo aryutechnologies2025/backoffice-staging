@@ -30,6 +30,9 @@ use App\Models\PriceCalculatorList;
 use App\Models\CustomerPricingCalculator;
 use App\Models\CustomerPriceCalculatorList;
 use App\Models\stay_district;
+use App\Models\CustomerTourPlanning;
+use Illuminate\Support\Facades\Validator;
+
 
 class CustomerPackage extends Controller
 {
@@ -74,7 +77,6 @@ class CustomerPackage extends Controller
 
     public function insert(Request $request)
     {
-
         // dd($request->all());
         $request->validate([
             'tour_planning' => 'required|array',
@@ -90,6 +92,7 @@ class CustomerPackage extends Controller
         $customer_package->package_type = $request->title;
 
 
+        // $customer_package->important_info = json_encode($request->input('important_info'));
         $customer_package->important_info = $request->input('important_info');
         $customer_package->stay_details_id = $request->input('package_stay');
         $customer_package->package_inclusion = json_encode($request->input('program_inclusion'));
@@ -103,16 +106,6 @@ class CustomerPackage extends Controller
 
         $customer_package->camp_rule = $campRulesJson;
 
-        // $tourPlanningJson = json_encode([
-        //     // 'plan_title' => $request->input['plan_title'],
-        //     // 'plan_subtitle' => $request->input['plan_subtitle'],
-        //     'plan_description' => $request->input('plan_description')
-        // ]);
-
-        $customer_package->tour_planning = json_encode($request->input('tour_planning'));;
-        // $customer_package->tour_planning = $request->input('tour_planning', []);
-
-
         $customer_package->price_title = json_encode($request->input('price_title', []));
         $customer_package->price_amount = json_encode($request->input('price_amount', []));
         $customer_package->amenities = $amenitiesJson;
@@ -123,17 +116,23 @@ class CustomerPackage extends Controller
 
         $customer_package->status = $request->has('status') && $request->input('status') === 'on' ? '1' : '0';
 
-        // dd($request->location);
-
-        // $location = $request->location ?? '';
-        // $location = trim($location);
-        // $location = str_replace('&nbsp;', ' ', $location); // Replace HTML spaces
-        // $location = html_entity_decode($location);
-        $location = json_encode($request->input('location'));
-
-        $customer_package->location =  json_encode($location);
+        $customer_package->location = json_encode($request->input('location'));
         $customer_package->save();
 
+        if ($request->filled('tour_planning')) {
+            $tourPlanningData = $request->tour_planning;
+
+            foreach ($tourPlanningData as $index => $day) {
+                CustomerTourPlanning::create([
+                    'customer_id' => $customer_package->id,
+                    'package_id' => $packageData['id'],
+                    'day_title' => $day['title'] ?? null,
+                    'day_subtitle' => $day['subtitle'] ?? null,
+                    'activity_description' => $day['description'] ?? null,
+                    'day_order' => $index
+                ]);
+            }
+        }
         // Mail::to($customer_package->email) // or use a different recipient
         // ->send(new CustomerPackageNotification([
         //     'name'=> $customer_package->name,
@@ -468,8 +467,6 @@ class CustomerPackage extends Controller
 
     public function edit_form(Request $request, $id)
     {
-
-
         $title = 'Edit Customer Package';
         $cities = City::where('status', "1")->where('is_deleted', "0")->pluck('city_name', 'id');
         $themes = Themes::where('status', "1")->where('is_deleted', "0")->pluck('themes_name', 'id');
@@ -512,7 +509,24 @@ class CustomerPackage extends Controller
             ->where('customer_package_id', $id)->first();
 
 
-        $customer = customer_package::with('customerpackage')->find($id);
+        // $customer = customer_package::with('customerpackage', 'customertourplanning')->find($id);
+        $customer = customer_package::with([
+            'customerpackage',
+            'customertourplanning' => function ($query) use ($id) {
+                $query->where(function ($q) use ($id) {
+                    $q->where('package_id', function ($subquery) use ($id) {
+                        $subquery->select('package_id')
+                            ->from('customer_packages')
+                            ->where('id', $id);
+                    })
+                        ->where('customer_id', function ($subquery) use ($id) {
+                            $subquery->select('customer_id')
+                                ->from('customer_packages')
+                                ->where('id', $id);
+                        });
+                });
+            }
+        ])->find($id);
         // dd($customer);
         $package_details = InclusivePackages::where('id', $customer->package_id)
             ->first();
@@ -555,244 +569,120 @@ class CustomerPackage extends Controller
 
     public function update(Request $request, $id)
     {
-
-        // $request->validate([
-        //     'tour_planning' => 'required|array',
-        //     'tour_planning.*.title' => 'required|string',
-        //     'tour_planning.*.description' => 'required|string',
-        // ]);
         // dd($request->all());
-        $customer_package = customer_package::find($id);
-        $customer_package->name = ucfirst($request->name);
-        $customer_package->phone_number = $request->phone_number;
-        $customer_package->email = $request->email;
-        $customer_package->package_id = $customer_package->package_id;
-        $customer_package->package_type = $request->title;
-        $customer_package->stay_details_id = $request->package_stay;
+        // Fetch the package
+        $customer_package = customer_package::findOrFail($id);
 
+        // Basic package info
+        $customer_package->name = ucfirst($request->name ?? $customer_package->name);
+        $customer_package->phone_number = $request->phone_number ?? $customer_package->phone_number;
+        $customer_package->email = $request->email ?? $customer_package->email;
+        $customer_package->package_type = $request->title ?? $customer_package->package_type;
+        $customer_package->stay_details_id = $request->package_stay ?? $customer_package->stay_details_id;
+        $customer_package->list_order = $request->input('list_order', $customer_package->list_order);
+        $customer_package->status = $request->has('status') && $request->status === 'on' ? '1' : '0';
 
-        $customer_package->important_info = $request->input('important_info');
-        $customer_package->package_inclusion = json_encode($request->input('program_inclusion')) ?? $request->input('program_inclusion');
-
-        $customer_package->package_exclusion = json_encode($request->input('program_exclusion'));
-
-
-        $amenitiesJson = json_encode($request->input('amenity_services', []));
-        $foodBeveragesJson = json_encode($request->input('food_beverages', []));
-        $activitiesJson = json_encode($request->input('activities', []));
-        $safetyFeaturesJson = json_encode($request->input('safety_features', []));
-        $campRulesJson = json_encode($request->input('camp_rule'));
-
-        $customer_package->camp_rule = $campRulesJson;
-
-        // $tourPlanningJson = json_encode([
-        //     // 'plan_title' => $request->input['plan_title'],
-        //     // 'plan_subtitle' => $request->input['plan_subtitle'],
-        //     'plan_description' => $request->input('plan_description')
-        // ]);
-
-
-        $customer_package->tour_planning = json_encode($request->input('tour_planning'));
-        // $customer_package->tour_planning = $request->input('tour_planning', []);
-        //latest- changes
-        // $tourPlanning = $request->input('tour_planning');
-        // // Clean each description field
-        // $cleanedPlanning = array_map(function ($day) {
-        //     $day['description'] = strip_tags($day['description']); // Remove HTML tags
-        //     $day['description'] = trim($day['description']); // Remove whitespace
-        //     return $day;
-        // }, $tourPlanning);
-
-        // $customer_package->tour_planning = json_encode($cleanedPlanning);
-
-        $customer_package->price_title = json_encode($request->input('price_title', []));
-        $customer_package->price_amount = json_encode($request->input('price_amount', []));
-        $customer_package->amenities = $amenitiesJson;
-        $customer_package->food_beverages = $foodBeveragesJson;
-        $customer_package->activities = $activitiesJson;
-        $customer_package->safety_features = $safetyFeaturesJson;
-        $customer_package->list_order = $request->input('list_order');
-
-        $customer_package->status = $request->has('status') && $request->input('status') === 'on' ? '1' : '0';
-
-        // dd($request->location);
-
-        // $location = $request->location ?? '';
-        // $location = trim($location);
-        // $location = str_replace('&nbsp;', ' ', $location); // Replace HTML spaces
-        // $location = html_entity_decode($location);
-        // $location = $request->input('location');
-
-        // $customer_package->location =  json_encode($location);
-
+        // Location handling
         $location = $request->location ?? '';
-        $location = strip_tags($location); // Replace HTML spaces
+        $location = strip_tags($location);
         $location = html_entity_decode($location);
-
-        // Save as JSON (to preserve special chars properly)
         $customer_package->location = json_encode($location, JSON_UNESCAPED_UNICODE);
-        // $customer_package->save();
 
+        // JSON fields
+        $customer_package->package_inclusion = json_encode($request->input('program_inclusion', []), JSON_UNESCAPED_UNICODE);
+        $customer_package->package_exclusion = json_encode($request->input('program_exclusion', []), JSON_UNESCAPED_UNICODE);
+        // $customer_package->tour_planning = json_encode($request->input('tour_planning', []), JSON_UNESCAPED_UNICODE);
+        $customer_package->camp_rule = json_encode($request->input('camp_rule', []), JSON_UNESCAPED_UNICODE);
+        $customer_package->amenities = json_encode($request->input('amenity_services', []), JSON_UNESCAPED_UNICODE);
+        $customer_package->food_beverages = json_encode($request->input('food_beverages', []), JSON_UNESCAPED_UNICODE);
+        $customer_package->activities = json_encode($request->input('activities', []), JSON_UNESCAPED_UNICODE);
+        $customer_package->safety_features = json_encode($request->input('safety_features', []), JSON_UNESCAPED_UNICODE);
+        $customer_package->price_title = json_encode($request->input('price_title', []), JSON_UNESCAPED_UNICODE);
+        $customer_package->price_amount = json_encode($request->input('price_amount', []), JSON_UNESCAPED_UNICODE);
 
         $customer_package->save();
 
-        // Mail::to($customer_package->email) // or use a different recipient
-        // ->send(new CustomerPackageNotification([
-        //     'name'=> $customer_package->name,
-        //     'phone_number'=> $customer_package->phone_number,
-        //     'email'=> $customer_package->email,
-        //     'package_type'=> $customer_package->package_type,
-        //     'package_id'=> $customer_package->package_id
-        // ]));
 
-        //pricing calculator
-        $packageData = json_decode($request->package_type, true);
+        // if ($request->filled('tour_planning')) {
+        //     $tourPlanningData = $request->tour_planning;
 
-        // if (!empty($id)) {
-        $pricingcalculator_v = CustomerPricingCalculator::where('customer_package_id', $id)->first();
-        // } else 
-        //     $pricingcalculator_v = null;
+
+        //     foreach ($tourPlanningData as $index => $day) {
+        //         CustomerTourPlanning::create([
+        //             'customer_id' => $customer_package->id,
+        //             'package_id' => $packageData['id'],
+        //             'day_title' => $day['title'] ?? null,
+        //             'day_subtitle' => $day['subtitle'] ?? null,
+        //             'activity_description' => $day['description'] ?? null,
+        //             'day_order' => $index
+        //         ]);
+        //     }
         // }
 
-        if ($pricingcalculator_v) {
-            $pricingcalculator_v->pricing_calculator_id = $request->pricing_calculator;
-            $pricingcalculator_v->package_id = $packageData['id'];
-            $pricingcalculator_v->customer_package_id = $id;
-            $pricingcalculator_v->stays_id = $request->stay_id;
-            $pricingcalculator_v->activitys_id = $request->activity_ids;
-            $pricingcalculator_v->cab_details_id = $request->selected_cab_options;
-            $pricingcalculator_v->cab_type = $request->cab_types;
-            $pricingcalculator_v->save();
+        // Pricing Calculator
+        $packageData = json_decode($request->package_type, true);
+        $pricingCalculator = CustomerPricingCalculator::where('customer_package_id', $id)->first();
 
-            CustomerPriceCalculatorList::where('customer_pricing_id', $pricingcalculator_v->id)->where('is_deleted', '0')->delete();
+        if ($pricingCalculator) {
+            $pricingCalculator->pricing_calculator_id = $request->pricing_calculator;
+            $pricingCalculator->package_id = $packageData['id'] ?? $pricingCalculator->package_id;
+            $pricingCalculator->customer_package_id = $id;
+            $pricingCalculator->stays_id = $request->stay_id ?? $pricingCalculator->stays_id;
+            $pricingCalculator->activitys_id = $request->activity_ids ?? $pricingCalculator->activitys_id;
+            $pricingCalculator->cab_details_id = $request->selected_cab_options ?? $pricingCalculator->cab_details_id;
+            $pricingCalculator->cab_type = $request->cab_types ?? $pricingCalculator->cab_type;
+            $pricingCalculator->save();
 
-            if (isset($request->stays) && count($request->stays) > 0) {
+            // Delete old entries
+            CustomerPriceCalculatorList::where('customer_pricing_id', $pricingCalculator->id)
+                ->where('is_deleted', '0')
+                ->delete();
 
-                $stays = $request->stays;
-                foreach ($stays as $val) {
-
-                    foreach ($val as $v) {
-                        $pricingcalculator = new CustomerPriceCalculatorList();
-                        $pricingcalculator->customer_pricing_id = $pricingcalculator_v->id;
-                        $pricingcalculator->type = 'stay';
-                        $pricingcalculator->type_id = $v['stay_id'];
-                        $pricingcalculator->title = $v['title'];
-                        $pricingcalculator->price_title = $v['price_title'];
-                        $pricingcalculator->price = $v['price'];
-                        $pricingcalculator->save();
-                    }
+            // Insert new stays
+            foreach ($request->stays ?? [] as $stayChunk) {
+                foreach ($stayChunk as $stay) {
+                    CustomerPriceCalculatorList::create([
+                        'customer_pricing_id' => $pricingCalculator->id,
+                        'type' => 'stay',
+                        'type_id' => $stay['stay_id'] ?? null,
+                        'title' => $stay['title'] ?? null,
+                        'price_title' => $stay['price_title'] ?? null,
+                        'price' => $stay['price'] ?? null
+                    ]);
                 }
             }
 
-            if (isset($request->activity) && count($request->activity) > 0) {
-
-                $stays = $request->activity;
-
-                foreach ($stays as $val) {
-                    foreach ($val as $v) {
-
-                        // dd($v);
-                        $pricingcalculator = new CustomerPriceCalculatorList();
-                        $pricingcalculator->customer_pricing_id = $pricingcalculator_v->id;
-                        $pricingcalculator->type = 'activity';
-                        $pricingcalculator->type_id = $v['activity_id'];
-                        $pricingcalculator->title = $v['title'];
-                        $pricingcalculator->price_title = $v['price_title'];
-                        $pricingcalculator->price = $v['price'];
-                        $pricingcalculator->save();
-                    }
+            // Insert new activities
+            foreach ($request->activity ?? [] as $activityChunk) {
+                foreach ($activityChunk as $activity) {
+                    CustomerPriceCalculatorList::create([
+                        'customer_pricing_id' => $pricingCalculator->id,
+                        'type' => 'activity',
+                        'type_id' => $activity['activity_id'] ?? null,
+                        'title' => $activity['title'] ?? null,
+                        'price_title' => $activity['price_title'] ?? null,
+                        'price' => $activity['price'] ?? null
+                    ]);
                 }
             }
 
-            if (isset($request->cabs) && count($request->cabs) > 0) {
-                $stays = $request->cabs;
-                foreach ($stays as $val) {
-                    foreach ($val as $v) {
-                        $pricingcalculator = new CustomerPriceCalculatorList();
-                        $pricingcalculator->customer_pricing_id = $pricingcalculator_v->id;
-                        $pricingcalculator->type = 'cabs';
-                        $pricingcalculator->type_id = $v['cab_id'];
-                        $pricingcalculator->title = $v['title'];
-                        $pricingcalculator->price_title = $v['price_title'];
-                        $pricingcalculator->price = $v['price'];
-                        $pricingcalculator->save();
-                    }
+            // Insert new cabs
+            foreach ($request->cabs ?? [] as $cabChunk) {
+                foreach ($cabChunk as $cab) {
+                    CustomerPriceCalculatorList::create([
+                        'customer_pricing_id' => $pricingCalculator->id,
+                        'type' => 'cabs',
+                        'type_id' => $cab['cab_id'] ?? null,
+                        'title' => $cab['title'] ?? null,
+                        'price_title' => $cab['price_title'] ?? null,
+                        'price' => $cab['price'] ?? null
+                    ]);
                 }
             }
         }
 
-        // else {
-        //     $pricingcalculator_v = new CustomerPricingCalculator();
-        //     $pricingcalculator_v->pricing_calculator_id = $request->pricing_calculator;
-        //     $pricingcalculator_v->package_id = $packageData['id'];
-        //     $pricingcalculator_v->customer_package_id = $id;
-        //     $pricingcalculator_v->stays_id = $request->stay_id;
-        //     $pricingcalculator_v->activitys_id = $request->activity_ids;
-        //     $pricingcalculator_v->cab_details_id = $request->selected_cab_options;
-        //     $pricingcalculator_v->cab_type = $request->cab_types;
-        //     $pricingcalculator_v->save();
-
-        //     CustomerPriceCalculatorList::where('customer_pricing_id', $pricingcalculator_v->id)->where('is_deleted', '0')->delete();
-
-        //     if (isset($request->stays) && count($request->stays) > 0) {
-
-        //         $stays = $request->stays;
-        //         foreach ($stays as $val) {
-
-        //             foreach ($val as $v) {
-        //                 $pricingcalculator = new CustomerPriceCalculatorList();
-        //                 $pricingcalculator->customer_pricing_id = $pricingcalculator_v->id;
-        //                 $pricingcalculator->type = 'stay';
-        //                 $pricingcalculator->type_id = $v['stay_id'];
-        //                 $pricingcalculator->title = $v['title'];
-        //                 $pricingcalculator->price_title = $v['price_title'];
-        //                 $pricingcalculator->price = $v['price'];
-        //                 $pricingcalculator->save();
-        //             }
-        //         }
-        //     }
-
-        //     if (isset($request->activity) && count($request->activity) > 0) {
-
-        //         $stays = $request->activity;
-
-        //         foreach ($stays as $val) {
-        //             foreach ($val as $v) {
-
-        //                 // dd($v);
-        //                 $pricingcalculator = new CustomerPriceCalculatorList();
-        //                 $pricingcalculator->customer_pricing_id = $pricingcalculator_v->id;
-        //                 $pricingcalculator->type = 'activity';
-        //                 $pricingcalculator->type_id = $v['activity_id'];
-        //                 $pricingcalculator->title = $v['title'];
-        //                 $pricingcalculator->price_title = $v['price_title'];
-        //                 $pricingcalculator->price = $v['price'];
-        //                 $pricingcalculator->save();
-        //             }
-        //         }
-        //     }
-
-        //     if (isset($request->cabs) && count($request->cabs) > 0) {
-        //         $stays = $request->cabs;
-        //         foreach ($stays as $val) {
-        //             foreach ($val as $v) {
-        //                 $pricingcalculator = new CustomerPriceCalculatorList();
-        //                 $pricingcalculator->customer_pricing_id = $pricingcalculator_v->id;
-        //                 $pricingcalculator->type = 'cabs';
-        //                 $pricingcalculator->type_id = $v['cab_id'];
-        //                 $pricingcalculator->title = $v['title'];
-        //                 $pricingcalculator->price_title = $v['price_title'];
-        //                 $pricingcalculator->price = $v['price'];
-        //                 $pricingcalculator->save();
-        //             }
-        //         }
-        //     }
-        // }
-
-
-
         return redirect()->route('admin.CustomerPackage_list')
-            ->with('success', 'customer Updated successfully');
+            ->with('success', 'Customer package updated successfully!');
     }
 
     public function pricing_details(Request $request)
@@ -1474,6 +1364,141 @@ class CustomerPackage extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to remove item: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function updatecustomertourplan(Request $request)
+    {
+        try {
+            // Validate required fields
+            $validator = Validator::make($request->all(), [
+                'day_title' => 'required',
+                'day_subtitle' => 'required',
+                'activity_description' => 'required',
+            ], [
+                'day_title.required' => 'Day title is required',
+                'day_subtitle.required' => 'Day subtitle is required',
+                'activity_description.required' => 'Activity description is required',
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Validation failed',
+                    'errors' => $validator->errors()
+                ], 422);
+            }
+
+            $tourplanid = $request->day_id;
+            $customerid = $request->customerid;
+            $packageid = $request->packageid;
+
+            // Safely handle package ID - check if it's JSON or already an ID
+            if (is_string($packageid) && json_decode($packageid) !== null) {
+                $packageData = json_decode($packageid, true);
+                $packageIdValue = $packageData['id'] ?? $packageid; // Fallback to original value
+            } else {
+                $packageIdValue = $packageid;
+            }
+
+            // Ensure packageIdValue is not null
+            if (empty($packageIdValue)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Package ID is required'
+                ], 422);
+            }
+
+            $customertourplan = CustomerTourPlanning::where('id', $tourplanid)->first();
+
+            if ($customertourplan) {
+                // Update existing record
+                $customertourplan->update([
+                    'day_title' => $request->day_title ?? null,
+                    'day_subtitle' => $request->day_subtitle ?? null,
+                    'activity_description' => $request->activity_description ?? null
+                ]);
+
+                $message = 'Day updated successfully';
+            } else {
+                // Create new record - validate required fields for creation
+                if (empty($customerid) || empty($packageIdValue)) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Customer ID and Package ID are required for creating new records'
+                    ], 422);
+                }
+
+                CustomerTourPlanning::create([
+                    'customer_id' => $customerid,
+                    'package_id' => $packageIdValue,
+                    'day_title' => $request->day_title ?? null,
+                    'day_subtitle' => $request->day_subtitle ?? null,
+                    'activity_description' => $request->activity_description ?? null,
+                ]);
+
+                $message = 'Day created successfully';
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => $message,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+
+    public function deletecustomertourplan(Request $request)
+    {
+        try {
+            $tourplanid = $request->day_id;
+            $customerid = $request->customerid;
+            $packageid = $request->packageid;
+
+            // Add debugging
+            \Log::info('Delete request received:', [
+                'tourplanid' => $tourplanid,
+                'customerid' => $customerid,
+                'packageid' => $packageid
+            ]);
+
+            $customertourplan = CustomerTourPlanning::where('id', $tourplanid)->first();
+
+            // Add more detailed logging
+            \Log::info('Record found:', [
+                'exists' => !is_null($customertourplan),
+                'record' => $customertourplan ? $customertourplan->toArray() : null
+            ]);
+
+            if ($customertourplan) {
+                // Update existing record
+                $customertourplan->is_deleted = "1";
+                $customertourplan->save();
+
+                $message = 'Day deleted successfully';
+
+                return response()->json([
+                    'success' => true,
+                    'message' => $message,
+                ]);
+            } else {
+                \Log::warning('Record not found for ID: ' . $tourplanid);
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Tour plan not found',
+                ], 404);
+            }
+        } catch (\Exception $e) {
+            \Log::error('Delete error: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Error: ' . $e->getMessage()
             ], 500);
         }
     }

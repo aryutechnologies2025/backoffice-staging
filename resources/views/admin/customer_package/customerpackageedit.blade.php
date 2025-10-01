@@ -173,6 +173,27 @@
         padding-left: 20px;
         color: #000;
     }
+
+    .is-invalid {
+        border-color: #dc3545 !important;
+    }
+
+    .editor-content.is-invalid {
+        border: 1px solid #dc3545 !important;
+        min-height: 100px;
+    }
+
+    .invalid-feedback {
+        display: none;
+        width: 100%;
+        margin-top: 0.25rem;
+        font-size: 0.875em;
+        color: #dc3545;
+    }
+
+    .is-invalid~.invalid-feedback {
+        display: block;
+    }
 </style>
 
 <div class="row body-sec py-3 px-5 justify-content-around">
@@ -192,6 +213,8 @@
         <div class="form-body px-4 mb-5 ms-4 me-5 rounded-4">
             <form class="bg-white p-4 rounded-3" action="{{ route('admin.CustomerPackage_update', $customer->id) }}" method="POST" enctype="multipart/form-data">
                 @csrf
+
+                <input type="hidden" name="customerpackid" id="customerpackid" value="{{ $customer->id }}">
 
                 <div class="row d-flex gap-2">
                     <div class="add_form col-md-5 mb-3">
@@ -223,8 +246,7 @@
                         <select class="package form-control" name="package_type" id="package">
                             <option disabled {{ !$customer->package_type ? 'selected' : '' }}>Select Package Type</option>
                             @foreach($titles as $id => $name)
-                            <option value="{{ json_encode(['id' => $id, 'name' => $name]) }}"
-                                {{ $customer->package_type == $id ? 'selected' : '' }}>
+                            <option value="{{ $id }}" {{ $customer->package_id == $id ? 'selected' : '' }}>
                                 {{ $name }}
                             </option>
                             @endforeach
@@ -364,7 +386,7 @@
                                                 <div class="row g-2 mb-1">
                                                     <div class="col">
                                                         <input type="hidden" id="location" name="location">
-                                                     
+
 
                                                         @php
                                                         $plain_text_program_inclusion = html_entity_decode(
@@ -392,25 +414,21 @@
                                             <h4 class="add_head fw-bold mb-3">02. Tour Planning <span class="text-danger">*</span></h4>
                                             <div id="day-wrapper">
                                                 @php
-                                                $tourPlanning = [];
-                                                if (!empty($customer->tour_planning)) {
-                                                $tourPlanning = is_array($customer->tour_planning)
-                                                ? $customer->tour_planning
-                                                : json_decode($customer->tour_planning, true);
-                                                }
+                                                $tourPlanning = $customer->customertourplanning ?? collect([]);
                                                 @endphp
 
                                                 @foreach ($tourPlanning as $i => $day)
                                                 <div class="row g-2 mb-2 day-block">
                                                     <div class="col-md-5 mb-2">
                                                         <label class="form-label fw-bold">Day Title</label>
-                                                        <input type="text" name="tour_planning[{{ $i }}][title]"
-                                                            class="form-control" value="{{ $day['title'] ?? '' }}">
+                                                        <input type="text"
+                                                            class="form-control" value="{{ $day->day_title ?? '' }}">
+                                                        <input type="hidden" value="{{ $day->id ?? '' }}">
                                                     </div>
                                                     <div class="col-md-5 mb-2">
                                                         <label class="form-label fw-bold">Day Subtitle</label>
-                                                        <input type="text" name="tour_planning[{{ $i }}][subtitle]"
-                                                            class="form-control" value="{{ $day['subtitle'] ?? '' }}">
+                                                        <input type="text"
+                                                            class="form-control" value="{{ $day->day_subtitle ?? '' }}">
                                                     </div>
                                                     <div class="col-md-10 mb-2">
                                                         <label class="form-label fw-bold">Activity Description</label>
@@ -422,14 +440,19 @@
                                                                 <button type="button" class="toolbar-btn" data-command="insertUnorderedList"><i class="fas fa-list-ul"></i></button>
                                                                 <button type="button" class="toolbar-btn" data-command="insertOrderedList"><i class="fas fa-list-ol"></i></button>
                                                             </div>
-                                                            <div class="editor-content" contenteditable="true">{!! $day['description'] ?? '' !!}</div>
-                                                            <input type="hidden" name="tour_planning[{{ $i }}][description]" class="tour-description-hidden" value="{{ $day['description'] ?? '' }}">
+                                                            <div class="editor-content" contenteditable="true">{!! $day->activity_description ?? '' !!}</div>
+                                                            <input type="hidden" class="tour-description-hidden" value="{{ $day->activity_description ?? '' }}">
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-1 d-flex align-items-end">
-                                                        @if (!$loop->first)
-                                                        <button type="button" class="btn btn-danger remove-day-btn"><i class="fa fa-trash"></i></button>
-                                                        @endif
+                                                    <div class="d-flex">
+                                                        <div class="col-md-1 d-flex align-items-end">
+                                                            <button type="button" class="btn btn-primary save-day-btn">save</button>
+                                                        </div>
+                                                        <div class="col-md-1 d-flex align-items-end">
+                                                            @if (!$loop->first)
+                                                            <button type="button" class="btn btn-danger removecustomer-day-btn"><i class="fa fa-trash"></i></button>
+                                                            @endif
+                                                        </div>
                                                     </div>
                                                 </div>
                                                 @endforeach
@@ -479,11 +502,12 @@
                                         div.innerHTML = `
                                             <div class="col-md-5 mb-2">
                                                 <label class="form-label fw-bold">Day Title</label>
-                                                <input type="text" name="tour_planning[${index}][title]" class="form-control">
+                                                <input type="text" class="form-control">
+                                                <input type="hidden" value="">
                                             </div>
                                             <div class="col-md-5 mb-2">
                                                 <label class="form-label fw-bold">Day Subtitle</label>
-                                                <input type="text" name="tour_planning[${index}][subtitle]" class="form-control">
+                                                <input type="text" class="form-control">
                                             </div>
                                             <div class="col-md-10 mb-2">
                                                 <label class="form-label fw-bold">Activity Description</label>
@@ -496,13 +520,18 @@
                                                         <button type="button" class="toolbar-btn" data-command="insertOrderedList"><i class="fas fa-list-ol"></i></button>
                                                     </div>
                                                     <div class="editor-content" contenteditable="true"></div>
-                                                    <input type="hidden" name="tour_planning[${index}][description]" class="tour-description-hidden">
+                                                    <input type="hidden" class="tour-description-hidden">
                                                 </div>
                                             </div>
-                                            <div class="col-md-1 d-flex align-items-end">
-                                                <button type="button" class="btn btn-danger remove-day-btn"><i class="fa fa-trash"></i></button>
+                                            <div class="d-flex">
+                                                <div class="col-md-1 d-flex align-items-end">
+                                                                        <button type="button" class="btn btn-primary save-day-btn">save</button>
+                                                                    </div>
+                                                <div class="col-md-1 d-flex align-items-end">
+                                                    <button type="button" class="btn btn-danger remove-day-btn"><i class="fa fa-trash"></i></button>
+                                                </div>
                                             </div>
-                                        `;
+                                            `;
 
                                         wrapper.appendChild(div);
                                         initializeRTE(div.querySelector(".rte-container"));
@@ -510,7 +539,14 @@
                                         // Add event listener to the new remove button
                                         div.querySelector('.remove-day-btn').addEventListener('click', function() {
                                             removeDay(this);
+                                            // ✅ Hide add button after adding new tour plan
+                                            document.getElementById("add-day-btn").style.display = 'block';
                                         });
+
+
+                                        // ✅ Hide add button after adding new tour plan
+                                        document.getElementById("add-day-btn").style.display = 'none';
+
 
                                         index++; // ✅ always move forward
                                     }
@@ -529,6 +565,24 @@
                                     document.querySelectorAll(".remove-day-btn").forEach(btn => {
                                         btn.addEventListener("click", function() {
                                             removeDay(this);
+                                        });
+                                    });
+
+                                    // Form submission - ensure all hidden fields are updated
+                                    document.querySelector('form').addEventListener('submit', function(e) {
+                                        // Force update all hidden fields before submission
+                                        document.querySelectorAll('.rte-container').forEach(container => {
+                                            const editor = container.querySelector('.editor-content');
+                                            const hidden = container.querySelector('.tour-description-hidden');
+                                            if (editor && hidden) {
+                                                hidden.value = editor.innerHTML;
+                                            }
+                                        });
+
+                                        // Debug: log what's being submitted
+                                        console.log('Tour planning data to be submitted:');
+                                        document.querySelectorAll('input[name^="tour_planning"]').forEach(input => {
+                                            console.log(input.name, '=', input.value);
                                         });
                                     });
                                 </script>
@@ -706,41 +760,6 @@
                                         </div>
                                     </div>
                                 </div>
-
-                                <!-- <div class="row mb-3">
-                            <div class="col">
-                                <div class="form-body px-1 py-3 rounded-4">
-                                    <h4 class="fw-bold mb-3">9. Location</h4>
-                                    <div>
-                                        <div class="row align-items-start">
-                                            <div class="col-lg-6">
-                                                <label for="google_map" class="fw-bold mb-3">Google Map<span class="text-danger">*</span></label>
-                                                <input
-                                                    type="text"
-                                                    id="google_map"
-                                                    name="google_map"
-                                                    class="form-control py-3 rounded-3 shadow-sm"
-                                                    placeholder="Enter Google Map Embed Iframe">
-                                            </div>
-                                            <div class="col-lg-6">
-                                                <label class="fw-bold mb-3">Map Preview</label>
-                                                <iframe
-                                                    id="map_preview"
-                                                    width="100%"
-                                                    height="250"
-                                                    frameborder="0"
-                                                    style="border:0;"
-                                                    allowfullscreen
-                                                    aria-hidden="false"
-                                                    tabindex="0">
-                                                </iframe>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div> -->
-
                                 <script>
                                     document.getElementById('google_map').addEventListener('input', function() {
                                         const inputValue = this.value;
@@ -756,69 +775,6 @@
                                 </script>
 
 
-                                <!-- <div class="row mb-3">
-                            <div class="col">
-                                <div class="form-body px-5 rounded-4">
-                                    <h4 class="fw-bold mb-3">08. Upload PDF</h4>
-                                    <div class="mb-1">
-                                        <div class="row g-2 mb-2">
-                                            <div class="col">
-                                                <label class="form-label form-label-top form-label-auto mb-2">Upload PDF</label>
-                                                <input type="file" id="program_pdf" name="program_pdf" class="form-control py-2 rounded-3 shadow-sm" >
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div> -->
-
-                                <!-- <div class="row mb-2">
-                            <div class="col">
-                                <div class="form-body px-5 rounded-4">
-                                    <h4 class="fw-bold mb-3">09. Food Menu</h4>
-                                    <div class="mb-1">
-                                        <div class="row g-2">
-                                            <div class="col-lg-4">
-                                                <label
-                                                    class="form-label form-label-top form-label-auto mb-2">Breakfast</label>
-                                                <input type="hidden" id="break_fast" name="break_fast">
-                                                <div class="mt-2">
-                                                    <div class="row">
-                                                        <div class="col-lg-12">
-                                                            <div id="summernote6" style="height: 200px;"></div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-4">
-                                                <label
-                                                    class="form-label form-label-top form-label-auto  mb-2">Lunch</label>
-                                                <input type="hidden" id="lunch" name="lunch">
-                                                <div class="mt-2">
-                                                    <div class="row">
-                                                        <div class="col-lg-12">
-                                                            <div id="summernote7" style="height: 200px;"></div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-4">
-                                                <label
-                                                    class="form-label form-label-top form-label-auto mb-2">Dinner</label>
-                                                <input type="hidden" id="dinner" name="dinner">
-                                                <div class="mt-2">
-                                                    <div class="row">
-                                                        <div class="col-lg-12">
-                                                            <div id="summernote8" style="height: 200px;"></div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div> -->
                                 <!-- 8. AMENITIES -->
                                 <div class="row  mt-3">
                                     <div class="col-lg-12">
@@ -935,30 +891,6 @@
                                         }
                                     }
                                 </style>
-
-
-
-                                <!-- 6.rule & Regulation
-                <div class="row mb-5">
-                    <div class="col">
-                        <div class="form-body px-5 rounded-4">
-                            <h4 class="fw-bold mb-5">14. Payment Policy</h4>
-                            <div class="mb-3">
-                                <div id="camp-rule-container">
-                                    <div class="row g-2 mb-4 camp-rule-field">
-                                        <div class="col">
-                                            <label class="fw-bold mb-4">Payment Policy <span class="text-danger">*</span></label>
-                                            <input type="text" name="camp_rule[]" id="camp_rule" class="form-control py-3  px-3 rounded-3 shadow-sm" placeholder="Payment Policy" required>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="text-end">
-                                    <button type="button" class="btn-add rounded border-0 px-5 py-3 text-white" onclick="addCampRuleField()">
-                                        <i class="fa fa-plus" aria-hidden="true"></i> Add
-                                    </button>
-                                </div>
-                            </div> -->
-
                                 <br>
 
                                 <div class="row g-2">
@@ -1264,9 +1196,6 @@
                 }
             });
         });
-
-
-
 
         function addCampRuleField() {
             // Find the container where new fields will be added
@@ -1618,8 +1547,6 @@
 
         // Update hidden input on form submission
         $('form').on('submit', function() {
-
-            $('#plan_description').val($('#summernote3').summernote('code'));
             $('#location').val($('#summernote10').summernote('code'));
             $('#important_info').val($('#summernote4').summernote('code'));
             $('#program_inclusion').val($('#summernote5').summernote('code'));
@@ -2261,6 +2188,231 @@
                 }
             });
 
+        });
+
+        //save tourplan
+        $(document).on("click", ".save-day-btn", function() {
+            let $button = $(this);
+            let $block = $button.closest(".day-block");
+
+            // Collect values from the current block only
+            let day_id = $block.find("input[type=hidden]").val();
+            let day_title = $block.find("input.form-control").eq(0).val().trim();
+            let day_subtitle = $block.find("input.form-control").eq(1).val().trim();
+            let activity_description = $block.find(".editor-content").html().trim();
+            let customerid = $('#customerpackid').val();
+            let packageid = $('#package').val();
+
+            // Client-side validation
+            let errors = [];
+
+            if (!day_title) {
+                errors.push('Day title is required');
+                $block.find("input.form-control").eq(0).addClass('is-invalid');
+            } else {
+                $block.find("input.form-control").eq(0).removeClass('is-invalid');
+            }
+
+            if (!day_subtitle) {
+                errors.push('Day subtitle is required');
+                $block.find("input.form-control").eq(1).addClass('is-invalid');
+            } else {
+                $block.find("input.form-control").eq(1).removeClass('is-invalid');
+            }
+
+            // Check if activity description has actual content (not just HTML tags)
+            let textContent = $block.find(".editor-content").text().trim();
+            if (!textContent) {
+                errors.push('Activity description is required');
+                $block.find(".editor-content").addClass('is-invalid');
+            } else {
+                $block.find(".editor-content").removeClass('is-invalid');
+            }
+
+            if (!customerid) {
+                errors.push('Customer ID is required');
+            }
+
+            if (!packageid) {
+                errors.push('Package ID is required');
+            }
+
+            // Show validation errors and stop if any
+            if (errors.length > 0) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Validation Error!',
+                    html: errors.join('<br>'),
+                    confirmButtonText: 'OK'
+                });
+                return false;
+            }
+
+            // Update hidden field value
+            $block.find(".tour-description-hidden").val(activity_description);
+
+            // Show loading state on button
+            $button.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Saving...');
+
+            // Send AJAX request
+            $.ajax({
+                url: "{{ route('admin.updatecustomertourplan') }}",
+                type: "POST",
+                data: {
+                    _token: "{{ csrf_token() }}",
+                    day_id: day_id,
+                    day_title: day_title,
+                    day_subtitle: day_subtitle,
+                    activity_description: activity_description,
+                    customerid: customerid,
+                    packageid: packageid
+                },
+                success: function(response) {
+                    // Reset button state
+                    $button.prop('disabled', false).html('Save');
+
+                    if (response.success) {
+                        // Show SweetAlert success message
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success!',
+                            text: response.message,
+                            timer: 3000,
+                            showConfirmButton: false,
+                            position: 'top-end',
+                            toast: true
+                        });
+
+                        // If it was a new record, update the hidden ID field
+                        if (response.day_id && !day_id) {
+                            $block.find("input[type=hidden]").val(response.day_id);
+                            // Add a class or data attribute to mark as existing record
+                            $block.addClass('existing-record');
+                        }
+
+                        // Remove any validation styles
+                        $block.find(".form-control, .editor-content").removeClass('is-invalid');
+
+                    } else {
+                        // Show validation errors from server
+                        if (response.errors) {
+                            let errorMessages = [];
+                            for (let field in response.errors) {
+                                errorMessages.push(response.errors[field].join('<br>'));
+                            }
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Validation Error!',
+                                html: errorMessages.join('<br>'),
+                                confirmButtonText: 'OK'
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                text: response.message || 'Something went wrong!',
+                            });
+                        }
+                    }
+
+                    // Show add button after saving
+                    document.getElementById("add-day-btn").style.display = 'block';
+                },
+                error: function(xhr) {
+                    // Reset button state
+                    $button.prop('disabled', false).html('Save');
+
+                    console.error('Error details:', xhr.responseText);
+
+                    // Show error message
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Failed to save day. Please try again.',
+                    });
+                }
+            });
+        });
+
+        //delete tourplan
+        $(document).on("click", ".removecustomer-day-btn", function() {
+            let $button = $(this);
+            let $block = $button.closest(".day-block");
+
+            // Collect values from the current block only
+            let day_id = $block.find("input[type=hidden]").val();
+            let day_title = $block.find("input.form-control").eq(0).val();
+            let day_subtitle = $block.find("input.form-control").eq(1).val();
+            let activity_description = $block.find(".editor-content").html();
+            let customerid = $('#customerpackid').val();
+            let packageid = $('#package').val();
+
+            // Update hidden field value
+            $block.find(".tour-description-hidden").val(activity_description);
+            // Show loading state on button
+            $button.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Saving...');
+
+
+            // Send AJAX request
+            $.ajax({
+                url: "{{ route('admin.deletecustomertourplan') }}",
+                type: "POST",
+                data: {
+                    _token: "{{ csrf_token() }}", // CSRF token
+                    day_id: day_id,
+                    day_title: day_title,
+                    day_subtitle: day_subtitle,
+                    activity_description: activity_description,
+                    customerid: customerid,
+                    packageid: packageid
+
+                },
+                success: function(response) {
+                    // Reset button state
+                    $button.prop('disabled', false).html('Save');
+
+                    if (response.success) {
+                        // Show SweetAlert success message
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success!',
+                            text: response.message,
+                            timer: 3000,
+                            showConfirmButton: false,
+                            position: 'top-end',
+                            toast: true
+                        });
+
+                        // If it was a new record, update the hidden ID field
+                        if (response.day_id && !day_id) {
+                            $block.find(".day-id").val(response.day_id);
+                        }
+                    } else {
+                        // Show error message
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: response.message || 'Something went wrong!',
+                        });
+                    }
+
+                    // ✅ Hide add button after adding new tour plan
+                    document.getElementById("add-day-btn").style.display = 'block';
+                },
+                error: function(xhr) {
+                    // Reset button state
+                    $button.prop('disabled', false).html('Save');
+
+                    console.error('Error details:', xhr.responseText);
+
+                    // Show error message
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Failed to save day. Please try again.',
+                    });
+                }
+            });
         });
     </script>
     @endsection

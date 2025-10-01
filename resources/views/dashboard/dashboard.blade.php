@@ -10,17 +10,17 @@
             <h5 class="mt-4">Welcome, <b>{{ Session::get('admin_name') }}</b></h5>
             <p>More Travel, More Peace</p>
         </div>
-        
+
         <!-- Dashboard Cards -->
         <div class="row">
-        
+
 
             <div class="col-12 col-sm-6 col-md-3 mb-4">
                 <div class="card shadow border-0 bg-white rounded d-flex align-items-center h-100">
                     <div class="card-body d-flex align-items-center w-100">
                         <!-- Icon on the left -->
                         <div class="px-2">
-                            <a href="/user"> <img src="/assets/image/dashboard/innerpece_dashboard_Wishlist_icon.svg" alt="" class="img-fluid" style="height: 60px;" />
+                            <a href="/user"> <img src="/assets/image/dashboard/userdetails.svg" alt="" class="img-fluid" style="height: 60px;" />
                             </a>
                             <!-- <img src="/assets/image/dashboard/innerpece_dashboard_Wishlist_icon.svg" alt="" class="img-fluid" style="height: 60px;" /> -->
                         </div>
@@ -29,6 +29,27 @@
                             <p class="icon-text mb-1">Total User</p>
                             <a href="/user">
                                 <h4 class="fw-semibold">{{ $userRegister }}</h4>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col-12 col-sm-6 col-md-3 mb-4">
+                <div class="card shadow border-0 bg-white rounded d-flex align-items-center h-100">
+                    <div class="card-body d-flex align-items-center w-100">
+                        <!-- Icon on the left -->
+                        <div class="px-2">
+                            <a href="/user"> <img src="/assets/image/dashboard/usergoogle.svg" alt="" class="img-fluid" style="height: 60px;" />
+                            </a>
+                            <!-- <img src="/assets/image/dashboard/innerpece_dashboard_Wishlist_icon.svg" alt="" class="img-fluid" style="height: 60px;" /> -->
+                        </div>
+                        <!-- Text on the right -->
+                        <div class="dash px-2">
+                            <p class="icon-text mb-1">Total User(Login With Google)</p>
+                            <a href="/user">
+                                <h4 class="fw-semibold">{{ $userRegisterGoogle }}</h4>
                             </a>
                         </div>
                     </div>
@@ -71,6 +92,34 @@
                             <a href="/client_review">
                                 <h4 class="fw-semibold">{{$clientReview}}</h4>
                             </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-sm-6 col-md-3 mb-4">
+                <div class="card shadow border-0 bg-white rounded d-flex align-items-center h-100 ">
+                    <div class="card-body d-flex align-items-center w-100">
+                        <!-- Icon on the left -->
+                        <div class="px-2">
+                            @if($followupCount > 0)
+                            <a href="{{ route('admin.home_enquiry_list', ['followupids' => implode(',', $followupIds)]) }}">
+                                <img src="/assets/image/dashboard/innerpece_dashboard_review_icon.svg" alt="" class="img-fluid" style="height: 60px;" />
+                            </a>
+                            @else
+                            <img src="/assets/image/dashboard/innerpece_dashboard_review_icon.svg" alt="" class="img-fluid" style="height: 60px;" />
+                            @endif
+                        </div>
+                        <!-- Text on the right -->
+                        <div class="dash px-2">
+                            <p class="icon-text mb-1">Today Followup</p>
+                            @if($followupCount > 0)
+                            <a href="{{ route('admin.home_enquiry_list', ['followupids' => implode(',', $followupIds)]) }}">
+                                <h4 class="fw-semibold">{{ $followupCount }}</h4>
+                            </a>
+                            @else
+                            <h4 class="fw-semibold">{{ $followupCount }}</h4>
+                            @endif
                         </div>
                     </div>
                 </div>

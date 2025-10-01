@@ -7,16 +7,16 @@
 
     a {
         font-family: 'Poppins', sans-serif;
-        font-weight:500;
-        color:#8B7eff;
-        font-size:13px;
+        font-weight: 500;
+        color: #8B7eff;
+        font-size: 13px;
     }
 
     .enquiry {
-       font-family: 'Poppins', sans-serif;
-        font-weight:600;
-        color:#282833;
-        font-size:13px;
+        font-family: 'Poppins', sans-serif;
+        font-weight: 600;
+        color: #282833;
+        font-size: 13px;
     }
 
     .modal {
@@ -41,7 +41,7 @@
         <h3 class="admin-title fw-bold">{{$title}}</h3>
     </div>
     <div class="text-end col-lg-6 ">
-       <b><a href="/dashboard">Dashboard</a> > <a class="enquiry" href="">Booking</a></b>
+        <b><a href="/dashboard">Dashboard</a> > <a class="enquiry" href="">Booking</a></b>
     </div>
     <div class="mt-2 mb-2 col-lg-12">
         <div class="d-flex justify-content-end">
@@ -51,7 +51,7 @@
         </div>
     </div>
 
-</div> 
+</div>
 
 
 
@@ -70,8 +70,9 @@
                         <th class="text-start"><span>Phone</span></th>
                         <th class="text-start"><span>Budget</span></th>
                         <th class="text-start"><span>Program Name</span></th>
-                        <th class="text-start"><span>Refered By</span></th>
-
+                        <th class="text-start"><span>Status</span></th>
+                        <!-- <th class="text-start"><span>Refered By</span></th> -->
+                        <th class="text-start"><span>Mail Processing</span></th>
                         <th class="text-start"><span>Action</span></th>
                     </tr>
                 </thead>
@@ -89,7 +90,34 @@
                         <td class="text-start">{{ $row->phone }}</td>
                         <td class="text-start">{{ $row->pricing }}</td>
                         <td class="text-start">{{ $row->program_title ?? 'null' }}</td>
-                        <td class="text-start">{{$row->reference_id ?? '-'}}</td>
+                        <td class="text-start">
+                            <select name="status"
+                                class="form-select statuschange"
+                                data-id="{{ $row->id }}"
+                                data-current="{{ $row->status }}">
+                                <option value="pending" {{ $row->status == 'pending' ? 'selected' : '' }}>Pending</option>
+                                <option value="processing" {{ $row->status == 'processing' ? 'selected' : '' }}>Processing</option>
+                                <option value="completed" {{ $row->status == 'completed' ? 'selected' : '' }}>Completed</option>
+                                <option value="rejected" {{ $row->status == 'rejected' ? 'selected' : '' }}>Rejected</option>
+                            </select>
+                        </td>
+
+                        <!-- <td class="text-start">{{$row->reference_id ?? '-'}}</td> -->
+
+
+                        <td class="text-start">
+                            <select name="email_template"
+                                class="form-select mailtemplate"
+                                data-id="{{ $row->id }}"
+                                data-current-template="{{ $row->email_template ?? '' }}">
+                                <option value="" disabled selected>Select a mail template</option>
+                                <option value="send_booking_process" {{ ($row->email_template ?? '') == 'send_booking_process' ? 'selected' : '' }}>Send booking process</option>
+                                <option value="advance_payment_completed" {{ ($row->email_template ?? '') == 'advance_payment_completed' ? 'selected' : '' }}>Advance payment completed</option>
+                                <option value="final_payment_completed" {{ ($row->email_template ?? '') == 'final_payment_completed' ? 'selected' : '' }}>Final payment completed</option>
+                                <option value="trip_completed" {{ ($row->email_template ?? '') == 'trip_completed' ? 'selected' : '' }}>Trip completed</option>
+                                <option value="trip_cancelled" {{ ($row->email_template ?? '') == 'trip_cancelled' ? 'selected' : '' }}>Trip cancelled</option>
+                            </select>
+                        </td>
 
                         <td class="text-start d-flex gap-1">
                             <a class="btn view-btn" href="{{ route('admin.enquiry_view', $row->id) }}">
@@ -149,7 +177,7 @@
 
 @section('scripts')
 <script>
-     $(document).ready(function() {
+    $(document).ready(function() {
         $('#cityTable').DataTable({
             "pageLength": 10,
             "lengthChange": true,
@@ -157,14 +185,138 @@
             "searching": true,
             "language": {
                 "emptyTable": "No records found",
-                "searchPlaceholder": "Search cities...",  // 👈 Your placeholder text
-                "search": ""  // 👈 This removes the "Search:" label
+                "searchPlaceholder": "Search cities...", // 👈 Your placeholder text
+                "search": "" // 👈 This removes the "Search:" label
             },
-            "columnDefs": [
-                { "orderable": true, "targets": [0, 3] }
-            ]
+            "columnDefs": [{
+                "orderable": true,
+                "targets": [0, 3]
+            }]
         });
-        
+
+
+        $('.statuschange').on('change', function() {
+            let select = $(this);
+            let newStatus = select.val();
+            let enquiryId = select.data('id');
+            let oldStatus = select.data('current');
+
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "Do you want to change this status?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, change it!',
+                cancelButtonText: 'No, cancel'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // ✅ Send AJAX request
+                    $.ajax({
+                        url: "{{ route('admin.followupstatuschange') }}",
+                        type: "POST",
+                        data: {
+                            _token: "{{ csrf_token() }}",
+                            enquiry_id: enquiryId,
+                            status: newStatus
+                        },
+                        success: function(response) {
+                            if (response.status == 1) {
+                                Swal.fire('Updated!', response.response, 'success');
+                                // update the current status
+                                select.data('current', newStatus);
+                            } else {
+                                Swal.fire('Error!', response.response, 'error');
+                                // reset dropdown to old value
+                                select.val(oldStatus);
+                            }
+                        },
+                        error: function() {
+                            Swal.fire('Error!', 'Something went wrong.', 'error');
+                            // reset dropdown to old value
+                            select.val(oldStatus);
+                        }
+                    });
+                } else {
+                    // ❌ Cancelled → reset dropdown
+                    select.val(oldStatus);
+                }
+            });
+        });
+
+        $('.mailtemplate').on('change', function() {
+            let select = $(this);
+            let newStatus = select.val();
+            let enquiryId = select.data('id');
+            let oldStatus = select.data('current');
+
+            // Prevent action if no value selected
+            if (!newStatus) {
+                return;
+            }
+
+            // Prevent action if same as current status
+            if (newStatus === oldStatus) {
+                return;
+            }
+
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "Do you want to send this mail template?",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, send it!',
+                cancelButtonText: 'No, cancel',
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Show loading state
+                    select.prop('disabled', true);
+
+                    // ✅ Send AJAX request
+                    $.ajax({
+                        url: "{{ route('admin.mailtemplate') }}",
+                        type: "POST",
+                        data: {
+                            _token: "{{ csrf_token() }}",
+                            enquiry_id: enquiryId,
+                            status: newStatus
+                        },
+                        success: function(response) {
+                            if (response.status == 1) {
+                                Swal.fire('Sent!', response.response, 'success');
+                                // update the current status
+                                select.data('current', newStatus);
+                                // Optional: Disable dropdown after successful send
+                                // select.prop('disabled', true);
+                            } else {
+                                Swal.fire('Error!', response.response, 'error');
+                                // reset dropdown to old value
+                                select.val(oldStatus);
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            let errorMessage = 'Something went wrong.';
+                            if (xhr.responseJSON && xhr.responseJSON.response) {
+                                errorMessage = xhr.responseJSON.response;
+                            }
+                            Swal.fire('Error!', errorMessage, 'error');
+                            // reset dropdown to old value
+                            select.val(oldStatus);
+                        },
+                        complete: function() {
+                            // Re-enable dropdown
+                            select.prop('disabled', false);
+                        }
+                    });
+                } else {
+                    // ❌ Cancelled → reset dropdown to old value
+                    select.val(oldStatus);
+                }
+            });
+        });
+
+
         // Populate modal with data
         $(document).on('click', '.view-btn', function() {
             // $('.view-btn').on('click', function() {

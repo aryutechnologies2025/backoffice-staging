@@ -36,9 +36,8 @@ class AuthController extends Controller
                 'required',
                 'email',
                 'max:255',
-                Rule::unique('users', 'email')->where(function ($query) {
-                    return $query->where('is_deleted', 0);
-                }),
+                Rule::unique('users', 'email')
+                    ->where(fn($q) => $q->where('is_deleted', 0)),
             ],
             'password' => 'required|min:8|confirmed',
             'dob' => 'required|date',

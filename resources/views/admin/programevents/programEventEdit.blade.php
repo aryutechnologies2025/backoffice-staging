@@ -199,74 +199,25 @@
                         <div class="add_form col-md-4">
                             <label class="mb-2">Title <span class="text-danger">*</span></label>
                             <input type="text" placeholder="Title" id="title" name="title"
-                                class="form-control py-2 rounded-3 shadow-sm" value="{{ $programdetails->title }}">
+                                class="form-control py-2 rounded-3 shadow-sm @error('title') is-invalid @enderror" value="{{ $programdetails->event_name }}">
+                        </div>
+                        <div class="add_form col-md-3">
+                            <label for="datetimePicker" class="form-label">Start Date & Time</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control flatpickr-input @error('start_datetime') is-invalid @enderror" name="start_datetime" id="datetimePicker" placeholder="Select date and time" value="{{ $programdetails->start_datetime }}">
+                                <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                            </div>
                         </div>
 
-                        <div class="add_form col-md-4">
-                            <label class="mb-2">Event Type<span class="text-danger">*</span></label>
-                            <select id="event_type" name="event_type"
-                                class="form-select py-2 rounded-3 shadow-sm" required>
-                                <option value="" disabled selected>Select Type</option>
-                                <option value="public" {{ $programdetails->event_type == 'public' ? 'selected' : '' }}>Public</option>
-                                <option value="private" {{ $programdetails->event_type == 'private' ? 'selected' : '' }}>Private</option>
-                            </select>
+                        <div class="add_form col-md-3">
+                            <label for="endDatetimePicker" class="form-label">End Date & Time</label>
+                            <div class="input-group">
+                                <input type="text" lass="form-control flatpickr-input @error('end_datetime') is-invalid @enderror" name="end_datetime" id="endDatetimePicker" placeholder="Select end date and time" value="{{ $programdetails->end_datetime }}">
+                                <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                            </div>
                         </div>
 
-                        <div class="add_form col-md-4">
-                            <label for="timezone" class="form-label">Select Timezone</label>
-                            <select id="timezone" name="timezone" class="form-select">
-                                <option value="" disabled {{ empty($programdetails->timezone) ? 'selected' : '' }}>Select Timezone</option>
 
-                                <option value="america_los_angeles" {{ $programdetails->timezone == 'america_los_angeles' ? 'selected' : '' }}>
-                                    Pacific Time - Los Angeles (GMT-07:00)
-                                </option>
-
-                                <option value="america_chicago" {{ $programdetails->timezone == 'america_chicago' ? 'selected' : '' }}>
-                                    Central Time - Chicago (GMT-05:00)
-                                </option>
-
-                                <option value="america_toronto" {{ $programdetails->timezone == 'america_toronto' ? 'selected' : '' }}>
-                                    Eastern Time - Toronto (GMT-04:00)
-                                </option>
-
-                                <option value="america_new_york" {{ $programdetails->timezone == 'america_new_york' ? 'selected' : '' }}>
-                                    Eastern Time - New York (GMT-04:00)
-                                </option>
-
-                                <option value="america_sao_paulo" {{ $programdetails->timezone == 'america_sao_paulo' ? 'selected' : '' }}>
-                                    Brasilia Standard Time - Sao Paulo (GMT-03:00)
-                                </option>
-
-                                <option value="europe_london" {{ $programdetails->timezone == 'europe_london' ? 'selected' : '' }}>
-                                    United Kingdom Time - London (GMT+01:00)
-                                </option>
-
-                                <option value="europe_madrid" {{ $programdetails->timezone == 'europe_madrid' ? 'selected' : '' }}>
-                                    Central European Time - Madrid (GMT+02:00)
-                                </option>
-
-                                <option value="europe_paris" {{ $programdetails->timezone == 'europe_paris' ? 'selected' : '' }}>
-                                    Central European Time - Paris (GMT+02:00)
-                                </option>
-
-                                <option value="asia_dubai" {{ $programdetails->timezone == 'asia_dubai' ? 'selected' : '' }}>
-                                    Gulf Standard Time - Dubai (GMT+04:00)
-                                </option>
-
-                                <option value="asia_kolkata" {{ $programdetails->timezone == 'asia_kolkata' ? 'selected' : '' }}>
-                                    India Standard Time - Kolkata (GMT+05:30)
-                                </option>
-
-                                <option value="asia_singapore" {{ $programdetails->timezone == 'asia_singapore' ? 'selected' : '' }}>
-                                    Singapore Standard Time - Singapore (GMT+08:00)
-                                </option>
-
-                                <option value="asia_tokyo" {{ $programdetails->timezone == 'asia_tokyo' ? 'selected' : '' }}>
-                                    Japan Standard Time - Tokyo (GMT+09:00)
-                                </option>
-                            </select>
-
-                        </div>
                     </div>
                 </div>
 
@@ -289,7 +240,7 @@
                                 @endif
                                 <p class="mt-2">Add Pic</p>
                             </label>
-                            <input type="file" id="file-cover" name="cover_img" class="form-control"
+                            <input type="file" id="file-cover" name="cover_img" class="form-control @error('cover_img') is-invalid @enderror"
                                 accept="image/png, image/jpeg, image/svg+xml"
                                 onchange="previewCoverImage(event)">
                             <div id="file-cover-error" class="text-danger"></div>
@@ -297,74 +248,27 @@
                                         [1200x120]</small> -->
                         </div>
                     </div>
-                </div>
 
+                    <div class="col-md-6">
+                        <div class="row g-3 pt-4">
+                            <!-- Upload Image Name -->
+                            <div class="add_form col-12 pt-4 forms">
+                                <label>Upload Image Name</label>
+                                <input type="text" id="upload_image_name" name="upload_image_name" placeholder="Rename the Photo" value="{{ $programdetails->upload_image_name }}" class="form-control py-2 rounded-3 shadow-sm w-50 ">
 
-                <!-- Gallery Images -->
-                <div id="photo-upload-container" class="row g-3">
-                    <label class="fw-bold mt-4">Gallery Image</label>
+                            </div>
 
-                    @php
-                    $images = !empty($programdetails->events_package_images)
-                    ? json_decode($programdetails->events_package_images, true)
-                    : [];
-                    $imageCount = count($images);
-                    @endphp
+                            <!-- Alternate Image Name -->
+                            <div class="add_form col-12 forms">
+                                <label>Alternate Image Name</label>
+                                <input type="text" id="alternate_image_name" name="alternate_image_name" placeholder="Alternate Name" value="{{ $programdetails->alternate_image_name }}" class="form-control py-2 rounded-3 shadow-sm w-50">
 
-                    @if ($imageCount > 0)
-                    @foreach ($images as $key => $image)
-                    <div class="col-md-2 col-sm-4 col-6 photo-upload-field"
-                        id="photo-field-{{ $key }}">
-                        <div class="form-input text-center">
-                            <label for="file-ip-{{ $key }}">
-                                <img class="img-fluid mt-3" id="file-ip-{{ $key }}-preview"
-                                    src="{{ asset($image) }}" alt="Image Preview">
-                                <p class="fw-light mt-2">Edit Pic</p>
-                            </label>
-                            <input type="file" name="img_{{ $key }}"
-                                id="file-ip-{{ $key }}" data-number="{{ $key }}"
-                                accept="image/*" onchange="previewGalleryImage(event, this)">
-                            <button type="button" class="btn btn-danger btn-sm mt-2 delete-photo-btn"
-                                data-key="{{ $key }}"
-                                data-image="{{ $image }}">Delete</button>
+                            </div>
                         </div>
                     </div>
-                    @endforeach
-                    @else
-                    <p>No images uploaded yet.</p>
-                    @endif
-                </div>
-
-                <!-- Hidden input to store deleted images -->
-                <input type="hidden" name="deleted_images" id="deleted-images" value="[]">
-
-                <div class="mt-3 mb-4">
-                    <button id="add-photo-btn" type="button" class="btn btn-primary">Add More
-                        Photos</button>
                 </div>
 
                 <script>
-                    // Start photo counter from existing gallery photos
-                    let photoCount = @json($imageCount);
-
-                    // Function to add a new gallery photo upload field
-                    document.getElementById('add-photo-btn').addEventListener('click', function() {
-                        photoCount++;
-                        const container = document.getElementById('photo-upload-container');
-                        const newFieldHtml = `
-                                <div class="col-md-2 col-sm-4 col-6 photo-upload-field" id="photo-field-${photoCount}">
-                                    <div class="form-input text-center">
-                                        <label for="file-ip-${photoCount}">
-                                            <img class="img-fluid mt-3" id="file-ip-${photoCount}-preview" src="/assets/image/dashboard/innerpece_addpic_icon.svg" alt="Image Preview">
-                                            <p class="fw-light mt-2">Add Pic</p>
-                                        </label>
-                                        <input type="file" name="img_${photoCount}" id="file-ip-${photoCount}" data-number="${photoCount}" accept="image/*" onchange="previewGalleryImage(event, this)">
-                                        <button type="button" class="btn btn-danger btn-sm mt-2 delete-photo-btn" data-key="${photoCount}">Delete</button>
-                                    </div>
-                                </div>`;
-                        container.insertAdjacentHTML('beforeend', newFieldHtml);
-                    });
-
                     // Function to preview the cover image after file selection
                     function previewCoverImage(event) {
                         const preview = document.getElementById('file-cover-preview'); // Updated to preview the image element
@@ -419,44 +323,57 @@
 
                 <div class="mb-3">
                     <div class="row g-4">
-                        <div class="add_form col-md-3">
-                            <label for="datetimePicker" class="form-label">Start Date & Time</label>
-                            <div class="input-group">
-                                <input type="text" class="form-control flatpickr-input" name="start_datetime" id="datetimePicker" placeholder="Select date and time" value="{{ $programdetails->start_datetime }}">
-                                <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
-                            </div>
+
+                        <!-- Hosted By -->
+                        <div class="add_form col-md-4">
+                            <label class="mb-2">Hosted By<span class="text-danger">*</span></label>
+                            <input type="text" placeholder="Hosted By" id="hosted_by" name="hosted_by" class="form-control py-2 rounded-3 shadow-sm @error('hosted_by') is-invalid @enderror" value="{{ $programdetails->hosted_by }}">
+
                         </div>
 
-                        <div class="add_form col-md-3">
-                            <label for="endDatetimePicker" class="form-label">End Date & Time</label>
-                            <div class="input-group">
-                                <input type="text" class="form-control flatpickr-input" name="end_datetime" id="endDatetimePicker" placeholder="Select end date and time" value="{{ $programdetails->end_datetime }}">
-                                <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
-                            </div>
+                        <!-- Welcome Message -->
+                        <div class="add_form col-md-6">
+                            <label class="mb-2">Welcome msg<span class="text-danger">*</span></label>
+                            <input type="text" placeholder="Welcome Msg" id="welcome_msg" name="welcome_msg" class="form-control py-2 rounded-3 shadow-sm @error('welcome_msg') is-invalid @enderror" value="{{ $programdetails->welcome_msg }}">
+
                         </div>
-                        <div class="col-md-6">
-                            <label>Enter location or virtual link</label>
-                            <div class="input-field">
-                                <i class="bi bi-search" style="margin-right:8px"></i>
-                                <input type="text" id="locationSearch" name="location_name" placeholder="Search for a location..." value="{{$programdetails->location_name}}">
-                            </div>
-                            <div id="searchResults" class="search-results"></div>
 
-                            <!-- ✅ Hidden fields that will be filled dynamically -->
-                            <input type="hidden" name="location_address" id="location_address" value="{{$programdetails->	location_address}}">
-                            <input type="hidden" name="latitude" id="latitude" value="{{$programdetails->latitude}}">
-                            <input type="hidden" name="longitude" id="longitude" value="{{$programdetails->	longitude}}">
-                            <input type="hidden" name="location_type" id="location_type" value="{{$programdetails->	location_type}}">
+                        <!-- Embed Map -->
+                        <div class="add_form col-md-6">
+                            <label class="mb-2">Location Address<span class="text-danger">*</span></label>
+                            <textarea placeholder="Location Address" id="location_address" name="location_address" class="form-control py-2 rounded-3 shadow-sm @error('location_address') is-invalid @enderror" rows="4" style="width: 100%; height: 120px;">{{ $programdetails->location_address }}</textarea>
 
-                            <div id="selectedLocationContainer">
-                                <div class="no-locations">Search for a location to select</div>
-                            </div>
+                        </div>
+
+                        <!-- Embed Map -->
+                        <div class="add_form col-md-6">
+                            <label class="mb-2">Location Iframe<span class="text-danger">*</span></label>
+                            <textarea placeholder="Location Iframe" id="embed_map" name="embed_map" class="form-control py-2 rounded-3 shadow-sm @error('embed_map') is-invalid @enderror" rows="4" style="width: 100%; height: 120px;">{{ $programdetails->embed_map }}</textarea>
+
+                        </div>
+
+
+                        <!-- Send Link -->
+                        <div class="add_form col-md-4">
+                            <label class="mb-2">Send Link<span class="text-danger">*</span></label>
+                            <input type="text" placeholder="Add map send a link" id="send_link" name="send_link" class="form-control py-2 rounded-3 shadow-sm @error('send_link') is-invalid @enderror" value="{{ $programdetails->send_link }}">
+
                         </div>
 
                         <div class="col-md-12">
-                            <label class="form-label">Description</label>
+                            <label class="form-label">About Event</label>
                             <textarea id="event_description" name="event_description" style="display:none;"></textarea>
                             <div id="eventdescription" style="height: 200px;"> {!! old('event_description', $programdetails->event_description) !!}</div>
+                        </div>
+
+
+                        <div class="row g-2 ">
+                            <div class="col">
+                                <h4> <label class="add_head fw-bold">Status</label></h4>
+                                <div class="form-check form-switch d-flex align-items-center">
+                                    <input class="form-check-input check_bx" type="checkbox" id="status" name="status" {{ $programdetails->status ? 'checked' : '' }}>
+                                </div>
+                            </div>
                         </div>
 
 
