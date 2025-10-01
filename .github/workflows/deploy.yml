@@ -1,4 +1,4 @@
-name: 🚀 Innerpece(Laravel) Deploy to Hostinger via FTP
+name: 🚀 Innerpece(Laravel) Deploy to Hostinger via SFTP
 
 on:
   push:
@@ -6,27 +6,25 @@ on:
       - main  # or your deployment branch
 
 jobs:
-  ftp-deploy:
+  sftp-deploy:
     runs-on: ubuntu-latest
 
     steps:
       - name: 📥 Checkout Code
         uses: actions/checkout@v3
 
-      - name: 🗂️ Upload Innerpece Files via FTP
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+      - name: 🗂️ Upload Innerpece Files via SFTP
+        uses: appleboy/scp-action@v0.1.7
         with:
-          server: ${{ secrets.FTP_HOST }}
+          host: ${{ secrets.FTP_HOST }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          port: 21
-          server-dir: /
-          protocol: ftp
-          active: true
-          dangerous-clean-slate: false
-          local-dir: ./
+          port: 22
+          source: "./"
+          target: "/var/www/backoffice-innerpece/"  # Adjust if your root folder is different
+          rm: false
+          strip_components: 0
+          overwrite: true
           exclude: |
-            **/vendor/**
-            **/vendor*/**
-          
-
+            vendor
+            node_modules
