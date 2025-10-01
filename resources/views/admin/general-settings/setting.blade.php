@@ -5,37 +5,34 @@
     a:hover {
         color: rgb(27, 108, 138);
     }
-
-    a {
+    a{
         font-family: 'Poppins', sans-serif;
-        font-weight: 500;
-        color: #8B7eff;
-        font-size: 13px;
+        font-weight:500;
+        color:#8B7eff;
+        font-size:13px;
     }
-
-    .city {
+    .city{
         font-family: 'Poppins', sans-serif;
-        font-weight: 600;
-        color: #282833;
-        font-size: 13px;
+        font-weight:600;
+        color:#282833;
+        font-size:13px;
     }
 
     .px-5 {
-
-        padding-left: 1rem !important;
-    }
-
-    .form-body {
-
-        padding-top: 1% !important;
-    }
+  
+  padding-left: 1rem !important; 
+}
+.form-body {
+   
+    padding-top: 1% !important;
+}
 </style>
 <div class="row body-sec py-3 px-5 justify-content-around">
     <div class="text-end col-lg-12 mb-3">
-        <b><a href="/dashboard">Dashboard</a> > <a class="city " href="/settings">Settings</a></b>
-
-    </div>
-    <div class="col-lg-12 mb-3">
+    <b><a href="/dashboard" >Dashboard</a> > <a class="city " href="/settings" >Settings</a></b>
+      
+   </div>   
+    <div class="col-lg-12 mb-3"> 
         <h3 class="admin-title fw-bold">{{ $title }}</h3>
         <!-- <p class="fw-light">There are many variations of passages of Lorem Ipsum</p> -->
     </div>
@@ -188,81 +185,12 @@
                         <input type="text" id="copyright" name="copyright" class="form-control py-2 rounded-3 shadow-sm" value="{{ old('copyright', $settings->copyright ?? 'Copyright © ' . date('Y') . ' by Innerpece. All Rights Reserved') }}" placeholder="Copyright Content">
                     </div>
                 </div>
-
-            </div>
-        </div>
-
-        <!-- Contact -->
-
-        <div class="row mb-5">
-            <h5 class="fw-bold mb-3">Leader Details</h5>
-            <div class="form-body px-5 py-5 rounded-4">
-                <div class="row mb-4">
-                    <div class="add_form col-lg-4">
-                        <label class="fw-bold mb-4 ">Leader</label>
-                        <input type="text" id="leader" name="leader" class="form-control py-2 rounded-3 shadow-sm" value="{{ old('leader', $settings->leader_name ?? '') }}" placeholder="Leader Name">
-                    </div>
-
-
-                    <div class="add_form col-lg-4">
-                        <label class="fw-bold mb-4 ">Contact</label>
-                        <input type="text" id="leader_contact" name="leader_contact" class="form-control py-2 rounded-3 shadow-sm" value="{{ old('leader_contact', $settings->leader_contact ?? '') }}" placeholder="Leader Contact">
-                    </div>
+                <div class="col-lg-12 text-center mt-5">
+                    <a href="{{ route('admin.dashboard') }}">
+                        <button type="button" class="cancel-btn"> Cancel </button>
+                    </a>
+                    <button class="submit-btn sbmtBtn ms-4"> Submit </button>
                 </div>
-
-            </div>
-        </div>
-
-
-        <!-- Accounts -->
-
-        <div class="row mb-5">
-            <h5 class="fw-bold mb-3">Accounts Details</h5>
-            <div class="form-body px-5 py-5 rounded-4">
-                <div class="row mb-4">
-                    <div class="add_form col-lg-4">
-                        <label class="fw-bold mb-4 ">GPay</label>
-                        <input type="text" id="gpay_number" name="gpay_number" class="form-control py-2 rounded-3 shadow-sm" value="{{ old('gpay_number', $settings->gpay_number ?? '') }}" placeholder="GPay">
-                    </div>
-
-
-                    <div class="add_form col-lg-4">
-                        <label class="fw-bold mb-4 ">AC Name</label>
-                        <input type="text" id="ac_name" name="ac_name" class="form-control py-2 rounded-3 shadow-sm" value="{{ old('ac_name', $settings->ac_name ?? '') }}" placeholder="Account Holder Name">
-                    </div>
-
-                    <div class="add_form col-lg-4">
-                        <label class="fw-bold mb-4 ">AC No</label>
-                        <input type="text" id="ac_number" name="ac_number" class="form-control py-2 rounded-3 shadow-sm" value="{{ old('ac_number', $settings->ac_number ?? '') }}" placeholder="Account Number">
-                    </div>
-                </div>
-                <div class="row mb-4">
-                    <div class="add_form col-lg-4">
-                        <label class="fw-bold mb-4 ">IFSC Code</label>
-                        <input type="text" id="ifsc_code" name="ifsc_code" class="form-control py-2 rounded-3 shadow-sm" value="{{ old('ifsc_code', $settings->ifsc_code ?? '') }}" placeholder="IFSC Code">
-                    </div>
-
-
-                    <div class="add_form col-lg-4">
-                        <label class="fw-bold mb-4 ">Bank Name</label>
-                        <input type="text" id="bank_name" name="bank_name" class="form-control py-2 rounded-3 shadow-sm" value="{{ old('bank_name', $settings->bank_name ?? '') }}" placeholder="Bank Name">
-                    </div>
-
-                    <div class="add_form col-lg-4">
-                        <label class="fw-bold mb-4 ">Branch Name</label>
-                        <input type="text" id="branch_name" name="branch_name" class="form-control py-2 rounded-3 shadow-sm" value="{{ old('branch_name', $settings->branch_name ?? '') }}" placeholder="Branch Name">
-                    </div>
-                </div>
-
-            </div>
-        </div>
-
-        <div class="row mb-5">
-            <div class="col-lg-12 text-center mt-5">
-                <a href="{{ route('admin.dashboard') }}">
-                    <button type="button" class="cancel-btn"> Cancel </button>
-                </a>
-                <button class="submit-btn sbmtBtn ms-4"> Submit </button>
             </div>
         </div>
     </form>

@@ -47,8 +47,6 @@ use App\Http\Controllers\Admin\ActivityController;
 use App\Http\Controllers\Admin\PricingCalculatorController;
 use App\Http\Controllers\Admin\StayreviewController;
 use App\Http\Controllers\Admin\ProgramEventsController;
-use App\Http\Controllers\Admin\EventRegisterController;
-use App\Http\Controllers\Admin\MailTemplateController;
 
 use App\Models\stay_desitination;
 use Illuminate\Support\Facades\Artisan;
@@ -189,8 +187,6 @@ Route::prefix('/')->group(function () {
                 Route::post('/activity-details', 'edit_activity_details')->name('admin.ec_activity_details');
                 Route::post('/cabs-details', 'edit_cabs_details')->name('admin.ec_cabs_details');
                 Route::post('/delete-customer-details', 'delete_customer_details')->name('admin.delete_customer_details');
-                Route::post('/update-customer-tourplan', 'updatecustomertourplan')->name('admin.updatecustomertourplan');
-                Route::post('/delete-customer-tourplan', 'deletecustomertourplan')->name('admin.deletecustomertourplan');
             });
         });
 
@@ -491,8 +487,6 @@ Route::prefix('/')->group(function () {
                 Route::get('/add', 'add_form')->name('admin.enquiry_add_form');
                 Route::get('/{id}/view', 'view_form')->name('admin.enquiry_view');
                 Route::post('/delete', 'delete')->name('admin.enquiry_delete');
-                Route::post('/status-change', 'change_status')->name('admin.followupstatuschange');
-                Route::post('/mailtemplate', 'mailtemplate')->name('admin.mailtemplate');
             });
         });
         Route::post('/enquiry/followup', [EnquiryController::class, 'markFollowUp']);
@@ -715,30 +709,6 @@ Route::prefix('/')->group(function () {
                 Route::post('/{id}/update', 'update')->name('admin.programeventupdate');
                 Route::post('/delete', 'delete')->name('admin.programeventdelete');
                 Route::post('/change-status', 'change_status')->name('admin.programeventstatus');
-            });
-        });
-
-        //Event Registration
-
-        Route::controller(EventRegisterController::class)->group(function () {
-            Route::prefix('events-register')->group(function () {
-                Route::get('/', 'list')->name('admin.registereventslist');
-                Route::post('/delete', 'delete')->name('admin.registereventdelete');
-                Route::post('/change-status', 'change_status')->name('admin.registereventstatus');
-            });
-        });
-
-
-        //Mail Template
-        Route::controller(MailTemplateController::class)->group(function () {
-            Route::prefix('mail-template')->group(function () {
-                Route::get('/', 'list')->name('admin.mailtemplatelist');
-                Route::get('/add', 'add')->name('admin.mailtemplateadd');
-                Route::post('/insert', 'insert')->name('admin.mailtemplatestore');
-                Route::get('/{id}/edit', 'edit')->name('admin.mailtemplateedit');
-                Route::post('/{id}/update', 'update')->name('admin.mailtemplateupdate');
-                Route::post('/delete', 'delete')->name('admin.mailtemplatedelete');
-                Route::post('/change-status', 'change_status')->name('admin.mailtemplatestatus');
             });
         });
     });

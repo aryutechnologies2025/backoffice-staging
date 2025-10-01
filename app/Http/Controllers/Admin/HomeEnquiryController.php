@@ -13,28 +13,11 @@ class HomeEnquiryController extends Controller
     public function list(Request $request)
     {
         $title = 'Enquiry List';
-
-        // Get followup IDs from request if exists
-        $followupIds = $request->get('followupids');
-
-        if ($followupIds) {
-            // Convert string of IDs to array
-            $followupIdsArray = explode(',', $followupIds);
-
-            // Filter enquiries by followup IDs
-            $enquiry_dts = HomeEnquiryDetail::whereIn('id', $followupIdsArray)
-                ->orderBy('created_at', 'desc')
-                ->where('is_deleted', '0')
-                ->get();
-        } else {
-            // Show all enquiries (normal behavior)
-            $enquiry_dts = HomeEnquiryDetail::orderBy('created_at', 'desc')
-                ->where('is_deleted', '0')
-                ->get();
-        }
+        $enquiry_dts = HomeEnquiryDetail::orderBy('created_at', 'desc')->where('is_deleted','0')->get();
 
         return view('admin.home_enquiry.homeenquirylist', compact('title', 'enquiry_dts'));
     }
+
 
     public function markFollowUp(Request $request, $id)
     {
@@ -98,7 +81,7 @@ class HomeEnquiryController extends Controller
     public function stayList(Request $request)
     {
         $title = 'Stay Enquiry List';
-        $enquiry_dts = stay_enquiry_details::orderBy('created_at', 'desc')->where('is_deleted', '0')->get();
+        $enquiry_dts = stay_enquiry_details::orderBy('created_at', 'desc')->where('is_deleted','0')->get();
 
         return view('admin.stay_enquiry.stayenquirylist', compact('title', 'enquiry_dts'));
     }

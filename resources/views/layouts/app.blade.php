@@ -4,7 +4,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="robots" content="noindex, nofollow">
     <!-- <meta name="csrf-token" content="{{ csrf_token() }}"> -->
     <title>{{ $settings->meta_title ?? 'Inner Pece' }}</title>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
@@ -159,10 +158,10 @@
                         <img src="/assets/image/dashboard/contact-us.svg" alt="">
                         <span class="nav_name">contact-Us</span>
                     </a>
-                    <!-- <a href="{{ route('admin.assistance_form_list') }}" class="nav_link {{ request()->routeIs(['admin.assistance_form_list']) ? 'active' : '' }} mb-3 text-white">
+                    <a href="{{ route('admin.assistance_form_list') }}" class="nav_link {{ request()->routeIs(['admin.assistance_form_list']) ? 'active' : '' }} mb-3 text-white">
                         <i class="bi bi-info-square"></i>
                         <span class="nav_name">Assitance Form</span>
-                    </a> -->
+                    </a>
                     <a href="{{ route('admin.enquiry_list') }}" class="nav_link {{ request()->routeIs(['admin.enquiry_list']) ? 'active' : '' }} mb-3 text-white">
                         <img src="/assets/image/dashboard/enquiry.svg" alt="">
                         <span class="nav_name"> Booking </span>
@@ -198,7 +197,7 @@
 
                     <a href="{{ route('admin.citylist') }}" class="nav_link {{ request()->routeIs(['admin.citylist', 'admin.city_add_form', 'admin.city_edit_form']) ? 'active' : '' }} mb-3 text-white">
                         <img src="/assets/image/dashboard/location-pin.svg" alt="">
-                        <span class="nav_name"> Packages Destionation </span>
+                        <span class="nav_name"> Destination </span>
                     </a>
 
                     <a href="{{ route('admin.staylist') }}" class="nav_link {{ request()->routeIs(['admin.staylist', 'admin.stays_add_form', 'admin.stay_details_edit_form']) ? 'active' : '' }} mb-3 text-white">
@@ -211,15 +210,15 @@
                     </a>
                     <a href="{{ route('admin.staypricinglist') }}" class="nav_link {{ request()->routeIs(['admin.staypricing_add_form', 'admin.staypricinglist', 'admin.staypricing_edit_form']) ? 'active' : '' }} mb-3 text-white">
                         <img src="/assets/image/dashboard/stay.png" alt="" class="stay-img">
-                        <span class="nav_name"> Stay Pricing(PC) </span>
+                        <span class="nav_name"> Stay Pricing </span>
                     </a>
                     <a href="{{ route('admin.cablist') }}" class="nav_link {{ request()->routeIs(['admin.cab_add_form', 'admin.cablist', 'admin.cab_edit_form']) ? 'active' : '' }} mb-3 text-white">
                         <img src="/assets/image/dashboard/stay.png" alt="" class="stay-img">
-                        <span class="nav_name"> Cab(PC) </span>
+                        <span class="nav_name"> Cab </span>
                     </a>
                     <a href="{{ route('admin.activitylist') }}" class="nav_link {{ request()->routeIs(['admin.activity_add_form', 'admin.activitylist', 'admin.activity_edit_form']) ? 'active' : '' }} mb-3 text-white">
                         <img src="/assets/image/dashboard/stay.png" alt="" class="stay-img">
-                        <span class="nav_name"> Activity(PC) </span>
+                        <span class="nav_name"> Activity </span>
                     </a>
                     <a href="{{ route('admin.pricinglist') }}" class="nav_link {{ request()->routeIs(['admin.pricing_add_form', 'admin.pricinglist', 'admin.pricing_edit_form']) ? 'active' : '' }} mb-3 text-white">
                         <img src="/assets/image/dashboard/stay.png" alt="" class="stay-img">
@@ -239,28 +238,15 @@
                         <img src="/assets/image/dashboard/program.svg" alt="">
                         <span class="nav_name"> Programs </span>
                     </a>
-
-                    <li class="nav-item dropdown">
-                        <a class="nav_link dropdown-toggle {{ request()->routeIs(['admin.programeventslist', 'admin.programeventsadd']) ? 'active' : '' }} mb-3 text-white d-flex align-items-center"
-                            href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <img src="/assets/image/dashboard/program.svg" alt="Events" class="me-2" width="20" height="20">
-                            <span class="nav_name">Events</span>
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <li>
-                                <a class="dropdown-item {{ request()->routeIs(['admin.programeventslist', 'admin.programeventsadd', 'admin.programeventedit']) ? 'active' : '' }}"
-                                    href="{{ route('admin.programeventslist') }}">
-                                    Event List
-                                </a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item {{ request()->routeIs(['admin.registereventslist']) ? 'active' : '' }}" href="{{ route('admin.registereventslist') }}">
-                                    Event Registration
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-
+<!-- 
+                    <a href="{{ route('admin.programeventslist') }}" class="nav_link {{ request()->routeIs(['admin.programeventslist', 'admin.programeventsadd']) ? 'active' : '' }} mb-3 text-white">
+                        <img src="/assets/image/dashboard/program.svg" alt="">
+                        <span class="nav_name"> Programs Events</span>
+                    </a> -->
+                    <!-- <a href="{{ route('admin.address_list') }}" class="nav_link {{ request()->routeIs(['admin.address_list', 'admin.address_add_form', 'admin.address_edit_form']) ? 'active' : '' }} mb-3 text-white">
+                        <img src="/assets/image/dashboard/program.svg" alt="">
+                        <span class="nav_name"> Address </span>
+                    </a> -->
                     <a href="{{ route('admin.client_review_list') }}" class="nav_link {{ request()->routeIs(['admin.client_review_list', 'admin.client_review_add_form', 'admin.client_review_edit_form']) ? 'active' : ''}} mb-3 text-white">
                         <img src="/assets/image/dashboard/review.svg" alt="">
                         <span class="nav_name"> Review </span>
@@ -392,10 +378,6 @@
                         <img src="/assets/image/dashboard/settings.svg" alt="">
                         <span class="nav_name" style="color: #fff;"> General Setting </span>
                     </a>
-                    <a href="{{ route('admin.mailtemplatelist') }}" class="nav_link {{ request()->routeIs(['admin.mailtemplatelist', 'admin.mailtemplateadd', 'admin.mailtemplateedit']) ? 'active' : '' }} mb-3">
-                        <img src="/assets/image/dashboard/settings.svg" alt="">
-                        <span class="nav_name" style="color: #fff;"> Mail Template </span>
-                    </a>
                     <div class="profile-content mb-4">
                         <a href="{{ route('admin.logout') }}" class="nav_link mb-5 ">
                             <img class="" src="/assets/image/dashboard/turn-off.svg" alt="">
@@ -524,8 +506,8 @@
             @if(session('success'))
             toastr.success("{{ session('success') }}");
             @endif
-            @if($errors -> any())
-            @foreach($errors -> all() as $error)
+            @if($errors-> any())
+            @foreach($errors-> all() as $error)
             toastr.error("{{ $error }}");
             @endforeach
             @endif

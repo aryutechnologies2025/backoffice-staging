@@ -46,7 +46,6 @@
                     <tr class="rounded-top-4">
                         <th class="text-start">S.No</th>
                         <th class="text-start">Title</th>
-                        <th class="text-start">Status</th>
                         <th class="text-start">Action</th>
                     </tr>
                 </thead>
@@ -56,7 +55,7 @@
 
                     <tr>
                         <td class="text-start">{{ $loop->iteration }}</td>
-                        <td class="text-start">{{ ucfirst($row->event_name) }}</td>
+                        <td class="text-start">{{ ucfirst($row->title) }}</td>
                         @php
                         $disp_status = 'In Active';
                         $actTitle = 'Click to activate';

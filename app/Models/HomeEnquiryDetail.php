@@ -27,8 +27,7 @@ class HomeEnquiryDetail extends Model
         'child_count',
         'child_age',
         'engagement_date',
-        'birth_date',
-        'travel_enddate'
+        'birth_date'
 
     ];
 

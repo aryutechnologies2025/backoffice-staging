@@ -24,56 +24,64 @@ class ProgramEventsController extends Controller
     public function insert(Request $request)
     {
         // dd($request->all());
+        // Handle dynamic image uploads
+        $imagePaths = [];
+        $fileInputs = $request->file();
 
-        // Validation rules
-        $validatedData = $request->validate([
-            'title' => 'required|string|max:255',
-            'start_datetime' => 'required|date',
-            'end_datetime' => 'required|date|after:start_datetime',
-            'hosted_by' => 'required|string|max:255',
-            'welcome_msg' => 'required|string',
-            'send_link' => 'required|url',
-            'embed_map' => 'required|string',
-            'event_description' => 'required|string',
-            'location_address' => 'required' // 2MB max
-        ], [
-            // 'cover_img.required' => 'The cover image is required.',
-            'end_datetime.after' => 'The end datetime must be after the start datetime.',
-            'send_link.url' => 'The send link must be a valid URL.'
-        ]);
+        foreach ($fileInputs as $key => $files) {
+            if (strpos($key, 'img_') === 0) {
+                if (is_array($files)) {
+                    foreach ($files as $file) {
+                        if ($file->isValid()) {
+                            $fileName = time() . '_' . $file->getClientOriginalName();
+                            $destinationPath = public_path('/uploads/events_program_images');
+                            if (!file_exists($destinationPath)) {
+                                mkdir($destinationPath, 0755, true);
+                            }
+                            $file->move($destinationPath, $fileName);
+                            $imagePaths[] = '/uploads/events_program_images/' . $fileName;
+                        }
+                    }
+                } else {
+                    if ($files->isValid()) {
+                        $fileName = time() . '_' . $files->getClientOriginalName();
+                        $destinationPath = public_path('/uploads/events_program_images');
+                        if (!file_exists($destinationPath)) {
+                            mkdir($destinationPath, 0755, true);
+                        }
+                        $files->move($destinationPath, $fileName);
+                        $imagePaths[] = '/uploads/events_program_images/' . $fileName;
+                    }
+                }
+            }
+        }
 
-
+        // Additional file handling for cover image
         $filePath1 = null;
         if ($request->hasFile('cover_img')) {
             $file1 = $request->file('cover_img');
-
-            // Get the original filename without extension
-            $originalName = pathinfo($file1->getClientOriginalName(), PATHINFO_FILENAME);
-
-            // Add timestamp and random number to original filename
-            $timestamp = now()->format('YmdHis');
-            $random = rand(100000, 999999);
-            $filename1 = $originalName . '_' . $timestamp . '_' . $random . '.' . $file1->getClientOriginalExtension();
-
+            $customFileName = preg_replace('/[^A-Za-z0-9_\-]/', '_', $request->input('upload_image_name', 'default_image_name'));
+            $filename1 = $customFileName . '.' . $file1->getClientOriginalExtension();
             $file1->move(public_path('/uploads/events_program_images'), $filename1);
             $filePath1 = '/uploads/events_program_images/' . $filename1;
         }
 
         $programevents = new ProgramEvents();
+        $programevents->events_package_images = json_encode($imagePaths);
         $programevents->cover_img = $filePath1;
         $programevents->upload_image_name = $request->input('upload_image_name');
         $programevents->alternate_image_name = $request->input('alternate_image_name');
-        $programevents->event_name = $request->input('title');
+        $programevents->title = $request->input('title');
+        $programevents->event_type = $request->input('event_type');
+        $programevents->timezone = $request->input('timezone');
         $programevents->start_datetime = $request->input('start_datetime');
         $programevents->end_datetime = $request->input('end_datetime');
-        $programevents->send_link = $request->input('send_link');
-        $programevents->embed_map = $request->input('embed_map');
-        $programevents->welcome_msg = $request->input('welcome_msg');
-        $programevents->hosted_by = $request->input('hosted_by');
-        $programevents->event_description = $request->input('event_description');
+        $programevents->location_name = $request->input('location_name');
         $programevents->location_address = $request->input('location_address');
-        
-        $programevents->status = $request->has('status') && $request->input('status') === 'on' ? '1' : '0';
+        $programevents->latitude = $request->input('latitude');
+        $programevents->longitude = $request->input('longitude');
+        $programevents->location_type = $request->input('location_type');
+        $programevents->event_description = $request->input('event_description');
         $programevents->save();
 
         if ($programevents) {
@@ -85,79 +93,114 @@ class ProgramEventsController extends Controller
         }
     }
 
-    public function edit(Request $request, $id)
+    public function edit(Request $request)
     {
-        $title = 'Edit Event';
-        $programdetails = ProgramEvents::where('id', $id)->where('is_deleted', '0')->orderBy('id', 'desc')->first();
+        $title = 'Events Edit';
+        $programdetails = ProgramEvents::where('is_deleted', '0')->orderBy('id', 'desc')->first();
         return view('admin.programevents.programEventEdit', compact('title', 'programdetails'));
     }
 
     public function update(Request $request, $id)
     {
-        // Validate the request
-        $validatedData = $request->validate([
-            'title' => 'required|string|max:255',
-            'start_datetime' => 'required|date',
-            'end_datetime' => 'required|date|after:start_datetime',
-            'hosted_by' => 'required|string|max:255',
-            'welcome_msg' => 'required|string',
-            'send_link' => 'required|url',
-            'embed_map' => 'required|string',
-            'event_description' => 'required|string',
-            'location_address' => 'required' // 2MB max
-        ], [
-            // 'cover_img.required' => 'The cover image is required.',
-            'end_datetime.after' => 'The end datetime must be after the start datetime.',
-            'send_link.url' => 'The send link must be a valid URL.'
-        ]);
 
+        // dd($request->input('title'));
         $program_events = ProgramEvents::find($id);
         if (!$program_events) {
             return redirect()->route('admin.programeventslist')
                 ->with('error', 'Record not found');
         }
 
-        // Handle cover image upload
+        // Get current images for deletion tracking
+        $currentImages = json_decode($program_events->events_package_images, true);
+        if (!is_array($currentImages)) {
+            $currentImages = [];
+        }
+
+        // Handle dynamic image uploads
+        $imagePaths = $currentImages; // Start with existing images
+        $fileInputs = $request->file();
+
+        // Track deleted images
+        $deletedImages = $request->input('deleted_images', []);
+        $deletedImages = json_decode($deletedImages, true); // Decode the list of deleted images
+        foreach ($deletedImages as $deletedImage) {
+            if (in_array($deletedImage, $currentImages)) {
+                // Delete the image from the filesystem
+                $oldImagePath = public_path($deletedImage);
+                if (file_exists($oldImagePath)) {
+                    unlink($oldImagePath);
+                }
+                // Remove the image from the imagePaths array
+                $imagePaths = array_filter($imagePaths, fn($path) => $path !== $deletedImage);
+            }
+        }
+
+        // Handle new image uploads
+        foreach ($fileInputs as $key => $files) {
+            if (strpos($key, 'img_') === 0) {
+                if (is_array($files)) {
+                    foreach ($files as $file) {
+                        if ($file->isValid()) {
+                            $fileName = time() . '_' . $file->getClientOriginalName();
+                            $destinationPath = public_path('/uploads/events_program_images');
+                            if (!file_exists($destinationPath)) {
+                                mkdir($destinationPath, 0755, true);
+                            }
+                            $file->move($destinationPath, $fileName);
+                            $imagePaths[] = '/uploads/events_program_images/' . $fileName;
+                        }
+                    }
+                } else {
+                    if ($files->isValid()) {
+                        $fileName = time() . '_' . $files->getClientOriginalName();
+                        $destinationPath = public_path('/uploads/events_program_images');
+                        if (!file_exists($destinationPath)) {
+                            mkdir($destinationPath, 0755, true);
+                        }
+                        $files->move($destinationPath, $fileName);
+                        $imagePaths[] = '/uploads/events_program_images/' . $fileName;
+                    }
+                }
+            }
+        }
+
         if ($request->hasFile('cover_img')) {
+            // Get the uploaded file
             $coverImage = $request->file('cover_img');
 
             // Sanitize the file name
-            $originalName = pathinfo($coverImage->getClientOriginalName(), PATHINFO_FILENAME);
-            $timestamp = now()->format('YmdHis');
-            $random = rand(100000, 999999);
-            $filename = $originalName . '_' . $timestamp . '_' . $random . '.' . $coverImage->getClientOriginalExtension();
+            $customFileName = preg_replace('/[^A-Za-z0-9_\-]/', '_', $request->input('upload_image_name', 'default_image_name'));
+            $customFileName = rand(1000, 9999) . '_' . time();
+            $coverImageName = $customFileName . '_cover.' . $coverImage->getClientOriginalExtension();
+            $coverImagePath = 'uploads/events_program_images/';
+            $coverImage->move(public_path($coverImagePath), $coverImageName);
 
-            $coverImage->move(public_path('/uploads/events_program_images'), $filename);
-            $filePath = '/uploads/events_program_images/' . $filename;
-
-            // Delete old cover image if exists
-            if ($program_events->cover_img && file_exists(public_path($program_events->cover_img))) {
-                unlink(public_path($program_events->cover_img));
-            }
-
-            $program_events->cover_img = $filePath;
+            // Save the file path in the database
+            $program_events->cover_img = $coverImagePath . $coverImageName;
         }
 
-        // Update other fields
+
+        $program_events->events_package_images = json_encode($imagePaths);
         $program_events->upload_image_name = $request->input('upload_image_name');
         $program_events->alternate_image_name = $request->input('alternate_image_name');
-        $program_events->event_name = $request->input('title'); // This is the title field
+        $program_events->title = $request->input('title');
+        $program_events->event_type = $request->input('event_type');
+        $program_events->timezone = $request->input('timezone');
         $program_events->start_datetime = $request->input('start_datetime');
         $program_events->end_datetime = $request->input('end_datetime');
-        $program_events->send_link = $request->input('send_link');
-        $program_events->embed_map = $request->input('embed_map');
-        $program_events->welcome_msg = $request->input('welcome_msg');
-        $program_events->hosted_by = $request->input('hosted_by');
-        $program_events->event_description = $request->input('event_description');
+        $program_events->location_name = $request->input('location_name');
         $program_events->location_address = $request->input('location_address');
-        $program_events->status = $request->has('status') && $request->input('status') === 'on' ? '1' : '0';
+        $program_events->latitude = $request->input('latitude');
+        $program_events->longitude = $request->input('longitude');
+        $program_events->location_type = $request->input('location_type');
+        $program_events->event_description = $request->input('event_description');
         $program_events->save();
 
         return redirect()->route('admin.programeventslist')
-            ->with('success', 'Record updated successfully');
+                ->with('success', 'Record updated successfully');
     }
 
-    public function change_status(Request $request)
+     public function change_status(Request $request)
     {
         // Retrieve the request data
         $record_id = $request->input('record_id');

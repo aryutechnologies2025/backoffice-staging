@@ -66,7 +66,7 @@
     </div>
 
     <!-- Bootstrap Modal -->
-    <div class="modal fade" id="travelDetailsModal" tabindex="-1" aria-labelledby="travelDetailsModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal fade" id="travelDetailsModal" tabindex="-1" aria-labelledby="travelDetailsModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
@@ -80,44 +80,37 @@
                         <div class="row">
                             <div class="col-md-4">
                                 <label>Customer Name</label>
-                                <input type="text" name="customer_name" class="form-control" value="{{ $enquiry->name }}">
+                                <input type="text" name="customer_name" class="form-control" required>
                             </div>
                             <div class="col-md-4">
                                 <label>Customer Location</label>
-                                <input type="text" name="customer_location" class="form-control" value="{{ $enquiry->location }}">
+                                <input type="text" name="customer_location" class="form-control" required>
                             </div>
                             <div class="col-md-4">
                                 <label>Booking Date</label>
-                                <input type="date" name="booking_date" class="form-control" value="{{ $enquiry->created_at ? date('Y-m-d', strtotime($enquiry->created_at)) : '' }}">
+                                <input type="date" name="booking_date" class="form-control" required>
                             </div>
                         </div>
 
                         <div class="row mt-3">
                             <div class="col-md-4">
                                 <label>Event Name</label>
-                                <!-- <input type="text" name="event_name" class="form-control" required> -->
-                                <select name="package_stay" id="package_stay" class="form-select">
-                                    <option disabled selected>Select Program</option>
-                                    @foreach($programdetails as $id => $name)
-                                    <option value="{{$id}}">{{ $name }}</option>
-
-                                    @endforeach
-                                </select>
+                                <input type="text" name="event_name" class="form-control" required>
                             </div>
                             <div class="col-md-4">
                                 <label>No. of Persons</label>
-                                <input type="number" name="no_of_persons" class="form-control" value="{{ $enquiry->total_count }}">
+                                <input type="number" name="no_of_persons" class="form-control" required>
                             </div>
                             <div class="col-md-4">
                                 <label>Travel Start Date</label>
-                                <input type="date" name="travel_start_date" class="form-control" value="{{ $enquiry->travel_date }}">
+                                <input type="date" name="travel_start_date" class="form-control" required>
                             </div>
                         </div>
 
                         <div class="row mt-3">
                             <div class="col-md-4">
                                 <label>Travel End date</label>
-                                <input type="date" name="travel_end_date" class="form-control" value="{{ $enquiry->travel_enddate }}">
+                                <input type="date" name="travel_end_date" class="form-control" required>
                             </div>
                             <div class="col-md-4">
                                 <label>Native to Transport</label>
@@ -127,9 +120,8 @@
                                 </select>
                             </div>
                             <div class="col-md-4">
-                                <label>Travel Date</label>
-                                <!-- <input type="datetime-local" name="travel_date_time" class="form-control"> -->
-                                 <input type="date" name="travel_date_time" class="form-control"  value="{{ $enquiry->travel_date }}">
+                                <label>Travel Date & Timing</label>
+                                <input type="datetime-local" name="travel_date_time" class="form-control">
                             </div>
                         </div>
 
@@ -142,10 +134,8 @@
                                 </select>
                             </div>
                             <div class="col-md-4">
-                                <label>Return Date</label>
-                                <!-- <input type="datetime-local" name="return_date_time" class="form-control">
-                                  -->
-                                 <input type="date" name="return_date_time" class="form-control"  value="{{ $enquiry->travel_enddate }}">
+                                <label>Return Date & Timing</label>
+                                <input type="datetime-local" name="return_date_time" class="form-control">
                             </div>
                             <div class="col-md-4">
                                 <label>Bus Service</label>

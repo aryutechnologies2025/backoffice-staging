@@ -30,7 +30,7 @@
 
 <div class="row body-sec py-4 justify-content-around ">
     <div class="col-lg-6">
-        <b><a href="/dashboard">Dashboard</a> > <a class="" href="/home-enquiry">Enquiry List</a> >
+        <b><a href="/dashboard">Dashboard</a> > <a class="" href="/enquiry">Enquiry List</a> >
             <a class="enquiry" href="">FollowUp</a>
         </b>
         <br><br>
@@ -84,7 +84,7 @@
 </div>
 
 <!-- Modal -->
-<div class="modal fade" id="followUpModals" tabindex="-1" aria-labelledby="followUpModalLabels" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+<div class="modal fade" id="followUpModals" tabindex="-1" aria-labelledby="followUpModalLabels" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -97,7 +97,7 @@
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <strong><label class="form-label">Follow-up Date <span class="text-danger">*</span></label></strong>
-                            <input type="date" id="follow_up_date" name="follow_up_date" class="form-control" value="{{ old('follow_up_date', date('Y-m-d')) }}" >
+                            <input type="date" id="follow_up_date" name="follow_up_date" class="form-control">
                         </div>
                         <div class="col-md-6">
                             <strong><label for="lead_source" class="form-label">Lead Source <span class="text-danger">*</span></label></strong>

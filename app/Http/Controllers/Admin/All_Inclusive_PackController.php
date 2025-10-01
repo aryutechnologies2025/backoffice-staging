@@ -16,7 +16,7 @@ use App\Models\Geo_feature;
 use App\Models\Themes;
 use App\Models\Themes_category;
 use App\Models\Destination_category;
-use App\Models\stays_destination_details;
+use App\Models\stay_district;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
 
@@ -61,12 +61,9 @@ class All_Inclusive_PackController extends Controller
         $foodBeverages = FoodBeverage::where('status', "1")->where('is_deleted', "0")->get();
         $activities = Activities::where('status', "1")->where('is_deleted', "0")->get();
         $safety_features = Safetyfeatures::where('status', "1")->where('is_deleted', "0")->get();
-        $safety_features = Safetyfeatures::where('status', "1")->where('is_deleted', "0")->get();
-        $stay_details = stays_destination_details::where('is_deleted', '0')->select('id', 'stay_title')->orderBy('created_at', 'desc')->get();
-
         // $geo_feature = Geo_feature::where('status', "1")->where('is_deleted', "0")->pluck('geo_feature', 'id');
 
-        return view('admin.inclusive_packages.inclusive_packagesadd', compact('title', 'cities', 'themes', 'amenities', 'foodBeverages', 'activities', 'safety_features', 'stay_details'));
+        return view('admin.inclusive_packages.inclusive_packagesadd', compact('title', 'cities', 'themes', 'amenities', 'foodBeverages', 'activities', 'safety_features'));
     }
 
 
@@ -182,7 +179,6 @@ class All_Inclusive_PackController extends Controller
         $safetyFeaturesJson = json_encode($request->input('safety_features'));
         $campRulesJson = json_encode($request->input('camp_rule'));
         $theme = $request->input('themes_name', []);
-        $stay_details = $request->input('stays_name', []);
 
 
         // Insert into MySQL
@@ -198,7 +194,6 @@ class All_Inclusive_PackController extends Controller
         $inclusive_packages->alternate_name = $request->input('alternate_image_name');
 
         $inclusive_packages->theme_id = implode(',', $theme);
-        $inclusive_packages->stays_name = implode(',', $stay_details);
         $inclusive_packages->city_details = $request->input('cities_name');
         // $inclusive_packages->location_name = $request->input('district_name');
         $inclusive_packages->title = $request->input('title');
@@ -263,7 +258,7 @@ class All_Inclusive_PackController extends Controller
         $safety_features_dts = Safetyfeatures::where('status', "1")->where('is_deleted', "0")->get();
         $geo_feature_dts = Geo_feature::where('status', "1")->where('is_deleted', "0")->pluck('geo_feature', 'id');
         $themes = Themes::where('status', "1")->where('is_deleted', "0")->pluck('themes_name', 'id');
-        $stay_details = stays_destination_details::where('is_deleted', '0')->select('id', 'stay_title')->orderBy('created_at', 'desc')->get();
+
         // dd($package_details);
         if (!$package_details) {
             return redirect()->route('admin.inclusive_package_list')->with('error', 'Package not found');
@@ -295,7 +290,7 @@ class All_Inclusive_PackController extends Controller
         //         echo"<pre>";
         // print_r($package_details->theme_id);die;
 
-        return view('admin.inclusive_packages.inclusive_packagesedit', compact('package_details', 'title', 'cities_dts', 'themes', 'amenities_dts', 'foodBeverages_dts', 'activities_dts', 'safety_features_dts', 'selectedCityId', 'selectedAmenities', 'selectedthemeId', 'selectedfood_beverages', 'selectedactivities', 'selectedsafety_features', 'geo_feature_dts', 'selectedgeo_featureId', 'categories', 'dest_categories', 'selecteddesCategoryId', 'selectedCategoryId', 'selectedprogram', 'selectedLocationname','stay_details'));
+        return view('admin.inclusive_packages.inclusive_packagesedit', compact('package_details', 'title', 'cities_dts', 'themes', 'amenities_dts', 'foodBeverages_dts', 'activities_dts', 'safety_features_dts', 'selectedCityId', 'selectedAmenities', 'selectedthemeId', 'selectedfood_beverages', 'selectedactivities', 'selectedsafety_features', 'geo_feature_dts', 'selectedgeo_featureId', 'categories', 'dest_categories', 'selecteddesCategoryId', 'selectedCategoryId', 'selectedprogram', 'selectedLocationname'));
     }
 
 
@@ -433,7 +428,6 @@ class All_Inclusive_PackController extends Controller
         $safetyFeaturesJson = json_encode($request->input('safety_features', []));
         $campRulesJson = json_encode($request->input('camp_rule'));
         $theme = $request->input('themes_name', []);
-        $stay_details = $request->input('stays_name', []);
         // Update the model fields
         // $inclusive_packages->program_pdf = $filePath;
         $inclusive_packages->upload_image_name = $request->input('upload_image_name');
@@ -441,7 +435,6 @@ class All_Inclusive_PackController extends Controller
         $inclusive_packages->program_inclusion = $request->input('program_inclusion');
         $inclusive_packages->program_exclusion = $request->input('program_exclusion');
         $inclusive_packages->theme_id = implode(',', $theme);
-        $inclusive_packages->stays_name = implode(',', $stay_details);
         $inclusive_packages->location = $request->input('location');
         $inclusive_packages->city_details = $request->input('cities_name');
         // $inclusive_packages->location_name = $request->input('district_name');
@@ -465,6 +458,7 @@ class All_Inclusive_PackController extends Controller
 
         // $inclusive_packages->tour_planning = $request->input('tour_planning', []);
         $inclusive_packages->tour_planning = json_encode($request->input('tour_planning'));
+
         $inclusive_packages->start_date = $request->input('start_date');
         $inclusive_packages->return_date = $request->input('return_date');
         $inclusive_packages->total_days = $request->input('total_days');

@@ -5,8 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Admin;
-use App\Models\FollowUp;
-use App\Models\HomeEnquiryDetail;
 
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
@@ -87,50 +85,32 @@ class AdminController extends Controller
     public function dashboard()
     {
         $title = 'Dashboard';
-
+    
         $programCount = Cache::remember('program_count', 120, function () {
             return DB::table('inclusive_package_details')->where('is_deleted', "0")->count();
         });
-
-        $userRegister = DB::table('users')->where('is_deleted', "0")->where('login_type', 'login')->count();
-
+    
+        $userRegister = Cache::remember('user_register_count', 120, function () {
+            return DB::table('users')->where('is_deleted', "0")->count();
+        });
+    
         $enquiryCount = Cache::remember('enquiry_count', 120, function () {
             return DB::table('enquiry_details')->count();
         });
-
+    
         $clientReview = Cache::remember('client_review_count', 120, function () {
             return DB::table('client_review')->where('is_deleted', "0")->count();
         });
-
-        $userRegisterGoogle = DB::table('users')->where('is_deleted', "0")->where('login_type', 'google')->count();
-
-        $current_date = date('Y-m-d');
-        $followupIds = FollowUp::where('next_follow_up_date', $current_date)
-            ->orderBy('id', 'desc')
-            ->pluck('home_id')
-            ->toArray();
-
-        if (!empty($followupIds)) {
-            $enquiry_dts = HomeEnquiryDetail::whereIn('id', $followupIds)
-                ->orderBy('created_at', 'desc')
-                ->where('is_deleted', '0')
-                ->get();
-        } else {
-            $enquiry_dts = collect(); // Empty collection
-        }
-
-        $followupCount = count($followupIds);
-
-
-        return view('dashboard.dashboard', compact('title', 'programCount', 'userRegister', 'enquiryCount', 'clientReview', 'userRegisterGoogle', 'followupCount', 'followupIds'));
+    
+        return view('dashboard.dashboard', compact('title', 'programCount', 'userRegister', 'enquiryCount', 'clientReview'));
     }
-
+    
 
     // public function getInclusivePackagesCount()
     // {
     //     // Get the count of inclusive packages
     //     $programCount = DB::table('inclusive_package_details')->where('is_deleted', "0")->count();
-
+    
     //     // Return view with the count
     //     return view('dashboard.dashboard', compact('programCount'));
     // }

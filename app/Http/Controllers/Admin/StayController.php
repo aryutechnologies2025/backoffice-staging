@@ -111,7 +111,6 @@ class StayController extends Controller
         $stay_details->package_inclusion = $request->input('program_inclusion');
         $stay_details->package_exclusion = $request->input('program_exclusion');
         $stay_details->district = $request->input('district_name');
-        $stay_details->stay_location_title = $request->input('stay_location_title');
 
         $stay_details->amenity_details = $amenitiesJson;
         $stay_details->food_beverages = $foodBeveragesJson;
@@ -192,7 +191,6 @@ class StayController extends Controller
         $stay_details->tag_line = $request->input('tag_line');
 
         $stay_details->district = $request->input('district_name');
-        $stay_details->stay_location_title = $request->input('stay_location_title');
 
         $stay_details->discount_price = $request->input('price_amount');
         $stay_details->actual_price = $request->input('actual_price_amount');
@@ -439,8 +437,7 @@ class StayController extends Controller
                     'tag_line' => $items->tag_line,
                     'review' => $items->stagReviews,
                     'stay_inclusive' => $items->package_inclusion,
-                    'stay_exclusive' => $items->package_exclusion,
-                     'stay_location_title' => $items->stay_location_title,
+                    'stay_exclusive' => $items->package_exclusion
                 ];
             });
 
