@@ -69,6 +69,6 @@ class Kernel extends HttpKernel
 
     protected $routeMiddleware = [
         // Other middleware...
-        'increase.size' => \App\Http\Middleware\IncreaseRequestSize::class,
+        // 'increase.size' => \App\Http\Middleware\IncreaseRequestSize::class,
     ];
 }
