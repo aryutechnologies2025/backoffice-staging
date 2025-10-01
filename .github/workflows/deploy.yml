@@ -14,17 +14,17 @@ jobs:
         uses: actions/checkout@v3
 
       - name: 🗂️ Upload Innerpece Files via SFTP
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        uses: appleboy/scp-action@v0.1.7
         with:
-          server: ${{ secrets.FTP_HOST }}
+          host: ${{ secrets.FTP_HOST }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          protocol: sftp
           port: 22
-          server-dir: ${{ secrets.FTP_REMOTE_DIR }}
-          active: false
-          dangerous-clean-slate: false
-          local-dir: ./
+          source: "./"
+          target: "/var/www/backoffice-innerpece/"  # Adjust if your root folder is different
+          rm: false
+          strip_components: 0
+          overwrite: true
           exclude: |
-            **/vendor/**
-            **/vendor*/**
+            vendor
+            node_modules
