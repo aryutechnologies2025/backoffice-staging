@@ -11,7 +11,7 @@ class Safety_featuresController extends Controller
     public function list(Request $request)
     {
         $title = 'Safety Features List';
-        $safety_features = Safetyfeatures::where('is_deleted', '0')->paginate(10);
+        $safety_features = Safetyfeatures::where('is_deleted', '0')->get();
         return view('admin.safety_features.safety_featureslist', compact('title', 'safety_features'));
     }
 
