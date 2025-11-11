@@ -14,8 +14,7 @@ class WishlistController extends Controller
         // $wishlist_dts = Program_wishlist::with('user','program_dts')->orderBy('created_at', 'desc')->paginate(10);
 
         $wishlist_dts = Program_wishlist::with(['program_dts', 'user'])
-        ->orderBy('created_at', 'desc')
-        ->paginate(10);
+        ->orderBy('created_at', 'desc')->get();
 //         echo"<pre>";
 // print_r($wishlist_dts);die;
         return view('admin.wish_list.wishlist', compact('title', 'wishlist_dts'));

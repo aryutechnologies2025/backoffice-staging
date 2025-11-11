@@ -28,7 +28,8 @@ class CityController extends Controller
         $credentials = $request->validate([
             'city_name' => 'required',
             'list_order' => 'required',
-            'image_1' => 'required',
+            'program_image' => 'required',
+            'stay_image' => 'required',
         ]);
 
         $cityPath = public_path('/uploads/cities_pic');
@@ -36,20 +37,35 @@ class CityController extends Controller
             mkdir($cityPath, 0755, true);
         }
 
-        if ($request->hasFile('image_1')) {
-            $file1 = $request->file('image_1');
-            $customFileName = preg_replace('/[^A-Za-z0-9_\-]/', '_', $request->input('upload_image_name'));
+        $filePath1 = null;
+        $filePath2 = null;
+
+        if ($request->hasFile('program_image')) {
+            $file1 = $request->file('program_image');
+            $customFileName = preg_replace('/[^A-Za-z0-9_\-]/', '_', $request->input('program_upload_image_name'));
             $filename1 = $customFileName . '.' . $file1->getClientOriginalExtension();
-            $file1->move( $cityPath, $filename1);
+            $file1->move($cityPath, $filename1);
             $filePath1 = 'uploads/cities_pic/' . $filename1;
+        }
+
+        if ($request->hasFile('stay_image')) {
+            $file1 = $request->file('stay_image');
+            $customFileName = preg_replace('/[^A-Za-z0-9_\-]/', '_', $request->input('stay_upload_image_name'));
+            $filename1 = $customFileName . '.' . $file1->getClientOriginalExtension();
+            $file1->move($cityPath, $filename1);
+            $filePath2 = 'uploads/cities_pic/' . $filename1;
         }
 
         $City = new City;
         $City->city_name = $request->input('city_name');
+        $City->description = $request->input('description');
         $City->list_order = $request->input('list_order');
         $City->cities_pic = $filePath1;
-        $City->upload_image_name = $request->input('upload_image_name');
-        $City->alternate_name = $request->input('alternate_image_name'); // Save alternate name
+        $City->stay_images = $filePath2;
+        $City->upload_image_name = $request->input('program_upload_image_name');
+        $City->alternate_name = $request->input('program_alternate_image_name'); // Save alternate name
+        $City->stay_upload_image_name = $request->input('stay_upload_image_name');
+        $City->stay_alternate_name = $request->input('stay_alternate_image_name'); // Save alternate name
         $City->status = $request->has('status') && $request->input('status') === 'on' ? '1' : '0';
         $City->created_date = date('Y-m-d H:i:s');
         $City->created_by = 'admin';
@@ -73,6 +89,8 @@ class CityController extends Controller
         $validatedData = $request->validate([
             'city_name' => 'required',
             'list_order' => 'required',
+            // 'program_image' => 'required',
+            // 'stay_image' => 'required',
         ]);
 
         $cityPath = public_path('/uploads/cities_pic');
@@ -87,20 +105,33 @@ class CityController extends Controller
         }
 
         $filePath1 = $City->cities_pic; // Initialize with existing value
+        $filePath2 = $City->stay_images;
 
-        if ($request->hasFile('image_1')) {
-            $file1 = $request->file('image_1');
-            $customFileName = preg_replace('/[^A-Za-z0-9_\-]/', '_', $request->input('upload_image_name'));
+        if ($request->hasFile('program_image')) {
+            $file1 = $request->file('program_image');
+            $customFileName = preg_replace('/[^A-Za-z0-9_\-]/', '_', $request->input('program_upload_image_name'));
             $filename1 = $customFileName . '.' . $file1->getClientOriginalExtension();
-            $file1->move(  $cityPath, $filename1);
+            $file1->move($cityPath, $filename1);
             $filePath1 = 'uploads/cities_pic/' . $filename1;
         }
 
+        if ($request->hasFile('stay_image')) {
+            $file1 = $request->file('stay_image');
+            $customFileName = preg_replace('/[^A-Za-z0-9_\-]/', '_', $request->input('stay_upload_image_name'));
+            $filename1 = $customFileName . '.' . $file1->getClientOriginalExtension();
+            $file1->move($cityPath, $filename1);
+            $filePath2 = 'uploads/cities_pic/' . $filename1;
+        }
+
         $City->cities_pic = $filePath1;
+        $City->stay_images = $filePath2;
         $City->city_name = $request->input('city_name');
+        $City->description = $request->input('description');
         $City->list_order = $request->input('list_order');
-        $City->alternate_name = $request->input('alternate_image_name'); // Save alternate name
-        $City->upload_image_name = $request->input('upload_image_name');
+        $City->upload_image_name = $request->input('program_upload_image_name');
+        $City->alternate_name = $request->input('program_alternate_image_name'); // Save alternate name
+        $City->stay_upload_image_name = $request->input('stay_upload_image_name');
+        $City->stay_alternate_name = $request->input('stay_alternate_image_name'); // Save alternate name
         $City->updated_date = date('Y-m-d H:i:s');
         $City->status = $request->has('status') && $request->input('status') === 'on' ? '1' : '0';
         $City->updated_by = 'admin';

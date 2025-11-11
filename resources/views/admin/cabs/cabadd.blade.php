@@ -21,7 +21,7 @@
         /* Consistent padding for both sides */
     }
 
-   
+
 
     .mb-1 {
         margin-bottom: .5rem !important;
@@ -135,7 +135,7 @@
                                 class="form-select py-2 rounded-3 shadow-sm" required>
                                 <option value="" disabled selected>Select Destination</option>
                                 @foreach($cities as $id => $name)
-                                <option value="{{ $name }}" @if(old('cities_name')=='{{ $id }}' ) selected @endif>
+                                <option value="{{ $id }}" @if(old('cities_name')=='{{ $id }}' ) selected @endif>
                                     {{ $name }}
                                 </option>
                                 @endforeach
@@ -220,7 +220,7 @@
                     </a>
                     <button class="submit-btn sbmtBtn ms-4 mb-5"> Submit </button>
                 </div>
-           </form>
+            </form>
         </div>
     </div>
 </div>
@@ -230,7 +230,6 @@
 
 <script>
     $(document).ready(function() {
-
         $('#cities_name').change(function() {
             const destination = $(this).val();
             const districtSelect = $('#district_name');
@@ -251,8 +250,11 @@
 
             // AJAX request
             $.ajax({
-                url: '/get-districts/' + encodeURIComponent(destination),
+                url: '/get-single-districts',
                 type: 'GET',
+                data: {
+                    destination: destination
+                }, // e.g. "13,15"
                 success: function(data) {
                     console.log('Received data:', data); // Debugging
 
@@ -264,8 +266,8 @@
                         $.each(data, function(index, district) {
                             districtSelect.append(
                                 $('<option>', {
-                                    value: district,
-                                    text: district
+                                    value: district.id, // Use district.id for value
+                                    text: district.name // Use district.name for display text
                                 })
                             );
                         });

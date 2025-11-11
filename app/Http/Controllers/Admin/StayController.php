@@ -10,6 +10,7 @@ use App\Models\FoodBeverage;
 use App\Models\Safetyfeatures;
 use App\Models\stay_district;
 use App\Models\stays_destination_details;
+use App\Models\stay_desitination;
 use App\Models\stays_whishlist;
 use Illuminate\Http\Request;
 use MongoDB\Operation\Find;
@@ -25,7 +26,8 @@ class StayController extends Controller
     public function add_form()
     {
 
-        $cities = stay_district::where('status', "1")->where('is_deleted', "0")->pluck('destination', 'id');
+        // $cities = stay_desitination::where('status', "1")->where('is_deleted', "0")->where('status', "1")->pluck('city_name', 'id');
+        $cities = City::where('status', '1')->where('is_deleted', '0')->pluck('city_name', 'id');
         // $cities = City::where('status', "1")->where('is_deleted', "0")->pluck('city_name', 'id');
         // $themes = Themes::where('status', "1")->where('is_deleted', "0")->pluck('themes_name', 'id');
         $amenities = Amenities::where('status', "1")->where('is_deleted', "0")->get();
@@ -111,6 +113,7 @@ class StayController extends Controller
         $stay_details->package_inclusion = $request->input('program_inclusion');
         $stay_details->package_exclusion = $request->input('program_exclusion');
         $stay_details->district = $request->input('district_name');
+        $stay_details->stay_location_title = $request->input('stay_location_title');
 
         $stay_details->amenity_details = $amenitiesJson;
         $stay_details->food_beverages = $foodBeveragesJson;
@@ -191,6 +194,7 @@ class StayController extends Controller
         $stay_details->tag_line = $request->input('tag_line');
 
         $stay_details->district = $request->input('district_name');
+        $stay_details->stay_location_title = $request->input('stay_location_title');
 
         $stay_details->discount_price = $request->input('price_amount');
         $stay_details->actual_price = $request->input('actual_price_amount');
@@ -255,12 +259,12 @@ class StayController extends Controller
     public function edit_form(Request $request, $id)
     {
         $stay_details = stays_destination_details::find($id);
-        $cities_dts = stay_district::where('status', "1")->where('is_deleted', "0")->pluck('destination', 'id');
+        // $cities_dts = stay_district::where('status', "1")->where('is_deleted', "0")->pluck('destination', 'id');
         $amenities_dts = Amenities::where('status', "1")->where('is_deleted', "0")->get();
         $foodBeverages_dts = FoodBeverage::where('status', "1")->where('is_deleted', "0")->get();
         $activities_dts = Activities::where('status', "1")->where('is_deleted', "0")->get();
         $safety_features_dts = Safetyfeatures::where('status', "1")->where('is_deleted', "0")->get();
-
+        $cities_dts = City::where('status', '1')->where('is_deleted', '0')->pluck('city_name', 'id');
 
         if (!$stay_details) {
             return redirect()->route('admin.inclusive_package_list')->with('error', 'Package not found');
@@ -337,6 +341,55 @@ class StayController extends Controller
 
         // Return the response as JSON
         return response()->json($response);
+    }
+
+    public function getDistrictsList(Request $request)
+    {
+        try {
+            $destination = $request->input('destination');
+
+            // Validate destination parameter
+            if (!$destination) {
+                return response()->json([], 400);
+            }
+
+            $stayDistrict = stay_district::where('destination', $destination)->where('status','1')->where('is_deleted','0')->first();
+
+            if (!$stayDistrict) {
+                return response()->json([]);
+            }
+
+            // Check if districts_data is already an array or needs decoding
+            $districts = is_array($stayDistrict->districts_data)
+                ? $stayDistrict->districts_data
+                : json_decode($stayDistrict->districts_data, true);
+
+            // Handle JSON decoding errors
+            if (json_last_error() !== JSON_ERROR_NONE && !is_array($stayDistrict->districts_data)) {
+                \Log::error('JSON decode error: ' . json_last_error_msg());
+                return response()->json([]);
+            }
+
+            if (!is_array($districts)) {
+                return response()->json([]);
+            }
+
+            // Extract district names safely
+            $districtNames = [];
+            foreach ($districts as $district) {
+                if (isset($district['destination']) && !empty($district['destination'])) {
+                    $districtNames[] = $district['destination'];
+                }
+            }
+
+            // Remove duplicates and reindex array
+            $uniqueDistricts = array_values(array_unique($districtNames));
+
+            return response()->json($uniqueDistricts);
+        } catch (\Exception $e) {
+            \Log::error('Error in getDistrictsList: ' . $e->getMessage());
+            return response()->json([], 500);
+        }
     }
 
 
@@ -420,12 +473,12 @@ class StayController extends Controller
 
         $stags = stays_destination_details
             ::where('is_deleted', '0')
-            ->with('stagReviews')
+            ->with('stagReviews','city')
             ->where('id', $programId)->get()
             ->map(function ($items) {
                 return [
                     'images' => json_decode($items->gallery_image),
-                    'destination' => $items->destination,
+                    'destination' => $items->city->city_name ?? null,
                     'district' => $items->district,
                     'stay_title' => $items->stay_title,
                     'stay_description' => $items->stay_description,
@@ -437,7 +490,8 @@ class StayController extends Controller
                     'tag_line' => $items->tag_line,
                     'review' => $items->stagReviews,
                     'stay_inclusive' => $items->package_inclusion,
-                    'stay_exclusive' => $items->package_exclusion
+                    'stay_exclusive' => $items->package_exclusion,
+                    'stay_location_title' => $items->stay_location_title,
                 ];
             });
 
@@ -502,6 +556,7 @@ class StayController extends Controller
     public function getDistricts($destination)
     {
         try {
+            // $stayDistrict = stay_desitination::where('destination', $destination)->first();
             $stayDistrict = stay_district::where('destination', $destination)->first();
 
             if (!$stayDistrict) {
@@ -520,14 +575,124 @@ class StayController extends Controller
             // Extract district names
             $districtNames = array_column($districts, 'destination');
 
-
             return response()->json(array_values(array_unique($districtNames)));
         } catch (\Exception $e) {
             return response()->json([], 500);
         }
     }
 
-    public function getDistrictsProgram($destination)
+    public function getMultiDistricts(Request $request)
+    {
+        try {
+            $destinationIds = $request->input('destination', []);
+
+            // Handle both string ("13,15") and array (["13", "15"]) formats
+            if (is_string($destinationIds)) {
+                $destinationIds = array_map('trim', explode(',', $destinationIds));
+            }
+
+            // If it's not an array after conversion or empty, return empty array
+            if (!is_array($destinationIds) || empty($destinationIds)) {
+                return response()->json([]);
+            }
+
+            // Convert all destination IDs to integers for consistent comparison
+            $destinationIds = array_map('intval', $destinationIds);
+
+            $stayDistricts = stay_district::whereIn('destination', $destinationIds)->where('status', '1')->where('is_deleted','0')->get();
+
+            $allDistricts = [];
+            $idCounter = 1;
+
+            foreach ($stayDistricts as $stayDistrict) {
+                $districtsData = is_array($stayDistrict->districts_data)
+                    ? $stayDistrict->districts_data
+                    : json_decode($stayDistrict->districts_data, true);
+
+                // Check if JSON decoding was successful and we have an array
+                if (is_array($districtsData)) {
+                    foreach ($districtsData as $district) {
+                        if (isset($district['destination'])) {
+                            $allDistricts[] = [
+                                'id' => (string) $idCounter++,
+                                'name' => $district['destination'],
+                                'value' => $district['destination'] // Add value field for frontend
+                            ];
+                        }
+                    }
+                }
+            }
+
+            // Remove duplicates based on name while keeping the structure
+            $uniqueDistricts = [];
+            $seenNames = [];
+
+            foreach ($allDistricts as $district) {
+                if (!in_array($district['name'], $seenNames)) {
+                    $uniqueDistricts[] = $district;
+                    $seenNames[] = $district['name'];
+                }
+            }
+
+            // dd($uniqueDistricts);
+
+            return response()->json($uniqueDistricts);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+
+    public function getSingleDistricts(Request $request)
+    {
+        try {
+            $destinationIds = $request->input('destination');
+
+
+            if (empty($destinationIds)) {
+                return response()->json([]);
+            }
+
+            $stayDistricts = stay_district::where('destination', $destinationIds)->where('status', '1')->where('is_deleted','0')->get();
+
+            $allDistricts = [];
+            $idCounter = 1;
+
+            foreach ($stayDistricts as $stayDistrict) {
+                $districtsData = is_array($stayDistrict->districts_data)
+                    ? $stayDistrict->districts_data
+                    : json_decode($stayDistrict->districts_data, true);
+
+                if (is_array($districtsData)) {
+                    foreach ($districtsData as $district) {
+                        if (isset($district['destination'])) {
+                            $allDistricts[] = [
+                                'id' => (string) $idCounter++,
+                                'name' => $district['destination']
+                            ];
+                        }
+                    }
+                }
+            }
+
+            // Remove duplicates based on name while keeping the structure
+            $uniqueDistricts = [];
+            $seenNames = [];
+
+            foreach ($allDistricts as $district) {
+                if (!in_array($district['name'], $seenNames)) {
+                    $uniqueDistricts[] = $district;
+                    $seenNames[] = $district['name'];
+                }
+            }
+
+            return response()->json($uniqueDistricts);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    public function getDistricts_name($destination)
     {
         try {
             $stayDistrict = stay_district::where('destination', $destination)->first();
@@ -548,6 +713,32 @@ class StayController extends Controller
             // Extract district names
             $districtNames = array_column($districts, 'destination');
 
+            return response()->json(array_values(array_unique($districtNames)));
+        } catch (\Exception $e) {
+            return response()->json([], 500);
+        }
+    }
+
+    public function getDistrictsProgram($destination)
+    {
+        try {
+            $stayDistrict = stay_district::where('destination', $destination)->where('status', '1')->where('is_deleted', '0')->first();
+
+            if (!$stayDistrict) {
+                return response()->json([]);
+            }
+
+            // Check if districts_data is already an array
+            $districts = is_array($stayDistrict->districts_data)
+                ? $stayDistrict->districts_data
+                : json_decode($stayDistrict->districts_data, true);
+
+            if (!is_array($districts)) {
+                throw new \Exception("Invalid districts data format");
+            }
+
+            // Extract district names
+            $districtNames = array_column($districts, 'destination');
 
             return response()->json(array_values(array_unique($districtNames)));
         } catch (\Exception $e) {

@@ -47,6 +47,8 @@ use App\Http\Controllers\Admin\ActivityController;
 use App\Http\Controllers\Admin\PricingCalculatorController;
 use App\Http\Controllers\Admin\StayreviewController;
 use App\Http\Controllers\Admin\ProgramEventsController;
+use App\Http\Controllers\Admin\EventRegisterController;
+use App\Http\Controllers\Admin\MailTemplateController;
 
 use App\Models\stay_desitination;
 use Illuminate\Support\Facades\Artisan;
@@ -165,6 +167,9 @@ Route::prefix('/')->group(function () {
             Route::prefix('customer-package')->group(function () {
                 Route::get('/', 'list')->name('admin.CustomerPackage_list');
                 Route::get('/add', 'add_form')->name('admin.CustomerPackage_form');
+                // Route::get('/get-packages-by-city/{city_id}','getPackagesByCity');
+                Route::post('/get-packages-by-city', 'getPackagesByCity');
+
                 Route::post('/insert', 'insert')->name('admin.CustomerPackage_insert');
                 Route::post('/delete', 'delete')->name('admin.CustomerPackage_delete');
                 Route::post('/change-status', 'change_status')->name('admin.CustomerPackage_status');
@@ -174,19 +179,22 @@ Route::prefix('/')->group(function () {
 
 
                 Route::post('/package-details', 'package_details')->name('admin.CustomerPackage_details');
+                Route::post('/packageStay-details', 'getCustomerStay')->name('admin.CustomerPackageStay_details');
                 Route::post('/duplicate-entry-details', 'duplicatePackage')->name('admin.CustomerPackage_dupdetails');
                 Route::post('/pricing-details', 'pricing_details')->name('admin.c_pricing_details');
                 Route::post('/c_stay-details', 'stay_details')->name('admin.c_stay_details');
                 Route::post('/c_activity-details', 'activity_details')->name('admin.c_activity_details');
                 Route::post('/c_travel-details', 'travel_details')->name('admin.c_travel_details');
                 Route::post('/c_cabs-details', 'cabs_details')->name('admin.c_cabs_details');
-
+                 Route::post('/edit-pricing-details', 'edit_pricing_details')->name('admin.edit_pricing_details');
                 //Edit stay
 
                 Route::post('/stay-details', 'edit_stay_details')->name('admin.ec_stay_details');
                 Route::post('/activity-details', 'edit_activity_details')->name('admin.ec_activity_details');
                 Route::post('/cabs-details', 'edit_cabs_details')->name('admin.ec_cabs_details');
                 Route::post('/delete-customer-details', 'delete_customer_details')->name('admin.delete_customer_details');
+                Route::post('/update-customer-tourplan', 'updatecustomertourplan')->name('admin.updatecustomertourplan');
+                Route::post('/delete-customer-tourplan', 'deletecustomertourplan')->name('admin.deletecustomertourplan');
             });
         });
 
@@ -483,10 +491,13 @@ Route::prefix('/')->group(function () {
         Route::controller(EnquiryController::class)->group(function () {
             Route::prefix('enquiry')->group(function () {
                 Route::get('/', 'list')->name('admin.enquiry_list');
+                Route::get('/download-all', 'downloadAll')->name('admin.downloadAll');
                 Route::post('/store', 'insert')->name('admin.enquiry_store');
                 Route::get('/add', 'add_form')->name('admin.enquiry_add_form');
                 Route::get('/{id}/view', 'view_form')->name('admin.enquiry_view');
                 Route::post('/delete', 'delete')->name('admin.enquiry_delete');
+                Route::post('/status-change', 'change_status')->name('admin.followupstatuschange');
+                Route::post('/mailtemplate', 'mailtemplate')->name('admin.mailtemplate');
             });
         });
         Route::post('/enquiry/followup', [EnquiryController::class, 'markFollowUp']);
@@ -508,6 +519,8 @@ Route::prefix('/')->group(function () {
         Route::controller(HomeEnquiryController::class)->group(function () {
             Route::prefix('home-enquiry')->group(function () {
                 Route::get('/', 'list')->name('admin.home_enquiry_list');
+                Route::get('/download-enquiry-all', 'downloadAll')->name('admin.download-enquiry-all');
+                Route::get('/download-stay-all', 'downloadStayAll')->name('admin.downloadStayAll');
                 Route::get('/add', 'add_form')->name('admin.home_enquiry_add_form');
                 Route::post('/insert/enquiry', 'insert')->name('admin.home_enquiry_store_form');
                 Route::get('/stay', 'stayList')->name('admin.stay_home_enquiry_list');
@@ -608,15 +621,24 @@ Route::prefix('/')->group(function () {
                 Route::get('/{id}/edit', 'edit_form')->name('admin.stay_details_edit_form');
                 Route::post('/{id}/update', 'update')->name('admin.stay_details_update');
                 Route::post('/change-status', 'change_status')->name('admin.stay_change_status');
+                Route::get('/get-districts-list', [StayController::class, 'getDistrictsList'])
+                    ->name('stay_list.getdistrictslist');
             });
         });
 
         Route::get('/get-districts/{destination}', [StayController::class, 'getDistricts'])
             ->name('get-districts');
+        Route::get('/get-multi-districts', [StayController::class, 'getMultiDistricts'])
+            ->name('get-multi-districts');
+        Route::get('/get-single-districts', [StayController::class, 'getSingleDistricts'])
+            ->name('get-single-districts');
+        Route::get('/get-districts-name/{destination}', [StayController::class, 'getDistricts_name'])
+            ->name('get-name-districts');
         Route::post('/get-districts-list', [StayController::class, 'getUpdateDistricts'])->name('get.districts.list');
 
         Route::get('/get-districts-program/{destination}', [StayController::class, 'getDistrictsProgram'])
             ->name('get-districts-program');
+
         Route::controller(StayDestinationController::class)->group(function () {
             Route::prefix('staydestination')->group(function () {
                 Route::get('/', 'list')->name('admin.staydestinationlist');
@@ -694,6 +716,7 @@ Route::prefix('/')->group(function () {
                 Route::post('/pricing-details', 'pricing_details')->name('admin.pricing_details');
                 Route::post('/travel-details', 'travel_details')->name('admin.travel_details');
                 Route::post('/stay-details', 'stay_details')->name('admin.stay_details');
+                Route::post('/stay-edit-details', 'stay_edit_details')->name('admin.stay_edit_details');
                 Route::post('/activity-details', 'activity_details')->name('admin.activity_details');
                 Route::post('/cabs-details', 'cabs_details')->name('admin.cabs_details');
             });
@@ -709,6 +732,32 @@ Route::prefix('/')->group(function () {
                 Route::post('/{id}/update', 'update')->name('admin.programeventupdate');
                 Route::post('/delete', 'delete')->name('admin.programeventdelete');
                 Route::post('/change-status', 'change_status')->name('admin.programeventstatus');
+            });
+        });
+
+        //Event Registration
+
+        Route::controller(EventRegisterController::class)->group(function () {
+            Route::prefix('events-register')->group(function () {
+                Route::get('/', 'list')->name('admin.registereventslist');
+                Route::get('/{id}/view', 'view_form')->name('admin.home_enquiry_view');
+                Route::post('/delete', 'delete')->name('admin.registereventdelete');
+                Route::post('/change-status', 'change_status')->name('admin.registereventstatus');
+                Route::post('/update-event-notes', 'updateEventNotes')->name('admin.updateEventNotes');
+            });
+        });
+
+
+        //Mail Template
+        Route::controller(MailTemplateController::class)->group(function () {
+            Route::prefix('mail-template')->group(function () {
+                Route::get('/', 'list')->name('admin.mailtemplatelist');
+                Route::get('/add', 'add')->name('admin.mailtemplateadd');
+                Route::post('/insert', 'insert')->name('admin.mailtemplatestore');
+                Route::get('/{id}/edit', 'edit')->name('admin.mailtemplateedit');
+                Route::post('/{id}/update', 'update')->name('admin.mailtemplateupdate');
+                Route::post('/delete', 'delete')->name('admin.mailtemplatedelete');
+                Route::post('/change-status', 'change_status')->name('admin.mailtemplatestatus');
             });
         });
     });

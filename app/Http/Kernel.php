@@ -22,6 +22,7 @@ class Kernel extends HttpKernel
         \App\Http\Middleware\TrimStrings::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
         \App\Http\Middleware\DatabaseConnectionMiddleware::class,
+        // \App\Http\Middleware\IncreaseRequestSize::class,
     ];
 
     /**
@@ -69,6 +70,6 @@ class Kernel extends HttpKernel
 
     protected $routeMiddleware = [
         // Other middleware...
-        // 'increase.size' => \App\Http\Middleware\IncreaseRequestSize::class,
+        'increase.size' => \App\Http\Middleware\IncreaseRequestSize::class,
     ];
 }

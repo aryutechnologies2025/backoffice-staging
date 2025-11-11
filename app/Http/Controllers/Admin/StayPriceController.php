@@ -13,14 +13,14 @@ class StayPriceController extends Controller
     public function list(Request $request)
     {
         $title = 'Stay Pricing List';
-        $stay_details = StayPricing::where('is_deleted', '0')->orderBy('id', 'desc')->get();
+        $stay_details = StayPricing::with('city')->where('is_deleted', '0')->with(['destination'])->orderBy('id', 'desc')->get();
 
         return view('admin.stay_pricing.staypricinglist', compact('title', 'stay_details'));
     }
 
     public function add_form()
     {
-        $cities = stay_district::where('status', "1")->where('is_deleted', "0")->pluck('destination', 'id');
+        $cities = City::where('status', '1')->where('is_deleted', '0')->pluck('city_name', 'id');
 
         $title = 'Add Stay Pricing';
 
@@ -30,6 +30,7 @@ class StayPriceController extends Controller
     public function insert(Request $request)
     {
 
+        // dd($request->all());
         // // Check if a record with the same destination_id and district_id already exists
         // $existingPricing = StayPricing::where('destination_id', $request->input('cities_name'))
         //     ->where('district_id', $request->input('district_name'))
@@ -126,7 +127,7 @@ class StayPriceController extends Controller
     public function edit_form(Request $request, $id)
     {
         $destination_details = StayPricing::find($id);
-        $cities = stay_district::where('status', "1")->where('is_deleted', "0")->pluck('destination', 'id');
+        $cities = City::where('status', '1')->where('is_deleted', '0')->pluck('city_name', 'id');
         $title = 'Edit Stay Pricing';
 
         $camp_rules = json_decode($destination_details->title_price, true);
@@ -167,7 +168,6 @@ class StayPriceController extends Controller
         return redirect()->route('admin.staypricinglist')
             ->with('success', 'Pricing updated successfully.');
     }
-
 }
 
 

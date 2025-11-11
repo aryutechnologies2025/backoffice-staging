@@ -24,11 +24,21 @@
         width: 100% !important;
         background: #29292960;
     }
+    .sticky-btn {
+        position: fixed;
+        bottom: 10px;
+        right: 10px;
+        width: 40px;
+        height: 40px;
+        background-color: #ff0000ff;
+        underline: none;
+        /* z-index: 999; */
+    }
 </style>
 
 <div>
 
-    <div class="row body-sec py-3 px-5 justify-content-around">
+    <div class="row body-sec py-3 px-5 justify-content-around" id="watch">
         <div class="text-start col-lg-6 ">
             <h3 class="admin-title fw-bold">{{$title}}</h3>
         </div>
@@ -68,6 +78,7 @@
                             <td class="text-start">
                                 <a href="#"
                                     class="btn btn-sm view-message-btn"
+                                    title="View"
                                     role="button"
                                     data-message="{{ htmlspecialchars($row->message, ENT_QUOTES) }}"
                                     data-bs-toggle="modal"
@@ -76,7 +87,7 @@
                                     <i class="fa fa-eye" style="color: #0d6efd;"></i>
                                 </a>
 
-                                <a href="javascript:void(0);" class="table-link danger delconfirm" data-row_id="{{ $row->id }}" data-act_url="{{ route('admin.contact_delete') }}" data-csrf_token="{{ csrf_token() }}">
+                                <a href="javascript:void(0);" class="table-link danger delconfirm" title="Delete" data-row_id="{{ $row->id }}" data-act_url="{{ route('admin.contact_delete') }}" data-csrf_token="{{ csrf_token() }}">
                                     <span class="fa-stack">
                                         <!-- <i class="fa fa-square fa-stack-2x"></i> -->
                                         <i class="fa fa-trash-o fa-stack-1x fa-inverse" style="color:red !important;"></i>
@@ -112,6 +123,7 @@
         </div>
     </div>
 </div>
+<button class="sticky-btn" id="myBtn"><a href="#watch"><i class="bi bi-caret-up-square text-white"></i></button>
 @endsection
 
 @section('scripts')

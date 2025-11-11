@@ -13,13 +13,14 @@ class ActivityController extends Controller
     public function list(Request $request)
     {
         $title = 'Activity List';
-        $stay_details = ActivityP::where('is_deleted', '0')->orderBy('id', 'desc')->get();
+        $stay_details = ActivityP::where('is_deleted', '0')->with(['destination'])->orderBy('id', 'desc')->get();
         return view('admin.activities_m.activitylist', compact('title', 'stay_details'));
     }
 
     public function add_form()
     {
-        $cities = stay_district::where('status', "1")->where('is_deleted', "0")->pluck('destination', 'id');
+        $cities = City::where('status', '1')->where('is_deleted', '0')->pluck('city_name', 'id');
+
 
         $title = 'Add Activity';
 
@@ -126,7 +127,8 @@ class ActivityController extends Controller
     public function edit_form(Request $request, $id)
     {
         $destination_details = ActivityP::find($id);
-        $cities = stay_district::where('status', "1")->where('is_deleted', "0")->pluck('destination', 'id');
+        $cities = City::where('status', '1')->where('is_deleted', '0')->pluck('city_name', 'id');
+
         $title = 'Edit Activity';
 
         $camp_rules = json_decode($destination_details->title_price, true);

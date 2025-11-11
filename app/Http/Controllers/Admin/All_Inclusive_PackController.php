@@ -16,7 +16,7 @@ use App\Models\Geo_feature;
 use App\Models\Themes;
 use App\Models\Themes_category;
 use App\Models\Destination_category;
-use App\Models\stay_district;
+use App\Models\stays_destination_details;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
 
@@ -28,14 +28,10 @@ class All_Inclusive_PackController extends Controller
     public function deleteImage(Request $request)
     {
         $imagePath = $request->input('image_path');
-        Log::info('Attempting to delete image:', ['image_path' => $imagePath]);
-
         if ($imagePath && file_exists(public_path($imagePath))) {
             unlink(public_path($imagePath));
             return response()->json(['success' => true]);
         }
-
-        Log::error('Image deletion failed:', ['image_path' => $imagePath]);
         return response()->json(['success' => false, 'message' => 'Image not found or already deleted.']);
     }
 
@@ -61,9 +57,12 @@ class All_Inclusive_PackController extends Controller
         $foodBeverages = FoodBeverage::where('status', "1")->where('is_deleted', "0")->get();
         $activities = Activities::where('status', "1")->where('is_deleted', "0")->get();
         $safety_features = Safetyfeatures::where('status', "1")->where('is_deleted', "0")->get();
+        $safety_features = Safetyfeatures::where('status', "1")->where('is_deleted', "0")->get();
+        $stay_details = stays_destination_details::where('is_deleted', '0')->select('id', 'stay_title')->orderBy('created_at', 'desc')->get();
+
         // $geo_feature = Geo_feature::where('status', "1")->where('is_deleted', "0")->pluck('geo_feature', 'id');
 
-        return view('admin.inclusive_packages.inclusive_packagesadd', compact('title', 'cities', 'themes', 'amenities', 'foodBeverages', 'activities', 'safety_features'));
+        return view('admin.inclusive_packages.inclusive_packagesadd', compact('title', 'cities', 'themes', 'amenities', 'foodBeverages', 'activities', 'safety_features', 'stay_details'));
     }
 
 
@@ -179,6 +178,7 @@ class All_Inclusive_PackController extends Controller
         $safetyFeaturesJson = json_encode($request->input('safety_features'));
         $campRulesJson = json_encode($request->input('camp_rule'));
         $theme = $request->input('themes_name', []);
+        $stay_details = $request->input('stays_name', []);
 
 
         // Insert into MySQL
@@ -194,8 +194,9 @@ class All_Inclusive_PackController extends Controller
         $inclusive_packages->alternate_name = $request->input('alternate_image_name');
 
         $inclusive_packages->theme_id = implode(',', $theme);
+        $inclusive_packages->stays_name = implode(',', $stay_details);
         $inclusive_packages->city_details = $request->input('cities_name');
-        // $inclusive_packages->location_name = $request->input('district_name');
+        $inclusive_packages->location_name = $request->input('district_name');
         $inclusive_packages->title = $request->input('title');
         $inclusive_packages->program_description = $request->input('program_description');
         $inclusive_packages->address = $request->input('address') ?? '';
@@ -225,7 +226,7 @@ class All_Inclusive_PackController extends Controller
         $inclusive_packages->food_beverages = $foodBeveragesJson;
         $inclusive_packages->activities = $activitiesJson;
         $inclusive_packages->safety_features = $safetyFeaturesJson;
-        $inclusive_packages->list_order = $request->input('list_order');
+        // $inclusive_packages->list_order = $request->input('list_order');
         $inclusive_packages->is_deleted = '0';
         $inclusive_packages->created_date = now();
         $inclusive_packages->created_by = 'admin';
@@ -258,7 +259,7 @@ class All_Inclusive_PackController extends Controller
         $safety_features_dts = Safetyfeatures::where('status', "1")->where('is_deleted', "0")->get();
         $geo_feature_dts = Geo_feature::where('status', "1")->where('is_deleted', "0")->pluck('geo_feature', 'id');
         $themes = Themes::where('status', "1")->where('is_deleted', "0")->pluck('themes_name', 'id');
-
+        $stay_details = stays_destination_details::where('is_deleted', '0')->select('id', 'stay_title')->orderBy('created_at', 'desc')->get();
         // dd($package_details);
         if (!$package_details) {
             return redirect()->route('admin.inclusive_package_list')->with('error', 'Package not found');
@@ -290,7 +291,7 @@ class All_Inclusive_PackController extends Controller
         //         echo"<pre>";
         // print_r($package_details->theme_id);die;
 
-        return view('admin.inclusive_packages.inclusive_packagesedit', compact('package_details', 'title', 'cities_dts', 'themes', 'amenities_dts', 'foodBeverages_dts', 'activities_dts', 'safety_features_dts', 'selectedCityId', 'selectedAmenities', 'selectedthemeId', 'selectedfood_beverages', 'selectedactivities', 'selectedsafety_features', 'geo_feature_dts', 'selectedgeo_featureId', 'categories', 'dest_categories', 'selecteddesCategoryId', 'selectedCategoryId', 'selectedprogram', 'selectedLocationname'));
+        return view('admin.inclusive_packages.inclusive_packagesedit', compact('package_details', 'title', 'cities_dts', 'themes', 'amenities_dts', 'foodBeverages_dts', 'activities_dts', 'safety_features_dts', 'selectedCityId', 'selectedAmenities', 'selectedthemeId', 'selectedfood_beverages', 'selectedactivities', 'selectedsafety_features', 'geo_feature_dts', 'selectedgeo_featureId', 'categories', 'dest_categories', 'selecteddesCategoryId', 'selectedCategoryId', 'selectedprogram', 'selectedLocationname', 'stay_details'));
     }
 
 
@@ -428,6 +429,7 @@ class All_Inclusive_PackController extends Controller
         $safetyFeaturesJson = json_encode($request->input('safety_features', []));
         $campRulesJson = json_encode($request->input('camp_rule'));
         $theme = $request->input('themes_name', []);
+        $stay_details = $request->input('stays_name', []);
         // Update the model fields
         // $inclusive_packages->program_pdf = $filePath;
         $inclusive_packages->upload_image_name = $request->input('upload_image_name');
@@ -435,9 +437,10 @@ class All_Inclusive_PackController extends Controller
         $inclusive_packages->program_inclusion = $request->input('program_inclusion');
         $inclusive_packages->program_exclusion = $request->input('program_exclusion');
         $inclusive_packages->theme_id = implode(',', $theme);
+        $inclusive_packages->stays_name = implode(',', $stay_details);
         $inclusive_packages->location = $request->input('location');
         $inclusive_packages->city_details = $request->input('cities_name');
-        // $inclusive_packages->location_name = $request->input('district_name');
+        $inclusive_packages->location_name = $request->input('district_name');
         $inclusive_packages->title = $request->input('title');
         $inclusive_packages->program_description = $request->input('program_description');
         $inclusive_packages->category = json_encode($request->input('prop_cat', []));
@@ -458,7 +461,6 @@ class All_Inclusive_PackController extends Controller
 
         // $inclusive_packages->tour_planning = $request->input('tour_planning', []);
         $inclusive_packages->tour_planning = json_encode($request->input('tour_planning'));
-
         $inclusive_packages->start_date = $request->input('start_date');
         $inclusive_packages->return_date = $request->input('return_date');
         $inclusive_packages->total_days = $request->input('total_days');
@@ -759,6 +761,7 @@ class All_Inclusive_PackController extends Controller
         try {
             // Find the original package
             $original = InclusivePackages::find($request->id);
+
             $customer_package = new InclusivePackages;
             $customer_package->title = $original->title . ' (Duplicate)';
             $customer_package->location = $original->location;
@@ -827,6 +830,8 @@ class All_Inclusive_PackController extends Controller
             $customer_package->price_tilte = $original->price_tilte;
             $customer_package->price_amount = $original->price_amount;
             $customer_package->list_order = $original->list_order;
+            $customer_package->location_name = $original->location_name;
+            $customer_package->stays_name = $original->stays_name;
 
 
             $customer_package->save();

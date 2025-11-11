@@ -2,7 +2,27 @@
 @section('content')
 <!-- Bootstrap CSS --><!-- Font Awesome -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <style>
+    .multiselect-container>li>a>label {
+        padding: 6px 15px;
+        font-size: 14px;
+    }
+
+    .multiselect.dropdown-toggle {
+        background-color: #f8f9fa;
+        border: 1px solid #ccc;
+        color: #333;
+        border-radius: 6px;
+    }
+
+    .multiselect-container {
+        max-height: 250px;
+        overflow-y: auto;
+    }
+
     a:hover {
         color: red;
     }
@@ -177,59 +197,74 @@
 </style>
 <div class="row body-sec py-3 px-5 justify-content-around">
     <div class="text-start col-lg-6 ">
-        <h3 class="admin-title fw-bold">{{$title}}</h3>
+        <h3 class="admin-title fw-bold">{{ $title }}</h3>
     </div>
     <div class="text-end col-lg-6 ">
-        <b><a href="/dashboard">Dashboard</a> > <a class="" href="/enquiry">Booking</a></b> > <a class="enquiry" href="">Add Booking</a>
+        <b><a href="/dashboard">Dashboard</a> > <a class="" href="/customer-package">Customer Package</a></b> > <a class="enquiry"
+            href="">Add Customer</a>
     </div>
 
 </div>
 
-@if(session('success'))
+@if (session('success'))
 <div class="alert alert-success">{{ session('success') }}</div>
 @endif
 <div class="row mb-5">
     <div class="col-lg-12">
         <!-- INFORMATION -->
         <div class="form-body px-4 mb-5 ms-4 me-5 rounded-4">
-            <form class="bg-white p-1 rounded-3" action="{{ route('admin.CustomerPackage_insert') }}" method="POST" enctype="multipart/form-data">
+            <form class="bg-white p-1 rounded-3" action="{{ route('admin.CustomerPackage_insert') }}" method="POST"
+                enctype="multipart/form-data">
                 @csrf
 
                 <div class="row d-flex gap-4">
                     <div class="add_form col-md-5 mb-1">
                         <label for="name" class="form-label">Full Name</label>
-                        <input id="name" type="text" class="form-control" name="name">
+                        <input id="name" type="text" class="form-control" name="name" required>
                     </div>
 
                     <div class="add_form col-md-5 mb-1">
                         <label for="phone" class="form-label">Phone Number</label>
-                        <input id="phone" type="number" class="form-control" name="phone_number">
+                        <input id="phone" type="number" class="form-control" name="phone_number" required>
                     </div>
 
                     <div class="add_form col-md-5 mb-1">
                         <label for="email" class="form-label">Email Address</label>
-                        <input id="email" type="email" class="form-control" name="email">
+                        <input id="email" type="email" class="form-control" name="email" required>
                     </div>
 
-                    <!-- Package Type Selector -->
-                    <div class="add_form col-md-5 mb-3">
-                        <label for="title_id" class="form-label">Select Package Type</label>
-                        <select name="package_type" id="package" class="form-control package">
-                            <option disabled selected>Select Package Type</option>
-                            @foreach($titles as $id => $name)
-                            <option value="{{  json_encode(['id' => $id, 'name' => $name])  }}">{{ $name }}</option>
-
+                    <div class="add_form col-md-5 mb-1">
+                        <label for="city_select" class="form-label">Select Destination</label>
+                        <select id="city_select" class="form-control" name="city_select[]" multiple required>
+                            @foreach ($cities as $id => $name)
+                            <option value="{{ $id }}">{{ $name }}</option>
                             @endforeach
                         </select>
                     </div>
 
-                    <div class="col-md-5 mb-3">
-                        <label for="title_id" class="form-label">Select Stays</label>
-                        <select class="package" name="package_stay" id="package_stay" class="form-control">
-                            <option disabled selected>Select Package Type</option>
 
-                        </select>
+                    <div class="add_form">
+                        <div class="add_form col-md-5 mb-1">
+                            <label for="package_select" class="form-label">Select Package</label>
+                            <select id="package_select" class="form-control">
+                                <option disabled selected>Select Package</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-4 mb-1">
+                            <label for="package_select_stay" class="form-label">Select Stay</label>
+                            <select id="package_select_stay" name="package_select_stay" class="form-control">
+                                <option value="" selected disabled>Select Stay</option>
+                            </select>
+                        </div>
                     </div>
+                    <input type="hidden" name="package_id" id="hidden_package_id">
+
+
+                    <!-- old -->
+
+
+
 
 
                     <div class="test">
@@ -251,7 +286,8 @@
                             <div class="add_form col-md-4">
                                 <label class="mb-2">Stay Details</label>
                                 <div class="dropdown">
-                                    <button class="btn btn-outline-secondary dropdown-toggle w-100 text-start d-flex justify-content-between align-items-center"
+                                    <button
+                                        class="btn btn-outline-secondary dropdown-toggle w-100 text-start d-flex justify-content-between align-items-center"
                                         type="button" id="stayDropdown" data-bs-toggle="dropdown"
                                         aria-expanded="false">
                                         <span id="stayDropdownText">Select stay</span>
@@ -271,7 +307,8 @@
                             <div class="add_form col-md-4">
                                 <label class="mb-2">Activity</label>
                                 <div class="dropdown">
-                                    <button class="btn btn-outline-secondary dropdown-toggle w-100 text-start d-flex justify-content-between align-items-center"
+                                    <button
+                                        class="btn btn-outline-secondary dropdown-toggle w-100 text-start d-flex justify-content-between align-items-center"
                                         type="button" id="activityDropdown" data-bs-toggle="dropdown"
                                         aria-expanded="false">
                                         <span id="activityDropdownText">Select activity</span>
@@ -291,7 +328,8 @@
                             <div class="add_form col-md-4">
                                 <label class="mb-2">Travel Mode</label>
                                 <div class="dropdown">
-                                    <button class="btn btn-outline-secondary dropdown-toggle w-100 text-start d-flex justify-content-between align-items-center"
+                                    <button
+                                        class="btn btn-outline-secondary dropdown-toggle w-100 text-start d-flex justify-content-between align-items-center"
                                         type="button" id="cabDropdown" data-bs-toggle="dropdown"
                                         aria-expanded="false">
                                         <span id="cabDropdownText">Select option</span>
@@ -309,7 +347,8 @@
                                 <div class="add_form col-md-4">
                                     <label class="mb-2">Travel Details</label>
                                     <div class="dropdown">
-                                        <button class="btn btn-outline-secondary dropdown-toggle w-100 text-start d-flex justify-content-between align-items-center"
+                                        <button
+                                            class="btn btn-outline-secondary dropdown-toggle w-100 text-start d-flex justify-content-between align-items-center"
                                             type="button" id="cabDetailsDropdown" data-bs-toggle="dropdown"
                                             aria-expanded="false">
                                             <span id="cabDetailsDropdownText">Select options</span>
@@ -326,6 +365,62 @@
                             <!-- Cab price details display -->
                             <div id="cabsdetails-container" class="mt-3"></div>
                         </div>
+
+
+
+                        <!-- PRICE SUMMARY SECTION -->
+                        <div class="price-summary mt-4">
+                            <h5 class="mb-3">Price Breakdown</h5>
+
+                            <div class="price-row">
+                                <span>Package Pricing:</span>
+                                <span id="selected-amount">₹ 0</span>
+                                <input type="hidden" id="selected-price-id" name="selected_price_id">
+                            </div>
+                            <div class="price-row">
+                                <span>Selected Value:</span>
+                                <span id="selected-value">₹ 0</span>
+                            </div>
+                            {{-- <div class="price-row">
+                                    <span>Service Fee:</span>
+                                    <span id="service-fee">₹ 0</span>
+                                </div> --}}
+                            <div class="price-row">
+                                <span>Service Fee:</span>
+                                <input type="number" id="service-fee-input" value="0" min="0"
+                                    step="0.01" />
+
+                            </div>
+                            <div class="price-row">
+                                <span>Tax (GST %):</span>
+                                <input type="number" name="gst_number" id="gst-input" value="0" min="0" step="0.01">
+                                %
+                            </div>
+                            <div class="price-row">
+                                <span>Tax Amount (₹):</span>
+                                <span id="tax-amount">₹ 0</span>
+                            </div>
+                            <input type="hidden" name="tax_amount" id="hidden-tax-amount" value="0">
+
+                            <div class="price-row price-total">
+                                <span>Total Amount:</span>
+                                <span id="total-amount">₹ 0</span>
+                            </div>
+                            <div class="grand-total text-center">
+                                <span>Grand Total: </span>
+                                <span id="grand-total">₹ 0</span>
+                            </div>
+                        </div>
+
+
+
+                        <!-- Hidden inputs for form submission -->
+                        <input type="hidden" name="package_pricing_value" id="package_pricing_value" value="0">
+                        <input type="hidden" name="selected_value" id="hidden-selected-value" value="0">
+                        <input type="hidden" name="service_fee" id="hidden-service-fee" value="0">
+                        <input type="hidden" name="tax_amount" id="hidden-tax-amount" value="0">
+                        <input type="hidden" name="total_amount" id="hidden-total-amount" value="0">
+                        <input type="hidden" name="grand_total" id="hidden-grand-total" value="0">
                     </div>
 
 
@@ -372,12 +467,15 @@
                             <div class="row mb-3">
                                 <div class="col">
                                     <div class="form-body rounded-4">
-                                        <h4 class="add_head fw-bold mb-2">02. Tour Planning <span class="text-danger">*</span></h4>
+                                        <h4 class="add_head fw-bold mb-2">
+                                            02. Tour Planning <span class="text-danger">*</span>
+                                        </h4>
                                         <div id="day-wrapper"></div>
 
                                     </div>
                                 </div>
                             </div>
+
 
 
                             <!-- 5.PRICING -->
@@ -416,7 +514,8 @@
                             <div class="row mb-2">
                                 <div class="col">
                                     <div class="form-body rounded-4">
-                                        <h4 class="add_head fw-bold mb-2">05. Notes <span class="text-danger">*</span></h4>
+                                        <h4 class="add_head fw-bold mb-2">05. Notes <span class="text-danger">*</span>
+                                        </h4>
                                         <div class="mb-1">
                                             <div class="row g-2 mb-1">
                                                 <div class="col">
@@ -442,7 +541,8 @@
                                         <div class="mb-2">
                                             <div class="row g-2 mb-2">
                                                 <div class="col">
-                                                    <input type="hidden" id="program_inclusion" name="program_inclusion">
+                                                    <input type="hidden" id="program_inclusion"
+                                                        name="program_inclusion">
 
                                                     <div class=" mt-2">
                                                         <div class="row">
@@ -465,7 +565,8 @@
                                         <div class="mb-2">
                                             <div class="row g-2 mb-2">
                                                 <div class="col">
-                                                    <input type="hidden" id="program_exclusion" name="program_exclusion">
+                                                    <input type="hidden" id="program_exclusion"
+                                                        name="program_exclusion">
                                                     <div class=" mt-2">
                                                         <div class="row">
                                                             <div class="col-lg-12 ">
@@ -502,7 +603,7 @@
                                     <div class="form-body rounded-4">
                                         <h4 class="add_head fw-bold mb-2">08. Amenities</h4>
                                         <div class="d-flex flex-wrap">
-                                            @foreach($amenities as $index => $amenity)
+                                            @foreach ($amenities as $index => $amenity)
                                             <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
                                                 <div class="form-check d-flex align-items-center">
                                                     <input type="checkbox" class="me-2 custom-checkbox"
@@ -512,8 +613,9 @@
                                                         class="mb-0">{{ $amenity->amenity_name }}</label>
                                                 </div>
                                             </div>
-                                            @if(($index + 1) % 4 == 0)
-                                            <div class="w-100"></div> <!-- Forces a line break after every 4 items -->
+                                            @if (($index + 1) % 4 == 0)
+                                            <div class="w-100"></div>
+                                            <!-- Forces a line break after every 4 items -->
                                             @endif
                                             @endforeach
                                         </div>
@@ -527,18 +629,19 @@
                                     <div class="form-body rounded-4">
                                         <h4 class="add_head fw-bold mb-2">09. Food and Beverages</h4>
                                         <div class="d-flex flex-wrap">
-                                            @foreach($foodBeverages as $index => $item)
+                                            @foreach ($foodBeverages as $index => $item)
                                             <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
                                                 <div class="form-check d-flex align-items-center">
                                                     <input type="checkbox" class="me-2 custom-checkbox"
-                                                        id="food-beverage-{{ $item->id }}" name="food_beverages[]"
-                                                        value="{{ $item->id }}">
+                                                        id="food-beverage-{{ $item->id }}"
+                                                        name="food_beverages[]" value="{{ $item->id }}">
                                                     <label for="food-beverage-{{ $item->id }}"
                                                         class="mb-0">{{ $item->food_beverage }}</label>
                                                 </div>
                                             </div>
-                                            @if(($index + 1) % 4 == 0)
-                                            <div class="w-100"></div> <!-- Forces a line break after every 4 items -->
+                                            @if (($index + 1) % 4 == 0)
+                                            <div class="w-100"></div>
+                                            <!-- Forces a line break after every 4 items -->
                                             @endif
                                             @endforeach
                                         </div>
@@ -552,7 +655,7 @@
                                     <div class="form-body rounded-4">
                                         <h4 class="add_head fw-bold mb-3">10. Activities</h4>
                                         <div class="d-flex flex-wrap">
-                                            @foreach($activities as $index => $item)
+                                            @foreach ($activities as $index => $item)
                                             <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
                                                 <div class="form-check d-flex align-items-center ">
                                                     <input type="checkbox" class="me-2 custom-checkbox"
@@ -562,8 +665,9 @@
                                                         class="mb-0">{{ $item->activities }}</label>
                                                 </div>
                                             </div>
-                                            @if(($index + 1) % 4 == 0)
-                                            <div class="w-100"></div> <!-- Forces a line break after every 4 items -->
+                                            @if (($index + 1) % 4 == 0)
+                                            <div class="w-100"></div>
+                                            <!-- Forces a line break after every 4 items -->
                                             @endif
                                             @endforeach
                                         </div>
@@ -577,12 +681,12 @@
                                     <div class="form-body rounded-4">
                                         <h4 class="add_head fw-bold mb-3">11. Safety Features</h4>
                                         <div class="d-flex flex-wrap">
-                                            @foreach($safety_features as $index => $item)
+                                            @foreach ($safety_features as $index => $item)
                                             <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
                                                 <div class="form-check d-flex align-items-center mb-1">
                                                     <input type="checkbox" class="me-2 custom-checkbox"
-                                                        id="safety_features-{{ $item->id }}" name="safety_features[]"
-                                                        value="{{ $item->id }}">
+                                                        id="safety_features-{{ $item->id }}"
+                                                        name="safety_features[]" value="{{ $item->id }}">
                                                     <label for="safety_features-{{ $item->id }}"
                                                         class="mb-0">{{ $item->safety_features }}</label>
                                                 </div>
@@ -611,12 +715,12 @@
 
                             <br>
 
-                            <div
-                                class="row g-2">
+                            <div class="row g-2">
                                 <div class="add_form col">
                                     <h4> <label class="fw-bold">Status</label></h4>
                                     <div class="form-check form-switch d-flex align-items-center">
-                                        <input class="form-check-input check_bx" type="checkbox" id="status" name="status">
+                                        <input class="form-check-input check_bx" type="checkbox" id="status"
+                                            name="status">
                                     </div>
                                 </div>
                             </div>
@@ -626,7 +730,7 @@
                                 <div class="add_form col-lg-4">
                                     <label class="fw-bold mb-3 ">Order</label>
                                     <input type="number" placeholder="Order" id="list_order" name="list_order"
-                                        value="{{old('order')}}" class="form-control py-2 rounded-3 shadow-sm">
+                                        value="{{ old('order') }}" class="form-control py-2 rounded-3 shadow-sm">
                                 </div>
                             </div>
 
@@ -641,6 +745,7 @@
         </div>
     </div>
 </div>
+
 <script>
     $(document).ready(function() {
         $('#summernote1,#summernote2,#summernote3,#summernote4,#summernote5,#summernote6,#summernote7,#summernote8,#summernote9,#summernote10')
@@ -961,20 +1066,96 @@
         startDateInput.addEventListener('change', calculateDays);
         returnDateInput.addEventListener('change', calculateDays);
     });
+    $('#city_select').select2({
+        placeholder: "Select Destination"
+    });
 
-    //package change
+    $('#package_select').select2({
+        placeholder: "Select Package"
+    });
 
-    $(".package").change(function() {
-        var selectedOption = $(this).val();
-        var packageData = JSON.parse(selectedOption);
+    // Initialize multiselect
+    $(document).ready(function() {
+        $('#city_select').select2({
+            placeholder: "Select a city",
+            allowClear: true
+        });
+    });
+    $('#package_select').select2({
+        placeholder: "Select Package",
+        allowClear: true,
+        width: '100%'
+    });
+    // 🔹 When city changes → fetch packages
+    $('#city_select').on('change', function() {
+        const city_ids = $(this).val();
 
-        var package_id = packageData.id;
-        // var package_id = $('#package').val();
+        if (city_ids && city_ids.length > 0) {
+            // Fetch packages (optional)
+            fetchPackages(city_ids);
+
+            // Fetch stays (directly after selecting city)
+            fetchStays(city_ids);
+        } else {
+            $('#package_select').empty().append('<option disabled selected>No package selected</option>');
+            $('#package_select_stay').empty().append('<option disabled selected>No stay selected</option>');
+        }
+    });
+
+    // ✅ Fetch packages (you already have this)
+    function fetchPackages(city_ids) {
+        $('#package_select').empty().append('<option disabled selected>Loading packages...</option>');
+
         $.ajax({
-            url: '/customer-package/package-details',
+            url: '/customer-package/get-packages-by-city',
             type: 'POST',
             data: {
-                id: package_id,
+                city_id: city_ids
+            },
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: function(response) {
+                const packageSelect = $('#package_select');
+                packageSelect.empty().append('<option disabled selected>Select Package</option>');
+
+                if (response.length > 0) {
+                    response.forEach(pkg => {
+                        packageSelect.append(
+                            $('<option></option>').val(pkg.id).text(pkg.title)
+                        );
+                    });
+                } else {
+                    packageSelect.append('<option disabled>No packages found</option>');
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Error fetching packages:', error);
+                console.error(xhr.responseText);
+            }
+        });
+    }
+
+    // Initialize select2 for package_select_stay with textarea-like appearance
+    $('#package_select_stay').select2({
+        placeholder: "Select Stay",
+        allowClear: true,
+        width: '100%',
+        // Make it look more like a textarea
+        minimumResultsForSearch: Infinity, // Hide search for cleaner look
+        dropdownCssClass: 'textarea-like-dropdown'
+    });
+
+
+    // ✅ New function to fetch stays based on city selection
+    function fetchStays(city_ids) {
+        $('#package_select_stay').empty().append('<option disabled selected>Loading stays...</option>');
+
+        $.ajax({
+            url: '/customer-package/packageStay-details',
+            type: 'POST',
+            data: {
+                city_ids: city_ids
             },
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -983,41 +1164,84 @@
                 try {
                     response = typeof response === 'string' ? JSON.parse(response) : response;
 
+                    const staySelect = $('#package_select_stay');
+
+                    // Clear all old options first
+                    staySelect.find('option').remove();
+
+                    // Add placeholder only once
+                    staySelect.append(
+                        $('<option disabled selected></option>').text('Select Stay')
+                    );
+
+                    // Then add your dynamic options
+                    if (response.cities_details && Array.isArray(response.cities_details)) {
+                        response.cities_details.forEach(stay => {
+                            if (stay && stay.id && stay.stay_title) {
+                                staySelect.append(
+                                    $('<option></option>')
+                                    .val(stay.id)
+                                    .text(stay.stay_title)
+                                );
+                            }
+                        });
+                    } else {
+                        staySelect.append('<option disabled>No stay details found</option>');
+                    }
+                } catch (e) {
+                    console.error('Error parsing stay response:', e);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Error fetching stays:', error);
+                console.error(xhr.responseText);
+            }
+        });
+    }
+    // When a package is selected, fetch package details (stays)
+    $('#package_select').change(function() {
+        const city_ids = $('#city_select').val();
+        var package_id = $(this).val();
+        $('#hidden_package_id').val(package_id);
+        $.ajax({
+            url: '/customer-package/package-details',
+            type: 'POST',
+            data: {
+                id: package_id,
+                city_ids: city_ids
+            },
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: function(response) {
+                try {
+                    response = typeof response === 'string' ? JSON.parse(response) : response;
                     const packageStaySelect = $('#package_stay');
 
                     packageStaySelect.empty().append(
                         $('<option></option>')
                         .val('')
-                        .text('Select Package Type')
+                        .text('Select Stay')
                         .prop('disabled', true)
                         .prop('selected', true)
                     );
 
-                    if (response && response.cities_details && Array.isArray(response.cities_details)) {
+                    if (response && response.cities_details && Array.isArray(response
+                            .cities_details)) {
                         const validStays = response.cities_details.filter(stay =>
                             stay && stay.id !== undefined && stay.stay_title
                         );
 
                         if (validStays.length > 0) {
-                            // Add each valid stay as an option
                             validStays.forEach(stay => {
                                 packageStaySelect.append(
-                                    $('<option></option>')
-                                    .val(stay.id)
-                                    .text(stay.stay_title)
+                                    $('<option></option>').val(stay.id).text(stay
+                                        .stay_title)
                                 );
                             });
-
-                            // Enable select if it was disabled
                             packageStaySelect.prop('disabled', false);
                         } else {
-                            // No valid stays found
-                            packageStaySelect.append(
-                                $('<option></option>')
-                                .val('')
-                                .text('No available stays')
-                            );
-                            packageStaySelect.prop('disabled', true);
+                            packageStaySelect.append('<option>No available stays</option>');
                         }
                     } else {
                         // Invalid response structure
@@ -1036,53 +1260,79 @@
                             JSON.parse(response.package_details.tour_planning) :
                             response.package_details.tour_planning;
 
-                        console.log('tourVal', tourVal);
-
+                        // Clear wrapper first
                         // Clear wrapper first
                         $('#day-wrapper').html('');
 
+                        // Render existing tour plans
                         tourVal.forEach(function(day, i) {
+                            addTourDayBlock(day, i);
+                        });
+
+                        // Add More button below the wrapper (if not already there)
+                        if (!$('#add-more-day').length) {
+                            $('#day-wrapper').after(`
+        <div class="text-end mt-3">
+            <button type="button" id="add-more-day" class="btn btn-primary px-4 py-2 rounded-3 shadow-sm">
+                <i class="fa fa-plus"></i> Add More
+            </button>
+        </div>
+    `);
+                        }
+
+                        // Handle Add More click
+                        $(document).on('click', '#add-more-day', function() {
+                            const index = $('.day-block').length;
+                            addTourDayBlock({
+                                title: '',
+                                subtitle: '',
+                                description: ''
+                            }, index);
+                        });
+
+                        // Function to create one day block
+                        function addTourDayBlock(day, i) {
                             const wrapper = document.getElementById('day-wrapper');
                             const div = document.createElement('div');
                             div.classList.add('row', 'g-2', 'mb-2', 'day-block');
 
                             div.innerHTML = `
-                            <div class="col-md-5 mb-2">
-                                <input type="text" name="tour_planning[${i}][title]" 
-                                    class="form-control py-2 rounded-3 shadow-sm" 
-                                    value="${day.title}" 
-                                    placeholder="Day Title (e.g., Day ${i + 1})">
-                                        </div>
-                                        <div class="col-md-5 mb-2">
-                                            <input type="text" name="tour_planning[${i}][subtitle]" 
-                                                class="form-control py-2 rounded-3 shadow-sm" 
-                                                value="${day.subtitle}" 
-                                                placeholder="Activity Subtitle">
-                                        </div>
-                                        <div class="col-md-10 mb-2">
-                                            <label class="form-label fw-bold">Activity Description</label>
-                                            <div class="rte-container">
-                                                <div class="editor-toolbar">
-                                                    <button type="button" class="toolbar-btn" data-command="bold"><i class="fas fa-bold"></i></button>
-                                                    <button type="button" class="toolbar-btn" data-command="italic"><i class="fas fa-italic"></i></button>
-                                                    <button type="button" class="toolbar-btn" data-command="underline"><i class="fas fa-underline"></i></button>
-                                                    <button type="button" class="toolbar-btn" data-command="insertUnorderedList"><i class="fas fa-list-ul"></i></button>
-                                                    <button type="button" class="toolbar-btn" data-command="insertOrderedList"><i class="fas fa-list-ol"></i></button>
-                                                    <button type="button" class="toolbar-btn" data-command="createLink"><i class="fas fa-link"></i></button>
-                                                </div>
-                                                <div class="editor-content" contenteditable="true" id="editor-${i}"></div>
-                                                <input type="hidden" name="tour_planning[${i}][description]" 
-                                                    class="tour-description-hidden">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-1 d-flex align-items-end">
-                                            ${i > 0 ? `
-                                                <button type="button" class="btn btn-danger remove-day" onclick="removeDay(this)">
-                                                    <i class="fa fa-trash"></i>
-                                                </button>` : ''
-                                            }
-                                        </div>
-                                            `;
+        <div class="col-md-5 mb-2">
+            <input type="text" name="tour_planning[${i}][title]" 
+                class="form-control py-2 rounded-3 shadow-sm" 
+                value="${day.title || ''}" 
+                placeholder="Day Title (e.g., Day ${i + 1})">
+        </div>
+        <div class="col-md-5 mb-2">
+            <input type="text" name="tour_planning[${i}][subtitle]" 
+                class="form-control py-2 rounded-3 shadow-sm" 
+                value="${day.subtitle || ''}" 
+                placeholder="Activity Subtitle">
+        </div>
+        <div class="col-md-10 mb-2">
+            <label class="form-label fw-bold">Activity Description</label>
+            <div class="rte-container">
+                <div class="editor-toolbar">
+                    <button type="button" class="toolbar-btn" data-command="bold"><i class="fas fa-bold"></i></button>
+                    <button type="button" class="toolbar-btn" data-command="italic"><i class="fas fa-italic"></i></button>
+                    <button type="button" class="toolbar-btn" data-command="underline"><i class="fas fa-underline"></i></button>
+                    <button type="button" class="toolbar-btn" data-command="insertUnorderedList"><i class="fas fa-list-ul"></i></button>
+                    <button type="button" class="toolbar-btn" data-command="insertOrderedList"><i class="fas fa-list-ol"></i></button>
+                    <button type="button" class="toolbar-btn" data-command="createLink"><i class="fas fa-link"></i></button>
+                </div>
+                <div class="editor-content" contenteditable="true" id="editor-${i}"></div>
+                <input type="hidden" name="tour_planning[${i}][description]" 
+                    class="tour-description-hidden">
+            </div>
+        </div>
+        <div class="col-md-1 d-flex align-items-end">
+            ${i > 0 ? `
+                <button type="button" class="btn btn-danger remove-day" onclick="removeDay(this)">
+                    <i class="fa fa-trash"></i>
+                </button>` : ''
+            }
+        </div>
+    `;
 
                             wrapper.appendChild(div);
 
@@ -1119,12 +1369,30 @@
                                 editor.focus();
                                 hiddenInput.value = editor.innerHTML;
                             });
-                        });
+                        }
+
+                        // Remove day function
+                        function removeDay(button) {
+                            $(button).closest('.day-block').remove();
+
+                            // Reindex all day fields after removal
+                            $('.day-block').each(function(index, block) {
+                                $(block).find('input, textarea, [contenteditable]').each(function() {
+                                    const name = $(this).attr('name');
+                                    if (name) {
+                                        const newName = name.replace(/\[\d+\]/, `[${index}]`);
+                                        $(this).attr('name', newName);
+                                    }
+                                });
+                            });
+                        }
+
 
 
                         if (response.package_details.location) {
                             $('#title').val(response.package_details.title)
-                            $('#summernote10').summernote('code', response.package_details.location);
+                            $('#summernote10').summernote('code', response.package_details
+                                .location);
 
                             $('#summernote3').summernote('code', tourVal);
                         }
@@ -1139,35 +1407,52 @@
 
                         var count = Math.max(4, priceAmount.length, priceTitle.length);
                         var priceContainer = $('#price-fields-container');
-
-
                         priceContainer.empty();
 
                         // Generate fields
                         for (var i = 0; i < count; i++) {
                             var fieldHtml = `
-                                        <div class="row mb-2">
-                                            <div class="col-lg-6">
-                                                <label class="form-label form-label-top form-label-auto fw-bold mb-2">
-                                                    Title
-                                                </label>
-                                                <input type="text" name="price_title[]" class="form-control py-2 rounded-3 shadow-sm"
-                                                    placeholder="Title"
-                                                    value="${priceTitle[i] || ''}">
+                                    <div class="row mb-2 align-items-center price-row" data-index="${i}">
+                                        <div class="col-lg-1 text-center">
+                                            <!-- Selector radio button -->
+                                            <input type="radio" name="selected_price" class="form-check-input mt-0" value="${i}">
+                                        </div>
+                                        <div class="col-lg-5">
+                                            <label class="form-label fw-bold mb-2">Title</label>
+                                            <input type="text" name="price_title[]" class="form-control py-2 rounded-3 shadow-sm"
+                                                placeholder="Title"
+                                                value="${priceTitle[i] || ''}">
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <label class="fw-bold mb-2">Amount <span class="text-danger">*</span></label>
+                                            <div class="position-relative">
+                                                <span class="position-absolute top-50 start-0 translate-middle-y ps-3">₹</span>
+                                                <input type="number" name="price_amount[]" class="form-control py-2 ps-5 rounded-3 shadow-sm price-amount"
+                                                    placeholder="Actual Amount"
+                                                    value="${priceAmount[i] || ''}">
                                             </div>
-                                            <div class="col-lg-6">
-                                                <label class="fw-bold mb-2">Amount <span class="text-danger">*</span></label>
-                                                <div class="position-relative">
-                                                    <span class="position-absolute top-50 start-0 translate-middle-y ps-3">₹</span>
-                                                    <input type="number" name="price_amount[]" class="form-control py-2 ps-5 rounded-3 shadow-sm"
-                                                        placeholder="Actual Amount"
-                                                        value="${priceAmount[i] || ''}">
-                                                </div>
-                                            </div>
-                                        </div>`;
-
+                                        </div>
+                                    </div>`;
                             priceContainer.append(fieldHtml);
                         }
+
+                        // When a radio button is selected
+                        // let selectedPriceAmount = 0;
+
+                        // $('#price-fields-container').on('change', 'input[name="selected_price"]', function() {
+                        //     var selectedRow = $(this).closest('.row');
+                        //     var title = selectedRow.find('input[name="price_title[]"]').val();
+                        //     selectedPriceAmount = parseFloat(selectedRow.find('.price-amount').val()) || 0;
+
+                        //     $('#selected-amount').text(selectedPriceAmount.toLocaleString() || '0');
+
+                        //     console.log('Selected Title:', title);
+                        //     console.log('Corresponding Amount:', selectedPriceAmount);
+
+
+                        // });
+
+
 
                         //camp rule
                         var campRuleContainer = $('#camp-rule-container');
@@ -1204,9 +1489,12 @@
                         // var notes_val = typeof response.package_details.important_info === 'string' ?
                         //     JSON.parse(response.package_details.important_info) :
                         //     response.package_details.important_info;
-                        $('#summernote4').summernote('code', response.package_details.important_info); // notes
-                        $('#summernote5').summernote('code', response.package_details.program_inclusion); // program Inclusion
-                        $('#summernote9').summernote('code', response.package_details.program_exclusion); // program Exclusion
+                        $('#summernote4').summernote('code', response.package_details
+                            .important_info); // notes
+                        $('#summernote5').summernote('code', response.package_details
+                            .program_inclusion); // program Inclusion
+                        $('#summernote9').summernote('code', response.package_details
+                            .program_exclusion); // program Exclusion
 
 
                         //aminites
@@ -1219,7 +1507,8 @@
 
                             // Loop through all checkboxes just once
                             $('input[name="amenity_services[]"]').each(function() {
-                                $(this).prop('checked', selectedAmenities[$(this).val()] || false);
+                                $(this).prop('checked', selectedAmenities[$(this).val()] ||
+                                    false);
                             });
                         }
                         //food beverages
@@ -1229,7 +1518,8 @@
                                 selectedFoodBeverages[id] = true;
                             });
                             $('input[name="food_beverages[]"]').each(function() {
-                                $(this).prop('checked', selectedFoodBeverages[$(this).val()] || false);
+                                $(this).prop('checked', selectedFoodBeverages[$(this)
+                                    .val()] || false);
                             });
                         }
                         //Activities
@@ -1239,7 +1529,8 @@
                                 selectedactivities[id] = true;
                             });
                             $('input[name="activities[]"]').each(function() {
-                                $(this).prop('checked', selectedactivities[$(this).val()] || false);
+                                $(this).prop('checked', selectedactivities[$(this).val()] ||
+                                    false);
                             });
                         }
                         //Safety Features
@@ -1249,40 +1540,12 @@
                                 selectedsafety_features[id] = true;
                             });
                             $('input[name="safety_features[]"]').each(function() {
-                                $(this).prop('checked', selectedsafety_features[$(this).val()] || false);
+                                $(this).prop('checked', selectedsafety_features[$(this)
+                                    .val()] || false);
                             });
                         }
 
-                        //destination check
-                        // const selectElement = document.getElementById('cities_name');
-                        // if (selectElement && response.selectedCityId) {
-                        //     // Find the option with matching ID (data attribute approach)
-                        //     const option = $(`#cities_name option[data-id="${response.selectedCityId}"]`);
-                        //     if (option.length) {
-                        //         selectElement.value = option.val();
-                        //         $('#cities_name').trigger('change');
-                        //         $('#district_name').trigger('change');
-                        //     }
-                        // }
-                        // if (response.selectedLocationname) {
-                        //     districtState.value = response.selectedLocationname;
-                        //     console.log('District value set:', districtState.value);
 
-                        //     // Try to select the district immediately
-                        //     const districtSelect = $('#district_name');
-                        //     const option = $(`#district_name option[value="${districtState.value}"]`);
-
-                        //     if (option.length) {
-                        //         districtSelect.val(districtState.value).trigger('change');
-                        //     } else {
-                        //         // If district not found, trigger city change to reload districts
-                        //         const citySelect = $('#cities_name');
-                        //         if (citySelect.val()) {
-                        //             citySelect.trigger('change');
-                        //         }
-                        //     }
-                        // }
-                        console.log('check response.pricingcalculator', response.pricingcalculator);
                         //pricing caluculator lsit 
                         if (response.pricingcalculator && response.pricingcalculator.length > 0) {
                             const pricingSelect = $('#pricing_calculator');
@@ -1298,6 +1561,11 @@
                                     .text(item.title)
                                 );
                             });
+
+
+                            // // Hide all sections
+                            // $('#stays-section, #activities-section, #cabs-section').hide();
+                            // $('#stays-details-container, #activity-details-container, #cabsdetails-container').empty();
                         }
 
                         //status
@@ -1305,34 +1573,37 @@
                             $('input[name="status"]').prop('checked', true);
                         }
                         //order
-                        if (response.package_details.list_order !== null && response.package_details.list_order !== undefined) {
+                        if (response.package_details.list_order !== null && response.package_details
+                            .list_order !== undefined) {
                             $('input[name="list_order"]').val(response.package_details.list_order);
                         }
 
                         // Update hidden input on form submission
                         $('form').on('submit', function() {
 
-                            $('#plan_description').val($('#summernote3').summernote('code'));
+                            $('#plan_description').val($('#summernote3').summernote(
+                                'code'));
                             $('#location').val($('#summernote10').summernote('code'));
                             $('#important_info').val($('#summernote4').summernote('code'));
-                            $('#program_inclusion').val($('#summernote5').summernote('code'));
-                            $('#program_exclusion').val($('#summernote9').summernote('code'));
+                            $('#program_inclusion').val($('#summernote5').summernote(
+                                'code'));
+                            $('#program_exclusion').val($('#summernote9').summernote(
+                                'code'));
                         });
 
 
                     }
                 } catch (e) {
-                    console.error('Error processing response:', e);
+                    console.error('Error parsing response:', e);
                 }
             },
-
             error: function(xhr, status, error) {
-                alert('AJAX Error: ' + error);
+                alert('Error fetching package details: ' + error);
             }
         });
-
-
     });
+
+    // });
 
     // console.log('check init', initialDistrict);
 
@@ -1340,8 +1611,115 @@
         $(this).closest('.day-block').remove();
     });
 
+
+    // Global variables to store settings
+    let gstRate = 0.0; // Default 0%
+    let serviceFeeAmount = 0; // Service fee as fixed amount
+
+    // Function to calculate and update price summary
+    // 1️⃣ Global variable
+    let selectedPriceAmount = 0;
+
+    // 2️⃣ Event for radio button selection
+    $('#price-fields-container').on('change', 'input[name="selected_price"]', function() {
+        const selectedRow = $(this).closest('.row');
+
+        const index = selectedRow.data('index');
+        selectedPriceAmount = parseFloat(selectedRow.find('.price-amount').val()) || 0;
+
+        $('#selected-amount').text('₹ ' + selectedPriceAmount.toLocaleString('en-IN'));
+
+        $('#selected-price-id').val(index);
+
+        // 3️⃣ Update grand total immediately
+        updatePriceSummary();
+    });
+
+
+    function updatePriceSummary() {
+        let selectedValue = 0;
+
+        // Sum up all other price inputs if needed
+        $('.price-input').each(function() {
+            const price = parseFloat($(this).val()) || 0;
+            selectedValue += price;
+        });
+
+        // Use the global selectedPriceAmount (Package Pricing)
+        let packagePricing = selectedPriceAmount || 0;
+
+        // Get GST from input instead of backend setting
+        const userGstRate = parseFloat($('#gst-input').val()) || 0; // percentage
+        const serviceFeeAmount = parseFloat($('#service-fee-input').val()) || 0;
+
+        // ✅ CORRECTED: Calculate GST on (Package Pricing + Selected Value + Service Fee)
+        const taxableAmount = packagePricing + selectedValue + serviceFeeAmount;
+        const gstAmount = Math.round(taxableAmount * (userGstRate / 100));
+
+        const totalBeforeTax = packagePricing + selectedValue + serviceFeeAmount;
+        const grandTotal = Math.round(totalBeforeTax + gstAmount);
+
+        // Update the DOM
+        $('#selected-amount').text('₹ ' + packagePricing.toLocaleString('en-IN'));
+        $('#selected-value').text('₹ ' + selectedValue.toLocaleString('en-IN'));
+        $('#service-fee').text('₹ ' + serviceFeeAmount.toLocaleString('en-IN'));
+        $('#tax-amount').text('₹ ' + gstAmount.toLocaleString('en-IN'));
+        $('#total-amount').text('₹ ' + totalBeforeTax.toLocaleString('en-IN'));
+        $('#grand-total').text('₹ ' + grandTotal.toLocaleString('en-IN'));
+
+        // Update hidden inputs
+        $('#hidden-selected-value').val(selectedValue);
+        $('#hidden-service-fee').val(serviceFeeAmount);
+        $('#hidden-tax-amount').val(gstAmount);
+        $('#hidden-total-amount').val(totalBeforeTax);
+        $('#hidden-grand-total').val(grandTotal);
+        $('#package_pricing_value').val(packagePricing);
+    }
+
+    $('#gst-input').on('input', function() {
+        updatePriceSummary();
+    });
+    $('#service-fee-input').on('input', function() {
+        updatePriceSummary();
+    });
+
+
+
+    // Function to handle price input changes with validation
+    function setupPriceInputListeners() {
+        $(document).off('input', '.price-input').on('input', '.price-input', function() {
+            // Validate input to allow only numbers
+            const value = $(this).val();
+            if (value && !/^\d*\.?\d*$/.test(value)) {
+                $(this).val(value.replace(/[^\d.]/g, ''));
+            }
+
+            // Update price summary
+            updatePriceSummary();
+        });
+    }
+
+    // Function to update settings from backend
+    function updateSettingsFromBackend(settings) {
+        if (settings && settings.length > 0) {
+            const setting = settings[0];
+
+            // GST as percentage (convert to decimal)
+            gstRate = (parseFloat(setting.gst) || 0) / 100;
+
+            // Service fee as fixed amount
+            serviceFeeAmount = parseFloat(setting.service_fee) || 0;
+        }
+    }
+
+
     $(document).ready(function() {
         $('#stays-section, #activities-section, #cabs-section').hide();
+
+        // Initialize price calculation
+        setupPriceInputListeners();
+        updatePriceSummary();
+
         $('#pricing_calculator').change(function() {
             const pricingval = $(this).val();
 
@@ -1352,6 +1730,15 @@
             $('#cabDropdownText').text('Select options');
             $('#stayHiddenInput, #activityHiddenInput, #cabHiddenInput').val('');
 
+            // Clear all details containers
+            $('#stays-details-container, #activity-details-container, #cabsdetails-container').empty();
+            $('#cabs-details-container').hide();
+
+            // Remove existing event handlers to prevent duplicates
+            $('.stay-checkbox').off('change');
+            $('.activity-checkbox').off('change');
+            $('.cab-details-checkbox').off('change');
+
             $.ajax({
                 url: "{{ route('admin.c_pricing_details') }}",
                 type: 'POST',
@@ -1360,6 +1747,10 @@
                     _token: "{{ csrf_token() }}"
                 },
                 success: function(data) {
+                    // Update settings from backend
+                    if (data.settings) {
+                        updateSettingsFromBackend(data.settings);
+                    }
                     // Process Stays
                     if (data.stays && Object.keys(data.stays).length > 0) {
                         const staysSection = $('#stays-section');
@@ -1387,7 +1778,8 @@
 
 
                         // Update the dropdown text and hidden input initially
-                        $('#stayDropdownText').text(selectedStays.length > 0 ? `${selectedStays.length} selected` : 'Select stays');
+                        $('#stayDropdownText').text(selectedStays.length > 0 ?
+                            `${selectedStays.length} selected` : 'Select stays');
                         $('#stayHiddenInput').val(selectedStays.join(','));
 
                         // Trigger change event for pre-checked boxes on initial load
@@ -1398,14 +1790,33 @@
                         $('.stay-checkbox').change(function() {
                             const stayId = $(this).val();
                             if ($(this).is(':checked')) {
-                                if (!selectedStays.includes(stayId)) selectedStays.push(stayId);
+                                if (!selectedStays.includes(stayId)) selectedStays
+                                    .push(stayId);
                             } else {
                                 const index = selectedStays.indexOf(stayId);
                                 if (index > -1) selectedStays.splice(index, 1);
                             }
-                            $('#stayDropdownText').text(selectedStays.length > 0 ? `${selectedStays.length} selected` : 'Select stays');
+                            $('#stayDropdownText').text(selectedStays.length > 0 ?
+                                `${selectedStays.length} selected` :
+                                'Select stays');
                             $('#stayHiddenInput').val(selectedStays.join(','));
+
+
+                            // Trigger AJAX call to update stays details
+                            if (selectedStays.length === 0) {
+                                $('#stays-details-container').empty();
+                                updatePriceSummary
+                                    (); // Update immediately when no stays selected
+                            } else {
+                                // This will trigger the stay-checkbox change event below
+                                $(this).trigger('stay-checkbox-change');
+                            }
                         });
+
+                        // Trigger change event for pre-checked boxes on initial load
+                        if (selectedStays.length > 0) {
+                            $('.stay-checkbox:checked').trigger('change');
+                        }
 
                         staysDropdown.on('click', '.form-check', function(e) {
                             e.stopPropagation();
@@ -1451,14 +1862,36 @@
                         $('.activity-checkbox').change(function() {
                             const activityId = $(this).val();
                             if ($(this).is(':checked')) {
-                                if (!selectedActivities.includes(activityId)) selectedActivities.push(activityId);
+                                if (!selectedActivities.includes(activityId))
+                                    selectedActivities.push(activityId);
                             } else {
-                                const index = selectedActivities.indexOf(activityId);
+                                const index = selectedActivities.indexOf(
+                                    activityId);
                                 if (index > -1) selectedActivities.splice(index, 1);
                             }
-                            $('#activityDropdownText').text(selectedActivities.length > 0 ? `${selectedActivities.length} selected` : 'Select activities');
-                            $('#activityHiddenInput').val(selectedActivities.join(','));
+                            $('#activityDropdownText').text(selectedActivities
+                                .length > 0 ?
+                                `${selectedActivities.length} selected` :
+                                'Select activities');
+                            $('#activityHiddenInput').val(selectedActivities.join(
+                                ','));
+
+
+                            // Trigger AJAX call to update activities details
+                            if (selectedActivities.length === 0) {
+                                $('#activity-details-container').empty();
+                                updatePriceSummary
+                                    (); // Update immediately when no activities selected
+                            } else {
+                                // This will trigger the activity-checkbox change event below
+                                $(this).trigger('activity-checkbox-change');
+                            }
                         });
+
+                        // Trigger change event for pre-checked boxes on initial load
+                        if (selectedActivities.length > 0) {
+                            $('.activity-checkbox:checked').trigger('change');
+                        }
 
                         activitiesDropdown.on('click', '.form-check', function(e) {
                             e.stopPropagation();
@@ -1469,29 +1902,31 @@
                     if (data.cabs && Object.keys(data.cabs).length > 0) {
                         const cabsSection = $('#cabs-section');
                         const cabsDropdown = cabsSection.find('.dropdown-menu');
-                        // const selectedCabs = [];
-                        const selectedCabs = data.pricing_cabs ?
-                            Object.keys(data.pricing_cabs)
-                            .filter(key => data.cabs[key]) // Only keep keys that exist in current cabs
-                            .map(key => ({
-                                key: key,
-                                value: data.cabs[key]
+
+                        console.log('check cabs id', data.pricing_cabs_id);
+                        const selectedCabs = data.pricing_cabs_id ?
+                            data.pricing_cabs_id
+                            .filter(cabId => data.cabs[cabId])
+                            .map(cabId => ({
+                                key: cabId,
+                                value: data.cabs[cabId]
                             })) : [];
 
+                        console.log('check cabs', selectedCabs);
                         cabsDropdown.empty();
 
                         // Using Object.keys to iterate through the key-value pairs
                         Object.keys(data.cabs).forEach(function(key) {
                             const value = data.cabs[key];
                             cabsDropdown.append(`
-                                    <li>
-                                        <div class="form-check">
-                                            <input type="checkbox" class="form-check-input cab-checkbox cab_details" 
-                                                id="cab-${key}" name="${key}" value="${key}" data-text="${value}" checked>
-                                            <label class="form-check-label" for="cab-${key}">${value}</label>
-                                        </div>
-                                    </li>
-                                `);
+                                <li>
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input cab-details-checkbox" 
+                                            id="cab-${key}" name="${key}" value="${key}" data-text="${value}" checked>
+                                        <label class="form-check-label" for="cab-${key}">${value}</label>
+                                    </div>
+                                </li>
+                            `);
                         });
 
                         cabsSection.show();
@@ -1504,48 +1939,55 @@
                         );
                         $('#cabHiddenInput').val(selectedCabs.map(item => item.key).join(','));
 
+                        // Load cab details immediately for pre-selected cabs
                         if (selectedCabs.length > 0) {
-                            $('.cab-checkbox:checked').trigger('change');
+                            console.log('Loading initial cab details');
+                            loadCabDetailsDirectly(selectedCabs.map(item => item.key));
                         }
 
-                        $('.cab-checkbox').change(function() {
-                            const cabKey = $(this).val();
-                            const cabValue = $(this).data('text');
+                        // Handle cab details checkbox changes directly
+                        $(document).on('change', '.cab-details-checkbox', function() {
+                            const selectedCabDetails = $('.cab-details-checkbox:checked').map(function() {
+                                return {
+                                    id: $(this).val(),
+                                    text: $(this).data('text')
+                                };
+                            }).get();
 
-                            if ($(this).is(':checked')) {
-                                if (!selectedCabs.some(item => item.key === cabKey)) {
-                                    selectedCabs.push({
-                                        key: cabKey,
-                                        value: cabValue
-                                    });
-                                }
-                            } else {
-                                const index = selectedCabs.findIndex(item => item.key === cabKey);
-                                if (index > -1) selectedCabs.splice(index, 1);
-                            }
-
-                            // Update button text with selected values
+                            // Update dropdown text
                             $('#cabDropdownText').text(
-                                selectedCabs.length > 0 ?
-                                selectedCabs.map(item => item.value).join(', ') :
+                                selectedCabDetails.length > 0 ?
+                                selectedCabDetails.map(item => item.text).join(', ') :
                                 'Select options'
                             );
+                            $('#cabHiddenInput').val(selectedCabDetails.map(item => item.id).join(','));
 
-                            // Store keys in hidden input
-                            $('#cabHiddenInput').val(selectedCabs.map(item => item.key).join(','));
+                            // Load cab details
+                            if (selectedCabDetails.length === 0) {
+                                $('#cabsdetails-container').empty().hide();
+                                updatePriceSummary();
+                            } else {
+                                loadCabDetailsDirectly(selectedCabDetails.map(item => item.id));
+                            }
                         });
 
                         cabsDropdown.on('click', '.form-check', function(e) {
                             e.stopPropagation();
                         });
                     }
+                    // Setup price listeners after all data is loaded
+                    setupPriceInputListeners();
+                    updatePriceSummary();
                 },
                 error: function(xhr, status, error) {
                     console.error('Error:', error);
-                    $('#stays-section, #activities-section, #cabs-section').html('<div class="alert alert-danger">Error loading data</div>').show();
+                    $('#stays-section, #activities-section, #cabs-section').html(
+                            '<div class="alert alert-danger">Error loading data</div>')
+                        .show();
                 }
             });
         });
+
         //stay details - stay-checkbox
         $(document).on('change', '.stay-checkbox', function() {
             const pricingval = $('#pricing_calculator').val();
@@ -1557,6 +1999,7 @@
 
             if (selectedStays.length === 0) {
                 $('#stays-details-container').empty();
+                updatePriceSummary(); // Update summary when no stays selected
                 return;
             }
 
@@ -1598,13 +2041,17 @@
                                     <div class="col-md-4">
                                         <input type="text" class="form-control price-input" 
                                             name="stays[${index}][${subIndex}][price]" 
-                                            value="${stay.price}" required> 
+                                            value="${stay.price}" readonly> 
                                     </div>
                                 </div>
                             `;
                             container.append(stayHtml);
                         });
                     });
+
+                    // Setup listeners and update price after stays are loaded
+                    setupPriceInputListeners();
+                    updatePriceSummary();
                 },
                 error: function(xhr, status, error) {
                     console.error('Error:', error);
@@ -1623,6 +2070,7 @@
 
             if (selectedStays.length === 0) {
                 $('#activity-details-container').empty();
+                updatePriceSummary(); // Update summary when no activities selected
                 return;
             }
 
@@ -1667,13 +2115,17 @@
                                     <div class="col-md-4">
                                         <input type="text" class="form-control price-input" 
                                             name="activity[${groupIndex}][${itemIndex}][price]" 
-                                            value="${activity.price}" required>
+                                            value="${activity.price}" readonly>
                                     </div>
                                 </div>
                             `;
                             container.append(activityHtml);
                         });
                     });
+
+                    // Setup listeners and update price after activities are loaded
+                    setupPriceInputListeners();
+                    updatePriceSummary();
                 },
                 error: function(xhr, status, error) {
                     console.error('Error:', error);
@@ -1681,227 +2133,242 @@
             });
         });
 
-        // Handle main cab type selection
-        $(document).on('change', '.cab-checkbox', function() {
-            const pricingval = $('#pricing_calculator').val();
-            const selectedCabIds = [];
 
-            $('.cab-checkbox:checked').each(function() {
-                selectedCabIds.push($(this).val());
-            });
+        // New function to load cab details directly
+        function loadCabDetailsDirectly(selectedCabIds) {
+            const pricingval = $('#pricing_calculator').val();
+
+            console.log('Loading cab details for:', selectedCabIds);
 
             if (selectedCabIds.length === 0) {
-                $('#cabs-details-container, #cabsdetails-container').hide();
-                return;
-            }
-
-            $.ajax({
-                url: "{{ route('admin.c_travel_details') }}",
-                type: 'POST',
-                data: {
-                    pricingval: pricingval,
-                    travelmodes: selectedCabIds,
-                    _token: "{{ csrf_token() }}"
-                },
-                success: function(data) {
-                    updateCabDetailsDropdown(data.cabs, data.pricing_cab);
-                },
-                error: function(xhr, status, error) {
-                    console.error('Error:', error);
-                    $('#cabs-details-container, #cabsdetails-container').hide();
-                }
-            });
-        });
-
-        // Handle cab details selection
-        $(document).on('change', '.cab-details-checkbox', function() {
-            const pricingval = $('#pricing_calculator').val();
-            const selectedCabDetails = [];
-
-            $('.cab-details-checkbox:checked').each(function() {
-                selectedCabDetails.push({
-                    id: $(this).val(),
-                    text: $(this).data('text')
-                });
-            });
-
-            if (selectedCabDetails.length === 0) {
                 $('#cabsdetails-container').empty().hide();
+                updatePriceSummary();
                 return;
             }
-
-            const selectedCabIds = [];
-            $('.cab-checkbox:checked').each(function() {
-                selectedCabIds.push($(this).val());
-            });
 
             $.ajax({
                 url: "{{ route('admin.c_cabs_details') }}",
                 type: 'POST',
                 data: {
                     pricingval: pricingval,
-                    cabdetails: selectedCabDetails.map(d => d.id),
-                    travelmodes: selectedCabIds,
+                    cabdetails: selectedCabIds,
+                    travelmodes: selectedCabIds, // Pass same IDs for consistency
                     _token: "{{ csrf_token() }}"
                 },
                 success: function(data) {
-                    displayCabDetails(data.activity_details);
+                    displayCabDetails(data.activity_details || data.cab_details || data.details || []);
                 },
                 error: function(xhr, status, error) {
-                    console.error('Error:', error);
+                    console.error('Error loading cab details:', error);
                     $('#cabsdetails-container').empty().hide();
                 }
             });
-        });
-
-        // Helper function to update cab details dropdown
-        function updateCabDetailsDropdown(cabsData, cabids) {
-            const container = $('#cabs-details-container');
-            const dropdownMenu = container.find('.dropdown-menu');
-            const dropdownText = container.find('#cabDetailsDropdownText');
-            const hiddenInput = container.find('#cabDetailsHiddenInput');
-
-            // Reset previous selections
-            dropdownMenu.empty();
-            hiddenInput.val(cabids);
-            dropdownText.text(cabids.length > 0 ? `${cabids.length} selected` : 'Select options');
-            $('#cabsdetails-container').empty().hide();
-
-            if (cabsData && Object.keys(cabsData).length > 0) {
-                const selectedCabDetails = cabids
-                    .filter(id => cabsData[id]) // Only keep IDs that exist in current data
-                    .map(id => ({
-                        id: id,
-                        text: cabsData[id]
-                    }));
-
-                $.each(cabsData, function(id, title) {
-                    const isChecked = cabids.includes(id.toString());
-                    dropdownMenu.append(`
-                            <li>
-                                <div class="form-check">
-                                    <input type="checkbox" class="form-check-input cab-details-checkbox" 
-                                        id="cab-detail-${id}" value="${id}" 
-                                        ${isChecked ? 'checked' : ''} 
-                                        data-text="${title}">
-                                    <label class="form-check-label" for="cab-detail-${id}">${title}</label>
-                                </div>
-                            </li>
-                        `);
-                });
-
-                // Update UI with initial selections
-                if (selectedCabDetails.length > 0) {
-                    dropdownText.text(selectedCabDetails.map(opt => opt.text).join(', '));
-                    hiddenInput.val(selectedCabDetails.map(opt => opt.id).join(','));
-                }
-
-                // Single unified change handler
-                $(document).off('change', '.cab-details-checkbox').on('change', '.cab-details-checkbox', function() {
-                    const pricingval = $('#pricing_calculator').val();
-                    const currentSelections = [];
-
-                    // Get all checked cab details
-                    $('.cab-details-checkbox:checked').each(function() {
-                        currentSelections.push({
-                            id: $(this).val(),
-                            text: $(this).data('text')
-                        });
-                    });
-
-                    // Get all checked main cab types
-                    const selectedCabIds = $('.cab-checkbox:checked').map(function() {
-                        return $(this).val();
-                    }).get();
-
-                    // Update UI
-                    dropdownText.text(
-                        currentSelections.length > 0 ?
-                        currentSelections.map(opt => opt.text).join(', ') :
-                        'Select options'
-                    );
-                    hiddenInput.val(currentSelections.map(opt => opt.id).join(','));
-
-                    // Make AJAX call if we have selections
-                    if (currentSelections.length > 0) {
-                        $.ajax({
-                            url: "{{ route('admin.c_cabs_details') }}",
-                            type: 'POST',
-                            data: {
-                                pricingval: pricingval,
-                                cabdetails: currentSelections.map(d => d.id),
-                                travelmodes: selectedCabIds,
-                                _token: "{{ csrf_token() }}"
-                            },
-                            success: function(data) {
-                                displayCabDetails(data.activity_details);
-                            },
-                            error: function(xhr, status, error) {
-                                console.error('Error:', error);
-                                $('#cabsdetails-container').empty().hide();
-                            }
-                        });
-                    } else {
-                        $('#cabsdetails-container').empty().hide();
-                    }
-                });
-
-                // Trigger change for pre-checked boxes
-                if (cabids.length > 0) {
-                    $('.cab-details-checkbox:checked').trigger('change');
-                }
-
-                container.show();
-            } else {
-                container.hide();
-            }
         }
 
-        // Helper function to display cab details (unchanged)
+        // Handle main cab type selection - UPDATED
+        // $(document).on('change', '.cab-checkbox', function() {
+        //     const pricingval = $('#pricing_calculator').val();
+        //     const selectedCabIds = $('.cab-checkbox:checked').map(function() {
+        //         return $(this).val();
+        //     }).get();
+        //     if (selectedCabIds.length === 0) {
+        //         $('#cabs-details-container, #cabsdetails-container').hide().empty();
+        //         updatePriceSummary();
+        //         return;
+        //     }
+
+        //     $.ajax({
+        //         url: "{{ route('admin.c_travel_details') }}",
+        //         type: 'POST',
+        //         data: {
+        //             pricingval: pricingval,
+        //             travelmodes: selectedCabIds,
+        //             _token: "{{ csrf_token() }}"
+        //         },
+        //         success: function(data) {
+        //             updateCabDetailsDropdown(data.cabs, data.pricing_cab || []);
+        //         },
+        //         error: function(xhr, status, error) {
+        //             $('#cabs-details-container, #cabsdetails-container').hide();
+        //         }
+        //     });
+        // });
+
+        // Helper: Update cab details dropdown - UPDATED
+        // function updateCabDetailsDropdown(cabsData, selectedCabIds) {
+        //     const container = $('#cabs-details-container');
+        //     const dropdownMenu = container.find('.dropdown-menu');
+        //     const dropdownText = container.find('#cabDetailsDropdownText');
+        //     const hiddenInput = container.find('#cabDetailsHiddenInput');
+
+        //     dropdownMenu.empty();
+
+        //     // Ensure selectedCabIds is an array
+        //     const cabIdsArray = Array.isArray(selectedCabIds) ? selectedCabIds :
+        //         (selectedCabIds ? [selectedCabIds.toString()] : []);
+
+        //     hiddenInput.val(cabIdsArray.join(','));
+        //     dropdownText.text(cabIdsArray.length > 0 ? `${cabIdsArray.length} selected` : 'Select options');
+
+        //     $('#cabsdetails-container').empty().hide();
+
+        //     if (cabsData && Object.keys(cabsData).length > 0) {
+        //         $.each(cabsData, function(id, title) {
+        //             const isChecked = cabIdsArray.includes(id.toString());
+        //             const checkboxId = `cab-detail-${id}`;
+
+        //             dropdownMenu.append(`
+        //         <li>
+        //             <div class="form-check">
+        //                 <input type="checkbox" class="form-check-input cab-details-checkbox" 
+        //                     id="${checkboxId}" value="${id}" 
+        //                     ${isChecked ? 'checked' : ''} 
+        //                     data-text="${title}">
+        //                 <label class="form-check-label" for="${checkboxId}">${title}</label>
+        //             </div>
+        //         </li>
+        //     `);
+        //         });
+
+        //         // Show the container
+        //         container.show();
+
+        //         // Prevent dropdown close when clicking checkboxes
+        //         dropdownMenu.off('click', '.form-check').on('click', '.form-check', function(e) {
+        //             e.stopPropagation();
+        //         });
+
+        //         // Update the dropdown text immediately
+        //         updateCabDetailsDropdownText();
+
+        //         // Trigger change for pre-checked boxes
+        //         if (cabIdsArray.length > 0) {
+        //             setTimeout(() => {
+        //                 $('.cab-details-checkbox:checked').trigger('change');
+        //             }, 100);
+        //         }
+        //     } else {
+        //         container.hide();
+        //     }
+        // }
+
+        // Helper: Update cab details dropdown text
+        // function updateCabDetailsDropdownText() {
+        //     const selectedCabDetails = $('.cab-details-checkbox:checked').map(function() {
+        //         return $(this).data('text');
+        //     }).get();
+
+        //     const dropdownText = $('#cabDetailsDropdownText');
+        //     const hiddenInput = $('#cabDetailsHiddenInput');
+
+        //     const selectedIds = $('.cab-details-checkbox:checked').map(function() {
+        //         return $(this).val();
+        //     }).get();
+
+        //     dropdownText.text(selectedCabDetails.length > 0 ?
+        //         selectedCabDetails.join(', ') : 'Select options');
+        //     hiddenInput.val(selectedIds.join(','));
+        // }
+
+        // // Handle cab details selection - UPDATED
+        // $(document).on('change', '.cab-details-checkbox', function() {
+        //     updateCabDetailsDropdownText(); // Update dropdown text immediately
+        //     handleCabDetailsChange();
+        // });
+
+        // Helper: Handle cab details selection logic - UPDATED
+        // function handleCabDetailsChange() {
+        //     const pricingval = $('#pricing_calculator').val();
+        //     const selectedCabDetails = $('.cab-details-checkbox:checked').map(function() {
+        //         return {
+        //             id: $(this).val(),
+        //             text: $(this).data('text')
+        //         };
+        //     }).get();
+
+        //     const selectedCabIds = $('.cab-checkbox:checked').map(function() {
+        //         return $(this).val();
+        //     }).get();
+
+        //     if (selectedCabDetails.length === 0) {
+        //         $('#cabsdetails-container').empty().hide();
+        //         updatePriceSummary();
+        //         return;
+        //     }
+
+        //     $.ajax({
+        //         url: "{{ route('admin.c_cabs_details') }}",
+        //         type: 'POST',
+        //         data: {
+        //             pricingval: pricingval,
+        //             cabdetails: selectedCabDetails.map(d => d.id),
+        //             travelmodes: selectedCabIds,
+        //             _token: "{{ csrf_token() }}"
+        //         },
+        //         success: function(data) {
+        //             displayCabDetails(data.activity_details || data.cab_details || data.details || []);
+        //         },
+        //         error: function(xhr, status, error) {
+        //             console.error('Error loading cab details:', error);
+        //             $('#cabsdetails-container').empty().hide();
+        //         }
+        //     });
+        // }
+
+        // Helper: Display cab details - UPDATED
         function displayCabDetails(detailsData) {
             const container = $('#cabsdetails-container');
             container.empty();
-
             if (detailsData && detailsData.length > 0) {
                 detailsData.forEach((cabGroup, groupIndex) => {
-                    // Add group header with title (shown once per group)
-                    if (cabGroup.length > 0) {
+                    if (cabGroup && cabGroup.length > 0 && cabGroup[0]) {
+                        const groupTitle = cabGroup[0].title || cabGroup[0].name || 'Cab Details';
                         container.append(`
-                            <div class="row cab-group-header mb-2">
-                                <div class="col-md-12">
-                                    <h5>${cabGroup[0].title}</h5>
-                                </div>
-                            </div>
-                        `);
-                    }
+                    <div class="row cab-group-header mb-2">
+                        <div class="col-md-12">
+                            <h5>${groupTitle}</h5>
+                        </div>
+                    </div>
+                `);
 
-                    // Add each cab detail (without repeating title)
-                    cabGroup.forEach((cab, itemIndex) => {
-                        container.append(`
+                        cabGroup.forEach((cab, itemIndex) => {
+                            if (cab) {
+                                container.append(`
                             <div class="row cab-detail-row mb-3">
                                 <div class="col-md-4">
-                                    <input type="hidden" name="cabs[${groupIndex}][${itemIndex}][cab_id]" value="${cab.cab_id}">
-                                    <input type="hidden" name="cabs[${groupIndex}][${itemIndex}][title]" value="${cab.title}">
-                                    <!-- Title removed from display (shown in header) -->
+                                    <input type="hidden" name="cabs[${groupIndex}][${itemIndex}][cab_id]" value="${cab.cab_id || cab.id || ''}">
+                                    <input type="hidden" name="cabs[${groupIndex}][${itemIndex}][title]" value="${cab.title || cab.name || ''}">
                                 </div>
                                 <div class="col-md-4">
-                                    <input type="hidden" name="cabs[${groupIndex}][${itemIndex}][price_title]" value="${cab.price_title}">
-                                    <input type="text" class="form-control" value="${cab.price_title}" readonly>
+                                    <input type="hidden" name="cabs[${groupIndex}][${itemIndex}][price_title]" value="${cab.price_title || cab.title || ''}">
+                                    <input type="text" class="form-control" value="${cab.price_title || cab.title || ''}" readonly>
                                 </div>
                                 <div class="col-md-4">
                                     <input type="text" class="form-control price-input" 
                                         name="cabs[${groupIndex}][${itemIndex}][price]" 
-                                        value="${cab.price}" required>
+                                        value="${cab.price || '0'}" readonly>
                                 </div>
                             </div>
                         `);
-                    });
+                            }
+                        });
+                    }
                 });
+
+                setupPriceInputListeners();
+                updatePriceSummary();
                 container.show();
             } else {
                 container.hide();
             }
         }
+        // // Add event listeners for checkbox changes to recalculate prices
+        // $(document).on('change', '.stay-checkbox, .activity-checkbox, .cab-checkbox, .cab-details-checkbox', function() {
+        //     // Small delay to allow DOM to update
+        //     setTimeout(() => {
+        //         updatePriceSummary();
+        //     }, 100);
+        // });
 
     });
 </script>

@@ -22,7 +22,12 @@ class stays_destination_details extends Model
         ->with (['user' => function ($query) {
             $query->select('id','first_name','last_name', 'email','profile_image'); 
         }]);
-    }   
+    }  
+    
+    public function city()
+    {
+        return $this->belongsTo(City::class, 'destination', 'id');
+    }
 }
 
 

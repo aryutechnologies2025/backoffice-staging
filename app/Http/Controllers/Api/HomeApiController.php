@@ -17,7 +17,7 @@ use App\Models\City;
 use App\Models\Slider;
 use App\Models\InclusivePackages;
 use App\Models\Group_tour;
-use App\Models\Geo_feature;
+use App\Models\stay_district;
 use App\Models\Influencers;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -56,7 +56,7 @@ class HomeApiController extends Controller
         $themes = Themes::where('status', "1")
             ->where('is_deleted', "0")
             ->orderBy('list_order', 'asc')
-            ->get(['id', 'themes_name', 'theme_pic']); // Select only the required fields
+            ->get(['id', 'themes_name', 'theme_pic', 'description']); // Select only the required fields
 
         // Check if any themes were found
         if ($themes->isEmpty()) {
@@ -111,8 +111,7 @@ class HomeApiController extends Controller
             $destination = $request->input('destination');
             $program_destination =  $request->input('program_destination');
             $view_type =  $request->input('view_type');
-            $getCity = City::where('status', "1")
-                ->where('is_deleted', "0");
+
 
             // Build the query
             $query = InclusivePackages::where('status', "1")
@@ -167,25 +166,6 @@ class HomeApiController extends Controller
                 return (float)($prices[0] ?? PHP_INT_MAX); // Sort by first price value
             })->values();
 
-            // $packages = $packages->sortBy(function ($package) {
-            //     $prices = json_decode($package->price_amount, true) ?? [];
-
-            //     // Get first price value
-            //     $firstPrice = $prices[0] ?? null;
-
-            //     // Handle null or invalid values
-            //     if ($firstPrice === null || $firstPrice === 'null') {
-            //         return PHP_INT_MAX; // Push null values to the end
-            //     }
-
-            //     // Clean the price string (remove quotes and trim whitespace)
-            //     if (is_string($firstPrice)) {
-            //         $firstPrice = trim(str_replace(['"', "'"], '', $firstPrice));
-            //     }
-
-            //     // Convert to float if numeric, otherwise use a high value
-            //     return is_numeric($firstPrice) ? (float)$firstPrice : PHP_INT_MAX;
-            // })->values();
 
             // Check if any packages were found
             if ($packages->isEmpty()) {
@@ -210,13 +190,49 @@ class HomeApiController extends Controller
                 $themeModel = Themes::find($theme);
                 $theme_d = $themeModel ? [['id' => $themeModel->id, 'name' => $themeModel->themes_name]] : [];
             } else {
-                $theme_d= [];
+                $theme_d = [];
             }
 
             // dd($theme_d);
 
+            // Get city with cities_pic if destination is provided
+            $city_data = null;
+            $districtsData = [];
+            if ($destination) {
+                $getCity = City::where('status', "1")
+                    ->where('is_deleted', "0")
+                    ->where('id', $destination)
+                    ->select('id', 'city_name', 'cities_pic')
+                    ->first();
+
+                if ($getCity) {
+                    $city_data = [
+                        'id' => $getCity->id,
+                        'city_name' => $getCity->city_name,
+                        'cities_pic' => $getCity->cities_pic
+                    ];
+                }
+
+                // Changed get() to first() since we're expecting a single record
+                $stayDistrict = stay_district::where('destination', $destination)->first();
+
+                // Check if stayDistrict exists and has districts_data
+                if ($stayDistrict && !empty($stayDistrict->districts_data)) {
+                    $districtsData = $stayDistrict->districts_data;
+
+                    $formattedDistricts = [];
+                    foreach ($districtsData as $district) {
+                        $formattedDistricts[] = [
+                            'destination' => $district['destination'] ?? null,
+                            'image_path' => $district['image_path'] ?? null
+                        ];
+                    }
+                    $districtsData = $formattedDistricts;
+                }
+            }
+
             // Process each package to format the output
-            $formattedPackages = $packages->map(function ($package) use ($getDetailsById) {
+            $formattedPackages = $packages->map(function ($package, $destination) use ($getDetailsById) {
                 // Decode JSON fields
                 $eventsPackageImages = json_decode($package->cover_img, true);
                 $tourPlanning = json_decode($package->tour_planning, true);
@@ -233,6 +249,38 @@ class HomeApiController extends Controller
                 $price_title = json_decode($package->price_tilte, true);
 
                 $price_amount = json_decode($package->price_amount, true);
+
+                $location_name = $package->location_name;
+                $city_details = $package->city_details;
+
+                $location_name = explode(',', $location_name);
+
+
+                $destination_name = '';
+
+                if (!empty($location_name)) {
+                    $stayDistrict = stay_district::where('destination', $city_details)->first();
+
+                    if ($stayDistrict && !empty($stayDistrict->districts_data)) {
+                        // Decode JSON if needed
+                        $dataArray = is_string($stayDistrict->districts_data)
+                            ? json_decode($stayDistrict->districts_data, true)
+                            : $stayDistrict->districts_data;
+
+                        if (is_array($dataArray)) {
+                            // Filter only matching destinations
+                            $selectedDestinations = array_filter($dataArray, function ($item) use ($location_name) {
+                                return in_array($item['destination'], $location_name);
+                            });
+
+                            // Extract only the destination names
+                            $destinationNames = array_column($selectedDestinations, 'destination');
+
+                            // Join names with commas
+                            $destination_name = $destinationNames;
+                        }
+                    }
+                }
 
                 // Process reviews and attach user data
                 $reviews = $package->reviews->map(function ($review) {
@@ -263,20 +311,27 @@ class HomeApiController extends Controller
                 // dd($themeIds);
                 if (is_array($themeIds)) {
                     $theme = Themes::whereIn('id', $themeIds)
-                        ->get(['id', 'themes_name'])
+                        ->get(['id', 'themes_name', 'theme_pic'])
                         ->map(function ($item) {
                             return [
                                 'id' => $item->id,
                                 'name' => $item->themes_name,
+                                'image' => $item->theme_pic,
                             ];
                         })
                         ->values();
                 } elseif (!empty($themeIds)) {
                     $themeModel = Themes::find($themeIds);
-                    $theme = $themeModel ? [['id' => $themeModel->id, 'name' => $themeModel->themes_name]] : [];
+                    $theme = $themeModel ? [[
+                        'id' => $themeModel->id,
+                        'name' => $themeModel->themes_name,
+                        'image' => $themeModel->theme_pic
+                    ]] : [];
                 } else {
                     $theme = [];
                 }
+
+
 
                 // dd($theme);
                 // Return the formatted package data, including additional details
@@ -314,8 +369,7 @@ class HomeApiController extends Controller
                     'activities' => $details['activities'] ?? [],
                     'safetyFeatures' => $details['safetyFeatures'] ?? [],
                     'addressDetails' => $details['addressDetails'] ?? [],
-
-
+                    'destination_name' => $destination_name
                 ];
             });
 
@@ -325,7 +379,10 @@ class HomeApiController extends Controller
                 'status' => 'success',
                 'message' => '' . str_replace('_', ' ', $program_type) . ' retrieved successfully.',
                 'data' => $formattedPackages,
-                'theme_details' => $theme_d
+                'theme_details' => $theme_d,
+                'city_details' => $city_data,
+                'districtsData' => $districtsData,
+
             ], 200);
         } catch (\Exception $e) {
 
@@ -338,176 +395,6 @@ class HomeApiController extends Controller
             ], 500);
         }
     }
-
-    // public function get_program(Request $request)
-    // {
-    //     try {
-    //         // Step 1: Check for Referral Code
-    //         $referralCode = $request->query('ref'); // Extract referral code from URL
-    //         if ($referralCode) {
-    //             $influencer = Influencers::where('reference_id', $referralCode)->first();
-
-    //             if ($influencer) {
-    //                 // Optionally log the referral or store the information
-    //                 Log::info("Referral used by influencer: " . $influencer->name);
-
-    //                 // You can store the referral in a new table, like "ReferralLogs"
-    //                 // ReferralLog::create(['influencer_id' => $influencer->id, 'user_ip' => $request->ip()]);
-    //             } else {
-    //                 // Return an error response for invalid referral code
-    //                 return response()->json([
-    //                     'status' => 'error',
-    //                     'message' => 'Invalid referral code.',
-    //                 ], 400);
-    //             }
-    //         }
-
-    //         // Step 2: Fetch the Programs Based on Filters
-    //         $program_type = $request->input('program_type');
-    //         $theme = $request->input('theme');
-    //         $destination = $request->input('destination');
-    //         $program_destination = $request->input('program_destination');
-    //         $view_type = $request->input('view_type');
-
-    //         $query = InclusivePackages::where('status', '1')->where('is_deleted', '0');
-
-    //         if ($program_type) {
-    //             $query->whereJsonContains('category', $program_type);
-    //         }
-
-    //         if ($theme) {
-    //             $query->where('theme_id', $theme);
-    //             $view_type = 'all'; // Change to 'all' if theme is applied
-    //         }
-
-    //         if ($destination) {
-    //             $query->where('city_details', $destination);
-    //             $view_type = 'all'; // Change to 'all' if destination is applied
-    //         }
-
-    //         if ($program_destination) {
-    //             $query->where('city_details', $program_destination);
-    //             $view_type = 'all'; // Change to 'all' if program_destination is applied
-    //         }
-
-    //         // Apply pagination based on view_type
-    //         if ($view_type !== 'all') {
-    //             $query->take(4); // Limit to 4 packages if view_type is not 'all'
-    //         }
-
-    //         // Execute the query and paginate results
-    //         $packages = $query->with(['theme', 'destination', 'clientReviews'])->paginate(10);
-
-    //         // Step 3: Check if Packages are Found
-    //         if ($packages->isEmpty()) {
-    //             return response()->json([
-    //                 'status' => 'success',
-    //                 'message' => 'No ' . str_replace('_', ' ', $program_type) . ' found.',
-    //                 'data' => []
-    //             ], 200);
-    //         }
-
-    //         // Helper function to get additional details like amenities, food & beverages, activities, etc.
-    //         $getDetailsById = function ($package) {
-    //             $id = $package->id;
-    //             $response = (new ProgramApiController)->getAmenitiesFoodBeverageActivitiesSafetyFeaturesById(new Request(['id' => $id]));
-    //             return json_decode($response->getContent(), true)['data'];
-    //         };
-
-    //         // Step 4: Format the Packages Data
-    //         $formattedPackages = $packages->map(function ($package) use ($getDetailsById) {
-    //             // Decode JSON fields and format
-    //             $eventsPackageImages = json_decode($package->cover_img, true);
-    //             $tourPlanning = json_decode($package->tour_planning, true);
-    //             $campRule = json_decode($package->camp_rule, true);
-    //             $amenityDetails = json_decode($package->amenity_details, true);
-    //             $activities = json_decode($package->activities, true);
-    //             $safetyFeatures = json_decode($package->safety_features, true);
-
-    //             // Process reviews
-    //             $reviews = $package->reviews->map(function ($review) {
-    //                 return [
-    //                     'first_name' => $review->user->first_name ?? null,
-    //                     'profile_image' => $review->user->profile_image ?? null,
-    //                     'comment' => $review->comment,
-    //                     'rating' => $review->rating,
-    //                     'date' => $review->created_at->format('M d, Y'),
-    //                 ];
-    //             });
-
-    //             // Fetch amenities, food & beverage, activities, safety features
-    //             $details = $getDetailsById($package);
-
-    //             // Format start date and location
-    //             $formattedStartDate = \Carbon\Carbon::parse($package->start_date)->format('M d, Y');
-    //             $formattedLocation = ucfirst($package->address) . ', ' . ucfirst($package->state);
-    //             $totalReviews = $package->clientReviews->count();
-    //             $averageRating = $package->reviews->avg('rating');
-    //             $category = json_decode($package->category, true) ?? [];
-    //             $formattedcategory = is_array($category) ? implode(', ', $category) : $category;
-
-    //             // Return the formatted package data
-    //             return [
-    //                 'id' => $package->id,
-    //                 'title' => ucfirst($package->title),
-    //                 'category' => ucfirst($formattedcategory),
-    //                 'total_days' => $package->total_days,
-    //                 'member_capacity' => $package->member_capacity,
-    //                 'price' => $package->price,
-    //                 'cover_img' => $package->cover_img,
-    //                 'start_date' => $formattedStartDate,
-    //                 'theme' => $package->theme->themes_name ?? null,
-    //                 'destination' => $package->destination->city_name ?? null,
-    //                 'average_rating' => number_format($averageRating, 1),
-    //                 'totalReviews' => $totalReviews,
-    //                 'reviews' => $reviews,
-    //                 'amenities' => $details['amenities'] ?? [],
-    //                 'foodBeverages' => $details['foodBeverages'] ?? [],
-    //                 'activities' => $details['activities'] ?? [],
-    //                 'safetyFeatures' => $details['safetyFeatures'] ?? [],
-    //             ];
-    //         });
-
-    //         // Step 5: Return API Response with Program Data
-    //         return response()->json([
-    //             'status' => 'success',
-    //             'message' => 'Programs retrieved successfully.',
-    //             'data' => $formattedPackages
-    //         ], 200);
-
-    //     } catch (\Exception $e) {
-    //         return response()->json([
-    //             'status' => 'error',
-    //             'message' => 'An error occurred while fetching programs.',
-    //             'error' => $e->getMessage(),
-    //         ], 500);
-    //     }
-    // }
-
-
-
-
-
-
-    //getting the title in InclusivePackages
-    // public function get_title(Request $request)
-    // {
-    //     try {
-    //         $titles = InclusivePackages::where('is_deleted', '0')->get(['id', 'title']);
-    //         $affiliateLinks = $titles->map(function ($title) use ($influencer) {
-    //             $baseUrl = url('/' . $title->id . '/' . str_replace(' ', '-', strtolower($title->title)));
-    //             return [
-    //                 'title' => $title->title,
-    //                 'url' => $baseUrl . '?ref=' . $influencer->referral_code,
-    //             ];
-    //         });
-
-    //         return response()->json(['status' => '1', 'data' => $titles]);
-    //     } catch (\Exception $e) {
-    //         return response()->json(['status' => '0', 'message' => 'An error occurred while fetching titles.']);
-    //     }
-    // }
-
 
     //dashboard api 
     public function get_combined_data(Request $request)
@@ -1313,135 +1200,4 @@ class HomeApiController extends Controller
             ], 500);
         }
     }
-
-    // public function get_upcoming_programs()
-    // {
-    //     try {
-    //         // Fetch the packages that meet the criteria
-    //         $packages = InclusivePackages::where('status', "1")
-    //             ->where('is_deleted', "0")
-    //             ->where('category', 'upcoming_program')
-    //             ->get();
-
-    //         // Check if any packages were found
-    //         if ($packages->isEmpty()) {
-    //             return response()->json([
-    //                 'status' => 'success',
-    //                 'message' => 'No Upcoming programs found.',
-    //                 'data' => []
-    //             ], 200);
-    //         }
-
-    //         // Process each package to format the output
-    //         $formattedPackages = $packages->map(function ($package) {
-    //             // Decode JSON fields
-    //             $eventsPackageImages = json_decode($package->events_package_images, true);
-    //             $tourPlanning = json_decode($package->tour_planning, true);
-    //             $campRule = json_decode($package->camp_rule, true);
-    //             $amenityDetails = json_decode($package->amenity_details, true);
-    //             $activities = json_decode($package->activities, true);
-    //             $safetyFeatures = json_decode($package->safety_features, true);
-
-    //             // Format the start date
-    //             $formattedStartDate = \Carbon\Carbon::parse($package->start_date)->format('M d, Y');
-
-    //             // Extract the first image URL
-    //             $firstImage = isset($eventsPackageImages[0]) ? $eventsPackageImages[0] : null;
-
-    //             // Return the formatted package data
-    //             return [
-    //                 'id' => $package->id,
-    //                 'title' => $package->title,
-    //                 'category' => $package->category,
-    //                 'state' => $package->state,
-    //                 'city' => $package->city,
-    //                 'events_package_images' => $firstImage,
-    //                 'start_date' => $formattedStartDate
-    //             ];
-    //         });
-
-    //         // Return the formatted data with success status
-    //         return response()->json([
-    //             'status' => 'success',
-    //             'message' => 'Upcoming programs retrieved successfully.',
-    //             'data' => $formattedPackages
-    //         ], 200);
-    //     } catch (\Exception $e) {
-    //         // Log the exception
-    //         \Log::error('Error fetching Upcoming programs: ' . $e->getMessage());
-
-    //         // Return error response
-    //         return response()->json([
-    //             'status' => 'error',
-    //             'message' => 'An error occurred while fetching Upcoming programs.',
-    //             'error' => $e->getMessage()
-    //         ], 500);
-    //     }
-    // }
-
-
-    // public function get_popular_program()
-    // {
-    //     try {
-    //         // Fetch the packages that meet the criteria
-    //         $packages = InclusivePackages::where('status', "1")
-    //             ->where('is_deleted', "0")
-    //             ->where('category', 'popular_program')
-    //             ->get();
-
-    //         // Check if any packages were found
-    //         if ($packages->isEmpty()) {
-    //             return response()->json([
-    //                 'status' => 'success',
-    //                 'message' => 'No Popular programs found.',
-    //                 'data' => []
-    //             ], 200);
-    //         }
-
-    //         // Process each package to format the output
-    //         $formattedPackages = $packages->map(function ($package) {
-    //             // Decode JSON fields
-    //             $eventsPackageImages = json_decode($package->events_package_images, true);
-    //             $tourPlanning = json_decode($package->tour_planning, true);
-    //             $campRule = json_decode($package->camp_rule, true);
-    //             $amenityDetails = json_decode($package->amenity_details, true);
-    //             $activities = json_decode($package->activities, true);
-    //             $safetyFeatures = json_decode($package->safety_features, true);
-
-    //             // Format the start date
-    //             $formattedStartDate = \Carbon\Carbon::parse($package->start_date)->format('M d, Y');
-
-    //             // Extract the first image URL
-    //             $firstImage = isset($eventsPackageImages[0]) ? $eventsPackageImages[0] : null;
-
-    //             // Return the formatted package data
-    //             return [
-    //                 'id' => $package->id,
-    //                 'title' => $package->title,
-    //                 'category' => $package->category,
-    //                 'state' => $package->state,
-    //                 'city' => $package->city,
-    //                 'events_package_images' => $firstImage,
-    //                 'start_date' => $formattedStartDate
-    //             ];
-    //         });
-
-    //         // Return the formatted data with success status
-    //         return response()->json([
-    //             'status' => 'success',
-    //             'message' => 'Popular programs retrieved successfully.',
-    //             'data' => $formattedPackages
-    //         ], 200);
-    //     } catch (\Exception $e) {
-    //         // Log the exception
-    //         \Log::error('Error fetching Popular programs: ' . $e->getMessage());
-
-    //         // Return error response
-    //         return response()->json([
-    //             'status' => 'error',
-    //             'message' => 'An error occurred while fetching Popular programs.',
-    //             'error' => $e->getMessage()
-    //         ], 500);
-    //     }
-    // }
 }

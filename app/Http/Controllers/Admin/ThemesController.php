@@ -44,6 +44,7 @@ class ThemesController extends Controller
 
         $themes = new Themes;
         $themes->themes_name = $request->input('theme_name');
+        $themes->description = $request->input('description');
         $themes->theme_pic = $filePath1 ?? null;
         $themes->status = $request->has('status') && $request->input('status') === 'on' ? '1' : '0';
         $themes->created_date = date('Y-m-d H:i:s');
@@ -98,6 +99,7 @@ class ThemesController extends Controller
 
 
         $themes->themes_name = $request->input('theme_name');
+        $themes->description = $request->input('description');
         $themes->updated_date = date('Y-m-d H:i:s');
         $themes->list_order = $request->input('list_order');
         $themes->alternate_name = $request->input('alternate_image_name'); // Save alternate name

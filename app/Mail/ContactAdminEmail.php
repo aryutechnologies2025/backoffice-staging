@@ -26,7 +26,10 @@ class ContactAdminEmail extends Mailable
     {
         return $this->subject('Admin Notification from Client')
             ->view('emails.ContactAdminNotification')
-            ->with('details', $this->details);
+             ->with([
+                'body' => $this->details['body'] ?? '',
+                'details' => $this->details, // Pass details to access subject in template
+            ]);
     }
 
     /**

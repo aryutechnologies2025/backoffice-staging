@@ -46,6 +46,7 @@
                     <tr class="rounded-top-4">
                         <th class="text-start">S.No</th>
                         <th class="text-start">Title</th>
+                        <th class="text-start">Status</th>
                         <th class="text-start">Action</th>
                     </tr>
                 </thead>
@@ -55,7 +56,7 @@
 
                     <tr>
                         <td class="text-start">{{ $loop->iteration }}</td>
-                        <td class="text-start">{{ ucfirst($row->title) }}</td>
+                        <td class="text-start">{{ ucfirst($row->event_name) }}</td>
                         @php
                         $disp_status = 'In Active';
                         $actTitle = 'Click to activate';
@@ -71,13 +72,13 @@
                         @endphp
                         <td class="text-start"><a data-toggle="tooltip" data-csrf_token="{{ csrf_token() }}" data-original-title="{{ $actTitle }}" class="stsconfirm" href="javascript:void(0);" data-row_id="{{ $row->id }}" data-act_url="{{ route('admin.programeventstatus') }}" data-stsmode="{{ $mode }}"><button type="button" class="btn {{ $btnColr }} px-5">{{ $disp_status }}</button></a></td>
                         <td class="text-start" style="width: 20%;">
-                            <a href="{{ route('admin.programeventedit',$row->id) }}" class="table-edit-link">
+                            <a href="{{ route('admin.programeventedit',$row->id) }}" title="Edit" class="table-edit-link">
                                 <span class="fa-stack">
                                     <i class="fa fa-pencil fa-stack-1x fa-inverse"></i>
                                 </span>
                             </a>
 
-                            <a href="javascript:void(0);" class="table-link danger delconfirm" data-row_id="{{ $row->id }}" data-act_url="{{ route('admin.programeventdelete') }}" data-csrf_token="{{ csrf_token() }}">
+                            <a href="javascript:void(0);" class="table-link danger delconfirm" title="Delete" data-row_id="{{ $row->id }}" data-act_url="{{ route('admin.programeventdelete') }}" data-csrf_token="{{ csrf_token() }}">
                                 <span class="fa-stack">
                                     <!-- <i class="fa fa-square fa-stack-2x"></i> -->
                                     <i class="fa fa-trash" style="color: red !important;"></i>

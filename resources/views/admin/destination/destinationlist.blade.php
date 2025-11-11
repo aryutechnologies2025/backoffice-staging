@@ -7,7 +7,7 @@
     <div class="col-lg-6">
         <div class="d-flex justify-content-end">
             <a href="{{ route('admin.destination_add_form') }}">
-                <button class="btn btn-add px-5" type="button">Add Destination</button>
+                <button class="btn btn-add px-5" type="button">Add Destinations</button>
             </a>
         </div>
     </div>
@@ -56,7 +56,7 @@
                         $actTitle = 'Click to deactivate';
                         }
                         @endphp
-                        <td class="text-center"><a data-toggle="tooltip" data-csrf_token="{{ csrf_token() }}" data-original-title="{{ $actTitle }}" class="stsconfirm" href="javascript:void(0);" data-row_id="{{ $row->id }}" data-act_url="{{ route('admin.destination_status') }}" data-stsmode="{{ $mode }}"><button type="button" class="btn {{ $btnColr }} px-5">{{ $disp_status }}</button></a></td>
+                        <td class="text-center"><a data-toggle="tooltip" title="Edit" data-csrf_token="{{ csrf_token() }}" data-original-title="{{ $actTitle }}" class="stsconfirm" href="javascript:void(0);" data-row_id="{{ $row->id }}" data-act_url="{{ route('admin.destination_status') }}" data-stsmode="{{ $mode }}"><button type="button" class="btn {{ $btnColr }} px-5">{{ $disp_status }}</button></a></td>
                         <td class="text-center" style="width: 20%;">
                             <a href="{{ route('admin.destination_edit_form',$row->id) }}" class="table-edit-link">
                                 <span class="fa-stack">
@@ -65,7 +65,7 @@
                                 </span>
                             </a>
 
-                            <a href="javascript:void(0);" class="table-link danger delconfirm" data-row_id="{{ $row->id }}" data-act_url="{{ route('admin.destination_delete') }}" data-csrf_token="{{ csrf_token() }}">
+                            <a href="javascript:void(0);" class="table-link danger delconfirm" title="Delete" data-row_id="{{ $row->id }}" data-act_url="{{ route('admin.destination_delete') }}" data-csrf_token="{{ csrf_token() }}">
                                 <span class="fa-stack">
                                     <!-- <i class="fa fa-square fa-stack-2x"></i> -->
                                     <i class="fa fa-trash-o fa-stack-1x fa-inverse" style="color: red !important;"></i>

@@ -13,11 +13,59 @@ class HomeEnquiryController extends Controller
     public function list(Request $request)
     {
         $title = 'Enquiry List';
-        $enquiry_dts = HomeEnquiryDetail::orderBy('created_at', 'desc')->where('is_deleted','0')->get();
+
+        // Get followup IDs from request if exists
+        $followupIds = $request->get('followupids');
+
+        if ($followupIds) {
+            // Convert string of IDs to array
+            $followupIdsArray = explode(',', $followupIds);
+
+            // Filter enquiries by followup IDs
+            $enquiry_dts = HomeEnquiryDetail::whereIn('id', $followupIdsArray)
+                ->orderBy('created_at', 'desc')
+                ->where('is_deleted', '0')
+                ->get();
+        } else {
+            // Show all enquiries (normal behavior)
+            $enquiry_dts = HomeEnquiryDetail::orderBy('created_at', 'desc')
+                ->where('is_deleted', '0')
+                ->get();
+        }
 
         return view('admin.home_enquiry.homeenquirylist', compact('title', 'enquiry_dts'));
     }
 
+    public function downloadAll(Request $request)
+    {
+        try {
+            $query = HomeEnquiryDetail::with(['followUps' => function ($q) {
+                $q->orderBy('created_at', 'desc'); // Order followups to get the latest first
+            }])->where('is_deleted', '0');
+
+            // Apply search filters if provided
+            if ($request->has('search') && !empty($request->search)) {
+                $search = $request->search;
+                $query->where(function ($q) use ($search) {
+                    $q->where('name', 'LIKE', "%{$search}%")
+                        ->orWhere('email', 'LIKE', "%{$search}%")
+                        ->orWhere('phone', 'LIKE', "%{$search}%")
+                        ->orWhere('location', 'LIKE', "%{$search}%")
+                        ->orWhere('travel_destination', 'LIKE', "%{$search}%")
+                        ->orWhere('comments', 'LIKE', "%{$search}%");
+                });
+            }
+            // Get the filtered data
+            $allData = $query->get()->toArray();
+
+            return response()->json($allData);
+        } catch (\Exception $e) {
+            \Log::error('downloadAll error: ' . $e->getMessage());
+            return response()->json([
+                'error' => 'Error retrieving data'
+            ], 500);
+        }
+    }
 
     public function markFollowUp(Request $request, $id)
     {
@@ -51,18 +99,22 @@ class HomeEnquiryController extends Controller
             $enquiry->delete();
 
             return response()->json(['success' => true, 'message' => 'Data transferred successfully.']);
-        } elseif ($request->followup === 'unfollowup') {
+        } elseif (in_array($request->followup, ['unfollowup', 'interested', 'prospect'])) {
+
             // Handle unfollowup case
-            $enquiry->followup = false; // Set followup to false
+            $enquiry->followup = true; // Set followup to false
             $enquiry->save();
+
+            // Update the specific record in the HomeEnquiryDetail table
+            HomeEnquiryDetail::where('id', $id)->update([
+                'followup' => $request->followup,
+            ]);
 
             return response()->json(['success' => true, 'message' => 'Follow-up status set to unfollow-up.']);
         }
 
         return response()->json(['success' => false, 'message' => 'Invalid follow-up status selected.']);
     }
-
-
     public function insert(Request $request)
     {
         $enquirydetails = new HomeEnquiryDetail();
@@ -81,9 +133,65 @@ class HomeEnquiryController extends Controller
     public function stayList(Request $request)
     {
         $title = 'Stay Enquiry List';
-        $enquiry_dts = stay_enquiry_details::orderBy('created_at', 'desc')->where('is_deleted','0')->get();
+        $enquiry_dts = stay_enquiry_details::orderBy('created_at', 'desc')->where('is_deleted', '0')->get();
 
         return view('admin.stay_enquiry.stayenquirylist', compact('title', 'enquiry_dts'));
+    }
+
+    public function downloadStayAll(Request $request)
+    {
+        try {
+            // Start with query builder
+            $query = stay_enquiry_details::where('is_deleted', '0');
+
+            // Apply search filters if provided
+            if ($request->has('search') && !empty($request->search)) {
+                $search = $request->search;
+
+                // Split the search term by spaces
+                $searchTerms = explode(' ', $search);
+
+                $query->where(function ($q) use ($searchTerms) {
+                    foreach ($searchTerms as $term) {
+                        if (!empty(trim($term))) {
+                            $q->where(function ($innerQ) use ($term) {
+                                $innerQ->where('name', 'LIKE', "%{$term}%")
+                                    ->orWhere('email', 'LIKE', "%{$term}%")
+                                    ->orWhere('phone', 'LIKE', "%{$term}%");
+                            });
+                        }
+                    }
+                });
+            }
+
+            // Select only the columns that exist in the table
+            $allData = $query->select([
+                'name',
+                'email',
+                'phone',
+                'comments',
+                'location',
+                'stay_title',
+                'birth_date',
+                'engagement_date',
+                'no_of_days',
+                'total_count',
+                'male_count',
+                'female_count',
+                'child_count',
+                'checkin_date',
+                'checkout_date',
+                'cab',
+                'price'
+            ])->get();
+
+            return response()->json($allData);
+        } catch (\Exception $e) {
+            \Log::error('downloadStayAll error: ' . $e->getMessage());
+            return response()->json([
+                'error' => 'Error retrieving data: ' . $e->getMessage()
+            ], 500);
+        }
     }
 
     public function view_form(Request $request, $id)

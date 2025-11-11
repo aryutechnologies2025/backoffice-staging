@@ -56,7 +56,7 @@
                                          alt="{{ old('alternate_image_name', 'Alternate Image Name') }}">
                                     <p class="text-center fw-light mt-3">Add Pic</p>
                                 </label>
-                                <input type="file" id="file-ip-1" name="image_1" accept="image/png, image/jpeg, image/webp" onchange="validateImage(this)" required>
+                                <input type="file" id="file-ip-1" name="image_1" accept="image/png, image/jpeg, image/webp" required>
                                 <!-- <label class="fw-bold mb-5 text-danger border-0">
                                     <small>* Upload size [up to 600x120] *</small>
                                 </label> -->

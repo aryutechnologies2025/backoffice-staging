@@ -86,7 +86,7 @@
 
     .forms {
         margin-left: 38px;
-    } 
+    }
 
     @media (min-width: 768px) {
         .col-md-1 {
@@ -129,7 +129,7 @@
                                             class="form-select py-2 rounded-3 shadow-sm" required>
                                             <option value="" disabled selected>Select Destination</option>
                                             @foreach($cities as $id => $name)
-                                            <option value="{{ $name }}" @if(old('cities_name')=='{{ $id }}' ) selected @endif>
+                                            <option value="{{ $id }}" @if(old('cities_name')=='{{ $id }}' ) selected @endif>
                                                 {{ $name }}
                                             </option>
                                             @endforeach
@@ -171,6 +171,16 @@
                                 </div>
                             </div>
 
+
+                            <!-- Stay Location -->
+                            <div class="row mt-4 px-2">
+                                <div class="add_form col-md-6">
+                                    <label class="mb-2">Location Name <span class="text-danger">*</span></label>
+                                    <input type="text" placeholder="Stay Location - Name" id="stay_location_title" name="stay_location_title"
+                                        class="form-control py-2 rounded-3 shadow-sm"
+                                        value="{{ old('stay_location_title') }}" required>
+                                </div>
+                            </div>
 
                             <!-- Program Description -->
                             <div class="row mt-4 px-2">
@@ -730,8 +740,6 @@
                     const destination = $(this).val();
                     const districtSelect = $('#district_name');
 
-                    console.log('Destination selected:', destination); // Debugging
-
                     if (!destination) {
                         districtSelect.empty().append(
                             '<option value="" disabled selected>Select District</option>'
@@ -746,8 +754,11 @@
 
                     // AJAX request
                     $.ajax({
-                        url: '/get-districts/' + encodeURIComponent(destination),
-                        type: 'GET',
+                        url: '{{ route('stay_list.getdistrictslist') }}',
+                        type: 'GET', // Fixed: Added comma and corrected syntax
+                        data: {
+                            destination: destination
+                        },
                         success: function(data) {
                             console.log('Received data:', data); // Debugging
 
@@ -765,6 +776,12 @@
                                     );
                                 });
                                 districtSelect.prop('disabled', false);
+
+                                // If editing and there's a previously selected district, set it
+                                @if(isset($stayList) && $stayList -> district_name)
+                                districtSelect.val('{{ $stayList->district_name }}');
+                                @endif
+
                             } else {
                                 districtSelect.append(
                                     '<option value="" disabled>No districts found for this destination</option>'
@@ -779,7 +796,6 @@
                         }
                     });
                 });
-
 
             });
 

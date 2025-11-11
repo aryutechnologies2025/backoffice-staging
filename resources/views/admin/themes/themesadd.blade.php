@@ -2,41 +2,41 @@
 @Section('content')
 
 <style>
-a:hover {
-    color: red;
-}
+    a:hover {
+        color: red;
+    }
 
-a {
-    color: rgb(37, 150, 190);
-}
+    a {
+        color: rgb(37, 150, 190);
+    }
 
-.add {
-    color: blue;
-}
+    .add {
+        color: blue;
+    }
 
-/* Align the form with the title */
-.container-wrapper {
-    padding-left: 30px;
-    /* Adjust as per your layout */
-    padding-right: 30px;
-    /* Consistent padding for both sides */
-}
+    /* Align the form with the title */
+    .container-wrapper {
+        padding-left: 30px;
+        /* Adjust as per your layout */
+        padding-right: 30px;
+        /* Consistent padding for both sides */
+    }
 
 
-/* .form-control {
+    /* .form-control {
     width: 80%;
 } */
 </style>
 
- <div class="row body-sec py-3 px-5 justify-content-around">
+<div class="row body-sec py-3 px-5 justify-content-around">
     <div class="text-start col-lg-6 ">
         <h3 class="admin-title fw-bold">{{$title}}</h3>
     </div>
     <div class="text-end col-lg-6 ">
-          <b><a href="/dashboard">Dashboard</a> > <a href="/themes">Themes</a> > <a class="add">Add</a></b>
+        <b><a href="/dashboard">Dashboard</a> > <a href="/themes">Themes</a> > <a class="add">Add</a></b>
     </div>
 
- </div>
+</div>
 
 
 <!-- FORM -->
@@ -72,7 +72,7 @@ a {
                         <div class="col-lg-8">
                             <div class="row g-1">
                                 <div id="file-ip-1-error" class="text-danger"></div>
-                               
+
                                 <!-- First Input: Upload Image Name -->
                                 <div class="add_form col-lg-6 pe-4">
                                     <label class="fw-bold">Upload Image Name <span class="text-danger">*</span></label>
@@ -97,6 +97,12 @@ a {
                         <label class="fw-bold mb-2 "> Title <span class="text-danger">*</span></label>
                         <input type="text" placeholder="Title" id="theme_name" name="theme_name"
                             class="form-control py-2 rounded-3 shadow-sm" required value="{{old('theme_name')}}">
+                    </div>
+
+                    <div class="add_form col-md-6 pe-4">
+                        <label class="fw-bold mb-2 "> Description <span class="text-danger">*</span></label>
+                        <input type="text" placeholder="Description" id="description" name="description"
+                            class="form-control py-2 rounded-3 shadow-sm" required value="{{old('description')}}">
                     </div>
 
 

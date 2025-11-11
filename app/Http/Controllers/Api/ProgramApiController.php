@@ -28,13 +28,15 @@ use App\Models\HomeEnquiryDetail;
 use App\Mail\enquiryEmail;
 use App\Mail\adminEmail;
 use App\Models\customer_package;
-use App\Models\program_pdf;
+use App\Models\CustomerPricingCalculator;
 use App\Models\stay_enquiry_details;
 use App\Models\stays_whishlist;
 use App\Models\Themes;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use App\Models\stays_destination_details;
+use App\Models\Settings;
+use App\Models\MailTemplate;
 
 class ProgramApiController extends Controller
 {
@@ -94,6 +96,10 @@ class ProgramApiController extends Controller
                     'data' => null
                 ], 404);
             }
+
+
+
+            // dd($package->stays_name);
 
 
 
@@ -222,6 +228,51 @@ class ProgramApiController extends Controller
             // $program_exclusionPlainText = strip_tags(html_entity_decode($package->program_exclusion, ENT_QUOTES, 'UTF-8'));
             // $program_exclusionPlainText = str_replace(["<br>", "<br/>", "<br />"], "\n", $program_exclusionPlainText);
 
+            $stay_gallery = [];
+            $stay_details_list = collect(); // Initialize as empty collection
+
+            // Check if stay_details_id exists and is not null
+            if (!empty($package->stays_name)) {
+                try {
+                    $stay_details = array_map('trim', explode(',', $package->stays_name));
+
+                    // Remove any empty values
+                    $stay_details = array_filter($stay_details);
+
+                    if (!empty($stay_details)) {
+                        // Get stay details list
+                        $stay_details_list = stays_destination_details::select('id', 'stay_title', 'tag_line')
+                            ->whereIn('id', $stay_details)
+                            ->get();
+
+                        // Get gallery images
+                        $stay_gallery_record = stays_destination_details::whereIn('id', $stay_details)
+                            ->select('id', 'gallery_image')
+                            ->get();
+
+                        // Process gallery images in the new format: [{id: []}, {id: []}]
+                        $stay_gallery = [];
+                        foreach ($stay_gallery_record as $record) {
+                            $gallery_array = [];
+
+                            if (!empty($record->gallery_image)) {
+                                $decoded_gallery = json_decode($record->gallery_image, true);
+                                $gallery_array = is_array($decoded_gallery) ? $decoded_gallery : [];
+                            }
+
+                            // Create object format: {id: gallery_array}
+                            $stay_gallery[] = [
+                                'id' => $record->id,
+                                'gallery' => $gallery_array
+                            ];
+                        }
+                    }
+                } catch (\Exception $e) {
+                    // Log error or handle appropriately
+                    \Log::error('Error processing stay details: ' . $e->getMessage());
+                }
+            }
+
 
             $responseData = [
                 'id' => $package->id,
@@ -266,20 +317,25 @@ class ProgramApiController extends Controller
                 'current_location' => $package->location,
                 'price_title' => $price_title,
                 'price_amount' => $price_amount,
-                // 'stay_details_list' => $stay_details_list
+                'stay_details_list' => $stay_details_list,
+                'stay_images' => $stay_gallery,
+
 
             ];
 
-            if ($user_id) {
+            if (!empty($user_id) && !empty($programId)) {
                 $wishlist = Program_wishlist::where('user_id', $user_id)
                     ->where('program_id', $programId)
                     ->exists();
 
                 $responseData['wishlists'] = $wishlist;
+            } else {
+                $responseData['wishlists'] = false;
             }
 
+
             // Cache the response data for 60 minutes
-            Cache::put($cacheKey, $responseData, 60);
+            // Cache::put($cacheKey, $responseData, 60);
 
             return response()->json([
                 'status' => 'success',
@@ -1119,6 +1175,7 @@ class ProgramApiController extends Controller
             'male_count' => 'required|integer',
             'female_count' => 'required|integer',
             'travel_date' => 'required|date',
+            'travel_enddate' => 'required|date',
             'rooms_count' => 'required|integer',
             'child_count' => 'required|integer|min:0',
             'child_age' => 'required_if:child_count,<,1|array|min:' . ($request->input('child_count') > 0 ? $request->input('child_count') : 0),
@@ -1136,6 +1193,7 @@ class ProgramApiController extends Controller
 
         $enquiryData = $request->all();
         $enquiryData['child_age'] = json_encode($request->input('child_age')); // Convert child_age to JSON
+        $enquiryData['status'] = 'pending';
 
         $enquiry = EnquiryDetail::create($enquiryData);
         // Find matching program PDF
@@ -1145,29 +1203,135 @@ class ProgramApiController extends Controller
 
         // Send email notifications
         try {
-            // Send email to the client
+
+            // Get settings
+            $settings = Settings::first();
+            if (!$settings) {
+                return response()->json([
+                    'status' => 0,
+                    'response' => 'Settings not found'
+                ]);
+            }
+
+            // Get mail template
+            $mailtemplate = MailTemplate::where('sub_title', 'thank_you_for_your_submission')
+                ->where('is_deleted', '0')
+                ->where('status', '1')
+                ->first();
+
+            if (!$mailtemplate) {
+                return response()->json([
+                    'status' => 0,
+                    'response' => 'Mail template not found or inactive'
+                ]);
+            }
+
+
+            // Replace placeholders in the template content
+            $mailBody = $mailtemplate->mail_template;
+            $mailBody = str_replace(
+                ['[name]', '[email]', '[phone]', '[destination]', '[message]'],
+                [
+                    $enquiry->name,
+                    $enquiry->email,
+                    $enquiry->phone,
+                    $enquiry->travel_destination,
+                    $enquiry->comments
+                ],
+                $mailBody
+            );
+
+
             Mail::to($enquiry->email)->send(new enquiryEmail([
-                'name' => $enquiry->name,
-                'email' => $enquiry->email,
-                'phone' => $enquiry->phone,
-                'travel_destination' => $enquiry->travel_destination,
-                'comments' => $enquiry->comments,
-                'program_pdf' => $programPdf->program_pdf ?? null
+                'subject' => $mailtemplate->title,
+                'body' => $mailBody
             ]));
 
-            // Send email to admin
-            Mail::to('contact@innerpece.com')->send(new adminEmail([
-                'name' => $enquiry->name,
-                'email' => $enquiry->email,
-                'phone' => $enquiry->phone,
-                'comments' => $enquiry->comments,
-                'location' => $enquiry->location,
-                'days' => $enquiry->days,
-                'travel_destination' => $enquiry->travel_destination,
-                'cab_need' => $enquiry->cab_need,
-                'total_count' => $enquiry->total_count,
-                'child_count' => $enquiry->child_count,
+            //admin mail
+
+            // Get mail template
+            $mailtemplate1 = MailTemplate::where('sub_title', 'new_contact_form_submission_-_innerpece')
+                ->where('is_deleted', '0')
+                ->where('status', '1')
+                ->first();
+
+            if (!$mailtemplate1) {
+                return response()->json([
+                    'status' => 0,
+                    'response' => 'Mail template not found or inactive'
+                ]);
+            }
+
+            // Replace placeholders in the template content
+            $mailBody1 = $mailtemplate1->mail_template;
+            $mailBody1 = str_replace(
+                ['[name]', '[email]', '[phone]', '[destination]', '[message]', '[username]', '[Current Date Time]'],
+                [
+                    $enquiry->name,
+                    $enquiry->email,
+                    $enquiry->phone,
+                    $enquiry->travel_destination,
+                    $enquiry->comments,
+                    $enquiry->name,
+                    date('Y-m-d H:i:s') // Fixed time format
+                ],
+                $mailBody1
+            );
+
+            // Find the position of "Warm regards" to insert details before it
+            $regardsPosition = strpos($mailBody1, 'Warm regards,');
+
+            if ($regardsPosition !== false) {
+                // Create the details section
+                $detailsSection = "Additional Enquiry Details:<br>";
+                $detailsSection .= "Comments: " . $enquiry->comments . "<br>";
+                $detailsSection .= "Location: " . $enquiry->location . "<br>";
+                $detailsSection .= "Days: " . $enquiry->days . "<br>";
+                $detailsSection .= "Cab Needed: " . $enquiry->cab_need . "<br>";
+                $detailsSection .= "Total Count: " . $enquiry->total_count . "<br>";
+                $detailsSection .= "Child Count: " . $enquiry->child_count . "<br>";
+                $detailsSection .= "<br>";
+
+                // Insert the details section before "Warm regards"
+                $mailBody1 = substr_replace($mailBody1, $detailsSection, $regardsPosition, 0);
+            } else {
+                // If "Warm regards" not found, append at the end
+                $mailBody1 = "Additional Enquiry Details:<br>";
+                $mailBody1 .= "Comments: " . $enquiry->comments . "<br>";
+                $mailBody1 .= "Location: " . $enquiry->location . "<br>";
+                $mailBody1 .= "Days: " . $enquiry->days . "<br>";
+                $mailBody1 .= "Cab Needed: " . $enquiry->cab_need . "<br>";
+                $mailBody1 .= "Total Count: " . $enquiry->total_count . "<br>";
+                $mailBody1 .= "Child Count: " . $enquiry->child_count . "<br>";
+            }
+
+            // Send mail
+            Mail::to('kanimozhi@aryutechnologies.com')->send(new adminEmail([
+                'subject' => $mailtemplate1->title,
+                'body' => $mailBody1
             ]));
+            // // Send email to the client
+            // Mail::to($enquiry->email)->send(new enquiryEmail([
+            //     'name' => $enquiry->name,
+            //     'email' => $enquiry->email,
+            //     'phone' => $enquiry->phone,
+            //     'travel_destination' => $enquiry->travel_destination,
+            //     'comments' => $enquiry->comments,
+            //     'program_pdf' => $programPdf->program_pdf ?? null
+            // ]));
+
+            // Send email to admin
+            // Mail::to('contact@innerpece.com')->send(new adminEmail([
+            //     'name' => $enquiry->name,
+            //     'email' => $enquiry->email,
+            //     'phone' => $enquiry->phone,
+            //     'comments' => $enquiry->comments,
+            //     'location' => $enquiry->location,
+            //     'days' => $enquiry->days,
+            //     'cab_need' => $enquiry->cab_need,
+            //     'total_count' => $enquiry->total_count,
+            //     'child_count' => $enquiry->child_count,
+            // ]));
         } catch (\Exception $e) {
             // Log any email sending errors
             Log::error('Mail failed: ' . $e->getMessage());
@@ -1311,6 +1475,7 @@ class ProgramApiController extends Controller
             'male_count' => 'required',
             'female_count' => 'required',
             'travel_date' => 'required',
+            'travel_enddate' => 'required',
             'rooms_count' => 'required|integer',
             'child_count' => 'required|integer|min:0',
             'child_age' => 'required_if:child_count,<,1|array|min:' . ($request->input('child_count') > 0 ? $request->input('child_count') : 0),
@@ -1329,29 +1494,138 @@ class ProgramApiController extends Controller
 
         $enquiry = HomeEnquiryDetail::create($enquiryData);
         try {
-            // Send email to the client
-            Mail::to($enquiry->email)->send(new enquiryEmail([
-                'name' => $enquiry->name,
-                'email' => $enquiry->email,
-                'phone' => $enquiry->phone,
-                'comments' => $enquiry->comments,
-                'travel_destination' => $enquiry->travel_destination,
 
+            // Get settings
+            $settings = Settings::first();
+            if (!$settings) {
+                return response()->json([
+                    'status' => 0,
+                    'response' => 'Settings not found'
+                ]);
+            }
+
+            // Get mail template
+            $mailtemplate = MailTemplate::where('sub_title', 'thank_you_for_your_submission')
+                ->where('is_deleted', '0')
+                ->where('status', '1')
+                ->first();
+
+            if (!$mailtemplate) {
+                return response()->json([
+                    'status' => 0,
+                    'response' => 'Mail template not found or inactive'
+                ]);
+            }
+
+
+            // Replace placeholders in the template content
+            $mailBody = $mailtemplate->mail_template;
+            $mailBody = str_replace(
+                ['[name]', '[email]', '[phone]', '[destination]', '[message]'],
+                [
+                    $enquiry->name,
+                    $enquiry->email,
+                    $enquiry->phone,
+                    $enquiry->travel_destination,
+                    $enquiry->comments
+                ],
+                $mailBody
+            );
+
+
+            Mail::to($enquiry->email)->send(new enquiryEmail([
+                'subject' => $mailtemplate->title,
+                'body' => $mailBody
             ]));
+
+            //admin mail
+
+            // Get mail template
+            $mailtemplate1 = MailTemplate::where('sub_title', 'new_contact_form_submission_-_innerpece')
+                ->where('is_deleted', '0')
+                ->where('status', '1')
+                ->first();
+
+            if (!$mailtemplate1) {
+                return response()->json([
+                    'status' => 0,
+                    'response' => 'Mail template not found or inactive'
+                ]);
+            }
+
+            // Replace placeholders in the template content
+            $mailBody1 = $mailtemplate1->mail_template;
+            $mailBody1 = str_replace(
+                ['[name]', '[email]', '[phone]', '[destination]', '[message]', '[username]', '[Current Date Time]'],
+                [
+                    $enquiry->name,
+                    $enquiry->email,
+                    $enquiry->phone,
+                    $enquiry->travel_destination,
+                    $enquiry->comments,
+                    $enquiry->name,
+                    date('Y-m-d H:i:s') // Fixed time format
+                ],
+                $mailBody1
+            );
+
+            // Find the position of "Warm regards" to insert details before it
+            $regardsPosition = strpos($mailBody1, 'Warm regards,');
+
+            $detailsSection = '';
+            if ($regardsPosition !== false) {
+                // Create the details section
+                $detailsSection = "Additional Enquiry Details:<br>";
+                $detailsSection .= "Comments: " . $enquiry->comments . "<br>";
+                $detailsSection .= "Location: " . $enquiry->location . "<br>";
+                $detailsSection .= "Days: " . $enquiry->days . "<br>";
+                $detailsSection .= "Cab Needed: " . $enquiry->cab_need . "<br>";
+                $detailsSection .= "Total Count: " . $enquiry->total_count . "<br>";
+                $detailsSection .= "Child Count: " . $enquiry->child_count . "<br>";
+                $detailsSection .= "<br>";
+
+                // Insert the details section before "Warm regards"
+                $mailBody1 = substr_replace($mailBody1, $detailsSection, $regardsPosition, 0);
+            } else {
+                // If "Warm regards" not found, append at the end
+                $mailBody1 = "Additional Enquiry Details:<br>";
+                $mailBody1 .= "Comments: " . $enquiry->comments . "<br>";
+                $mailBody1 .= "Location: " . $enquiry->location . "<br>";
+                $mailBody1 .= "Days: " . $enquiry->days . "<br>";
+                $mailBody1 .= "Cab Needed: " . $enquiry->cab_need . "<br>";
+                $mailBody1 .= "Total Count: " . $enquiry->total_count . "<br>";
+                $mailBody1 .= "Child Count: " . $enquiry->child_count . "<br>";
+            }
+
+            // Send mail
+            Mail::to('kanimozhi@aryutechnologies.com')->send(new adminEmail([
+                'subject' => $mailtemplate1->title,
+                'body' => $mailBody1
+            ]));
+
+            // Send email to the client
+            // Mail::to($enquiry->email)->send(new enquiryEmail([
+            //     'name' => $enquiry->name,
+            //     'email' => $enquiry->email,
+            //     'phone' => $enquiry->phone,
+            //     'comments' => $enquiry->comments,
+            //     'travel_destination' => $enquiry->travel_destination,
+
+            // ]));
 
             // Send email to admin
-            Mail::to('contact@innerpece.com')->send(new adminEmail([
-                'name' => $enquiry->name,
-                'email' => $enquiry->email,
-                'phone' => $enquiry->phone,
-                'comments' => $enquiry->comments,
-                'location' => $enquiry->location,
-                'days' => $enquiry->days,
-                'travel_destination' => $enquiry->travel_destination,
-                'cab_need' => $enquiry->cab_need,
-                'total_count' => $enquiry->total_count,
-                'child_count' => $enquiry->child_count,
-            ]));
+            // Mail::to('contact@innerpece.com')->send(new adminEmail([
+            //     'name' => $enquiry->name,
+            //     'email' => $enquiry->email,
+            //     'phone' => $enquiry->phone,
+            //     'comments' => $enquiry->comments,
+            //     'location' => $enquiry->location,
+            //     'days' => $enquiry->days,
+            //     'travel_destination' => $enquiry->travel_destination,
+            //     'cab_need' => $enquiry->cab_need,
+            //     'total_count' => $enquiry->total_count,
+            //     'child_count' => $enquiry->child_count,
+            // ]));
         } catch (\Exception $e) {
             // Log any email sending errors
             Log::error('Mail failed: ' . $e->getMessage());
@@ -1744,8 +2018,6 @@ class ProgramApiController extends Controller
                 ], 404);
             }
 
-
-
             // Check if the program details are already cached
             $cacheKey = "program_details_{$programId}";
             $cachedData = Cache::get($cacheKey);
@@ -1781,7 +2053,7 @@ class ProgramApiController extends Controller
 
             // $stay_gallery = json_decode($stay_gallery->gallery_image, true) ?? [];
             $stay_gallery = [];
-            $stay_details_list = null;
+            $stay_details_array = [];
 
             // Check if stay_details_id exists and is not null
             if (!empty($package->stay_details_id)) {
@@ -1797,10 +2069,18 @@ class ProgramApiController extends Controller
                     $stay_gallery = json_decode($stay_gallery_record->gallery_image, true) ?? [];
                 }
 
-                $stay_details_list = stays_destination_details::select('id', 'stay_title','tag_line')
+                $stay_details_list = stays_destination_details::select('id', 'stay_title', 'tag_line')
                     ->where('id', $stay_details)
                     ->first();
+
+                // Convert object to array and wrap in array
+                if ($stay_details_list) {
+                    $stay_details_array = [$stay_details_list->toArray()];
+                }
             }
+
+
+            // $stay_details_array = $stay_details_list ? $stay_details_list->toArray() : [];
             // dd($stay_gallery);
 
             $amenityIds = json_decode($package->amenities, true) ?? [];
@@ -1885,6 +2165,62 @@ class ProgramApiController extends Controller
             // $program_exclusionPlainText = str_replace(["<br>", "<br/>", "<br />"], "\n", $program_exclusionPlainText);
             $eventsPackageImages = json_decode($Inclusivepackage->events_package_images, true) ?? [];
 
+            //pricing calculator
+
+            // In your controller or wherever you're querying the model
+            $customerPricing = CustomerPricingCalculator::with([
+                'stayLists',
+                'activityLists',
+                'cabLists'
+            ])
+                ->withSum('stayLists as stay_total', 'price')
+                ->withSum('activityLists as activity_total', 'price')
+                ->withSum('cabLists as cab_total', 'price')
+                ->where('customer_package_id', $programId)
+                ->first();
+
+            if ($customerPricing) {
+                $pricing_calculator = [
+                    // Basic attributes
+                    'id' => $customerPricing->id,
+                    'customer_package_id' => $customerPricing->customer_package_id,
+                    'title' => $customerPricing->title,
+                    'description' => $customerPricing->description,
+                    'status' => $customerPricing->status,
+                    'created_at' => $customerPricing->created_at,
+                    'updated_at' => $customerPricing->updated_at,
+
+                    // Sum totals from relationships
+                    'stayTotal' => $customerPricing->stay_total ?? 0,
+                    'activityTotal' => $customerPricing->activity_total ?? 0,
+                    'cabTotal' => $customerPricing->cab_total ?? 0,
+                    // Additional columns from your database
+                    'selected_value' => $customerPricing->selected_value,
+                    'service_fee' => $customerPricing->service_fee,
+                    'tax_amount' => $customerPricing->tax_amount,
+                    'total_amount' => $customerPricing->total_amount,
+                    'grand_total' => $customerPricing->grand_total,
+                    'package_pricing' => $customerPricing->package_pricing,
+                 
+                ];
+            } else {
+                // Handle case when no record is found
+                $pricing_calculator = [
+                    'stayTotal' => 0,
+                    'activityTotal' => 0,
+                    'cabTotal' => 0,
+                    'selected_value' => null,
+                    'service_fee' => null,
+                    'tax_amount' => null,
+                    'total_amount' => null,
+                    'grand_total' => null,
+                    'package_pricing' => null,
+                   
+                ];
+            }
+
+            // dd($pricing_calculator);
+
             $reviews = $Inclusivepackage->reviews->map(function ($review) {
                 $user = $review->user;
                 return [
@@ -1947,7 +2283,9 @@ class ProgramApiController extends Controller
                 'review_count' => $reviewCount,
                 'price_title' => $price_title,
                 'price_amount' => $price_amount,
-                'stay_details_list' => $stay_details_list
+                'stay_details_list' => $stay_details_array,
+                'pricing_calculator' => $pricing_calculator,
+
 
             ];
 
@@ -1981,14 +2319,6 @@ class ProgramApiController extends Controller
             ], 500);
         }
     }
-
-
-
-
-
-
-
-
 
     // public function get_program(Request $request)
     // {

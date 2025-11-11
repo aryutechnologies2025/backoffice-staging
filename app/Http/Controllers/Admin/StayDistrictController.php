@@ -19,14 +19,17 @@ class StayDistrictController extends Controller
     public function list()
     {
         $title = 'Stay District List';
-        $destination_dts = stay_district::where('is_deleted', "0")->get();
+        $destination_dts = stay_district::with('city')->where('is_deleted', "0")->get();
+
         return view('admin.stay_district.staydistrictlist', compact('title', 'destination_dts'));
     }
 
     public function add_form()
     {
         $title = 'Add District';
-        $destination_dts = City::where('status', "1")->where('is_deleted', "0")->pluck('city_name', 'id');
+        // $destination_dts = stay_desitination::where('status', "1")->where('is_deleted', "0")->pluck('city_name', 'id');
+
+        $destination_dts = City::where('status', '1')->where('is_deleted', '0')->pluck('city_name', 'id');
         return view('admin.stay_district.staydistrictsadd', compact('title', 'destination_dts'));
     }
 
@@ -48,7 +51,7 @@ class StayDistrictController extends Controller
 
             $validator = Validator::make($districtData, [
                 'destination' => 'required|string|max:255',
-                'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+                'image' => 'nullable',
                 'description' => 'nullable|string',
                 'is_featured' => 'sometimes|boolean',
             ]);
@@ -120,13 +123,15 @@ class StayDistrictController extends Controller
 
     public function edit_form($id)
     {
-        $destination_dts = City::where('status', "1")->where('is_deleted', "0")->pluck('city_name', 'id');
+        $destination_dts = City::where('status', '1')->where('is_deleted', '0')->pluck('city_name', 'id');
         $destination = stay_district::findOrFail($id);
         return view('admin.stay_district.staydistrictedit', compact('destination', 'destination_dts'));
     }
 
     public function update(Request $request, $id)
     {
+
+        // dd($request->all());
         // First check if districts data exists
         if (!$request->has('districts') || !is_array($request->districts)) {
             return redirect()->back()
@@ -142,7 +147,7 @@ class StayDistrictController extends Controller
 
             $validator = Validator::make($districtData, [
                 'destination' => 'required|string|max:255',
-                'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+                'image' => 'nullable',
                 'description' => 'nullable|string',
                 'is_featured' => 'sometimes|boolean',
                 'existing_image' => 'nullable|string',

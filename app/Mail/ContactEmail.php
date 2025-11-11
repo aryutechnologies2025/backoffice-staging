@@ -27,7 +27,10 @@ class ContactEmail extends Mailable
     {
         return $this->subject('Innerpece Notification')
             ->view('emails.ContactNotification')
-            ->with('details', $this->details);
+            ->with([
+                'body' => $this->details['body'] ?? '',
+                'details' => $this->details, // Pass details to access subject in template
+            ]);
     }
 
     /**
