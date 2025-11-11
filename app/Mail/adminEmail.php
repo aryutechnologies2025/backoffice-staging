@@ -27,7 +27,10 @@ class adminEmail extends Mailable
     {
         return $this->subject('Admin Notification')
             ->view('emails.AdminNotification')
-            ->with('details', $this->details);
+             ->with([
+                'body' => $this->details['body'] ?? '',
+                'details' => $this->details, // Pass details to access subject in template
+            ]);
     }
 
     /**

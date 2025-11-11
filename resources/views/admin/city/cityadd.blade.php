@@ -48,29 +48,58 @@
         <div class="form-body px-4 mb-5 ms-4 me-5 rounded-4">
             <form class=" px-4" id="form_valid" action="{{ route('admin.city_insert') }}" method="POST" autocomplete="off" enctype="multipart/form-data">
                 @csrf
-                <div class="mb-3 ">
+                <div class="mb-3">
                     <div class="row align-items-center">
+                        <!-- Program Image Upload -->
                         <div class="col-lg-2 photo-upload-field">
-                            <div class="form-input text-center">
-                                <label for="file-ip-1" class="px-4 py-3 text-center">
-                                    <img class="text-center mt-3" id="file-ip-1-preview" src="/assets/image/dashboard/innerpece_addpic_icon.svg"                                          alt="{{ old('alternate_image_name', 'Alternate Image Name') }}">
 
+                                <label class="fw-bold px-2 py-2">Add Program Image <span class="text-danger">*</span></label>
+                        <div class="form-input text-center">
+
+                                <label for="file-ip-program" class="px-4 py-3 text-center">
+                                    <img class="text-center mt-3" id="file-ip-program-preview" src="/assets/image/dashboard/innerpece_addpic_icon.svg" alt="Program Image Preview">
                                     <p class="text-center fw-light mt-3">Add Pic</p>
                                 </label>
-                                <input type="file" id="file-ip-1" name="image_1" accept="image/png, image/jpeg" required>
-                                <div id="file-ip-1-error" class="error-message"></div>
-                                <!-- <label class="fw-bold mb-5 text-danger border-0"><small>* Upload size [56x56] *</small></label> -->
+                                <input type="file" id="file-ip-program" name="program_image" accept="image/png, image/jpeg" required>
+                                <div id="file-ip-program-error" class="error-message"></div>
                             </div>
                         </div>
                         <div class="col-lg-8">
                             <div class="row g-1">
                                 <div class="add_form col-lg-6 pe-4">
-                                    <label class="fw-bold">Upload Image Name <span class="text-danger">*</span></label>
-                                    <input type="text" placeholder="Rename the Photo" id="upload_image_name" name="upload_image_name" value="{{ old('upload_image_name') }}" class="form-control py-2 rounded-3 shadow-sm" required>
+                                    <label class="fw-bold">Program Image Name <span class="text-danger">*</span></label>
+                                    <input type="text" placeholder="Rename the Program Photo" id="program_upload_image_name" name="program_upload_image_name" value="{{ old('program_upload_image_name') }}" class="form-control py-2 rounded-3 shadow-sm" required>
                                 </div>
                                 <div class="add_form col-lg-6">
-                                    <label class="fw-bold">Alternate Image Name <span class="text-danger">*</span></label>
-                                    <input type="text" placeholder="Alternate Name" id="alternate_image_name" name="alternate_image_name" value="{{ old('alternate_image_name') }}" class="form-control py-2 rounded-3 shadow-sm" required>
+                                    <label class="fw-bold">Program Alternate Name <span class="text-danger">*</span></label>
+                                    <input type="text" placeholder="Program Alternate Name" id="program_alternate_image_name" name="program_alternate_image_name" value="{{ old('program_alternate_image_name') }}" class="form-control py-2 rounded-3 shadow-sm" required>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row align-items-center mt-4">
+                        <!-- Stay Image Upload -->
+                        <div class="col-lg-2 photo-upload-field">
+                            <label class="fw-bold px-2 py-2">Add Stay Image <span class="text-danger">*</span></label>
+                            <div class="form-input text-center">
+                                <label for="file-ip-stay" class="px-4 py-3 text-center">
+                                    <img class="text-center mt-3" id="file-ip-stay-preview" src="/assets/image/dashboard/innerpece_addpic_icon.svg" alt="Stay Image Preview">
+                                    <p class="text-center fw-light mt-3">Add Pic</p>
+                                </label>
+                                <input type="file" id="file-ip-stay" name="stay_image" accept="image/png, image/jpeg" required>
+                                <div id="file-ip-stay-error" class="error-message"></div>
+                            </div>
+                        </div>
+                        <div class="col-lg-8">
+                            <div class="row g-1">
+                                <div class="add_form col-lg-6 pe-4">
+                                    <label class="fw-bold">Stay Image Name <span class="text-danger">*</span></label>
+                                    <input type="text" placeholder="Rename the Stay Photo" id="stay_upload_image_name" name="stay_upload_image_name" value="{{ old('stay_upload_image_name') }}" class="form-control py-2 rounded-3 shadow-sm" required>
+                                </div>
+                                <div class="add_form col-lg-6">
+                                    <label class="fw-bold">Stay Alternate Name <span class="text-danger">*</span></label>
+                                    <input type="text" placeholder="Stay Alternate Name" id="stay_alternate_image_name" name="stay_alternate_image_name" value="{{ old('stay_alternate_image_name') }}" class="form-control py-2 rounded-3 shadow-sm" required>
                                 </div>
                             </div>
                         </div>
@@ -81,6 +110,10 @@
                     <div class="add_form col-md-6 pe-4">
                         <label class="fw-bold mb-2">Title <span class="text-danger">*</span></label>
                         <input type="text" placeholder="Title" id="city_name" name="city_name" value="{{ old('city_name') }}" class="form-control py-2 rounded-3 shadow-sm" required>
+                    </div>
+                    <div class="add_form col-md-6 pe-4">
+                        <label class="fw-bold mb-2">Description <span class="text-danger">*</span></label>
+                        <input type="text" placeholder="Description" id="description" name="description" value="{{ old('description') }}" class="form-control py-2 rounded-3 shadow-sm" required>
                     </div>
                     <div class="add_form col-md-6">
                         <label class="fw-bold mb-2">Order <span class="text-danger">*</span></label>
@@ -157,4 +190,3 @@
         });
     }
 </script>
-

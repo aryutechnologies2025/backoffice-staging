@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\stay_desitination;
 use Illuminate\Http\Request;
+use App\Models\City;
 
 class StayDestinationController extends Controller
 {
@@ -175,9 +176,9 @@ class StayDestinationController extends Controller
 
     public function get_stay_destination(Request $request)
     {
-        $city_dts = stay_desitination::where('is_deleted', '0')
+        $city_dts = City::where('is_deleted', '0')
         ->where('status', '1')
-        ->select('id','city_name','city_image','upload_image_name','alternate_name')->get();
+        ->select('id','city_name','stay_images','stay_alternate_name','stay_upload_image_name')->get();
         return response()->json([
             'status' => 'success',
             'message' => 'Stays city successfully retrieved.',

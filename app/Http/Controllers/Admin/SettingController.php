@@ -17,8 +17,6 @@ class SettingController extends Controller
         return view('admin.general-settings.setting', compact('title', 'settings'));
     }
 
-
-
     public function insert(Request $request)
     {
 
@@ -58,6 +56,17 @@ class SettingController extends Controller
         $settings->android_link = $request->android_link;
         $settings->ios_link = $request->ios_link;
         $settings->copyright = $request->copyright;
+
+        $settings->leader_name = $request->leader;
+        $settings->leader_contact = $request->leader_contact;
+        $settings->gpay_number = $request->gpay_number;
+        $settings->ac_name = $request->ac_name;
+        $settings->ac_number = $request->ac_number;
+        $settings->ifsc_code = $request->ifsc_code;
+        $settings->bank_name = $request->bank_name;
+        $settings->branch_name = $request->branch_name;
+        $settings->gst = $request->gst;
+        $settings->service_fee = $request->service_fee;
 
         // Handle file uploads
         if ($request->hasFile('site_logo')) {

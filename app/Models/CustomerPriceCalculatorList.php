@@ -12,6 +12,16 @@ class CustomerPriceCalculatorList extends Model
     use HasFactory;
 
     protected $table = 'customer_price_calculator_lists';
+    protected $fillable = [
+        'customer_pricing_id',
+        'type',
+        'type_id',
+        'title',
+        'price_title',
+        'price',
+        'is_deleted'
+    ];
+
 
     public function pricingCalculator(): BelongsTo
     {
@@ -23,5 +33,5 @@ class CustomerPriceCalculatorList extends Model
         return $this->belongsTo(StayPricing::class, 'type_id');
     }
 
-   
+    
 }

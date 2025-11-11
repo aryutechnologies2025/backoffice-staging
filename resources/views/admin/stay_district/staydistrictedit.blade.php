@@ -46,8 +46,7 @@
             <form method="POST" action="{{ route('admin.staydistrict_update', $destination->id) }}" enctype="multipart/form-data" id="districts-form">
                 @csrf
 
-
-                <div id="districts-container">
+                <div id="districts-container" data-initial-count="{{ count($destination->districts_data) }}">
                     <div class="add_form form-group">
 
                         <label class="mb-2">Destination <span class="text-danger">*</span></label>
@@ -55,12 +54,13 @@
                             class="form-select py-2 rounded-3 shadow-sm" required>
                             <option value="" disabled selected>Select Destination</option>
                             @foreach($destination_dts as $id => $name)
-                            <option value="{{ $name }}" @if($destination->destination == $name) selected @endif>
+                            <option value="{{ $id }}" @if($destination->destination == $id) selected @endif>
                                 {{ $name }}
                             </option>
                             @endforeach
                         </select>
                     </div>
+                    
                     @foreach($destination->districts_data as $index => $district)
                     <div class="district-fieldset mb-4 mt-3 p-3 border rounded">
                         <div class="add_form form-group mb-3">
@@ -130,11 +130,8 @@
 <script>
     $(document).ready(function() {
         // Initialize districtCount with the number of existing districts
-        let districtCount = {
-            {
-                count($destination - > districts_data)
-            }
-        };
+        let districtCount = parseInt($('#districts-container').data('initial-count'));
+
 
         // Add new district fields
         $('#add-district').click(function() {

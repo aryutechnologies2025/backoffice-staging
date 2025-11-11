@@ -29,7 +29,7 @@
                         <select id="cities_name" name="cities_name" class="form-select py-2 rounded-3 shadow-sm" required>
                             <option value="" disabled selected>Select Destination</option>
                             @foreach ($destination_dts as $id => $name)
-                            <option value="{{ $name }}" @if (old('cities_name')=='{{ $id }}' ) selected @endif>
+                            <option value="{{ $id }}" @if (old('cities_name')=='{{ $id }}' ) selected @endif>
                                 {{ $name }}
                             </option>
                             @endforeach

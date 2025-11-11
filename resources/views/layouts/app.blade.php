@@ -4,21 +4,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
     <!-- <meta name="csrf-token" content="{{ csrf_token() }}"> -->
     <title>{{ $settings->meta_title ?? 'Inner Pece' }}</title>
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous">
+    </script>
     <!-- Bootstrap Bundle (includes Popper) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <link href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css"
+        rel="stylesheet" />
     <!-- Bootstrap Multiselect JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap-multiselect@1.1.1/dist/js/bootstrap-multiselect.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <link rel="icon" href="{{ $settings->fav_icon ? asset($settings->fav_icon) : '' }}" type="image/x-icon">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        crossorigin="anonymous">
     <!-- <link rel="stylesheet" href="/assets/css/bootstrap.min.css"> -->
     <link rel="stylesheet" href="/assets/css/admin_dashboard.css">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <!-- <link rel="stylesheet" href="/assets/css/font-awesome.min.css"> -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
@@ -40,8 +45,22 @@
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.1/xlsx.full.min.js"></script>
 
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-multiselect@1.1.0/dist/css/bootstrap-multiselect.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-multiselect@1.1.0/dist/js/bootstrap-multiselect.min.js"></script>
+
+
+    <!-- Select2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Select2 JS -->
 
     <!-- Bootstrap Multiselect CSS & JS -->
+    <!--Multi Selector -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-multiselect@1.1.1/dist/css/bootstrap-multiselect.css">
 
 
     @yield('scripts')
@@ -97,8 +116,11 @@
                 <div class="bg-white rounded-5 py-2 px-4 d-none d-lg-flex gap-2  ">
 
                     <div>
-                        <p class="fs-6 p-0 m-0 d-flex text-dark">Welcome👋 <span class="fs-6 text-start fw-bold text-dark ms-1">Admin</span></p>
-                        <b class="rounded-circle " style="width: 10%; height: auto;" src="{{ session('admin_email') ? asset(session('admin_email')) : '/assets/image/dashboard/innerpece_admin_img.png' }}" alt="admin_email"></b>
+                        <p class="fs-6 p-0 m-0 d-flex text-dark">Welcome👋 <span
+                                class="fs-6 text-start fw-bold text-dark ms-1">Admin</span></p>
+                        <b class="rounded-circle " style="width: 10%; height: auto;"
+                            src="{{ session('admin_email') ? asset(session('admin_email')) : '/assets/image/dashboard/innerpece_admin_img.png' }}"
+                            alt="admin_email"></b>
                         <span class="text-dark">{{ session('admin_email') }}</span>
 
                     </div>
@@ -107,14 +129,15 @@
             </div>
             <!-- <div class="col-lg-3 text-end pt-3">
             <b class="rounded-circle" style="width: 10%; height: auto;" src="{{ session('admin_name') ? asset(session('admin_name')) : '/assets/image/dashboard/innerpece_admin_img.png' }}" alt="admin_name"></b>
-            <span class="text-white">{{ session('admin_name') }}</span> 
-            <br>   
+            <span class="text-white">{{ session('admin_name') }}</span>
+            <br>
             <b class="rounded-circle" style="width: 10%; height: auto;" src="{{ session('admin_email') ? asset(session('admin_email')) : '/assets/image/dashboard/innerpece_admin_img.png' }}" alt="admin_email"></b>
                 <span class="text-white">{{ session('admin_email') }}</span>
             </div> -->
     </div>
     <!-- Modal -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
@@ -141,148 +164,215 @@
                 <!-- <img src="/assets/image/dashboard/plane.svg" alt=""  class="px-5 invisible navbar-toggle-icon" style="height: 30px;"> -->
 
                 <div class="nav_list ">
-                    <img class="pt-3 px-2 " style="width:90%;" src="{{ $settings->footer_logo ? asset($settings->footer_logo) : '/assets/image/login/inner_pece_logo.png' }}" alt="">
+                    <img class="pt-3 px-2 " style="width:90%;"
+                        src="{{ $settings->footer_logo ? asset($settings->footer_logo) : '/assets/image/login/inner_pece_logo.png' }}"
+                        alt="">
                     <div>
-                        <img src="{{$settings->fav_icon}}" alt="" class="px-4 mb-3 invisible navbar-toggle-icon" style="height: 30px;">
+                        <img src="{{ $settings->fav_icon }}" alt=""
+                            class="px-4 mb-3 invisible navbar-toggle-icon" style="height: 30px;">
                     </div>
-                    <a href="{{ route('admin.dashboard') }}" class="nav_link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }} mb-3 text-white">
+                    <a href="{{ route('admin.dashboard') }}"
+                        class="nav_link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }} mb-3 text-white">
                         <img src="/assets/image/dashboard/Dashboard.svg" alt="">
                         <span class="nav_name">Dashboard</span>
                     </a>
 
-                    <a href="{{ route('admin.user_list') }}" class="nav_link {{ request()->routeIs(['admin.user_list', 'admin.user_add_form', 'admin.user_edit_form']) ? 'active' : ''}} mb-3 text-white">
+                    <a href="{{ route('admin.user_list') }}"
+                        class="nav_link {{ request()->routeIs(['admin.user_list', 'admin.user_add_form', 'admin.user_edit_form']) ? 'active' : '' }} mb-3 text-white">
                         <img src="/assets/image/dashboard/user.svg" alt="">
                         <span class="nav_name"> User Registration </span>
                     </a>
-                    <a href="{{ route('admin.contact_list') }}" class="nav_link {{ request()->routeIs(['admin.contact_list']) ? 'active' : '' }} mb-3 text-white">
+                    <a href="{{ route('admin.contact_list') }}"
+                        class="nav_link {{ request()->routeIs(['admin.contact_list']) ? 'active' : '' }} mb-3 text-white">
                         <img src="/assets/image/dashboard/contact-us.svg" alt="">
                         <span class="nav_name">contact-Us</span>
                     </a>
-                    <a href="{{ route('admin.assistance_form_list') }}" class="nav_link {{ request()->routeIs(['admin.assistance_form_list']) ? 'active' : '' }} mb-3 text-white">
+                    <!-- <a href="{{ route('admin.assistance_form_list') }}" class="nav_link {{ request()->routeIs(['admin.assistance_form_list']) ? 'active' : '' }} mb-3 text-white">
                         <i class="bi bi-info-square"></i>
                         <span class="nav_name">Assitance Form</span>
-                    </a>
-                    <a href="{{ route('admin.enquiry_list') }}" class="nav_link {{ request()->routeIs(['admin.enquiry_list']) ? 'active' : '' }} mb-3 text-white">
+                    </a> -->
+                    <a href="{{ route('admin.enquiry_list') }}"
+                        class="nav_link {{ request()->routeIs(['admin.enquiry_list']) ? 'active' : '' }} mb-3 text-white">
                         <img src="/assets/image/dashboard/enquiry.svg" alt="">
                         <span class="nav_name"> Booking </span>
                     </a>
-                    <a href="{{ route('admin.home_enquiry_list') }}" class="nav_link {{ request()->routeIs(['admin.home_enquiry_list']) ? 'active' : '' }} mb-3 text-white">
+                    <a href="{{ route('admin.home_enquiry_list') }}"
+                        class="nav_link {{ request()->routeIs(['admin.home_enquiry_list']) ? 'active' : '' }} mb-3 text-white">
                         <img src="/assets/image/dashboard/enquiry.svg" alt="">
                         <span class="nav_name"> Enquiry </span>
                     </a>
-                    <a href="{{ route('admin.stay_home_enquiry_list') }}" class="nav_link {{ request()->routeIs(['admin.stay_home_enquiry_list']) ? 'active' : '' }} mb-3 text-white">
-                        <img src="/assets/image/dashboard/enquiry.svg" alt="">
-                        <span class="nav_name"> Stay Enquiry </span>
-                    </a>
-                    <!-- <a href="{{ route('admin.review_review_list') }}" class="nav_link {{ request()->routeIs(['admin.review_review_list', 'admin.client_review_add_form', 'admin.client_review_edit_form']) ? 'active' : ''}} mb-3 text-white">
-                        <img src="/assets/image/dashboard/review.svg" alt="">
-                        <span class="nav_name"> Client Review </span>
-                    </a> -->
-                    <a href="{{ route('admin.influencer_list') }}" class="nav_link {{ request()->routeIs(['admin.influencer_list', 'admin.influencer_add_form', 'admin.influencer_edit_form']) ? 'active' : '' }} mb-3 text-white">
-                        <img src="/assets/image/dashboard/slider.svg" alt="">
-                        <span class="nav_name"> Influencer </span>
-                    </a>
-                    <!-- <a href="{{ route('admin.program_pdf_list') }}" class="nav_link {{ request()->routeIs(['admin.program_pdf_list','admin.program_pdf_add_form', 'admin.program_pdf_insert', 'admin.program_pdf_updates', 'admin.program_pdf_delete']) ? 'active' : '' }} mb-3 text-white">
-                    <i class="bi bi-filetype-pdf"></i>
-                        <span class="nav_name"> pdf </span>
-                    </a> -->
-                    <a href="{{ route('admin.slider_list') }}" class="nav_link {{ request()->routeIs(['admin.slider_list', 'admin.slider_add_form', 'admin.slider_edit_form']) ? 'active' : '' }} mb-3 text-white">
-                        <img src="/assets/image/dashboard/slider.svg" alt="">
-                        <span class="nav_name"> Slider </span>
-                    </a>
-                    <a href="{{ route('admin.themes_list') }}" class="nav_link {{ request()->routeIs(['admin.themes_list', 'admin.themes_add_form', 'admin.themes_edit_form']) ? 'active' : '' }} mb-3 text-white">
-                        <img src="/assets/image/dashboard/themes.svg" alt="">
-                        <span class="nav_name">Theme</span>
-                    </a>
-
-                    <a href="{{ route('admin.citylist') }}" class="nav_link {{ request()->routeIs(['admin.citylist', 'admin.city_add_form', 'admin.city_edit_form']) ? 'active' : '' }} mb-3 text-white">
-                        <img src="/assets/image/dashboard/location-pin.svg" alt="">
-                        <span class="nav_name"> Destination </span>
-                    </a>
-
-                    <a href="{{ route('admin.staylist') }}" class="nav_link {{ request()->routeIs(['admin.staylist', 'admin.stays_add_form', 'admin.stay_details_edit_form']) ? 'active' : '' }} mb-3 text-white">
-                        <img src="/assets/image/dashboard/stay.png" alt="" class="stay-img">
-                        <span class="nav_name"> Stays </span>
-                    </a>
-                    <a href="{{ route('admin.staydestinationlist') }}" class="nav_link {{ request()->routeIs(['admin.staydestination_add_form', 'admin.staydestinationlist', 'admin.staydestination_edit_form']) ? 'active' : '' }} mb-3 text-white">
-                        <img src="/assets/image/dashboard/stay.png" alt="" class="stay-img">
-                        <span class="nav_name"> Stays Destination </span>
-                    </a>
-                    <a href="{{ route('admin.staypricinglist') }}" class="nav_link {{ request()->routeIs(['admin.staypricing_add_form', 'admin.staypricinglist', 'admin.staypricing_edit_form']) ? 'active' : '' }} mb-3 text-white">
-                        <img src="/assets/image/dashboard/stay.png" alt="" class="stay-img">
-                        <span class="nav_name"> Stay Pricing </span>
-                    </a>
-                    <a href="{{ route('admin.cablist') }}" class="nav_link {{ request()->routeIs(['admin.cab_add_form', 'admin.cablist', 'admin.cab_edit_form']) ? 'active' : '' }} mb-3 text-white">
-                        <img src="/assets/image/dashboard/stay.png" alt="" class="stay-img">
-                        <span class="nav_name"> Cab </span>
-                    </a>
-                    <a href="{{ route('admin.activitylist') }}" class="nav_link {{ request()->routeIs(['admin.activity_add_form', 'admin.activitylist', 'admin.activity_edit_form']) ? 'active' : '' }} mb-3 text-white">
-                        <img src="/assets/image/dashboard/stay.png" alt="" class="stay-img">
-                        <span class="nav_name"> Activity </span>
-                    </a>
-                    <a href="{{ route('admin.pricinglist') }}" class="nav_link {{ request()->routeIs(['admin.pricing_add_form', 'admin.pricinglist', 'admin.pricing_edit_form']) ? 'active' : '' }} mb-3 text-white">
-                        <img src="/assets/image/dashboard/stay.png" alt="" class="stay-img">
-                        <span class="nav_name"> Pricing Calculator </span>
-                    </a>
-                    <a href="{{ route('admin.staydistrictlist') }}" class="nav_link {{ request()->routeIs(['']) ? 'active' : '' }} mb-3 text-white">
-                        <img src="/assets/image/dashboard/stay.png" alt="" class="stay-img">
-                        <span class="nav_name"> Stays District </span>
-                    </a>
-
-                    <a href="{{ route('admin.CustomerPackage_list') }}" class="nav_link {{ request()->routeIs(['admin.CustomerPackage_list', 'admin.CustomerPackage_insert']) ? 'active' : '' }} mb-3 text-white">
-                        <img class="customer-package" src="/assets/image/dashboard/customer_package.png" alt="">
-                        <span class="nav_name"> Customer Package </span>
-                    </a>
-
-                    <a href="{{ route('admin.inclusive_package_list') }}" class="nav_link {{ request()->routeIs(['admin.inclusive_package_list', 'admin.inclusive_package_add_form', 'admin.inclusive_package_edit_form']) ? 'active' : '' }} mb-3 text-white">
+                    <p class=" nav_link mb-0 text-black fw-bold">PROGRAM</p>
+                    <a href="{{ route('admin.inclusive_package_list') }}"
+                        class="nav_link {{ request()->routeIs(['admin.inclusive_package_list', 'admin.inclusive_package_add_form', 'admin.inclusive_package_edit_form']) ? 'active' : '' }} mb-0 text-white">
                         <img src="/assets/image/dashboard/program.svg" alt="">
                         <span class="nav_name"> Programs </span>
                     </a>
-<!-- 
-                    <a href="{{ route('admin.programeventslist') }}" class="nav_link {{ request()->routeIs(['admin.programeventslist', 'admin.programeventsadd']) ? 'active' : '' }} mb-3 text-white">
-                        <img src="/assets/image/dashboard/program.svg" alt="">
-                        <span class="nav_name"> Programs Events</span>
+                    <a href="{{ route('admin.citylist') }}"
+                        class="nav_link {{ request()->routeIs(['admin.citylist', 'admin.city_add_form', 'admin.city_edit_form']) ? 'active' : '' }} mb-0 text-white">
+                        <img src="/assets/image/dashboard/location-pin.svg" alt="">
+                        <span class="nav_name"> Packages Destionation </span>
+                    </a>
+                    <a href="{{ route('admin.themes_list') }}"
+                        class="nav_link {{ request()->routeIs(['admin.themes_list', 'admin.themes_add_form', 'admin.themes_edit_form']) ? 'active' : '' }} mb-3 text-white">
+                        <img src="/assets/image/dashboard/themes.svg" alt="">
+                        <span class="nav_name">Theme</span>
+                    </a>
+                    <p class=" nav_link mb-0 text-black fw-bold">AMENITIES </p>
+                    <a href="{{ route('admin.amenitieslist') }}"
+                        class="nav_link {{ request()->routeIs(['admin.amenitieslist', 'admin.amenities_add_form', 'admin.amenities_edit_form']) ? 'active' : '' }} mb-0 text-white">
+                        <img src="/assets/image/dashboard/amenities.svg" alt="">
+                        <span class="nav_name">Amenities</span>
+                    </a>
+                    <a href="{{ route('admin.food_beveragelist') }}"
+                        class="nav_link {{ request()->routeIs(['admin.food_beveragelist', 'admin.food_beverage_add_form', 'admin.food_beverage_edit_form']) ? 'active' : '' }} mb-0 text-white">
+                        <img src="/assets/image/dashboard/fast-food.svg" alt="">
+                        <span class="nav_name">Food&Beverage</span>
+                    </a>
+                    <a href="{{ route('admin.activitieslist') }}"
+                        class="nav_link {{ request()->routeIs(['admin.activitieslist', 'admin.activities_add_form', 'admin.activities_edit_form']) ? 'active' : '' }} mb-0 text-white">
+                        <img src="/assets/image/dashboard/activities.svg" alt="">
+                        <span class="nav_name">Activities</span>
+                    </a>
+
+                    <a href="{{ route('admin.safety_features_list') }}"
+                        class="nav_link {{ request()->routeIs(['admin.safety_features_list', 'admin.safety_features_add_form', 'admin.safety_features_edit_form']) ? 'active' : '' }} mb-3 text-white">
+                        <img src="/assets/image/dashboard/security.svg" alt="">
+                        <span class="nav_name">Safety Features</span>
+                    </a>
+                    <p class=" nav_link text-black fw-bold mb-0">STAYS</p>
+                    <a href="{{ route('admin.staylist') }}"
+                        class="nav_link {{ request()->routeIs(['admin.staylist', 'admin.stays_add_form', 'admin.stay_details_edit_form']) ? 'active' : '' }} mb-0 text-white">
+                        <img src="/assets/image/dashboard/stay.png" alt="" class="stay-img">
+                        <span class="nav_name"> ADD Stays </span>
+                    </a>
+                    <a href="{{ route('admin.stay_home_enquiry_list') }}"
+                        class="nav_link {{ request()->routeIs(['admin.stay_home_enquiry_list']) ? 'active' : '' }} mb-0 text-white">
+                        <img src="/assets/image/dashboard/enquiry.svg" alt="">
+                        <span class="nav_name"> Stay Enquiry </span>
+                    </a>
+                    <a href="{{ route('admin.staydistrictlist') }}"
+                        class="nav_link {{ request()->routeIs(['admin.staydistrictlist']) ? 'active' : '' }} mb-0 text-white">
+                        <img src="/assets/image/dashboard/stay.png" alt="" class="stay-img">
+                        <span class="nav_name"> Stays District </span>
+                    </a>
+                    <!-- <a href="{{ route('admin.staydestinationlist') }}"
+                        class="nav_link {{ request()->routeIs(['admin.staydestination_add_form', 'admin.staydestinationlist', 'admin.staydestination_edit_form']) ? 'active' : '' }} mb-3 text-white">
+                        <img src="/assets/image/dashboard/stay.png" alt="" class="stay-img">
+                        <span class="nav_name"> Stays Destination </span>
                     </a> -->
-                    <!-- <a href="{{ route('admin.address_list') }}" class="nav_link {{ request()->routeIs(['admin.address_list', 'admin.address_add_form', 'admin.address_edit_form']) ? 'active' : '' }} mb-3 text-white">
-                        <img src="/assets/image/dashboard/program.svg" alt="">
-                        <span class="nav_name"> Address </span>
+                    <p class=" nav_link mb-0 text-black fw-bold">PRICING CALCULATOR </p>
+                    <a href="{{ route('admin.staypricinglist') }}"
+                        class="nav_link {{ request()->routeIs(['admin.staypricing_add_form', 'admin.staypricinglist', 'admin.staypricing_edit_form']) ? 'active' : '' }} mb-0 text-white">
+                        <img src="/assets/image/dashboard/stay.png" alt="" class="stay-img">
+                        <span class="nav_name"> Stay Pricing(PC) </span>
+                    </a>
+                    <a href="{{ route('admin.cablist') }}"
+                        class="nav_link {{ request()->routeIs(['admin.cab_add_form', 'admin.cablist', 'admin.cab_edit_form']) ? 'active' : '' }} mb-0 text-white">
+                        <img src="/assets/image/dashboard/stay.png" alt="" class="stay-img">
+                        <span class="nav_name"> Cab(PC) </span>
+                    </a>
+                    <a href="{{ route('admin.activitylist') }}"
+                        class="nav_link {{ request()->routeIs(['admin.activity_add_form', 'admin.activitylist', 'admin.activity_edit_form']) ? 'active' : '' }} mb-0 text-white">
+                        <img src="/assets/image/dashboard/stay.png" alt="" class="stay-img">
+                        <span class="nav_name"> Activity(PC) </span>
+                    </a>
+                    <a href="{{ route('admin.pricinglist') }}"
+                        class="nav_link {{ request()->routeIs(['admin.pricing_add_form', 'admin.pricinglist', 'admin.pricing_edit_form']) ? 'active' : '' }} mb-3 text-white">
+                        <img src="/assets/image/dashboard/stay.png" alt="" class="stay-img">
+                        <span class="nav_name"> Pricing Calculator </span>
+                    </a>
+
+                    <p class=" nav_link text-black fw-bold mb-0">EVENTS</p>
+                    <a class="nav_link {{ request()->routeIs(['admin.programeventslist', 'admin.programeventsadd', 'admin.programeventedit']) ? 'active' : '' }} mb-0 text-white"
+                        href="{{ route('admin.programeventslist') }}">
+                        <img src="/assets/image/dashboard/themes.svg" alt="">
+                        <span class="nav_name"> Event List </span>
+                    </a>
+                    <a class="nav_link {{ request()->routeIs(['admin.registereventslist']) ? 'active' : '' }} mb-3 text-white"
+                        href="{{ route('admin.registereventslist') }}">
+                        <img src="/assets/image/dashboard/themes.svg" alt="">
+                        <span class="nav_name"> Event Registration </span>
+                    </a>
+
+
+                    <!-- <a href="{{ route('admin.review_review_list') }}" class="nav_link {{ request()->routeIs(['admin.review_review_list', 'admin.client_review_add_form', 'admin.client_review_edit_form']) ? 'active' : '' }} mb-3 text-white">
+                        <img src="/assets/image/dashboard/review.svg" alt="">
+                        <span class="nav_name"> Client Review </span>
                     </a> -->
-                    <a href="{{ route('admin.client_review_list') }}" class="nav_link {{ request()->routeIs(['admin.client_review_list', 'admin.client_review_add_form', 'admin.client_review_edit_form']) ? 'active' : ''}} mb-3 text-white">
+                    <a href="{{ route('admin.influencer_list') }}"
+                        class="nav_link {{ request()->routeIs(['admin.influencer_list', 'admin.influencer_add_form', 'admin.influencer_edit_form']) ? 'active' : '' }} mb-3 text-white">
+                        <img src="/assets/image/dashboard/slider.svg" alt="">
+                        <span class="nav_name"> Influencer </span>
+                    </a>
+                    <!-- <a href="{{ route('admin.program_pdf_list') }}" class="nav_link {{ request()->routeIs(['admin.program_pdf_list', 'admin.program_pdf_add_form', 'admin.program_pdf_insert', 'admin.program_pdf_updates', 'admin.program_pdf_delete']) ? 'active' : '' }} mb-3 text-white">
+                    <i class="bi bi-filetype-pdf"></i>
+                        <span class="nav_name"> pdf </span>
+                    </a> -->
+                    <a href="{{ route('admin.slider_list') }}"
+                        class="nav_link {{ request()->routeIs(['admin.slider_list', 'admin.slider_add_form', 'admin.slider_edit_form']) ? 'active' : '' }} mb-3 text-white">
+                        <img src="/assets/image/dashboard/slider.svg" alt="">
+                        <span class="nav_name"> Slider </span>
+                    </a>
+
+
+                    <a href="{{ route('admin.CustomerPackage_list') }}"
+                        class="nav_link {{ request()->routeIs(['admin.CustomerPackage_list', 'admin.CustomerPackage_insert']) ? 'active' : '' }} mb-3 text-white">
+                        <img class="customer-package" src="/assets/image/dashboard/customer_package.png"
+                            alt="">
+                        <span class="nav_name"> Customer Package </span>
+                    </a>
+
+                    {{-- <li class="nav-item dropdown">
+                        <a class="nav_link dropdown-toggle {{ request()->routeIs(['admin.programeventslist', 'admin.programeventsadd']) ? 'active' : '' }} mb-3 text-white d-flex align-items-center"
+                            href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            <img src="/assets/image/dashboard/program.svg" alt="Events" class="me-2"
+                                width="20" height="20">
+                            <span class="nav_name">Events</span>
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li>
+                                <a class="dropdown-item {{ request()->routeIs(['admin.programeventslist', 'admin.programeventsadd', 'admin.programeventedit']) ? 'active' : '' }}"
+                                    href="{{ route('admin.programeventslist') }}">
+                                    Event List
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item {{ request()->routeIs(['admin.registereventslist']) ? 'active' : '' }}"
+                                    href="{{ route('admin.registereventslist') }}">
+                                    Event Registration
+                                </a>
+                            </li>
+                        </ul>
+                    </li> --}}
+
+                    <a href="{{ route('admin.client_review_list') }}"
+                        class="nav_link {{ request()->routeIs(['admin.client_review_list', 'admin.client_review_add_form', 'admin.client_review_edit_form']) ? 'active' : '' }} mb-3 text-white">
                         <img src="/assets/image/dashboard/review.svg" alt="">
                         <span class="nav_name"> Review </span>
                     </a>
 
-                    <a href="{{ route('admin.stay_review_list') }}" class="nav_link {{ request()->routeIs(['admin.stay_review_list', 'admin.stay_review_add_form', 'admin.stay_review_edit_form']) ? 'active' : ''}} mb-3 text-white">
+                    <a href="{{ route('admin.stay_review_list') }}"
+                        class="nav_link {{ request()->routeIs(['admin.stay_review_list', 'admin.stay_review_add_form', 'admin.stay_review_edit_form']) ? 'active' : '' }} mb-3 text-white">
                         <img src="/assets/image/dashboard/review.svg" alt="">
                         <span class="nav_name"> Stay Review </span>
                     </a>
 
-                    <a href="{{ route('admin.wish_list') }}" class="nav_link {{ request()->routeIs(['admin.wish_list', 'admin.wishlist_add_form', 'admin.wishlist_edit_form']) ? 'active' : '' }} mb-3 text-white">
+                    <a href="{{ route('admin.wish_list') }}"
+                        class="nav_link {{ request()->routeIs(['admin.wish_list', 'admin.wishlist_add_form', 'admin.wishlist_edit_form']) ? 'active' : '' }} mb-3 text-white">
                         <img src="/assets/image/dashboard/wishlist.svg" alt="">
                         <span class="nav_name"> Wishlist</span>
                     </a>
 
-                    <a href="{{ route('admin.faqlist') }}" class="nav_link {{ request()->routeIs(['admin.faqlist', 'admin.faq_add_form', 'admin.faq_edit_form']) ? 'active' : '' }} mb-3 text-white">
+                    <a href="{{ route('admin.faqlist') }}"
+                        class="nav_link {{ request()->routeIs(['admin.faqlist', 'admin.faq_add_form', 'admin.faq_edit_form']) ? 'active' : '' }} mb-3 text-white">
                         <img src="/assets/image/dashboard/faq.svg" alt="">
                         <span class="nav_name">FAQ</span>
                     </a>
 
-                    <a href="{{ route('admin.amenitieslist') }}" class="nav_link {{ request()->routeIs(['admin.amenitieslist', 'admin.amenities_add_form', 'admin.amenities_edit_form']) ? 'active' : '' }} mb-3 text-white">
-                        <img src="/assets/image/dashboard/amenities.svg" alt="">
-                        <span class="nav_name">Amenities</span>
-                    </a>
-                    <a href="{{ route('admin.food_beveragelist') }}" class="nav_link {{ request()->routeIs(['admin.food_beveragelist', 'admin.food_beverage_add_form', 'admin.food_beverage_edit_form']) ? 'active' : '' }} mb-3 text-white">
-                        <img src="/assets/image/dashboard/fast-food.svg" alt="">
-                        <span class="nav_name">Food&Beverage</span>
-                    </a>
-                    <a href="{{ route('admin.activitieslist') }}" class="nav_link {{ request()->routeIs(['admin.activitieslist', 'admin.activities_add_form', 'admin.activities_edit_form']) ? 'active' : '' }} mb-3 text-white">
-                        <img src="/assets/image/dashboard/activities.svg" alt="">
-                        <span class="nav_name">Activities</span>
-                    </a>
-                    <a href="{{ route('admin.safety_features_list') }}" class="nav_link {{ request()->routeIs(['admin.safety_features_list', 'admin.safety_features_add_form', 'admin.safety_features_edit_form']) ? 'active' : '' }} mb-3 text-white">
-                        <img src="/assets/image/dashboard/security.svg" alt="">
-                        <span class="nav_name">Safety Features</span>
-                    </a>
+
+
+
                     {{--
                     <a href="{{ route('admin.group_tour_list') }}" class="nav_link {{ request()->routeIs(['admin.group_tour_list', 'admin.group_tour_add_form', 'admin.group_tour_edit_form']) ? 'active' : '' }} mb-3 text-white">
                     <img src="/assets/image/dashboard/program.svg" alt="">
@@ -357,7 +447,7 @@
                     </a>
                     --}}
 
-                    <!-- <a href="{{ route('admin.user_list') }}" class="nav_link {{ request()->routeIs(['admin.user_list', 'admin.user_add_form', 'admin.user_edit_form']) ? 'active' : ''}} mb-3 text-white">
+                    <!-- <a href="{{ route('admin.user_list') }}" class="nav_link {{ request()->routeIs(['admin.user_list', 'admin.user_add_form', 'admin.user_edit_form']) ? 'active' : '' }} mb-3 text-white">
                         <img src="/assets/image/dashboard/user.svg" alt="">
                         <span class="nav_name"> User Registration </span>
                     </a>
@@ -374,9 +464,15 @@
                         <span class="nav_name">My Profile</span>
                     </a> -->
 
-                    <a href="{{ route('admin.settings_list') }}" class="nav_link {{ request()->routeIs(['admin.settings_list']) ? 'active' : '' }} mb-3">
+                    <a href="{{ route('admin.settings_list') }}"
+                        class="nav_link {{ request()->routeIs(['admin.settings_list']) ? 'active' : '' }} mb-3">
                         <img src="/assets/image/dashboard/settings.svg" alt="">
                         <span class="nav_name" style="color: #fff;"> General Setting </span>
+                    </a>
+                    <a href="{{ route('admin.mailtemplatelist') }}"
+                        class="nav_link {{ request()->routeIs(['admin.mailtemplatelist', 'admin.mailtemplateadd', 'admin.mailtemplateedit']) ? 'active' : '' }} mb-3">
+                        <img src="/assets/image/dashboard/settings.svg" alt="">
+                        <span class="nav_name" style="color: #fff;"> Mail Template </span>
                     </a>
                     <div class="profile-content mb-4">
                         <a href="{{ route('admin.logout') }}" class="nav_link mb-5 ">
@@ -414,7 +510,7 @@
 
                 <div class="col-lg-1">
                     <div class="d-flex justify-content-end mt-2">
-                        <button class="dashboard-nav-btn"><img class="dashboard-nav-btnimg" src="/assets/image/dashboard/dashboard_login.png" alt=""> {{ ucfirst(session('admin_role'))  }}</button>
+                        <button class="dashboard-nav-btn"><img class="dashboard-nav-btnimg" src="/assets/image/dashboard/dashboard_login.png" alt=""> {{ ucfirst(session('admin_role')) }}</button>
                     </div>
                 </div>
             </nav>
@@ -424,6 +520,7 @@
 
     <!-- NAVBAR SEC END -->
     @yield('content')
+    @yield('modal')
     <footer>
 
 
@@ -444,128 +541,131 @@
             </div>
         </div>
     </footer>
+
     @push('scripts')
-    <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script> -->
-    <script src="/assets/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script> -->
-    <script src="/assets/js/toastr.min.js"></script>
-    <!-- <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.3/dist/jquery.validate.min.js"></script> -->
-    <script src="/assets/js/jquery.validate.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>
-    <!-- <script src="/assets/js/summernote-bs4.min.js"></script> -->
-    <script src="/assets/js/developer.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/summernote/dist/summernote-lite.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-    <script>
-        $(".sbmtBtn").click(function(evt) {
-
-        });
-        $(document).ready(function() {
+        <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous">
+        </script> -->
+        <script src="/assets/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script> -->
+        <script src="/assets/js/toastr.min.js"></script>
+        <!-- <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.3/dist/jquery.validate.min.js"></script> -->
+        <script src="/assets/js/jquery.validate.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>
+        <!-- <script src="/assets/js/summernote-bs4.min.js"></script> -->
+        <script src="/assets/js/developer.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/summernote/dist/summernote-lite.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
+        </script>
+        <script>
             $(".sbmtBtn").click(function(evt) {
-                // if ($('#form_valid').valid()) {
-                //     $('.sbmtBtn').attr("disabled", true);
-                //     $('#program_description').val($('#summernote1').summernote('code'));
-                //     $('#address').val($('#summernote2').summernote('code'));
-                //     $('#plan_description').val($('#summernote3').summernote('code'));
-                //     $('#important_info').val($('#summernote4').summernote('code'));
-                //     $('#program_inclusion').val($('#summernote5').summernote('code'));
-                //     $('#break_fast').val($('#summernote6').summernote('code'));
-                //     $('#lunch').val($('#summernote7').summernote('code'));
-                //     $('#dinner').val($('#summernote8').summernote('code'));
-                //     $('#client_review').val($('#summernote').summernote('code'));
-                //     $('#form_valid').submit();
-                // }
-                if ($('#form_valid').valid()) {
-                    $('.sbmtBtn').attr("disabled", true);
 
-                    // Iterate over each Summernote editor and set the corresponding hidden input value
-                    $('#plan-container').find('.plan-item').each(function(index, item) {
-                        const planDescription = $(item).find('.note-editable').html(); // Get the Summernote HTML content
-                        $(item).find('input[name="plan_description[]"]').val(planDescription);
-                    });
-
-                    // Set other Summernote fields
-                    $('#program_description').val($('#summernote1').summernote('code'));
-                    $('#event_description').val($('#eventdescription').summernote('code'));
-                    $('#address').val($('#summernote2').summernote('code'));
-                    $('#plan_description').val($('#summernote3').summernote('code'));
-                    $('#important_info').val($('#summernote4').summernote('code'));
-                    $('#program_inclusion').val($('#summernote5').summernote('code'));
-                    $('#break_fast').val($('#summernote6').summernote('code'));
-                    $('#lunch').val($('#summernote7').summernote('code'));
-                    $('#dinner').val($('#summernote8').summernote('code'));
-                    $('#client_review').val($('#summernote').summernote('code'));
-                    $('#location').val($('#summernote10').summernote('code'));
-                    $('#program_exclusion').val($('#summernote9').summernote('code'));
-
-                    $('#form_valid').submit();
-                }
             });
-            @if(session('success'))
-            toastr.success("{{ session('success') }}");
-            @endif
-            @if($errors-> any())
-            @foreach($errors-> all() as $error)
-            toastr.error("{{ $error }}");
-            @endforeach
-            @endif
+            $(document).ready(function() {
+                $(".sbmtBtn").click(function(evt) {
+                    // if ($('#form_valid').valid()) {
+                    //     $('.sbmtBtn').attr("disabled", true);
+                    //     $('#program_description').val($('#summernote1').summernote('code'));
+                    //     $('#address').val($('#summernote2').summernote('code'));
+                    //     $('#plan_description').val($('#summernote3').summernote('code'));
+                    //     $('#important_info').val($('#summernote4').summernote('code'));
+                    //     $('#program_inclusion').val($('#summernote5').summernote('code'));
+                    //     $('#break_fast').val($('#summernote6').summernote('code'));
+                    //     $('#lunch').val($('#summernote7').summernote('code'));
+                    //     $('#dinner').val($('#summernote8').summernote('code'));
+                    //     $('#client_review').val($('#summernote').summernote('code'));
+                    //     $('#form_valid').submit();
+                    // }
+                    if ($('#form_valid').valid()) {
+                        $('.sbmtBtn').attr("disabled", true);
 
-        });
+                        // Iterate over each Summernote editor and set the corresponding hidden input value
+                        $('#plan-container').find('.plan-item').each(function(index, item) {
+                            const planDescription = $(item).find('.note-editable')
+                                .html(); // Get the Summernote HTML content
+                            $(item).find('input[name="plan_description[]"]').val(planDescription);
+                        });
 
+                        // Set other Summernote fields
+                        $('#program_description').val($('#summernote1').summernote('code'));
+                        $('#event_description').val($('#eventdescription').summernote('code'));
+                        $('#address').val($('#summernote2').summernote('code'));
+                        $('#plan_description').val($('#summernote3').summernote('code'));
+                        $('#important_info').val($('#summernote4').summernote('code'));
+                        $('#program_inclusion').val($('#summernote5').summernote('code'));
+                        $('#break_fast').val($('#summernote6').summernote('code'));
+                        $('#lunch').val($('#summernote7').summernote('code'));
+                        $('#dinner').val($('#summernote8').summernote('code'));
+                        $('#client_review').val($('#summernote').summernote('code'));
+                        $('#location').val($('#summernote10').summernote('code'));
+                        $('#program_exclusion').val($('#summernote9').summernote('code'));
 
+                        $('#form_valid').submit();
+                    }
+                });
+                @if (session('success'))
+                    toastr.success("{{ session('success') }}");
+                @endif
+                @if ($errors->any())
+                    @foreach ($errors->all() as $error)
+                        toastr.error("{{ $error }}");
+                    @endforeach
+                @endif
 
-
-
-        const tableBody = document.getElementById('tableBody');
-
-        // Function to filter rows by status
-        function filterTable(status) {
-            const rows = Array.from(tableBody.querySelectorAll('tr'));
-
-            // Show/hide rows based on status
-            rows.forEach(row => {
-                if (row.getAttribute('status') === status || status === 'All') {
-                    row.style.display = ''; // Show row
-                } else {
-                    row.style.display = 'none'; // Hide row
-                }
             });
-        }
-
-        // Add event listeners for the filter arrows
-        document.getElementById('filterActive').addEventListener('click', () => {
-            filterTable('Active');
-        });
-
-        document.getElementById('filterInactive').addEventListener('click', () => {
-            filterTable('Inactive');
-        });
-
-        //     function updateTime() {
-        //     const now = new Date();
-
-        //     const options = {
-        //         weekday: 'short',   // Short day like "Mon", "Tue"
-        //         year: 'numeric',
-        //         month: 'short',
-        //         day: 'numeric',
-        //         hour: 'numeric',
-        //         minute: 'numeric',
-        //         hour12: true
-        //     };
-
-        //     const timeString = now.toLocaleString('en-US', options);
-        //     document.getElementById('liveTime').textContent = timeString;
-        // }
-
-        // setInterval(updateTime, 1000);
-        // updateTime();
-    </script>
-    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 
 
+
+
+
+            const tableBody = document.getElementById('tableBody');
+
+            // Function to filter rows by status
+            function filterTable(status) {
+                const rows = Array.from(tableBody.querySelectorAll('tr'));
+
+                // Show/hide rows based on status
+                rows.forEach(row => {
+                    if (row.getAttribute('status') === status || status === 'All') {
+                        row.style.display = ''; // Show row
+                    } else {
+                        row.style.display = 'none'; // Hide row
+                    }
+                });
+            }
+
+            // Add event listeners for the filter arrows
+            document.getElementById('filterActive').addEventListener('click', () => {
+                filterTable('Active');
+            });
+
+            document.getElementById('filterInactive').addEventListener('click', () => {
+                filterTable('Inactive');
+            });
+
+            //     function updateTime() {
+            //     const now = new Date();
+
+            //     const options = {
+            //         weekday: 'short',   // Short day like "Mon", "Tue"
+            //         year: 'numeric',
+            //         month: 'short',
+            //         day: 'numeric',
+            //         hour: 'numeric',
+            //         minute: 'numeric',
+            //         hour12: true
+            //     };
+
+            //     const timeString = now.toLocaleString('en-US', options);
+            //     document.getElementById('liveTime').textContent = timeString;
+            // }
+
+            // setInterval(updateTime, 1000);
+            // updateTime();
+        </script>
+        <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     @endpush
     @stack('scripts')
 </body>

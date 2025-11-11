@@ -23,9 +23,19 @@
         width: 100%;
         background: #29292960;
     }
+    .sticky-btn {
+        position: fixed;
+        bottom: 10px;
+        right: 10px;
+        width: 40px;
+        height: 40px;
+        background-color: #ff0000ff;
+        underline: none;
+        /* z-index: 999; */
+    }
 </style>
 
- <div class="row body-sec py-3 px-5 justify-content-around">
+ <div class="row body-sec py-3 px-5 justify-content-around" id="watch">
     <div class="text-start col-lg-6 ">
         <h3 class="admin-title fw-bold">{{$title}}</h3>
     </div>
@@ -70,13 +80,13 @@
                         <td class="text-start">{{ $row->email }}</td>
                         <td class="text-start">{{ \App\Helpers\DateHelper::formatDate($row->created_at) }}</td>
                         <td class="text-start">
-                             <a class="btn view-btn" href="{{ route('admin.influencer_view', $row->id) }}">
+                             <a class="btn view-btn" title="View" href="{{ route('admin.influencer_view', $row->id) }}">
                                 <i class="bi bi-eye-fill" style="color:#000 !important;"></i>
                             </a>
                         </td>
                         <!-- <td class="text-center" style="font-size: small;">{{ $row->referral_code }}</td> -->
                         <td class="text-start" style="width: 10%;">
-                            <button class="btn text-white btn-sm  view-links" data-id="{{ $row->id }}" data-name="{{ $row->full_name }}"
+                            <button class="btn text-white btn-sm  view-links" title="Link" data-id="{{ $row->id }}" data-name="{{ $row->full_name }}"
                             data-signup-url="https://innerpece.com/signup?ref={{ $row->reference_id }}-{{ substr($row->full_name, 0, 4) }}"
                            > 
                                 <i class="fa fa-link" style="color:#008000 !important;" aria-hidden="true"></i>
@@ -94,13 +104,13 @@
                             @endif
                         </td> -->
                         <td class="text-start">
-                            <a href="{{ route('admin.influencer_edit_form', $row->id) }}" class="table-edit-link">
+                            <a href="{{ route('admin.influencer_edit_form', $row->id) }}" title="Edit" class="table-edit-link">
                                 <span class="fa-stack">
                                     <!-- <i class="fa fa-square fa-stack-2x"></i> -->
                                     <i class="fa fa-pencil fa-stack-1x fa-inverse"></i>
                                 </span>
                             </a>
-                            <a href="javascript:void(0);" class="table-link danger delconfirm" data-row_id="{{ $row->id }}" data-act_url="{{ route('admin.influencer_delete') }}" data-csrf_token="{{ csrf_token() }}">
+                            <a href="javascript:void(0);" class="table-link danger delconfirm" title="Delete" data-row_id="{{ $row->id }}" data-act_url="{{ route('admin.influencer_delete') }}" data-csrf_token="{{ csrf_token() }}">
                                 <span class="fa-stack">
                                     <!-- <i class="fa fa-square fa-stack-2x"></i> -->
                                     <i class="fa fa-trash-o fa-stack-1x fa-inverse" style="color: red !important;"></i>
@@ -167,7 +177,7 @@
         </div>
     </div>
 </div>
-
+<button class="sticky-btn" id="myBtn"><a href="#watch"><i class="bi bi-caret-up-square text-white"></i></button>
 @endsection
 
 @section('scripts')

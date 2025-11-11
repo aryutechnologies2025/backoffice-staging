@@ -9,6 +9,7 @@ use App\Models\Clientreview;
 use App\Models\InclusivePackages;
 use App\Models\Review;
 use App\Models\User;
+use App\Models\StagReview;
 
 class ClientreviewController extends Controller
 {
@@ -19,9 +20,33 @@ class ClientreviewController extends Controller
         $review_dts = Review::with('package','user') // Eager load the related theme
             ->where('is_deleted', '0')
             ->get();
+        $stay_reviews = StagReview::with(['stag', 'user'])
+        ->where('is_deleted', '0')
+        ->orderBy('id', 'desc')
+        ->get();
        
-            return view('admin.client_review.client_reviewlist', compact('title', 'review_dts'));
+        return view('admin.client_review.client_reviewlist', compact('title', 'review_dts','stay_reviews'));
     }
+
+//     public function list(Request $request)
+// {
+//     $title = 'All Reviews';
+
+//     // Fetch client reviews
+//     $client_reviews = Review::with(['package', 'user'])
+//         ->where('is_deleted', '0')
+//         ->orderBy('id', 'desc')
+//         ->get();
+
+//     // Fetch stay (stag) reviews
+//     $stay_reviews = StagReview::with(['stag', 'user'])
+//         ->where('is_deleted', '0')
+//         ->orderBy('id', 'desc')
+//         ->get();
+
+//     return view('admin.reviews.all_reviews', compact('title', 'client_reviews', 'stay_reviews'));
+// }
+
     public function review_list(Request $request)
     {
         

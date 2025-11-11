@@ -34,7 +34,10 @@ class enquiryEmail extends Mailable
 {
     $email = $this->subject('Enquiry Notification')
         ->view('emails.ClientNotification')
-        ->with('details', $this->details);
+         ->with([
+                'body' => $this->details['body'] ?? '',
+                'details' => $this->details, // Pass details to access subject in template
+            ]);
 
     // Check if program_pdf exists and attach it
     if (!empty($this->details['program_pdf'])) {

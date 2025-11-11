@@ -1,10 +1,12 @@
 <?php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\InclusivePackages;
 use App\Models\Review;
+
 class EnquiryDetail extends Model
 {
     use HasFactory;
@@ -25,47 +27,51 @@ class EnquiryDetail extends Model
         'travel_date',
         'rooms_count',
         'reference_id',
-        
+
         'program_title',
         'child_count',
         'child_age',
         'image',
         'follow_up',
-        
+
         'engagement_date',
         'birth_date',
-        'pricing'
-       
-       
+        'pricing',
+        'email_template'
+
+
     ];
     public function package()
-{
-    return $this->belongsTo(InclusivePackages::class, 'package_id');
-}
-public function user()
-{
-    return $this->belongsTo(User::class, 'user_id');
-}
-
-    
-public function themes()
-{
-    return $this->package ? $this->package->theme() : null;
-}
-// In EnquiryDetail.php
-public function review()
-{
-    return $this->hasOne(Review::class, 'enquiry_id'); // Adjust 'enquiry_id' to the correct foreign key
-}
-public function followUps()
-{
-    return $this->hasMany(FollowUp::class, 'enquiry_id', 'id');
-}
-public function enquiryFollowUps()
-{
-    return $this->hasMany(EnquiryFollow_up::class, 'enquiry_id', 'id');
+    {
+        return $this->belongsTo(InclusivePackages::class, 'package_id');
+    }
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 
 
-}
+    public function themes()
+    {
+        return $this->package ? $this->package->theme() : null;
+    }
+    // In EnquiryDetail.php
+    public function review()
+    {
+        return $this->hasOne(Review::class, 'enquiry_id'); // Adjust 'enquiry_id' to the correct foreign key
+    }
+    public function followUps()
+    {
+        return $this->hasMany(FollowUp::class, 'enquiry_id', 'id');
+    }
+    public function enquiryFollowUps()
+    {
+        return $this->hasMany(EnquiryFollow_up::class, 'enquiry_id', 'id');
+    }
 
+
+    public function program()
+    {
+        return $this->belongsTo(InclusivePackages::class, 'program_id');
+    }
 }

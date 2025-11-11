@@ -15,6 +15,7 @@ use App\Http\Controllers\Api\ReviewController;
 use App\Http\Controllers\Api\StayEnquiryController;
 use App\Http\Controllers\GoogleAuthController;
 use App\Models\customer_package;
+use App\Http\Controllers\Api\ProgramEventController;
 
 /*
 |----------------------------------------------------------------------
@@ -98,6 +99,12 @@ Route::prefix('v1')->group(function () {
 
         //price fillter
         Route::get('/get-pricewise-programs', [ProgramApiController::class, 'getPriceWiseProgramm']);
+
+        //program events
+        Route::get('/program-events', [ProgramEventController::class, 'list']);
+        Route::post('/events-register', [ProgramEventController::class, 'registration']);
+        Route::get('/program-event-view/{id}', [ProgramEventController::class, 'viewevents']);
+        Route::get('/program-registration/{id}', [ProgramEventController::class, 'vieweventregistration']);
     });
 });
 

@@ -1,25 +1,25 @@
 @extends('layouts.app')
 @section('content')
 <style>
-a:hover {
-    color: red;
-}
+    a:hover {
+        color: red;
+    }
 
-a {
-    color: rgb(37, 150, 190);
-}
+    a {
+        color: rgb(37, 150, 190);
+    }
 
-.add {
-    color: blue;
-}
+    .add {
+        color: blue;
+    }
 
-/* Align the form with the title */
-.container-wrapper {
-    padding-left: 30px;
-    /* Adjust as per your layout */
-    padding-right: 30px;
-    /* Consistent padding for both sides */
-}
+    /* Align the form with the title */
+    .container-wrapper {
+        padding-left: 30px;
+        /* Adjust as per your layout */
+        padding-right: 30px;
+        /* Consistent padding for both sides */
+    }
 </style>
 
 <div class="row body-sec py-3 px-5 justify-content-around">
@@ -27,7 +27,7 @@ a {
         <h3 class="admin-title fw-bold">{{$title}}</h3>
     </div>
     <div class="text-end col-lg-6 ">
-          <b><a href="/dashboard">Dashboard</a> > <a href="/amenities">Amenities</a> > <a class="add">Add</a></b>
+        <b><a href="/dashboard">Dashboard</a> > <a href="/amenities">Amenities</a> > <a class="add">Add</a></b>
     </div>
 
 </div>
@@ -54,8 +54,8 @@ a {
                                         alt="{{ old('alternate_image_name', 'Alternate Image Name') }}">
                                     <p class="text-center fw-light mt-3">Add Pic</p>
                                 </label>
-                                <input type="file" id="file-ip-1" name="image_1" accept="image/png, image/jpeg"
-                                     required>
+                                <input type="file" id="file-ip-1" name="image_1"
+                                    accept="image/*" required>
                                 <div id="file-ip-1-error" class="text-danger"></div>
                                 <!-- <label class="fw-bold mb-5 text-danger border-0"><small>* Upload size [30*30]
                                         *</small></label> -->
@@ -68,13 +68,13 @@ a {
                                 <div id="file-ip-1-error" class="text-danger"></div>
                                 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
                                 <script>
-                                function showError(message) {
-                                    Swal.fire({
-                                        icon: 'error',
-                                        title: 'Oops...',
-                                        text: message,
-                                    });
-                                }
+                                    function showError(message) {
+                                        Swal.fire({
+                                            icon: 'error',
+                                            title: 'Oops...',
+                                            text: message,
+                                        });
+                                    }
                                 </script>
                                 <!-- First Input: Upload Image Name -->
                                 <div class="add_form col-lg-6 pe-3">
@@ -126,49 +126,49 @@ a {
 </div>
 @endsection
 <script>
-function validateImage(input) {
-    const file = input.files[0];
-    const errorElement = document.getElementById('file-ip-1-error');
-    const previewElement = document.getElementById('file-ip-1-preview');
+    function validateImage(input) {
+        const file = input.files[0];
+        const errorElement = document.getElementById('file-ip-1-error');
+        const previewElement = document.getElementById('file-ip-1-preview');
 
-    // Clear previous error messages and reset preview
-    errorElement.textContent = '';
-    previewElement.src = '/assets/image/dashboard/innerpece_addpic_icon.svg';
+        // Clear previous error messages and reset preview
+        errorElement.textContent = '';
+        previewElement.src = '/assets/image/dashboard/innerpece_addpic_icon.svg';
 
-    if (file) {
-        const reader = new FileReader();
+        if (file) {
+            const reader = new FileReader();
 
-        reader.onload = function(e) {
-            const img = new Image();
+            reader.onload = function(e) {
+                const img = new Image();
 
-            img.onload = function() {
-                console.log('Image loaded with width: ' + img.width + ' and height: ' + img.height);
+                img.onload = function() {
+                    console.log('Image loaded with width: ' + img.width + ' and height: ' + img.height);
 
-                // Check if the image exceeds the limit of 640x120
-                if (img.width > 30 || img.height > 30) {
-                    console.log("Dimensions exceed allowed size!"); // Debugging log
-                    showError('Image size must not exceed 30x30 pixels.');
-                    input.value = ''; // Clear the input if the size exceeds limits
-                } else {
-                    console.log("Image dimensions are valid.");
-                    // Only show the image preview if dimensions are valid
-                    previewElement.src = e.target.result;
-                }
+                    // Check if the image exceeds the limit of 640x120
+                    if (img.width > 30 || img.height > 30) {
+                        console.log("Dimensions exceed allowed size!"); // Debugging log
+                        showError('Image size must not exceed 30x30 pixels.');
+                        input.value = ''; // Clear the input if the size exceeds limits
+                    } else {
+                        console.log("Image dimensions are valid.");
+                        // Only show the image preview if dimensions are valid
+                        previewElement.src = e.target.result;
+                    }
+                };
+
+                // Handling image load error
+                img.onerror = function() {
+                    console.log("Error loading image file."); // Debugging log for errors
+                    showError("Error loading the image file. It might be corrupted or not a valid image.");
+                };
+
+                img.src = e.target.result;
             };
 
-            // Handling image load error
-            img.onerror = function() {
-                console.log("Error loading image file."); // Debugging log for errors
-                showError("Error loading the image file. It might be corrupted or not a valid image.");
-            };
-
-            img.src = e.target.result;
-        };
-
-        // Read the image as a data URL
-        reader.readAsDataURL(file);
-    } else {
-        showError('No file selected.');
+            // Read the image as a data URL
+            reader.readAsDataURL(file);
+        } else {
+            showError('No file selected.');
+        }
     }
-}
 </script>

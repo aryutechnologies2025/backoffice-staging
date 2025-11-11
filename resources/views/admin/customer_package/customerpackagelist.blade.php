@@ -98,7 +98,7 @@
 
                             <a href="#"
                                 class="copy-link text-dark"
-                                data-link="https://innerpece.com/{{ $row->package_id }}/{{ str_replace(' ', '-', $row->package_type) }}#{{ $row->id }}"
+                                data-link="{{ env('APP_URL_FRONTEND') }}{{ $row->package_id }}/{{ str_replace(' ', '-', $row->package_type) }}#{{ $row->id }}"
                                 title="Click to copy link">
                                 <i class="fa fa-clone" aria-hidden="true"></i> copy
                             </a>
@@ -116,14 +116,14 @@
                             </button>
                         </td>
                         <td class="text-start">
-                            <a href="{{ route('admin.CustomerPackage_edit_form',$row->id) }}" class="table-edit-link">
+                            <a href="{{ route('admin.CustomerPackage_edit_form',$row->id) }}" title="Edit" class="table-edit-link">
                                 <span class="fa-stack">
                                     <i class="fa fa-square fa-stack-2x"></i>
                                     <i class="fa fa-pencil fa-stack-1x fa-inverse"></i>
                                 </span>
                             </a>
 
-                            <a href="javascript:void(0);" class="table-link danger delconfirm" data-row_id="{{ $row->id }}" data-act_url="{{ route('admin.CustomerPackage_delete') }}" data-csrf_token="{{ csrf_token() }}">
+                            <a href="javascript:void(0);" class="table-link danger delconfirm" title="Delete" data-row_id="{{ $row->id }}" data-act_url="{{ route('admin.CustomerPackage_delete') }}" data-csrf_token="{{ csrf_token() }}">
                                 <span class="fa-stack">
                                     <!-- <i class="fa fa-square fa-stack-2x"></i> -->
                                     <i class="fa fa-trash-o fa-stack-1x fa-inverse text-danger" style="color: red !important;"></i>

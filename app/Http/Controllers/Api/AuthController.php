@@ -20,6 +20,8 @@ use Throwable;
 use Illuminate\Validation\Rule;
 
 use Illuminate\Http\JsonResponse;
+use App\Models\Settings;
+use App\Models\MailTemplate;
 
 class AuthController extends Controller
 {
@@ -36,9 +38,8 @@ class AuthController extends Controller
                 'required',
                 'email',
                 'max:255',
-                Rule::unique('users', 'email')->where(function ($query) {
-                    return $query->where('is_deleted', 0);
-                }),
+                Rule::unique('users', 'email')
+                    ->where(fn($q) => $q->where('is_deleted', 0)),
             ],
             'password' => 'required|min:8|confirmed',
             'dob' => 'required|date',
@@ -94,6 +95,7 @@ class AuthController extends Controller
                 'dob' => $request->input('dob'),
                 'phone' => $request->input('phone'),
                 'street' => $request->input('street'),
+                'anniversary_date' => $request->input('anniversary_date'),
                 'city' => $request->input('city'),
                 'state' => $request->input('state'),
                 'zip_province_code' => $request->input('zip_province_code'),
@@ -496,22 +498,102 @@ class AuthController extends Controller
 
         ]);
         try {
-            // Send email to the client
+
+
+            // Get settings
+            $settings = Settings::first();
+            if (!$settings) {
+                return response()->json([
+                    'status' => 0,
+                    'response' => 'Settings not found'
+                ]);
+            }
+
+            // Get mail template
+            $mailtemplate = MailTemplate::where('sub_title', 'contact_user_mail')
+                ->where('is_deleted', '0')
+                ->where('status', '1')
+                ->first();
+
+            if (!$mailtemplate) {
+                return response()->json([
+                    'status' => 0,
+                    'response' => 'Mail template not found or inactive'
+                ]);
+            }
+
+
+            // Replace placeholders in the template content
+            $mailBody = $mailtemplate->mail_template;
+            $mailBody = str_replace(
+                ['[name]', '[email]', '[phone]', '[message]'],
+                [
+                    $contact->first_name,
+                    $contact->email,
+                    $contact->phone,
+                    $contact->message
+                ],
+                $mailBody
+            );
+
+
             Mail::to($contact->email)->send(new ContactEmail([
-                'name' => $contact->first_name,
-                'email' => $contact->email,
-                'phone' => $contact->phone,
-                'comments' => $contact->message,
+                'subject' => $mailtemplate->title,
+                'body' => $mailBody
             ]));
 
-            // Send email to admin
-            Mail::to('contact@innerpece.com')->send(new ContactAdminEmail([
-                'name' => $contact->first_name,
-                'email' => $contact->email,
-                'phone' => $contact->phone,
-                'comments' => $contact->message,
+            //admin mail
 
+            // Get mail template
+            $mailtemplate1 = MailTemplate::where('sub_title', 'contact_admin_mail')
+                ->where('is_deleted', '0')
+                ->where('status', '1')
+                ->first();
+
+            if (!$mailtemplate1) {
+                return response()->json([
+                    'status' => 0,
+                    'response' => 'Mail template not found or inactive'
+                ]);
+            }
+
+            // Replace placeholders in the template content
+            $mailBody1 = $mailtemplate1->mail_template;
+            $mailBody1 = str_replace(
+                ['[name]', '[email]', '[phone]', '[message]', '[username]', '[Current Date Time]'],
+                [
+                    $contact->first_name,
+                    $contact->email,
+                    $contact->phone,
+                    $contact->message,
+                    $contact->first_name,
+                    date('Y-m-d H:i:s') // Fixed time format
+                ],
+                $mailBody1
+            );
+
+            // Send mail
+            Mail::to('kanimozhi@aryutechnologies.com')->send(new ContactAdminEmail([
+                'subject' => $mailtemplate1->title,
+                'body' => $mailBody1
             ]));
+
+            // // Send email to the client
+            // Mail::to($contact->email)->send(new ContactEmail([
+            //     'name' => $contact->first_name,
+            //     'email' => $contact->email,
+            //     'phone' => $contact->phone,
+            //     'comments' => $contact->message,
+            // ]));
+
+            // // Send email to admin
+            // Mail::to('contact@innerpece.com')->send(new ContactAdminEmail([
+            //     'name' => $contact->first_name,
+            //     'email' => $contact->email,
+            //     'phone' => $contact->phone,
+            //     'comments' => $contact->message,
+
+            // ]));
         } catch (\Exception $e) {
             // Log any email sending errors
             Log::error('Mail failed: ' . $e->getMessage());

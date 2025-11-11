@@ -11,9 +11,22 @@ class PriceCalculatorList extends Model
     use HasFactory;
 
     protected $table = 'price_calculator_lists';
+    protected $fillable = [
+        'pricing_calculator_id',
+        'type',
+        'type_id', 
+        'title',
+        'price_title',
+        'price',
+    ];
 
-    public function pricingCalculator(): BelongsTo
+    // public function pricingCalculator(): BelongsTo
+    // {
+    //     return $this->belongsTo(PricingCalculator::class, 'pricing_calculator_id');
+    // }
+
+    public function pricingCalculator()
     {
-        return $this->belongsTo(PricingCalculator::class, 'pricing_calculator_id');
+        return $this->belongsTo(PricingCalculator::class);
     }
 }

@@ -13,6 +13,7 @@ class CustomerPricingCalculator extends Model
 
     protected $table = 'customer_pricing_calculators';
 
+
     public function priceLists(): HasMany
     {
         return $this->hasMany(CustomerPriceCalculatorList::class, 'customer_pricing_id');
@@ -22,4 +23,47 @@ class CustomerPricingCalculator extends Model
     {
         return $this->belongsTo(customer_package::class, 'customer_pricing_id');
     }
+
+
+    // Specific relationship for stays only
+    public function stayLists(): HasMany
+    {
+        return $this->hasMany(CustomerPriceCalculatorList::class, 'customer_pricing_id')
+            ->select('price')
+            ->where('type', 'stay');
+    }
+
+    // Specific relationship for activities only
+    public function activityLists(): HasMany
+    {
+        return $this->hasMany(CustomerPriceCalculatorList::class, 'customer_pricing_id')
+            ->select('price')
+            ->where('type', 'activity');
+    }
+
+    // Specific relationship for cabs only
+    public function cabLists(): HasMany
+    {
+        return $this->hasMany(CustomerPriceCalculatorList::class, 'customer_pricing_id')
+            ->select('price')
+            ->where('type', 'cabs');
+    }
+
+
+    // In your CustomerPricing model
+    public function getStayTotalAttribute()
+    {
+        return $this->stayLists()->sum('price');
+    }
+
+    public function getActivityTotalAttribute()
+    {
+        return $this->activityLists()->sum('price');
+    }
+
+    public function getCabTotalAttribute()
+    {
+        return $this->cabLists()->sum('price');
+    }
+
 }

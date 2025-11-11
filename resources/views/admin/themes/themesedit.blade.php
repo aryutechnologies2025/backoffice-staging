@@ -29,7 +29,7 @@
         <h3 class="admin-title fw-bold">{{$title}}</h3>
     </div>
     <div class="text-end col-lg-6 ">
-        <b><a href="/dashboard">Dashboard</a> > <a href="/user">User</a> > <a class="edit">Edit</a></b>
+        <b><a href="/dashboard">Dashboard</a> > <a href="/themes">Theme</a> > <a class="edit">Edit</a></b>
     </div>
 
 </div>
@@ -83,6 +83,11 @@
                     <div class="add_form col-md-6 pe-4">
                         <label class="fw-bold mb-2 "> Title <span class="text-danger">*</span></label>
                         <input type="text" placeholder="Title" id="theme_name" name="theme_name" value="{{ $themes_details->themes_name }}" class="form-control py-2 rounded-3 shadow-sm" required>
+                    </div>
+
+                     <div class="add_form col-md-6 pe-4">
+                        <label class="fw-bold mb-2 ">Description <span class="text-danger">*</span></label>
+                        <input type="text" placeholder="Description" id="description" name="description" value="{{ $themes_details->description }}" class="form-control py-2 rounded-3 shadow-sm" required>
                     </div>
                     <div class="add_form col-md-6">
                         <label class="fw-bold mb-2 ">Order <span class="text-danger">*</span></label>

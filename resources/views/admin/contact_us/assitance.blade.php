@@ -47,11 +47,6 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @if($assitance->isEmpty())
-                        <tr>
-                            <td colspan="4" class="text-center">No records</td>
-                        </tr>
-                        @else
                         @foreach ($assitance as $row)
                         <tr>
                             <td class="text-start">{{ $loop->iteration }}</td>
@@ -70,7 +65,6 @@
                             </td>
                         </tr>
                         @endforeach
-                        @endif
                     </tbody>
                 </table>
             </div>

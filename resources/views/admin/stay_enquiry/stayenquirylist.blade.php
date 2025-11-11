@@ -7,17 +7,17 @@
 
     a {
         font-family: 'Poppins', sans-serif;
-        font-weight:500;
-        color:#8B7eff;
-        font-size:13px;
+        font-weight: 500;
+        color: #8B7eff;
+        font-size: 13px;
     }
 
 
     .enquiry {
-       font-family: 'Poppins', sans-serif;
-        font-weight:600;
-        color:#282833;
-        font-size:13px;
+        font-family: 'Poppins', sans-serif;
+        font-weight: 600;
+        color: #282833;
+        font-size: 13px;
     }
 
     .modal {
@@ -30,19 +30,30 @@
         color: #FFF !important;
         font-size: 15px !important;
     }
+
+    .sticky-btn {
+        position: fixed;
+        bottom: 10px;
+        right: 10px;
+        width: 40px;
+        height: 40px;
+        background-color: #ff0000ff;
+        underline: none;
+        /* z-index: 999; */
+    }
 </style>
 
- <div class="row body-sec py-3 px-5 justify-content-around">
-        <div class="text-start col-lg-6 ">
-            <h3 class="admin-title fw-bold">{{$title}}</h3>
-        </div>
-        <div class="text-end col-lg-6 ">
-           <b><a href="/dashboard">Dashboard</a> > <a class="enquiry" href="{{ route('admin.stay_home_enquiry_list') }}">Stay Enquiry</a></b>
-        </div>
+<div class="row body-sec py-3 px-5 justify-content-around" id="watch">
+    <div class="text-start col-lg-6 ">
+        <h3 class="admin-title fw-bold">{{$title}}</h3>
     </div>
+    <div class="text-end col-lg-6 ">
+        <b><a href="/dashboard">Dashboard</a> > <a class="enquiry" href="{{ route('admin.stay_home_enquiry_list') }}">Stay Enquiry</a></b>
+    </div>
+</div>
 
 
-    
+
 
 
 <div class="row body-sec px-5">
@@ -99,11 +110,11 @@
 
                         </td> -->
                         <td class="text-start d-flex gap-1">
-                            <a class="btn view-btn" href="{{ route('admin.stay_enquiry_view', $row->id) }}">
+                            <a class="btn view-btn" title="View" href="{{ route('admin.stay_enquiry_view', $row->id) }}">
                                 <i class="bi bi-eye-fill" style="color:#000 !important;"></i>
                             </a>
                             <!-- <a href="{{ route('admin.enquiry.followups', $row->id) }}" class="btn btn-primary"><i class="bi bi-list-check"></i></a> -->
-                            <a href="javascript:void(0);" class="table-link danger delconfirm" data-row_id="{{ $row->id }}" data-act_url="{{ route('admin.stay_enquiry_delete') }}" data-csrf_token="{{ csrf_token() }}">
+                            <a href="javascript:void(0);" title="Delete" class="table-link danger delconfirm" data-row_id="{{ $row->id }}" data-act_url="{{ route('admin.stay_enquiry_delete') }}" data-csrf_token="{{ csrf_token() }}">
                                 <span class="fa-stack">
                                     <i class="fa fa-trash-o fa-stack-1x fa-inverse" style="color:red !important;"></i>
                                 </span>
@@ -149,6 +160,7 @@
         </div>
     </div>
 </div>
+<button class="sticky-btn" id="myBtn"><a href="#watch"><i class="bi bi-caret-up-square text-white"></i></button>
 
 @endsection
 
@@ -158,7 +170,7 @@
 <!-- Add SheetJS (XLSX) library for Excel export -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script>
-     $(document).ready(function() {
+    $(document).ready(function() {
         $('#cityTable').DataTable({
             "pageLength": 10,
             "lengthChange": true,
@@ -166,14 +178,15 @@
             "searching": true,
             "language": {
                 "emptyTable": "No records found",
-                "searchPlaceholder": "Search cities...",  // 👈 Your placeholder text
-                "search": ""  // 👈 This removes the "Search:" label
+                "searchPlaceholder": "Search cities...", // 👈 Your placeholder text
+                "search": "" // 👈 This removes the "Search:" label
             },
-            "columnDefs": [
-                { "orderable": true, "targets": [0, 3] }
-            ]
+            "columnDefs": [{
+                "orderable": true,
+                "targets": [0, 3]
+            }]
         });
-    }); 
+    });
 
     function handleFollowUpChange(selectElement) {
         let enquiryId = $(selectElement).data('enquiry-id');
@@ -281,16 +294,103 @@
         });
 
         // Move the downloadExcel click handler inside document ready
+        // $('#downloadExcel').on('click', function() {
+        //     let $table = $('#cityTable').clone();
+        //     $table.find('tr').each(function() {
+        //         $(this).find('th:last-child, td:last-child').remove();
+        //     });
+        //     let tempDiv = $('<div>').append($table);
+        //     const wb = XLSX.utils.table_to_book(tempDiv.find('table')[0], {
+        //         sheet: "Enquiries"
+        //     });
+        //     XLSX.writeFile(wb, 'Enquiries_Data.xlsx');
+        // });
+
         $('#downloadExcel').on('click', function() {
-            let $table = $('#cityTable').clone();
-            $table.find('tr').each(function() {
-                $(this).find('th:last-child, td:last-child').remove();
+            // Get the DataTable instance
+            var table = $('#cityTable').DataTable();
+
+            // Get the current search value from DataTables
+            const searchValue = table.search();
+
+            // Show loading state
+            var $downloadBtn = $(this);
+            var originalText = $downloadBtn.html();
+            $downloadBtn.html('<i class="fas fa-spinner fa-spin"></i> Downloading...').prop('disabled', true);
+
+            // Get ALL data without pagination limits
+            $.ajax({
+                url: '/home-enquiry/download-stay-all',
+                method: 'GET',
+                data: {
+                    search: searchValue || '',
+                    length: -1 // Request all records
+                },
+                success: function(allData) {
+                    // Reset button state
+                    $downloadBtn.html(originalText).prop('disabled', false);
+
+                    if (!allData || allData.length === 0) {
+                        alert('No data found for the current search!');
+                        return;
+                    }
+
+                    var wb = XLSX.utils.book_new();
+                    var modalData = [
+                        ["S.No", "Name", "Email", "Phone", "Comments", "Location", "Stay Title",
+                            "Birth Date", "Engagement Date", "No of Days", "Total Count", "Male Count",
+                            "Female Count", "Child Count", "Checkin Date", "Checkout Date", "Cab", "Price"
+                        ]
+                    ];
+
+                    allData.forEach(function(d, index) {
+                        modalData.push([
+                            index + 1,
+                            d.name || '',
+                            d.email || '',
+                            d.phone || '',
+                            d.comments || '',
+                            d.location || '',
+                            d.stay_title || '',
+                            d.birth_date || '',
+                            d.engagement_date || '',
+                            d.no_of_days || '',
+                            d.total_count || '',
+                            d.male_count || '',
+                            d.female_count || '',
+                            d.child_count || '',
+                            d.checkin_date || '',
+                            d.checkout_date || '',
+                            d.cab || '',
+                            d.price || ''
+                        ]);
+                    });
+
+                    var ws = XLSX.utils.aoa_to_sheet(modalData);
+                    XLSX.utils.book_append_sheet(wb, ws, "Stay Enquiries");
+
+                    // Create dynamic filename
+                    var timestamp = new Date().toISOString().split('T')[0];
+                    var filename = searchValue ?
+                        `Stay_Enquiries_${searchValue}_${timestamp}.xlsx` :
+                        `All_Stay_Enquiries_${timestamp}.xlsx`;
+
+                    XLSX.writeFile(wb, filename);
+                },
+                error: function(xhr, status, error) {
+                    // Reset button state
+                    $downloadBtn.html(originalText).prop('disabled', false);
+
+                    console.error('Error:', error);
+                    var errorMessage = 'Error fetching data from server';
+
+                    if (xhr.responseJSON && xhr.responseJSON.error) {
+                        errorMessage = xhr.responseJSON.error;
+                    }
+
+                    alert(errorMessage);
+                }
             });
-            let tempDiv = $('<div>').append($table);
-            const wb = XLSX.utils.table_to_book(tempDiv.find('table')[0], {
-                sheet: "Enquiries"
-            });
-            XLSX.writeFile(wb, 'Enquiries_Data.xlsx');
         });
     });
 </script>

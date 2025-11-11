@@ -14,5 +14,6 @@ class VerifyCsrfToken extends Middleware
     protected $except = [
         'api/*', // Add this line to exclude all API routes
         'https://backoffice.innerpece.com/api/contact',
+        // 'customer-package/latest-update',  // match your route here
     ];
 }

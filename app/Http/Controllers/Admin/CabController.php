@@ -13,13 +13,13 @@ class CabController extends Controller
     public function list(Request $request)
     {
         $title = 'Cab List';
-        $stay_details = Cab::where('is_deleted', '0')->orderBy('id', 'desc')->get();
+        $stay_details = Cab::where('is_deleted', '0')->with(['destination'])->orderBy('id', 'desc')->get();
         return view('admin.cabs.cablist', compact('title', 'stay_details'));
     }
 
     public function add_form()
     {
-        $cities = stay_district::where('status', "1")->where('is_deleted', "0")->pluck('destination', 'id');
+        $cities = City::where('status', '1')->where('is_deleted', '0')->pluck('city_name', 'id');
 
         $title = 'Add Cab';
 
@@ -129,7 +129,7 @@ class CabController extends Controller
     public function edit_form(Request $request, $id)
     {
         $destination_details = Cab::find($id);
-        $cities = stay_district::where('status', "1")->where('is_deleted', "0")->pluck('destination', 'id');
+        $cities = City::where('status', '1')->where('is_deleted', '0')->pluck('city_name', 'id');
         $title = 'Edit Cab';
 
         $camp_rules = json_decode($destination_details->title_price, true);

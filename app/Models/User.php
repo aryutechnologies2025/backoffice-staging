@@ -44,7 +44,8 @@ class User extends Authenticatable
         'created_by',
         'created_date',
         'login_type',
-        'email_verified'
+        'email_verified',
+        'anniversary_date'
     ];
 
     /**

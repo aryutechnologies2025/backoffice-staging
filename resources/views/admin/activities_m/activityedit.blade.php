@@ -122,7 +122,6 @@
                 @csrf
                             <h4 class="fw-bold mb-3">Information</h4>
 
-
                             <div class="mb-3 ">
                                 <div class="row gap-2">
                                     <!-- Theme and Destination -->
@@ -131,9 +130,9 @@
                                         <label class="mb-2">Destination <span class="text-danger">*</span></label>
                                         <select id="cities_name" name="cities_name" class="form-select py-2 rounded-3 shadow-sm" required>
                                             <option value="" disabled selected>Select Destination</option>
-                                            @foreach($cities as $name)
-                                            <option value="{{ $name }}"
-                                                @if(old('cities_name', $destination_details->destination_id ?? '') == $name) selected @endif>
+                                          @foreach($cities as $id => $name)
+                                            <option value="{{ $id }}"
+                                                @if(old('cities_name', $destination_details->destination_id ?? '') == $id) selected @endif>
                                                 {{ $name }}
                                             </option>
                                             @endforeach
@@ -249,69 +248,80 @@
 
         <script>
             let fieldCounter = {{ count($camp_rules ?? []) }};
-            $(document).ready(function() {
-                // Delegate event binding for dynamically added file inputs
-                $('#photo-upload-container').on('change', 'input[type="file"]', function(event) {
-                    var number = $(this).data('number'); // Use data attribute to get the number
-                    showPreview(event, number);
-                });
+               $(document).ready(function() {
 
-                $('#cities_name').change(function() {
-                    const destination = $(this).val();
-                    const districtSelect = $('#district_name');
+                    const $citiesSelect = $('#cities_name');
+                    // Initialize with existing values if in edit mode
+                    const initialDestination = "{{ $destination_details->destination_id ?? '' }}";
+                    const initialDistrict = "{{ $destination_details->district_id ?? '' }}";
 
-                    console.log('Destination selected:', destination); // Debugging
-
-                    if (!destination) {
-                        districtSelect.empty().append(
-                            '<option value="" disabled selected>Select District</option>'
-                        ).prop('disabled', true);
-                        return;
+                    if (initialDestination) {
+                        // Trigger district load for existing destination
+                        loadDistricts(initialDestination, initialDistrict);
                     }
 
-                    // Show loading state
-                    districtSelect.empty().append(
-                        '<option value="" disabled>Loading districts...</option>'
-                    ).prop('disabled', true);
+                    $('#cities_name').change(function() {
+                        const destination = $(this).val();
+                        loadDistricts(destination);
+                    });
 
-                    // AJAX request
-                    $.ajax({
-                        url: '/get-districts/' + encodeURIComponent(destination),
-                        type: 'GET',
-                        success: function(data) {
-                            console.log('Received data:', data); // Debugging
+                    function loadDistricts(destination, selectedDistrict = null) {
+                        const districtSelect = $('#district_name');
 
+                        if (!destination) {
                             districtSelect.empty().append(
                                 '<option value="" disabled selected>Select District</option>'
-                            );
+                            ).prop('disabled', true);
+                            return;
+                        }
 
-                            if (data && data.length > 0) {
-                                $.each(data, function(index, district) {
+                        // Show loading state
+                        districtSelect.empty().append(
+                            '<option value="" disabled>Loading districts...</option>'
+                        ).prop('disabled', true);
+
+                        $.ajax({
+                            url: '/get-single-districts',
+                            type: 'GET',
+                            data: {
+                                destination: destination
+                            }, // e.g. "13,15"
+                            success: function(data) {
+                                console.log('Received data:', data); // Debugging
+
+                                districtSelect.empty().append(
+                                    '<option value="" disabled selected>Select District</option>'
+                                );
+
+                                if (data && data.length > 0) {
+                                    $.each(data, function(index, district) {
+                                        const isSelected = (selectedDistrict && district.id === selectedDistrict);
+                                        districtSelect.append(
+                                            $('<option>', {
+                                                value: district.id, // Use district.id for value
+                                                text: district.name, // Use district.name for display text
+                                                selected: isSelected
+                                            })
+                                        );
+                                    });
+                                    districtSelect.prop('disabled', false);
+                                } else {
                                     districtSelect.append(
-                                        $('<option>', {
-                                            value: district,
-                                            text: district
-                                        })
+                                        '<option value="" disabled>No districts found for this destination</option>'
                                     );
-                                });
-                                districtSelect.prop('disabled', false);
-                            } else {
-                                districtSelect.append(
-                                    '<option value="" disabled>No districts found for this destination</option>'
+                                }
+                            },
+                            error: function(xhr, status, error) {
+                                console.error('AJAX Error:', status, error); // Debugging
+                                districtSelect.empty().append(
+                                    '<option value="" disabled>Error loading districts</option>'
                                 );
                             }
-                        },
-                        error: function(xhr, status, error) {
-                            console.error('AJAX Error:', status, error); // Debugging
-                            districtSelect.empty().append(
-                                '<option value="" disabled>Error loading districts</option>'
-                            );
-                        }
-                    });
+                        });
+                    }
+
+
                 });
-
-
-            });
 
 
 

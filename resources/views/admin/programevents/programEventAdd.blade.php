@@ -178,6 +178,49 @@
         background-color: #fff;
     }
 </style>
+<style>
+    .search-results {
+        position: absolute;
+        background: white;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        max-height: 200px;
+        overflow-y: auto;
+        z-index: 1000;
+        width: calc(100% - 30px);
+        margin-top: 5px;
+    }
+
+    .search-result-item {
+        padding: 10px;
+        cursor: pointer;
+        border-bottom: 1px solid #eee;
+    }
+
+    .search-result-item:hover {
+        background-color: #f5f5f5;
+    }
+
+    .search-result-item:last-child {
+        border-bottom: none;
+    }
+
+    .input-field {
+        position: relative;
+        display: flex;
+        align-items: center;
+    }
+
+    .input-field i {
+        position: absolute;
+        left: 10px;
+        z-index: 1;
+    }
+
+    .input-field input {
+        padding-left: 30px;
+    }
+</style>
 <div class="row body-sec py-3 px-5 justify-content-around">
     <div class="text-start col-lg-6 ">
         <h3 class="admin-title fw-bold">{{$title}}</h3>
@@ -191,233 +234,149 @@
 <div class="row mb-5">
     <div class="col-lg-12">
         <div class="form-body px-4 mb-5 ms-4 me-5 rounded-4">
-            <form id="form_valid" action="{{ route('admin.programeventstore') }}" method="POST"
-                autocomplete="off" enctype="multipart/form-data">
+            <form id="form_valid" action="{{ route('admin.programeventstore') }}" method="POST" autocomplete="off" enctype="multipart/form-data">
                 @csrf
                 <div class="mb-3">
                     <div class="row g-4">
+                        <!-- Title Field -->
                         <div class="add_form col-md-4">
                             <label class="mb-2">Title <span class="text-danger">*</span></label>
-                            <input type="text" placeholder="Title" id="title" name="title"
-                                class="form-control py-2 rounded-3 shadow-sm" value="{{ old('title') }}">
+                            <input type="text" placeholder="Title" id="title" name="title" class="form-control py-2 rounded-3 shadow-sm @error('title') is-invalid @enderror" value="{{ old('title') }}">
+
                         </div>
 
-                        <div class="add_form col-md-4">
-                            <label class="mb-2">Event Type<span class="text-danger">*</span></label>
-                            <select id="event_type" name="event_type"
-                                class="form-select py-2 rounded-3 shadow-sm" required>
-                                <option value="" disabled selected>Select Type</option>
-                                <option value="public">Public</option>
-                                <option value="private">Private</option>
-                            </select>
+                        <!-- Start Date & Time -->
+                        <div class="add_form col-md-3">
+                            <label for="datetimePicker" class="form-label">Start Date & Time<span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <input type="text" class="form-control flatpickr-input @error('start_datetime') is-invalid @enderror" name="start_datetime" id="datetimePicker" placeholder="Select date and time" value="{{ old('start_datetime') }}">
+                                <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+
+                            </div>
                         </div>
 
-                        <div class="add_form col-md-4">
-                            <label for="timezone" class="form-label">Select Timezone</label>
-                            <select id="timezone" name="timezone" class="form-select">
-                                <option value="" disabled selected>Select Timezone</option>
-                                <option value="america_los_angeles">Pacific Time - Los Angeles (GMT-07:00)</option>
-                                <option value="america_chicago">Central Time - Chicago (GMT-05:00)</option>
-                                <option value="america_toronto">Eastern Time - Toronto (GMT-04:00)</option>
-                                <option value="america_new_york">Eastern Time - New York (GMT-04:00)</option>
-                                <option value="america_sao_paulo">Brasilia Standard Time - Sao Paulo (GMT-03:00)</option>
-                                <option value="europe_london">United Kingdom Time - London (GMT+01:00)</option>
-                                <option value="europe_madrid">Central European Time - Madrid (GMT+02:00)</option>
-                                <option value="europe_paris">Central European Time - Paris (GMT+02:00)</option>
-                                <option value="asia_dubai">Gulf Standard Time - Dubai (GMT+04:00)</option>
-                                <option value="asia_kolkata">India Standard Time - Kolkata (GMT+05:30)</option>
-                                <option value="asia_singapore">Singapore Standard Time - Singapore (GMT+08:00)</option>
-                                <option value="asia_tokyo">Japan Standard Time - Tokyo (GMT+09:00)</option>
-                            </select>
+                        <!-- End Date & Time -->
+                        <div class="add_form col-md-3">
+                            <label for="endDatetimePicker" class="form-label">End Date & Time<span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <input type="text" class="form-control flatpickr-input @error('end_datetime') is-invalid @enderror" name="end_datetime" id="endDatetimePicker" placeholder="Select end date and time" value="{{ old('end_datetime') }}">
+                                <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+
+                            </div>
                         </div>
                     </div>
                 </div>
-
 
                 <!-- Cover Image -->
                 <div class="row mt-4">
                     <div class="col-md-2 h-25">
-                        <label for="file-ip-1" class="form-label ">Cover Image</label>
+                        <label for="file-ip-1" class="form-label">Cover Image<span class="text-danger">*</span></label>
                         <div class="form-input text-start pt-2 pb-0">
                             <label for="file-ip-1" class="d-block pt-4">
-                                <img id="file-ip-1-preview"
-                                    src="/assets/image/dashboard/innerpece_addpic_icon.svg"
-                                    class="img-thumbnail">
+                                <img id="file-ip-1-preview" src="/assets/image/dashboard/innerpece_addpic_icon.svg" class="img-thumbnail">
                                 <p class="mt-2">Add Pic</p>
                             </label>
-                            <input type="file" id="file-ip-1" name="cover_img" class="form-control"
-                                accept="image/png, image/jpeg, image/svg+xml">
-                            <div id="file-ip-1-error" class="text-danger"></div>
+                            <input type="file" id="file-ip-1" name="cover_img" class="form-control @error('cover_img') is-invalid @enderror" accept="image/png, image/jpeg, image/svg+xml">
 
-                            <!-- <small class="text-danger d-block mt-2 text-center">* Upload size
-                                [1200x120]</small> -->
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="row g-3 pt-4">
-                            <div id="file-ip-1-error" class="text-danger"></div>
-                            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-                            <script>
-                                function showError(message) {
-                                    Swal.fire({
-                                        icon: 'error',
-                                        title: 'Oops...',
-                                        text: message,
-                                    });
-                                }
-                            </script>
+                            <!-- Upload Image Name -->
                             <div class="add_form col-12 pt-4 forms">
-                                <label class="">Upload Image Name <span
-                                        class="text-danger">*</span></label>
-                                <input type="text" id="upload_image_name" name="upload_image_name"
-                                    placeholder="Rename the Photo" value="{{ old('upload_image_name') }}"
-                                    class="form-control py-2 rounded-3 shadow-sm w-50">
+                                <label>Upload Image Name <span class="text-danger">*</span></label>
+                                <input type="text" id="upload_image_name" name="upload_image_name" placeholder="Rename the Photo" value="{{ old('upload_image_name') }}" class="form-control py-2 rounded-3 shadow-sm w-50 @error('upload_image_name') is-invalid @enderror">
+
                             </div>
+
+                            <!-- Alternate Image Name -->
                             <div class="add_form col-12 forms">
-                                <label class="">Alternate Image Name <span
-                                        class="text-danger">*</span></label>
-                                <input type="text" id="alternate_image_name" name="alternate_image_name"
-                                    placeholder="Alternate Name" value="{{ old('alternate_image_name') }}"
-                                    class="form-control py-2 rounded-3 shadow-sm w-50">
+                                <label>Alternate Image Name <span class="text-danger">*</span></label>
+                                <input type="text" id="alternate_image_name" name="alternate_image_name" placeholder="Alternate Name" value="{{ old('alternate_image_name') }}" class="form-control py-2 rounded-3 shadow-sm w-50 @error('alternate_image_name') is-invalid @enderror">
+
                             </div>
                         </div>
                     </div>
                 </div>
-                <!-- Gallery Images -->
-                <div class="row mt-4 py-5">
-                    <div class="add_form col">
-                        <label class="py-1">Gallery Image</label>
-                        <div id="photo-upload-container" class="row g-6">
-                            <!-- Dynamically added photo containers will go here -->
-                        </div>
-                        <div class="text mt-3">
-                            <button type="button" class="btn-add rounded border-0 px-3 py-3 text-white"
-                                onclick="addPhotoField()">
-                                <i class="fa fa-plus" aria-hidden="true"></i> Add Photo
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <script>
-                    // Function to add a new photo field dynamically
-                    let photoCount = 1; // Initialize photo count
-
-                    function addPhotoField() {
-                        const container = document.getElementById('photo-upload-container');
-                        photoCount++; // Increment photo count
-
-                        // Create a new photo upload field with delete button
-                        const photoField = document.createElement('div');
-                        photoField.classList.add('col-lg-2', 'photo-upload-field');
-
-                        photoField.innerHTML = `
-                                    <div class="form-input">
-                                        <label for="file-ip-${photoCount}" class="px-4 py-2 text-center">
-                                            <img class="text-center mt-3" id="file-ip-${photoCount}-preview" src="/assets/image/dashboard/innerpece_addpic_icon.svg">
-                                            <p class="text-center fw-light mt-3"> Add Pic</p>
-                                        </label>
-                                        <input type="file" name="img_${photoCount}" id="file-ip-${photoCount}" data-number="${photoCount}" accept="image/png, image/jpeg, image/svg+xml" onchange="previewImage(event, this)">
-                                        <button type="button" class="btn btn-danger mt-2" onclick="deletePhoto(this)">Delete</button>
-                                    </div>
-                                `;
-
-                        // Append the new photo field to the container
-                        container.appendChild(photoField);
-                    }
-
-                    // Function to preview the image after selection
-                    function previewImage(event, inputElement) {
-                        const file = event.target.files[0];
-                        const reader = new FileReader();
-
-                        reader.onload = function() {
-                            const preview = inputElement.previousElementSibling.querySelector('img');
-                            preview.src = reader.result;
-                        };
-
-                        if (file) {
-                            reader.readAsDataURL(file);
-                        }
-                    }
-
-                    // Function to delete the image container
-                    function deletePhoto(button) {
-                        const photoField = button.closest('.photo-upload-field');
-                        photoField.remove();
-                    }
-                </script>
 
                 <div class="mb-3">
                     <div class="row g-4">
-                        <div class="add_form col-md-3">
-                            <label for="datetimePicker" class="form-label">Start Date & Time</label>
-                            <div class="input-group">
-                                <input type="text" class="form-control flatpickr-input" name="start_datetime" id="datetimePicker" placeholder="Select date and time">
-                                <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
-                            </div>
+                        <!-- Hosted By -->
+                        <div class="add_form col-md-4">
+                            <label class="mb-2">Hosted By<span class="text-danger">*</span></label>
+                            <input type="text" placeholder="Hosted By" id="hosted_by" name="hosted_by" class="form-control py-2 rounded-3 shadow-sm @error('hosted_by') is-invalid @enderror" value="{{ old('hosted_by') }}">
+
                         </div>
 
-                        <div class="add_form col-md-3">
-                            <label for="endDatetimePicker" class="form-label">End Date & Time</label>
-                            <div class="input-group">
-                                <input type="text" class="form-control flatpickr-input" name="end_datetime" id="endDatetimePicker" placeholder="Select end date and time">
-                                <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <label>Enter location or virtual link</label>
-                            <div class="input-field">
-                                <i class="bi bi-search" style="margin-right:8px"></i>
-                                <input type="text" id="locationSearch" name="location_name" placeholder="Search for a location...">
-                            </div>
-                            <div id="searchResults" class="search-results"></div>
+                        <!-- Welcome Message -->
+                        <div class="add_form col-md-6">
+                            <label class="mb-2">Welcome msg<span class="text-danger">*</span></label>
+                            <input type="text" placeholder="Welcome Msg" id="welcome_msg" name="welcome_msg" class="form-control py-2 rounded-3 shadow-sm @error('welcome_msg') is-invalid @enderror" value="{{ old('welcome_msg') }}">
 
-                            <!-- ✅ Hidden fields that will be filled dynamically -->
-                            <input type="hidden" name="location_address" id="location_address">
-                            <input type="hidden" name="latitude" id="latitude">
-                            <input type="hidden" name="longitude" id="longitude">
-                            <input type="hidden" name="location_type" id="location_type">
-
-                            <div id="selectedLocationContainer">
-                                <div class="no-locations">Search for a location to select</div>
-                            </div>
                         </div>
 
+                        <!-- Embed Map -->
+                        <div class="add_form col-md-6">
+                            <label class="mb-2">Location Address<span class="text-danger">*</span></label>
+                            <textarea placeholder="Location Address" id="location_address" name="location_address" class="form-control py-2 rounded-3 shadow-sm @error('location_address') is-invalid @enderror" rows="4" style="width: 100%; height: 120px;">{{ old('location_address') }}</textarea>
+
+                        </div>
+
+                        <!-- Embed Map -->
+                        <div class="add_form col-md-6">
+                            <label class="mb-2">Location Iframe<span class="text-danger">*</span></label>
+                            <textarea placeholder="Location Iframe" id="embed_map" name="embed_map" class="form-control py-2 rounded-3 shadow-sm @error('embed_map') is-invalid @enderror" rows="4" style="width: 100%; height: 120px;">{{ old('embed_map') }}</textarea>
+
+                        </div>
+
+
+                        <!-- Send Link -->
+                        <div class="add_form col-md-4">
+                            <label class="mb-2">Location Map Link<span class="text-danger">*</span></label>
+                            <input type="text" placeholder="Add location map a link" id="send_link" name="send_link" class="form-control py-2 rounded-3 shadow-sm @error('send_link') is-invalid @enderror" value="{{ old('send_link') }}">
+
+                        </div>
+
+
+                        <!-- Event Description -->
                         <div class="col-md-12">
-                            <label class="form-label">Description</label>
-                            <textarea id="event_description" name="event_description" style="display:none;"></textarea>
-                            <div id="eventdescription" style="height: 200px;"></div>
+                            <label class="form-label">About event <span class="text-danger">*</span></label>
+                            <textarea id="event_description" name="event_description" style="display:none;">{{ old('event_description') }}</textarea>
+                            <div id="eventdescription" style="height: 200px;" class="@error('event_description') is-invalid @enderror"> {!! old('event_description') !!}</div>
+
                         </div>
 
+
+                        <div class="row g-2">
+                            <div class="add_form col">
+                                <h4> <label class="fw-bold">Status</label></h4>
+                                <div class="form-check form-switch d-flex align-items-center">
+                                    <input class="form-check-input check_bx" type="checkbox" id="status" name="status">
+                                </div>
+                            </div>
+                        </div>
 
                         <div class="col-lg-12 text-center mt-5">
-                            <a href="{{ route('admin.activitylist') }}">
+                            <a href="{{ route('admin.programeventslist') }}">
                                 <button type="button" class="cancel-btn"> Cancel </button>
                             </a>
                             <button class="submit-btn sbmtBtn ms-4 mb-5"> Submit </button>
                         </div>
-
                     </div>
                 </div>
             </form>
         </div>
     </div>
 </div>
+
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-<!-- Load Google Maps JS with Places library -->
-<script src="https://maps.googleapis.com/maps/api/js?key={{ config('services.google.maps_api_key') }}&libraries=places"></script>
 <script>
     $(document).ready(function() {
-
-        $('#eventdescription')
-            .summernote({
-                height: 200 // Set the height of the editor
-            });
+        // Initialize Summernote editor
         $('#eventdescription').summernote({
             placeholder: 'Hello stand alone ui',
             tabsize: 2,
-            height: 100,
+            height: 200,
             toolbar: [
                 ['style', ['style']],
                 ['font', ['bold', 'underline', 'clear']],
@@ -429,181 +388,81 @@
             ]
         });
 
-        $('#timezone').select2({
-            placeholder: "Search for a timezone",
-            allowClear: true
+        // Initialize Flatpickr with datetime plugin
+        const datetimePicker = flatpickr("#datetimePicker", {
+            enableTime: true,
+            dateFormat: "Y-m-d h:i K",
+            altFormat: "F j, Y at h:i K",
+            time_24hr: false,
+            minuteIncrement: 1,
+            onChange: function(selectedDates, dateStr, instance) {
+                updatePreview();
+            }
         });
-    });
 
+        const endDatetimePicker = flatpickr("#endDatetimePicker", {
+            enableTime: true,
+            dateFormat: "Y-m-d h:i K",
+            altFormat: "F j, Y at h:i K",
+            time_24hr: false,
+            minuteIncrement: 1,
+            onChange: function(selectedDates, dateStr, instance) {
+                updatePreview();
+            }
+        });
 
-    // Initialize Flatpickr with datetime plugin
-    const datetimePicker = flatpickr("#datetimePicker", {
-        enableTime: true,
-        dateFormat: "Y-m-d h:i K", // This format shows AM/PM
-        altFormat: "F j, Y at h:i K", // Display format with AM/PM
-        time_24hr: false,
-        minuteIncrement: 1,
-        onChange: function(selectedDates, dateStr, instance) {
-            updatePreview();
-        }
-    });
+        // Update preview in real-time
+        function updatePreview() {
+            const startDate = datetimePicker.selectedDates[0];
+            const endDate = endDatetimePicker.selectedDates[0];
 
-    const endDatetimePicker = flatpickr("#endDatetimePicker", {
-        enableTime: true,
-        dateFormat: "Y-m-d h:i K", // This format shows AM/PM
-        altFormat: "F j, Y at h:i K", // Display format with AM/PM
-        time_24hr: false,
-        minuteIncrement: 1,
-        onChange: function(selectedDates, dateStr, instance) {
-            updatePreview();
-        }
-    });
-
-    // Update preview in real-time
-    function updatePreview() {
-        const startDate = datetimePicker.selectedDates[0];
-        const endDate = endDatetimePicker.selectedDates[0];
-
-        if (startDate) {
-            const formattedStart = formatDateTime(startDate);
-            document.getElementById('previewStart').textContent = formattedStart;
-        } else {
-            document.getElementById('previewStart').textContent = 'Not selected';
-        }
-
-        if (endDate) {
-            const formattedEnd = formatDateTime(endDate);
-            document.getElementById('previewEnd').textContent = formattedEnd;
-
-            // Calculate duration if both dates are selected
             if (startDate) {
-                const duration = calculateDuration(startDate, endDate);
-                document.getElementById('previewDuration').textContent = duration;
-            }
-        } else {
-            document.getElementById('previewEnd').textContent = 'Not selected';
-            document.getElementById('previewDuration').textContent = '-';
-        }
-    }
-
-    // Format date to readable string
-    function formatDateTime(date) {
-        return date.toLocaleString('en-US', {
-            weekday: 'short',
-            month: 'short',
-            day: 'numeric',
-            year: 'numeric',
-            hour: 'numeric',
-            minute: '2-digit',
-            hour12: true
-        });
-    }
-
-    // Calculate duration between two dates
-    function calculateDuration(startDate, endDate) {
-        const diffMs = endDate - startDate;
-        const diffHrs = Math.floor((diffMs % 86400000) / 3600000);
-        const diffMins = Math.round(((diffMs % 86400000) % 3600000) / 60000);
-
-        if (diffMs < 0) {
-            return "End date must be after start date";
-        }
-
-        return `${diffHrs} hours, ${diffMins} minutes`;
-    }
-
-    $(document).ready(function() {
-        const input = document.getElementById('locationSearch');
-        const selected = document.getElementById('selectedLocationContainer');
-        let map, marker;
-
-        const autocomplete = new google.maps.places.Autocomplete(input, {
-            types: ['geocode'] // limit to addresses/places
-        });
-
-        // ✅ Handle Google suggestion selection
-        autocomplete.addListener('place_changed', function() {
-            const place = autocomplete.getPlace();
-
-            if (!place.geometry) {
-                // No coordinates → treat as custom
-                handleCustomAddress(input.value);
-                return;
+                const formattedStart = formatDateTime(startDate);
+                document.getElementById('previewStart').textContent = formattedStart;
+            } else {
+                document.getElementById('previewStart').textContent = 'Not selected';
             }
 
-            // Show with map
-            showLocation(
-                place.formatted_address || place.name,
-                place.geometry.location.lat(),
-                place.geometry.location.lng()
-            );
-        });
+            if (endDate) {
+                const formattedEnd = formatDateTime(endDate);
+                document.getElementById('previewEnd').textContent = formattedEnd;
 
-        // ✅ Handle Enter key for manual input (force custom)
-        input.addEventListener("keydown", function(e) {
-            if (e.key === "Enter") {
-                e.preventDefault();
-                handleCustomAddress(input.value);
+                if (startDate) {
+                    const duration = calculateDuration(startDate, endDate);
+                    document.getElementById('previewDuration').textContent = duration;
+                }
+            } else {
+                document.getElementById('previewEnd').textContent = 'Not selected';
+                document.getElementById('previewDuration').textContent = '-';
             }
-        });
-
-        // 🔹 Fills hidden inputs automatically
-        function saveLocation(location) {
-            document.getElementById('location_address').value = location.formatted_address;
-            document.getElementById('latitude').value = location.latitude ?? "";
-            document.getElementById('longitude').value = location.longitude ?? "";
-            document.getElementById('location_type').value = location.type;
         }
 
-        // 🔹 Custom address → text only, no map
-        function handleCustomAddress(addr) {
-            if (!addr) return;
-            selected.innerHTML = `
-            <div style="max-width:600px;margin:0 auto;">
-                <strong>${addr}</strong> <span style="color:gray">(Custom Address)</span>
-            </div>
-        `;
-            saveLocation({
-                formatted_address: addr,
-                latitude: null,
-                longitude: null,
-                type: "custom"
+        // Format date to readable string
+        function formatDateTime(date) {
+            return date.toLocaleString('en-US', {
+                weekday: 'short',
+                month: 'short',
+                day: 'numeric',
+                year: 'numeric',
+                hour: 'numeric',
+                minute: '2-digit',
+                hour12: true
             });
         }
 
-        // 🔹 Google suggestion → show map + marker
-        function showLocation(addr, lat, lng) {
-            selected.innerHTML = `
-            <div style="max-width:600px;margin:0 auto;">
-                <strong>${addr}</strong>
-                <div id="map" style="width:100%;height:300px;margin-top:10px;border-radius:8px;overflow:hidden"></div>
-            </div>
-        `;
+        // Calculate duration between two dates
+        function calculateDuration(startDate, endDate) {
+            const diffMs = endDate - startDate;
+            const diffHrs = Math.floor((diffMs % 86400000) / 3600000);
+            const diffMins = Math.round(((diffMs % 86400000) % 3600000) / 60000);
 
-            map = new google.maps.Map(document.getElementById("map"), {
-                center: {
-                    lat: lat,
-                    lng: lng
-                },
-                zoom: 15
-            });
+            if (diffMs < 0) {
+                return "End date must be after start date";
+            }
 
-            marker = new google.maps.Marker({
-                position: {
-                    lat: lat,
-                    lng: lng
-                },
-                map: map,
-                title: addr
-            });
-
-            saveLocation({
-                formatted_address: addr,
-                latitude: lat,
-                longitude: lng,
-                type: "google"
-            });
+            return `${diffHrs} hours, ${diffMins} minutes`;
         }
+
     });
 </script>
 @endsection

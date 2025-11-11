@@ -1,7 +1,28 @@
 @extends('layouts.app')
 @section('content')
+<!-- Bootstrap CSS --><!-- Font Awesome -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <style>
+    .multiselect-container>li>a>label {
+        padding: 6px 15px;
+        font-size: 14px;
+    }
+
+    .multiselect.dropdown-toggle {
+        background-color: #f8f9fa;
+        border: 1px solid #ccc;
+        color: #333;
+        border-radius: 6px;
+    }
+
+    .multiselect-container {
+        max-height: 250px;
+        overflow-y: auto;
+    }
+
     a:hover {
         color: red;
     }
@@ -174,13 +195,13 @@
         color: #000;
     }
 </style>
-
 <div class="row body-sec py-3 px-5 justify-content-around">
     <div class="text-start col-lg-6 ">
         <h3 class="admin-title fw-bold">{{$title}}</h3>
     </div>
     <div class="text-end col-lg-6 ">
-        <b><a href="/dashboard">Dashboard</a> > <a class="" href="/customer-package">Customer List</a></b> >
+        <b><a href="/dashboard">Dashboard</a> > <a class="" href="/customer-package">Customer List</a></b> > <a class="enquiry"
+            href="">Edit Customer</a>
         @if(session('success'))
         <div class="alert alert-success">{{ session('success') }}</div>
         @endif
@@ -209,49 +230,51 @@
                         <input id="email" type="email" class="form-control" name="email" value="{{ $customer->email }}">
                     </div>
 
-                    <!-- <div class="col-md-5 mb-3">
-                    <label for="type"  class="form-label">Package Type</label>
-                    <input id="type" type="text" class="form-control" name="package_type" required>
-                    
-                </div> -->
+
+                    <div class="add_form col-md-5 mb-1">
+                        <label for="city_select" class="form-label">Select Destination</label>
+                        <select id="city_select" class="form-control" name="city_select[]" multiple>
+                            @foreach ($destinatoncitys as $id => $name)
+                            @php
+                            $destinationIds = explode(',', $customer->destination_id);
+                            $isSelected = in_array($id, $destinationIds);
+                            @endphp
+                            <option value="{{ $id }}" {{ $isSelected ? 'selected' : '' }}>{{ $name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+
                     <!-- Package Type Selector -->
-                    <div class="add_form col-md-5 mb-3">
-                        <label for="title_id" class="form-label">Select Package Type</label>
-                        <br>
-                        <label class="form-label text-danger"> Current: {{ $titless }}</label>
+                    <div class="add_form">
+                        <div class="add_form col-md-5 mb-1">
+                            <label for="package_select" class="form-label">Select Package</label>
+                            <br>
+                            <label class="form-label text-danger"> Current: {{ $titless }}</label>
+                            <select id="package_select" class="form-control package_select">
+                                <option disabled selected>Select Package</option>
+                            </select>
+                        </div>
 
-                        <select class="package form-control" name="package_type" id="package">
-                            <option disabled {{ !$customer->package_type ? 'selected' : '' }}>Select Package Type</option>
-                            @foreach($titles as $id => $name)
-                            <option value="{{ json_encode(['id' => $id, 'name' => $name]) }}"
-                                {{ $customer->package_type == $id ? 'selected' : '' }}>
-                                {{ $name }}
-                            </option>
-                            @endforeach
-                        </select>
+                        <div class="col-md-4 mb-1">
+                            <label for="package_select_stay" class="form-label">Select Stay</label>
+                            <select id="package_select_stay"  name="package_select_stay" class="form-control">
+                                <option value="" selected disabled>Select Stay</option>
+                            </select>
+                        </div>
                     </div>
-
-                    <div class="add_form col-md-5 mb-3">
-                        <label for="title_id" class="form-label">Select Stays</label>
-                        <select name="package_stay" id="package_stay" class="form-control package">
-                            <option disabled selected>Select Package Type</option>
-                            @foreach($stay_details as $id => $name)
-                            <option value="{{ $name->id }}" {{ $customer->stay_details_id == $name->id ? 'selected' : '' }}>{{ $name->stay_title }}</option>
-
-                            @endforeach
-                        </select>
-                    </div>
+                    <input type="hidden" name="package_id" id="hidden_package_id">
 
                     <div class="test">
                         <h4 class="add_head">Pricing Calculator</h4>
                         <div class="row gap-2">
                             <!-- Theme and Destination -->
-                            <input type="hidden" id="customer_id" name="customer_id" value="{{ $customer->customerpackage->pricing_calculator_id ?? '' }}">
+                            <input type="hidden" id="customer_id" name="customer_id" value="{{ $customer->customerpackage->customer_package_id ?? '' }}">
                             <div class="col-md-4">
-                                <div class="add_form col-md-4">
+                                <div class="add_form ">
                                     <label class="mb-2">Price Calculator List</label>
                                     <select id="pricing_calculator" name="pricing_calculator" class="form-select py-2 rounded-3 shadow-sm">
-                                        <option value="" disabled selected>Select Location</option>
+                                        <option value="" disabled selected>Select Price Calculator</option>
                                         @foreach($pricingcalculator as $id => $title)
                                         <option value="{{ $title->id }}"
                                             {{ $customer->customerpackage && $customer->customerpackage->pricing_calculator_id == $title->id ? 'selected' : '' }}>
@@ -344,39 +367,96 @@
                                 <!-- Cab price details display -->
                                 <div id="cabsdetails-container" class="mt-3"></div>
                             </div>
+
+
+
+
+                            <!-- PRICE SUMMARY SECTION -->
+                            <div class="price-summary mt-4">
+                                <h5 class="mb-3">Price Breakdown</h5>
+
+                                <div class="price-row">
+                                    <span>Package Pricing:</span>
+                                    <span id="selected-amount" value="{{ $customerservicefee->service_fee ?? 0 }}">₹ 0</span>
+                                    <input type="hidden" id="selected-price-id" name="selected_price_id" value="{{ $customerservicefee->package_pricing_id ?? 0 }}">
+                                </div>
+                                <div class="price-row">
+                                    <span>Selected Value:</span>
+                                    <span id="selected-value">₹ 0</span>
+                                </div>
+                                {{-- <div class="price-row">
+                                    <span>Service Fee:</span>
+                                    <span id="service-fee">₹ 0</span>
+                                </div> --}}
+                                <div class="price-row">
+                                    <span>Service Fee:</span>
+                                    <input type="number" id="service-fee-input" value="{{ $customerservicefee->service_fee ?? 0 }}" min="0"
+                                        step="0.01" />
+
+                                </div>
+                                <div class="price-row">
+                                    <span>Tax (GST %):</span>
+                                    <input type="number" name="gst_number" id="gst-input" value="{{ $customerservicefee->tax_amount ?? 0 }}" min="0" step="0.01">
+                                    %
+                                </div>
+                                <div class="price-row">
+                                    <span>Tax Amount (₹):</span>
+                                    <span id="tax-amount">₹ 0</span>
+                                </div>
+                                <input type="hidden" name="tax_amount" id="hidden-tax-amount" value="0">
+
+                                <div class="price-row price-total">
+                                    <span>Total Amount:</span>
+                                    <span id="total-amount">₹ 0</span>
+                                </div>
+                                <div class="grand-total text-center">
+                                    <span>Grand Total: </span>
+                                    <span id="grand-total">₹ 0</span>
+                                </div>
+                            </div>
+
+
+
+                            <!-- Hidden inputs for form submission -->
+                            <input type="hidden" name="package_pricing_value" id="package_pricing_value" value="0">
+                            <input type="hidden" name="selected_value" id="hidden-selected-value" value="0">
+                            <input type="hidden" name="service_fee" id="hidden-service-fee" value="0">
+                            <input type="hidden" name="tax_amount" id="hidden-tax-amount" value="0">
+                            <input type="hidden" name="total_amount" id="hidden-total-amount" value="0">
+                            <input type="hidden" name="grand_total" id="hidden-grand-total" value="0">
                         </div>
+                    </div>
 
-                        <div class="test mt-3">
-                            <h2 class="add_head">Package Details</h2>
-                            <!-- 1.INFORMATION -->
-                            <div class="row mb-3">
-                                <div class="add_form col-lg-4">
-                                    <label class="fw-bold mb-2">Title </label>
-                                    <input type="text" placeholder="Title" id="title" name="title"
-                                        class="form-control py-2 rounded-3 shadow-sm" value="{{ $customer->package_type }}">
-                                </div>
+                    <div class="test mt-3">
+                        <h2 class="add_head">Package Details</h2>
+                        <!-- 1.INFORMATION -->
+                        <div class="row mb-3">
+                            <div class="add_form col-lg-4">
+                                <label class="fw-bold mb-2">Title </label>
+                                <input type="text" placeholder="Title" id="title" name="title"
+                                    class="form-control py-2 rounded-3 shadow-sm" value="{{ $customer->package_type }}">
+                            </div>
 
-                                <div class="row  mt-3">
-                                    <div class="col-lg-12">
-                                        <div class="form-body mb-5 rounded-4">
-                                            <h4 class="add_head fw-bold mb-3">01. Location</h4>
-                                            <div class="mb-1">
-                                                <div class="row g-2 mb-1">
-                                                    <div class="col">
-                                                        <input type="hidden" id="location" name="location">
-                                                     
+                            <div class="row  mt-3">
+                                <div class="col-lg-12">
+                                    <div class="form-body mb-5 rounded-4">
+                                        <h4 class="add_head fw-bold mb-3">01. Location</h4>
+                                        <div class="mb-1">
+                                            <div class="row g-2 mb-1">
+                                                <div class="col">
+                                                    <input type="hidden" id="location" name="location">
 
-                                                        @php
-                                                        $plain_text_program_inclusion = html_entity_decode(
-                                                        strip_tags($customer->location),
-                                                        );
-                                                        $inclusion =json_decode($customer->location)
-                                                        @endphp
-                                                        <div class=" mt-1">
-                                                            <div class="row">
-                                                                <div class="col-lg-12 ">
-                                                                    <div id="summernote10" style="height: 200px;">{!! $inclusion !!}</div>
-                                                                </div>
+
+                                                    @php
+                                                    $plain_text_program_inclusion = html_entity_decode(
+                                                    strip_tags($customer->location),
+                                                    );
+                                                    $inclusion =json_decode($customer->location)
+                                                    @endphp
+                                                    <div class=" mt-1">
+                                                        <div class="row">
+                                                            <div class="col-lg-12 ">
+                                                                <div id="summernote10" style="height: 200px;">{!! $inclusion !!}</div>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -385,98 +465,99 @@
                                         </div>
                                     </div>
                                 </div>
+                            </div>
 
-                                <div class="row mt-3">
-                                    <div class="col-lg-12">
-                                        <div class="form-body mb-5 rounded-4">
-                                            <h4 class="add_head fw-bold mb-3">02. Tour Planning <span class="text-danger">*</span></h4>
-                                            <div id="day-wrapper">
-                                                @php
-                                                $tourPlanning = [];
-                                                if (!empty($customer->tour_planning)) {
-                                                $tourPlanning = is_array($customer->tour_planning)
-                                                ? $customer->tour_planning
-                                                : json_decode($customer->tour_planning, true);
-                                                }
-                                                @endphp
+                            <div class="row mt-3">
+                                <div class="col-lg-12">
+                                    <div class="form-body mb-5 rounded-4">
+                                        <h4 class="add_head fw-bold mb-3">02. Tour Planning <span class="text-danger">*</span></h4>
+                                        <div id="day-wrapper">
+                                            @php
+                                            $tourPlanning = [];
+                                            if (!empty($customer->tour_planning)) {
+                                            $tourPlanning = is_array($customer->tour_planning)
+                                            ? $customer->tour_planning
+                                            : json_decode($customer->tour_planning, true);
+                                            }
+                                            @endphp
 
-                                                @foreach ($tourPlanning as $i => $day)
-                                                <div class="row g-2 mb-2 day-block">
-                                                    <div class="col-md-5 mb-2">
-                                                        <label class="form-label fw-bold">Day Title</label>
-                                                        <input type="text" name="tour_planning[{{ $i }}][title]"
-                                                            class="form-control" value="{{ $day['title'] ?? '' }}">
-                                                    </div>
-                                                    <div class="col-md-5 mb-2">
-                                                        <label class="form-label fw-bold">Day Subtitle</label>
-                                                        <input type="text" name="tour_planning[{{ $i }}][subtitle]"
-                                                            class="form-control" value="{{ $day['subtitle'] ?? '' }}">
-                                                    </div>
-                                                    <div class="col-md-10 mb-2">
-                                                        <label class="form-label fw-bold">Activity Description</label>
-                                                        <div class="rte-container">
-                                                            <div class="editor-toolbar">
-                                                                <button type="button" class="toolbar-btn" data-command="bold"><i class="fas fa-bold"></i></button>
-                                                                <button type="button" class="toolbar-btn" data-command="italic"><i class="fas fa-italic"></i></button>
-                                                                <button type="button" class="toolbar-btn" data-command="underline"><i class="fas fa-underline"></i></button>
-                                                                <button type="button" class="toolbar-btn" data-command="insertUnorderedList"><i class="fas fa-list-ul"></i></button>
-                                                                <button type="button" class="toolbar-btn" data-command="insertOrderedList"><i class="fas fa-list-ol"></i></button>
-                                                            </div>
-                                                            <div class="editor-content" contenteditable="true">{!! $day['description'] ?? '' !!}</div>
-                                                            <input type="hidden" name="tour_planning[{{ $i }}][description]" class="tour-description-hidden" value="{{ $day['description'] ?? '' }}">
+                                            @foreach ($tourPlanning as $i => $day)
+                                            <div class="row g-2 mb-2 day-block">
+                                                <div class="col-md-5 mb-2">
+                                                    <label class="form-label fw-bold">Day Title</label>
+                                                    <input type="text" name="tour_planning[{{ $i }}][title]"
+                                                        class="form-control" value="{{ $day['title'] ?? '' }}">
+                                                </div>
+                                                <div class="col-md-5 mb-2">
+                                                    <label class="form-label fw-bold">Day Subtitle</label>
+                                                    <input type="text" name="tour_planning[{{ $i }}][subtitle]"
+                                                        class="form-control" value="{{ $day['subtitle'] ?? '' }}">
+                                                </div>
+                                                <div class="col-md-10 mb-2">
+                                                    <label class="form-label fw-bold">Activity Description</label>
+                                                    <div class="rte-container">
+                                                        <div class="editor-toolbar">
+                                                            <button type="button" class="toolbar-btn" data-command="bold"><i class="fas fa-bold"></i></button>
+                                                            <button type="button" class="toolbar-btn" data-command="italic"><i class="fas fa-italic"></i></button>
+                                                            <button type="button" class="toolbar-btn" data-command="underline"><i class="fas fa-underline"></i></button>
+                                                            <button type="button" class="toolbar-btn" data-command="insertUnorderedList"><i class="fas fa-list-ul"></i></button>
+                                                            <button type="button" class="toolbar-btn" data-command="insertOrderedList"><i class="fas fa-list-ol"></i></button>
                                                         </div>
-                                                    </div>
-                                                    <div class="col-md-1 d-flex align-items-end">
-                                                        @if (!$loop->first)
-                                                        <button type="button" class="btn btn-danger remove-day-btn"><i class="fa fa-trash"></i></button>
-                                                        @endif
+                                                        <div class="editor-content" contenteditable="true">{!! $day['description'] ?? '' !!}</div>
+                                                        <input type="hidden" name="tour_planning[{{ $i }}][description]" class="tour-description-hidden" value="{{ $day['description'] ?? '' }}">
                                                     </div>
                                                 </div>
-                                                @endforeach
+                                                <div class="col-md-1 d-flex align-items-end">
+                                                    @if (!$loop->first)
+                                                    <button type="button" class="btn btn-danger remove-day-btn"><i class="fa fa-trash"></i></button>
+                                                    @endif
+                                                </div>
                                             </div>
-                                            <button type="button" id="add-day-btn" class="btn-add rounded border-0 px-4 py-2 text-white mt-2">
-                                                <i class="fa fa-plus" aria-hidden="true"></i> Add More
-                                            </button>
+                                            @endforeach
                                         </div>
+                                        <button type="button" id="add-day-btn" class="btn-add rounded border-0 px-4 py-2 text-white mt-2">
+                                            <i class="fa fa-plus" aria-hidden="true"></i> Add More
+                                        </button>
                                     </div>
                                 </div>
+                            </div>
 
-                                <script>
-                                    // ✅ Find the highest index from existing inputs
-                                    let index = Math.max(
-                                        -1,
-                                        ...Array.from(document.querySelectorAll('[name^="tour_planning"]'))
-                                        .map(el => {
-                                            let match = el.name.match(/tour_planning\[(\d+)\]/);
-                                            return match ? parseInt(match[1]) : -1;
-                                        })
-                                    ) + 1;
+                            <script>
+                                // ✅ Find the highest index from existing inputs
+                                let index = Math.max(
+                                    -1,
+                                    ...Array.from(document.querySelectorAll('[name^="tour_planning"]'))
+                                    .map(el => {
+                                        let match = el.name.match(/tour_planning\[(\d+)\]/);
+                                        return match ? parseInt(match[1]) : -1;
+                                    })
+                                ) + 1;
 
-                                    function initializeRTE(container) {
-                                        const editor = container.querySelector(".editor-content");
-                                        const hidden = container.querySelector(".tour-description-hidden");
-                                        const toolbar = container.querySelector(".editor-toolbar");
+                                function initializeRTE(container) {
+                                    const editor = container.querySelector(".editor-content");
+                                    const hidden = container.querySelector(".tour-description-hidden");
+                                    const toolbar = container.querySelector(".editor-toolbar");
 
-                                        toolbar.addEventListener("click", e => {
-                                            const btn = e.target.closest("button");
-                                            if (!btn) return;
-                                            const command = btn.dataset.command;
-                                            editor.focus();
-                                            document.execCommand(command, false, null);
-                                            hidden.value = editor.innerHTML;
-                                        });
-
-                                        editor.addEventListener("input", () => hidden.value = editor.innerHTML);
+                                    toolbar.addEventListener("click", e => {
+                                        const btn = e.target.closest("button");
+                                        if (!btn) return;
+                                        const command = btn.dataset.command;
+                                        editor.focus();
+                                        document.execCommand(command, false, null);
                                         hidden.value = editor.innerHTML;
-                                    }
+                                    });
 
-                                    // ✅ Add new block
-                                    function addDay() {
-                                        const wrapper = document.getElementById("day-wrapper");
-                                        const div = document.createElement("div");
-                                        div.classList.add("row", "g-2", "mb-2", "day-block");
+                                    editor.addEventListener("input", () => hidden.value = editor.innerHTML);
+                                    hidden.value = editor.innerHTML;
+                                }
 
-                                        div.innerHTML = `
+                                // ✅ Add new block
+                                function addDay() {
+                                    const wrapper = document.getElementById("day-wrapper");
+                                    const div = document.createElement("div");
+                                    div.classList.add("row", "g-2", "mb-2", "day-block");
+
+                                    div.innerHTML = `
                                             <div class="col-md-5 mb-2">
                                                 <label class="form-label fw-bold">Day Title</label>
                                                 <input type="text" name="tour_planning[${index}][title]" class="form-control">
@@ -504,312 +585,117 @@
                                             </div>
                                         `;
 
-                                        wrapper.appendChild(div);
-                                        initializeRTE(div.querySelector(".rte-container"));
+                                    wrapper.appendChild(div);
+                                    initializeRTE(div.querySelector(".rte-container"));
 
-                                        // Add event listener to the new remove button
-                                        div.querySelector('.remove-day-btn').addEventListener('click', function() {
-                                            removeDay(this);
-                                        });
-
-                                        index++; // ✅ always move forward
-                                    }
-
-                                    function removeDay(btn) {
-                                        btn.closest(".day-block").remove();
-                                    }
-
-                                    // Initialize editors for existing ones
-                                    document.querySelectorAll(".rte-container").forEach(initializeRTE);
-
-                                    // Add event listener to the Add button
-                                    document.getElementById("add-day-btn").addEventListener("click", addDay);
-
-                                    // Add event listeners to existing remove buttons
-                                    document.querySelectorAll(".remove-day-btn").forEach(btn => {
-                                        btn.addEventListener("click", function() {
-                                            removeDay(this);
-                                        });
+                                    // Add event listener to the new remove button
+                                    div.querySelector('.remove-day-btn').addEventListener('click', function() {
+                                        removeDay(this);
                                     });
-                                </script>
-                                <!-- 5.PRICING -->
-                                <div class="row mb-5 mt-3">
-                                    <div class="col-lg-12">
-                                        <div class="form-body mb-2 rounded-4">
-                                            <h4 class="add_head fw-bold mb-3">03. Pricing</h4>
-                                            <div id="price-fields-container" class="mb-2">
-                                                <div class="mb-2">
+
+                                    index++; // ✅ always move forward
+                                }
+
+                                function removeDay(btn) {
+                                    btn.closest(".day-block").remove();
+                                }
+
+                                // Initialize editors for existing ones
+                                document.querySelectorAll(".rte-container").forEach(initializeRTE);
+
+                                // Add event listener to the Add button
+                                document.getElementById("add-day-btn").addEventListener("click", addDay);
+
+                                // Add event listeners to existing remove buttons
+                                document.querySelectorAll(".remove-day-btn").forEach(btn => {
+                                    btn.addEventListener("click", function() {
+                                        removeDay(this);
+                                    });
+                                });
+                            </script>
+                            <!-- 5.PRICING -->
+                            <div class="row mb-3">
+                                <div class="col">
+                                    <div class="form-body rounded-4">
+                                        <h4 class="add_head fw-bold mb-2">03. Pricing</h4>
+                                        <div id="price-fields-container" class="mb-2">
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 6. Payment Policy -->
+                            <div class="row  mt-3">
+                                <div class="col-lg-12">
+                                    <div class="form-body mb-2 rounded-4">
+                                        <h4 class="add_head fw-bold mb-4 ps-0">04. Payment Policy</h4>
+                                        <div id="camp-rule-container">
+                                            @php
+                                            $campRuleArray = json_decode($customer->camp_rule, true);
+                                            if (is_array($campRuleArray)) {
+                                            $customer->camp_rule = $campRuleArray;
+                                            } else {
+                                            // Handle the error or initialize it to an empty array if it's not a valid JSON string
+                                            $customer->camp_rule = [];
+                                            }
+                                            @endphp
+                                            @if (is_array($customer->camp_rule))
+                                            @foreach ($customer->camp_rule as $rule)
+                                            <div class="row g-2 mb-2 camp-rule-field">
+                                                <div class="col">
+                                                    <input type="text" name="camp_rule[]"
+                                                        class="form-control py-2 rounded-3 shadow-sm"
+                                                        placeholder="Rule And Regulations"
+                                                        value="{{ $rule }}">
+                                                </div>
+                                                <div class="col-lg-1 mt-2 text-end">
+                                                    <a class="table-link danger remove-plan"
+                                                        onclick="removeField(this)">
+                                                        <span class="fa-stack">
+                                                            <i class="fa fa-square fa-stack-2x"></i>
+                                                            <i
+                                                                class="fa fa-trash-o fa-stack-1x fa-inverse"></i>
+                                                        </span>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            @endforeach
+                                            @else
+                                            <p>No Rule And Regulations available.</p>
+                                            @endif
+                                        </div>
+                                        <div class="text-end">
+                                            <button type="button"
+                                                class="btn-add rounded border-0 px-5 py-2 text-white"
+                                                onclick="addCampRuleField()">
+                                                <i class="fa fa-plus" aria-hidden="true"></i> Add
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <!-- 7.Important info -->
+                            <div class="row  mt-3">
+                                <div class="col-lg-12">
+                                    <div class="form-body mb-2 rounded-4">
+                                        <h4 class="add_head fw-bold mb-3">05. Notes <span class="text-danger">*</span></h4>
+                                        <div class="mb-1">
+                                            <div class="row g-2 mb-1">
+                                                <div class="col">
+                                                    <input type="hidden" id="important_info" name="important_info">
                                                     @php
-                                                    $priceTitle = json_decode($customer->price_title, true) ?? [];
-                                                    $priceAmount = json_decode($customer->price_amount, true) ?? [];
-                                                    $count = max(4, count($priceTitle), count($priceAmount));
+                                                    $plain_text_important_info = html_entity_decode(
+                                                    strip_tags($customer->important_info),
+                                                    );
                                                     @endphp
-
-                                                    @for ($i = 0; $i < $count; $i++)
-                                                        <div class="row mb-2">
-                                                        <div class="add_form col-lg-6">
-                                                            <label class="form-label form-label-top form-label-auto fw-bold mb-2">
-                                                                Title
-                                                            </label>
-                                                            <input type="text" name="price_title[]" class="form-control py-2 rounded-3 shadow-sm"
-                                                                placeholder="Title"
-                                                                value="{{ $priceTitle[$i] ?? '' }}">
-                                                        </div>
-                                                        <div class="add_form col-lg-6">
-                                                            <label class="fw-bold mb-2">Amount <span class="text-danger">*</span></label>
-                                                            <div class="position-relative">
-                                                                <span class="position-absolute top-50 start-0 translate-middle-y ps-3">₹</span>
-                                                                <input type="number" name="price_amount[]" class="form-control py-2 ps-5 rounded-3 shadow-sm"
-                                                                    placeholder="Actual Amount"
-                                                                    value="{{ $priceAmount[$i] ?? '' }}">
+                                                    <div class=" mt-1">
+                                                        <div class="row">
+                                                            <div class="col-lg-12 ">
+                                                                <div id="summernote4" style="height: 200px;">{!! $customer->important_info !!}</div>
                                                             </div>
-                                                        </div>
-                                                </div>
-                                                @endfor
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- 6. Payment Policy -->
-                                <div class="row  mt-3">
-                                    <div class="col-lg-12">
-                                        <div class="form-body mb-2 rounded-4">
-                                            <h4 class="add_head fw-bold mb-4 ps-0">04. Payment Policy</h4>
-                                            <div id="camp-rule-container">
-                                                @php
-                                                $campRuleArray = json_decode($customer->camp_rule, true);
-                                                if (is_array($campRuleArray)) {
-                                                $customer->camp_rule = $campRuleArray;
-                                                } else {
-                                                // Handle the error or initialize it to an empty array if it's not a valid JSON string
-                                                $customer->camp_rule = [];
-                                                }
-                                                @endphp
-                                                @if (is_array($customer->camp_rule))
-                                                @foreach ($customer->camp_rule as $rule)
-                                                <div class="row g-2 mb-2 camp-rule-field">
-                                                    <div class="col">
-                                                        <input type="text" name="camp_rule[]"
-                                                            class="form-control py-2 rounded-3 shadow-sm"
-                                                            placeholder="Rule And Regulations"
-                                                            value="{{ $rule }}">
-                                                    </div>
-                                                    <div class="col-lg-1 mt-2 text-end">
-                                                        <a class="table-link danger remove-plan"
-                                                            onclick="removeField(this)">
-                                                            <span class="fa-stack">
-                                                                <i class="fa fa-square fa-stack-2x"></i>
-                                                                <i
-                                                                    class="fa fa-trash-o fa-stack-1x fa-inverse"></i>
-                                                            </span>
-                                                        </a>
-                                                    </div>
-                                                </div>
-                                                @endforeach
-                                                @else
-                                                <p>No Rule And Regulations available.</p>
-                                                @endif
-                                            </div>
-                                            <div class="text-end">
-                                                <button type="button"
-                                                    class="btn-add rounded border-0 px-5 py-2 text-white"
-                                                    onclick="addCampRuleField()">
-                                                    <i class="fa fa-plus" aria-hidden="true"></i> Add
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-
-                                <!-- 7.Important info -->
-                                <div class="row  mt-3">
-                                    <div class="col-lg-12">
-                                        <div class="form-body mb-2 rounded-4">
-                                            <h4 class="add_head fw-bold mb-3">05. Notes <span class="text-danger">*</span></h4>
-                                            <div class="mb-1">
-                                                <div class="row g-2 mb-1">
-                                                    <div class="col">
-                                                        <input type="hidden" id="important_info" name="important_info">
-                                                        @php
-                                                        $plain_text_important_info = html_entity_decode(
-                                                        strip_tags($customer->important_info),
-                                                        );
-                                                        @endphp
-                                                        <div class=" mt-1">
-                                                            <div class="row">
-                                                                <div class="col-lg-12 ">
-                                                                    <div id="summernote4" style="height: 200px;">{!! $customer->important_info !!}</div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="row  mt-3">
-                                    <div class="col-lg-12">
-                                        <div class="form-body mb-2 rounded-4">
-                                            <h4 class="add_head fw-bold mb-2">06. Package Inclusion </h4>
-                                            <div class="mb-2">
-                                                <div class="row g-2 mb-2">
-                                                    <div class="col">
-                                                        <input type="hidden" id="program_inclusion" name="program_inclusion">
-                                                        @php
-                                                        $plain_text_program_inclusion = html_entity_decode(
-                                                        strip_tags($customer->package_inclusion),
-                                                        );
-                                                        $inclusion =json_decode($customer->package_inclusion)
-                                                        @endphp
-                                                        <div class=" mt-2">
-                                                            <div class="row">
-                                                                <div class="col-lg-12 ">
-                                                                    <div id="summernote5" style="height: 200px;">{!! $inclusion !!}</div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row  mt-3">
-                                    <div class="col-lg-12">
-                                        <div class="form-body mb-2 rounded-4">
-                                            <h4 class="add_head fw-bold mb-2">07. Package Exclusion </h4>
-                                            <div class="mb-2">
-                                                <div class="row g-2 mb-2">
-                                                    <div class="col">
-                                                        <input type="hidden" id="program_exclusion" name="program_exclusion">
-                                                        @php
-                                                        $plain_text_program_inclusion = html_entity_decode(
-                                                        strip_tags($customer->package_exclusion),
-                                                        );
-                                                        $exclusion =json_decode($customer->package_exclusion)
-                                                        @endphp
-                                                        <div class=" mt-2">
-                                                            <div class="row">
-                                                                <div class="col-lg-12 ">
-                                                                    <div id="summernote9" style="height: 200px;">{!! $exclusion !!}</div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- <div class="row mb-3">
-                            <div class="col">
-                                <div class="form-body px-1 py-3 rounded-4">
-                                    <h4 class="fw-bold mb-3">9. Location</h4>
-                                    <div>
-                                        <div class="row align-items-start">
-                                            <div class="col-lg-6">
-                                                <label for="google_map" class="fw-bold mb-3">Google Map<span class="text-danger">*</span></label>
-                                                <input
-                                                    type="text"
-                                                    id="google_map"
-                                                    name="google_map"
-                                                    class="form-control py-3 rounded-3 shadow-sm"
-                                                    placeholder="Enter Google Map Embed Iframe">
-                                            </div>
-                                            <div class="col-lg-6">
-                                                <label class="fw-bold mb-3">Map Preview</label>
-                                                <iframe
-                                                    id="map_preview"
-                                                    width="100%"
-                                                    height="250"
-                                                    frameborder="0"
-                                                    style="border:0;"
-                                                    allowfullscreen
-                                                    aria-hidden="false"
-                                                    tabindex="0">
-                                                </iframe>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div> -->
-
-                                <script>
-                                    document.getElementById('google_map').addEventListener('input', function() {
-                                        const inputValue = this.value;
-                                        const iframeSrcMatch = inputValue.match(/src=["']([^"']+)["']/); // Extract the src attribute value
-                                        const mapPreviewIframe = document.getElementById('map_preview');
-
-                                        if (iframeSrcMatch && iframeSrcMatch[1]) {
-                                            mapPreviewIframe.src = iframeSrcMatch[1]; // Set the extracted src to the iframe
-                                        } else {
-                                            mapPreviewIframe.removeAttribute('src'); // Clear the iframe if input is invalid
-                                        }
-                                    });
-                                </script>
-
-
-                                <!-- <div class="row mb-3">
-                            <div class="col">
-                                <div class="form-body px-5 rounded-4">
-                                    <h4 class="fw-bold mb-3">08. Upload PDF</h4>
-                                    <div class="mb-1">
-                                        <div class="row g-2 mb-2">
-                                            <div class="col">
-                                                <label class="form-label form-label-top form-label-auto mb-2">Upload PDF</label>
-                                                <input type="file" id="program_pdf" name="program_pdf" class="form-control py-2 rounded-3 shadow-sm" >
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div> -->
-
-                                <!-- <div class="row mb-2">
-                            <div class="col">
-                                <div class="form-body px-5 rounded-4">
-                                    <h4 class="fw-bold mb-3">09. Food Menu</h4>
-                                    <div class="mb-1">
-                                        <div class="row g-2">
-                                            <div class="col-lg-4">
-                                                <label
-                                                    class="form-label form-label-top form-label-auto mb-2">Breakfast</label>
-                                                <input type="hidden" id="break_fast" name="break_fast">
-                                                <div class="mt-2">
-                                                    <div class="row">
-                                                        <div class="col-lg-12">
-                                                            <div id="summernote6" style="height: 200px;"></div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-4">
-                                                <label
-                                                    class="form-label form-label-top form-label-auto  mb-2">Lunch</label>
-                                                <input type="hidden" id="lunch" name="lunch">
-                                                <div class="mt-2">
-                                                    <div class="row">
-                                                        <div class="col-lg-12">
-                                                            <div id="summernote7" style="height: 200px;"></div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-4">
-                                                <label
-                                                    class="form-label form-label-top form-label-auto mb-2">Dinner</label>
-                                                <input type="hidden" id="dinner" name="dinner">
-                                                <div class="mt-2">
-                                                    <div class="row">
-                                                        <div class="col-lg-12">
-                                                            <div id="summernote8" style="height: 200px;"></div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -818,588 +704,681 @@
                                     </div>
                                 </div>
                             </div>
-                        </div> -->
-                                <!-- 8. AMENITIES -->
-                                <div class="row  mt-3">
-                                    <div class="col-lg-12">
-                                        <div class="form-body mb-2 rounded-4">
-                                            <h4 class="add_head fw-bold mb-3">08. Amenities</h4>
-                                            <div class="d-flex flex-wrap">
-                                                @foreach($amenities as $index => $amenity)
-                                                <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
-                                                    <div class="form-check d-flex align-items-center">
-                                                        <input type="checkbox" class="me-2 custom-checkbox"
-                                                            id="amenity-{{ $amenity->id }}" name="amenity_services[]"
-                                                            value="{{ $amenity->id }}"
-                                                            @if (in_array((string) $amenity->id, json_decode($customer->amenities))) checked @endif>
-                                                        <label for="amenity-{{ $amenity->id }}"
-                                                            class="mb-0">{{ $amenity->amenity_name }}</label>
+
+                            <div class="row  mt-3">
+                                <div class="col-lg-12">
+                                    <div class="form-body mb-2 rounded-4">
+                                        <h4 class="add_head fw-bold mb-2">06. Package Inclusion </h4>
+                                        <div class="mb-2">
+                                            <div class="row g-2 mb-2">
+                                                <div class="col">
+                                                    <input type="hidden" id="program_inclusion" name="program_inclusion">
+                                                    @php
+                                                    $plain_text_program_inclusion = html_entity_decode(
+                                                    strip_tags($customer->package_inclusion),
+                                                    );
+                                                    $inclusion =json_decode($customer->package_inclusion)
+                                                    @endphp
+                                                    <div class=" mt-2">
+                                                        <div class="row">
+                                                            <div class="col-lg-12 ">
+                                                                <div id="summernote5" style="height: 200px;">{!! $inclusion !!}</div>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                                @if(($index + 1) % 4 == 0)
-                                                <div class="w-100"></div> <!-- Forces a line break after every 4 items -->
-                                                @endif
-                                                @endforeach
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-
-                                <!-- 9. FOOD & BEVERAGES -->
-                                <div class="row  mt-3">
-                                    <div class="col-lg-12">
-                                        <div class="form-body mb-2 rounded-4">
-                                            <h4 class="add_head fw-bold mb-3">09. Food and Beverages</h4>
-                                            <div class="d-flex flex-wrap">
-                                                @foreach($foodBeverages as $index => $item)
-                                                <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
-                                                    <div class="form-check d-flex align-items-center">
-                                                        <input type="checkbox" class="me-2 custom-checkbox"
-                                                            id="food-beverage-{{ $item->id }}" name="food_beverages[]"
-                                                            value="{{ $item->id }}"
-                                                            @if (in_array((string) $item->id, json_decode($customer->food_beverages))) checked @endif>
-                                                        <label for="food-beverage-{{ $item->id }}"
-                                                            class="mb-0">{{ $item->food_beverage }}</label>
+                            </div>
+                            <div class="row  mt-3">
+                                <div class="col-lg-12">
+                                    <div class="form-body mb-2 rounded-4">
+                                        <h4 class="add_head fw-bold mb-2">07. Package Exclusion </h4>
+                                        <div class="mb-2">
+                                            <div class="row g-2 mb-2">
+                                                <div class="col">
+                                                    <input type="hidden" id="program_exclusion" name="program_exclusion">
+                                                    @php
+                                                    $plain_text_program_inclusion = html_entity_decode(
+                                                    strip_tags($customer->package_exclusion),
+                                                    );
+                                                    $exclusion =json_decode($customer->package_exclusion)
+                                                    @endphp
+                                                    <div class=" mt-2">
+                                                        <div class="row">
+                                                            <div class="col-lg-12 ">
+                                                                <div id="summernote9" style="height: 200px;">{!! $exclusion !!}</div>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                                @if(($index + 1) % 4 == 0)
-                                                <div class="w-100"></div> <!-- Forces a line break after every 4 items -->
-                                                @endif
-                                                @endforeach
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+                            </div>
 
-                                <!-- 10. ACTIVITIES -->
-                                <div class="row  mt-3">
-                                    <div class="col-lg-12">
-                                        <div class="form-body mb-2 rounded-4">
-                                            <h4 class="add_head fw-bold mb-3">10. Activities</h4>
-                                            <div class="d-flex flex-wrap">
-                                                @foreach($activities as $index => $item)
-                                                <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
-                                                    <div class="form-check d-flex align-items-center ">
-                                                        <input type="checkbox" class="me-2 custom-checkbox"
-                                                            id="activities-{{ $item->id }}" name="activities[]"
-                                                            value="{{ $item->id }}"
-                                                            @if (in_array((string) $item->id, json_decode($customer->activities))) checked @endif>
-                                                        <label for="activities-{{ $item->id }}"
-                                                            class="mb-0">{{ $item->activities }}</label>
-                                                    </div>
+                            <script>
+                                document.getElementById('google_map').addEventListener('input', function() {
+                                    const inputValue = this.value;
+                                    const iframeSrcMatch = inputValue.match(/src=["']([^"']+)["']/); // Extract the src attribute value
+                                    const mapPreviewIframe = document.getElementById('map_preview');
+
+                                    if (iframeSrcMatch && iframeSrcMatch[1]) {
+                                        mapPreviewIframe.src = iframeSrcMatch[1]; // Set the extracted src to the iframe
+                                    } else {
+                                        mapPreviewIframe.removeAttribute('src'); // Clear the iframe if input is invalid
+                                    }
+                                });
+                            </script>
+
+
+
+                            <!-- 8. AMENITIES -->
+                            <div class="row  mt-3">
+                                <div class="col-lg-12">
+                                    <div class="form-body mb-2 rounded-4">
+                                        <h4 class="add_head fw-bold mb-3">08. Amenities</h4>
+                                        <div class="d-flex flex-wrap">
+                                            @foreach($amenities as $index => $amenity)
+                                            <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                                <div class="form-check d-flex align-items-center">
+                                                    <input type="checkbox" class="me-2 custom-checkbox"
+                                                        id="amenity-{{ $amenity->id }}" name="amenity_services[]"
+                                                        value="{{ $amenity->id }}"
+                                                        @if (in_array((string) $amenity->id, json_decode($customer->amenities))) checked @endif>
+                                                    <label for="amenity-{{ $amenity->id }}"
+                                                        class="mb-0">{{ $amenity->amenity_name }}</label>
                                                 </div>
-                                                @if(($index + 1) % 4 == 0)
-                                                <div class="w-100"></div> <!-- Forces a line break after every 4 items -->
-                                                @endif
-                                                @endforeach
                                             </div>
+                                            @if(($index + 1) % 4 == 0)
+                                            <div class="w-100"></div> <!-- Forces a line break after every 4 items -->
+                                            @endif
+                                            @endforeach
                                         </div>
                                     </div>
                                 </div>
+                            </div>
 
-                                <!-- 11. SAFETY FEATURES -->
-                                <div class="row  mt-3">
-                                    <div class="col-lg-12">
-                                        <div class="form-body mb-2 rounded-4">
-                                            <h4 class="add_head fw-bold mb-3">11. Safety Features</h4>
-                                            <div class="d-flex flex-wrap">
-                                                @foreach($safety_features as $index => $item)
-                                                <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
-                                                    <div class="form-check d-flex align-items-center mb-1">
-                                                        <input type="checkbox" class="me-2 custom-checkbox"
-                                                            id="safety_features-{{ $item->id }}" name="safety_features[]"
-                                                            value="{{ $item->id }}"
-                                                            @if (in_array((string) $item->id, json_decode($customer->safety_features))) checked @endif>
-                                                        <label for="safety_features-{{ $item->id }}"
-                                                            class="mb-0">{{ $item->safety_features }}</label>
-                                                    </div>
+                            <!-- 9. FOOD & BEVERAGES -->
+                            <div class="row  mt-3">
+                                <div class="col-lg-12">
+                                    <div class="form-body mb-2 rounded-4">
+                                        <h4 class="add_head fw-bold mb-3">09. Food and Beverages</h4>
+                                        <div class="d-flex flex-wrap">
+                                            @foreach($foodBeverages as $index => $item)
+                                            <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                                <div class="form-check d-flex align-items-center">
+                                                    <input type="checkbox" class="me-2 custom-checkbox"
+                                                        id="food-beverage-{{ $item->id }}" name="food_beverages[]"
+                                                        value="{{ $item->id }}"
+                                                        @if (in_array((string) $item->id, json_decode($customer->food_beverages))) checked @endif>
+                                                    <label for="food-beverage-{{ $item->id }}"
+                                                        class="mb-0">{{ $item->food_beverage }}</label>
                                                 </div>
-                                                @endforeach
                                             </div>
+                                            @if(($index + 1) % 4 == 0)
+                                            <div class="w-100"></div> <!-- Forces a line break after every 4 items -->
+                                            @endif
+                                            @endforeach
                                         </div>
                                     </div>
                                 </div>
+                            </div>
 
-                                <!-- Add custom CSS -->
-                                <style>
+                            <!-- 10. ACTIVITIES -->
+                            <div class="row  mt-3">
+                                <div class="col-lg-12">
+                                    <div class="form-body mb-2 rounded-4">
+                                        <h4 class="add_head fw-bold mb-3">10. Activities</h4>
+                                        <div class="d-flex flex-wrap">
+                                            @foreach($activities as $index => $item)
+                                            <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                                <div class="form-check d-flex align-items-center ">
+                                                    <input type="checkbox" class="me-2 custom-checkbox"
+                                                        id="activities-{{ $item->id }}" name="activities[]"
+                                                        value="{{ $item->id }}"
+                                                        @if (in_array((string) $item->id, json_decode($customer->activities))) checked @endif>
+                                                    <label for="activities-{{ $item->id }}"
+                                                        class="mb-0">{{ $item->activities }}</label>
+                                                </div>
+                                            </div>
+                                            @if(($index + 1) % 4 == 0)
+                                            <div class="w-100"></div> <!-- Forces a line break after every 4 items -->
+                                            @endif
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 11. SAFETY FEATURES -->
+                            <div class="row  mt-3">
+                                <div class="col-lg-12">
+                                    <div class="form-body mb-2 rounded-4">
+                                        <h4 class="add_head fw-bold mb-3">11. Safety Features</h4>
+                                        <div class="d-flex flex-wrap">
+                                            @foreach($safety_features as $index => $item)
+                                            <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                                <div class="form-check d-flex align-items-center mb-1">
+                                                    <input type="checkbox" class="me-2 custom-checkbox"
+                                                        id="safety_features-{{ $item->id }}" name="safety_features[]"
+                                                        value="{{ $item->id }}"
+                                                        @if (in_array((string) $item->id, json_decode($customer->safety_features))) checked @endif>
+                                                    <label for="safety_features-{{ $item->id }}"
+                                                        class="mb-0">{{ $item->safety_features }}</label>
+                                                </div>
+                                            </div>
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Add custom CSS -->
+                            <style>
+                                .custom-checkbox {
+                                    width: 18px;
+                                    height: 18px;
+                                }
+
+                                /* Ensure responsiveness on all screen sizes */
+                                @media (max-width: 768px) {
                                     .custom-checkbox {
                                         width: 18px;
                                         height: 18px;
                                     }
-
-                                    /* Ensure responsiveness on all screen sizes */
-                                    @media (max-width: 768px) {
-                                        .custom-checkbox {
-                                            width: 18px;
-                                            height: 18px;
-                                        }
-                                    }
-                                </style>
+                                }
+                            </style>
 
 
 
-                                <!-- 6.rule & Regulation
-                <div class="row mb-5">
-                    <div class="col">
-                        <div class="form-body px-5 rounded-4">
-                            <h4 class="fw-bold mb-5">14. Payment Policy</h4>
-                            <div class="mb-3">
-                                <div id="camp-rule-container">
-                                    <div class="row g-2 mb-4 camp-rule-field">
-                                        <div class="col">
-                                            <label class="fw-bold mb-4">Payment Policy <span class="text-danger">*</span></label>
-                                            <input type="text" name="camp_rule[]" id="camp_rule" class="form-control py-3  px-3 rounded-3 shadow-sm" placeholder="Payment Policy" required>
-                                        </div>
+
+                            <br>
+
+                            <div class="row g-2">
+                                <div class="col">
+                                    <h4> <label class="add_head fw-bold">Status</label></h4>
+                                    <div class="form-check form-switch d-flex align-items-center">
+                                        <input class="form-check-input check_bx" type="checkbox" id="status" name="status"
+                                            {{ $customer->status ? 'checked' : '' }}>
                                     </div>
-                                </div>
-                                <div class="text-end">
-                                    <button type="button" class="btn-add rounded border-0 px-5 py-3 text-white" onclick="addCampRuleField()">
-                                        <i class="fa fa-plus" aria-hidden="true"></i> Add
-                                    </button>
-                                </div>
-                            </div> -->
-
-                                <br>
-
-                                <div class="row g-2">
-                                    <div class="col">
-                                        <h4> <label class="add_head fw-bold">Status</label></h4>
-                                        <div class="form-check form-switch d-flex align-items-center">
-                                            <input class="form-check-input check_bx" type="checkbox" id="status" name="status"
-                                                {{ $customer->status ? 'checked' : '' }}>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="row g-3">
-                                    <div class="col-lg-3">
-                                        <label class="fw-bold mb-3 ">Order</label>
-                                        <input type="number" placeholder="Order" id="list_order" name="list_order"
-                                            value="{{ $customer->list_order }}" class="form-control py-2 rounded-3 shadow-sm">
-                                    </div>
-                                </div>
-
-                                <div class="col-lg-12 text-center mt-5">
-                                    <a href="{{ route('admin.inclusive_package_list') }}">
-                                        <button type="button" class="cancel-btn"> Cancel </button>
-                                    </a>
-                                    <button class="submit-btn sbmtBtn ms-4 mb-5"> Submit </button>
                                 </div>
                             </div>
+
+                            <div class="row g-3">
+                                <div class="col-lg-3">
+                                    <label class="fw-bold mb-3 ">Order</label>
+                                    <input type="number" placeholder="Order" id="list_order" name="list_order"
+                                        value="{{ $customer->list_order }}" class="form-control py-2 rounded-3 shadow-sm">
+                                </div>
+                            </div>
+
+                            <div class="col-lg-12 text-center mt-5">
+                                <a href="{{ route('admin.inclusive_package_list') }}">
+                                    <button type="button" class="cancel-btn"> Cancel </button>
+                                </a>
+                                <button class="submit-btn sbmtBtn ms-4 mb-5"> Submit </button>
+                            </div>
+                        </div>
             </form>
         </div>
     </div>
+</div>
 
-    <script>
-        $(document).ready(function() {
-            $('#summernote1,#summernote2,#summernote3,#summernote4,#summernote5,#summernote6,#summernote7,#summernote8,#summernote9,#summernote10')
-                .summernote({
-                    height: 200 // Set the height of the editor
-                });
-            $('#summernote1').summernote({
-                placeholder: 'Hello stand alone ui',
-                tabsize: 2,
-                height: 100,
-                toolbar: [
-                    ['style', ['style']],
-                    ['font', ['bold', 'underline', 'clear']],
-                    ['color', ['color']],
-                    ['para', ['ul', 'ol', 'paragraph']],
-                    ['table', ['table']],
-                    ['insert', ['link', 'picture', 'video']],
-                    ['view', ['fullscreen', 'codeview', 'help']]
-                ]
+<script>
+    $(document).ready(function() {
+        $('#summernote1,#summernote2,#summernote3,#summernote4,#summernote5,#summernote6,#summernote7,#summernote8,#summernote9,#summernote10')
+            .summernote({
+                height: 200 // Set the height of the editor
             });
+        $('#summernote1').summernote({
+            placeholder: 'Hello stand alone ui',
+            tabsize: 2,
+            height: 100,
+            toolbar: [
+                ['style', ['style']],
+                ['font', ['bold', 'underline', 'clear']],
+                ['color', ['color']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['table', ['table']],
+                ['insert', ['link', 'picture', 'video']],
+                ['view', ['fullscreen', 'codeview', 'help']]
+            ]
+        });
 
-            $('#summernote2').summernote({
-                placeholder: 'Hello stand alone ui',
-                tabsize: 2,
-                height: 100,
-                toolbar: [
-                    ['style', ['style']],
-                    ['font', ['bold', 'underline', 'clear']],
-                    ['color', ['color']],
-                    ['para', ['ul', 'ol', 'paragraph']],
-                    ['table', ['table']],
-                    ['insert', ['link', 'picture', 'video']],
-                    ['view', ['fullscreen', 'codeview', 'help']]
-                ]
-            });
-            $('#summernote3').summernote({
-                placeholder: 'Hello stand alone ui',
-                tabsize: 2,
-                height: 100,
-                toolbar: [
-                    ['style', ['style']],
-                    ['font', ['bold', 'underline', 'clear']],
-                    ['color', ['color']],
-                    ['para', ['ul', 'ol', 'paragraph']],
-                    ['table', ['table']],
-                    ['insert', ['link', 'picture', 'video']],
-                    ['view', ['fullscreen', 'codeview', 'help']]
-                ]
-            });
-            $('#summernote4').summernote({
-                placeholder: 'Hello stand alone ui',
-                tabsize: 2,
-                height: 100,
-                toolbar: [
-                    ['style', ['style']],
-                    ['font', ['bold', 'underline', 'clear']],
-                    ['color', ['color']],
-                    ['para', ['ul', 'ol', 'paragraph']],
-                    ['table', ['table']],
-                    ['insert', ['link', 'picture', 'video']],
-                    ['view', ['fullscreen', 'codeview', 'help']]
-                ]
-            });
-            $('#summernote5').summernote({
-                placeholder: 'Hello stand alone ui',
-                tabsize: 2,
-                height: 100,
-                toolbar: [
-                    ['style', ['style']],
-                    ['font', ['bold', 'underline', 'clear']],
-                    ['color', ['color']],
-                    ['para', ['ul', 'ol', 'paragraph']],
-                    ['table', ['table']],
-                    ['insert', ['link', 'picture', 'video']],
-                    ['view', ['fullscreen', 'codeview', 'help']]
-                ]
-            });
-            $('#summernote9').summernote({
-                placeholder: 'Hello stand alone ui',
-                tabsize: 2,
-                height: 100,
-                toolbar: [
-                    ['style', ['style']],
-                    ['font', ['bold', 'underline', 'clear']],
-                    ['color', ['color']],
-                    ['para', ['ul', 'ol', 'paragraph']],
-                    ['table', ['table']],
-                    ['insert', ['link', 'picture', 'video']],
-                    ['view', ['fullscreen', 'codeview', 'help']]
-                ]
-            });
-            $('#summernote6').summernote({
-                placeholder: 'Hello stand alone ui',
-                tabsize: 2,
-                height: 100,
-                toolbar: [
-                    ['style', ['style']],
-                    ['font', ['bold', 'underline', 'clear']],
-                    ['color', ['color']],
-                    ['para', ['ul', 'ol', 'paragraph']],
-                    ['table', ['table']],
-                    ['insert', ['link', 'picture', 'video']],
-                    ['view', ['fullscreen', 'codeview', 'help']]
-                ]
-            });
-            $('#summernote7').summernote({
-                placeholder: 'Hello stand alone ui',
-                tabsize: 2,
-                height: 100,
-                toolbar: [
-                    ['style', ['style']],
-                    ['font', ['bold', 'underline', 'clear']],
-                    ['color', ['color']],
-                    ['para', ['ul', 'ol', 'paragraph']],
-                    ['table', ['table']],
-                    ['insert', ['link', 'picture', 'video']],
-                    ['view', ['fullscreen', 'codeview', 'help']]
-                ]
-            });
-            $('#summernote8').summernote({
-                placeholder: 'Hello stand alone ui',
-                tabsize: 2,
-                height: 100,
-                toolbar: [
-                    ['style', ['style']],
-                    ['font', ['bold', 'underline', 'clear']],
-                    ['color', ['color']],
-                    ['para', ['ul', 'ol', 'paragraph']],
-                    ['table', ['table']],
-                    ['insert', ['link', 'picture', 'video']],
-                    ['view', ['fullscreen', 'codeview', 'help']]
-                ]
-            });
-            $('#summernote10').summernote({
-                placeholder: 'Hello stand alone ui',
-                tabsize: 2,
-                height: 100,
-                toolbar: [
-                    ['style', ['style']],
-                    ['font', ['bold', 'underline', 'clear']],
-                    ['color', ['color']],
-                    ['para', ['ul', 'ol', 'paragraph']],
-                    ['table', ['table']],
-                    ['insert', ['link', 'picture', 'video']],
-                    ['view', ['fullscreen', 'codeview', 'help']]
-                ]
-            });
+        $('#summernote2').summernote({
+            placeholder: 'Hello stand alone ui',
+            tabsize: 2,
+            height: 100,
+            toolbar: [
+                ['style', ['style']],
+                ['font', ['bold', 'underline', 'clear']],
+                ['color', ['color']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['table', ['table']],
+                ['insert', ['link', 'picture', 'video']],
+                ['view', ['fullscreen', 'codeview', 'help']]
+            ]
+        });
+        $('#summernote3').summernote({
+            placeholder: 'Hello stand alone ui',
+            tabsize: 2,
+            height: 100,
+            toolbar: [
+                ['style', ['style']],
+                ['font', ['bold', 'underline', 'clear']],
+                ['color', ['color']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['table', ['table']],
+                ['insert', ['link', 'picture', 'video']],
+                ['view', ['fullscreen', 'codeview', 'help']]
+            ]
+        });
+        $('#summernote4').summernote({
+            placeholder: 'Hello stand alone ui',
+            tabsize: 2,
+            height: 100,
+            toolbar: [
+                ['style', ['style']],
+                ['font', ['bold', 'underline', 'clear']],
+                ['color', ['color']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['table', ['table']],
+                ['insert', ['link', 'picture', 'video']],
+                ['view', ['fullscreen', 'codeview', 'help']]
+            ]
+        });
+        $('#summernote5').summernote({
+            placeholder: 'Hello stand alone ui',
+            tabsize: 2,
+            height: 100,
+            toolbar: [
+                ['style', ['style']],
+                ['font', ['bold', 'underline', 'clear']],
+                ['color', ['color']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['table', ['table']],
+                ['insert', ['link', 'picture', 'video']],
+                ['view', ['fullscreen', 'codeview', 'help']]
+            ]
+        });
+        $('#summernote9').summernote({
+            placeholder: 'Hello stand alone ui',
+            tabsize: 2,
+            height: 100,
+            toolbar: [
+                ['style', ['style']],
+                ['font', ['bold', 'underline', 'clear']],
+                ['color', ['color']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['table', ['table']],
+                ['insert', ['link', 'picture', 'video']],
+                ['view', ['fullscreen', 'codeview', 'help']]
+            ]
+        });
+        $('#summernote6').summernote({
+            placeholder: 'Hello stand alone ui',
+            tabsize: 2,
+            height: 100,
+            toolbar: [
+                ['style', ['style']],
+                ['font', ['bold', 'underline', 'clear']],
+                ['color', ['color']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['table', ['table']],
+                ['insert', ['link', 'picture', 'video']],
+                ['view', ['fullscreen', 'codeview', 'help']]
+            ]
+        });
+        $('#summernote7').summernote({
+            placeholder: 'Hello stand alone ui',
+            tabsize: 2,
+            height: 100,
+            toolbar: [
+                ['style', ['style']],
+                ['font', ['bold', 'underline', 'clear']],
+                ['color', ['color']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['table', ['table']],
+                ['insert', ['link', 'picture', 'video']],
+                ['view', ['fullscreen', 'codeview', 'help']]
+            ]
+        });
+        $('#summernote8').summernote({
+            placeholder: 'Hello stand alone ui',
+            tabsize: 2,
+            height: 100,
+            toolbar: [
+                ['style', ['style']],
+                ['font', ['bold', 'underline', 'clear']],
+                ['color', ['color']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['table', ['table']],
+                ['insert', ['link', 'picture', 'video']],
+                ['view', ['fullscreen', 'codeview', 'help']]
+            ]
+        });
+        $('#summernote10').summernote({
+            placeholder: 'Hello stand alone ui',
+            tabsize: 2,
+            height: 100,
+            toolbar: [
+                ['style', ['style']],
+                ['font', ['bold', 'underline', 'clear']],
+                ['color', ['color']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['table', ['table']],
+                ['insert', ['link', 'picture', 'video']],
+                ['view', ['fullscreen', 'codeview', 'help']]
+            ]
+        });
 
+        let photoCount = 1; // Start with existing photo field count
 
-
-
-
-
-
-
-
-            let photoCount = 1; // Start with existing photo field count
-
-            // Function to generate new photo upload field HTML
-            function createPhotoUploadField(count) {
-                return `
-                <div class="col-lg-2 photo-upload-field">
-                    <div class="form-input">
-                        <label for="file-ip-${count}" class="px-4 py-3 text-center">
-                            <img class="text-center mt-3" id="file-ip-${count}-preview" src="/assets/image/dashboard/innerpece_addpic_icon.svg">
-                            <p class="text-center fw-light mt-3"> Add Pic</p>
-                        </label>
-                        <input type="file" name="img_${count}" id="file-ip-${count}" data-number="${count}" accept="image/*">
-                    </div>
+        // Function to generate new photo upload field HTML
+        function createPhotoUploadField(count) {
+            return `
+            <div class="col-lg-2 photo-upload-field">
+                <div class="form-input">
+                    <label for="file-ip-${count}" class="px-4 py-3 text-center">
+                        <img class="text-center mt-3" id="file-ip-${count}-preview" src="/assets/image/dashboard/innerpece_addpic_icon.svg">
+                        <p class="text-center fw-light mt-3"> Add Pic</p>
+                    </label>
+                    <input type="file" name="img_${count}" id="file-ip-${count}" data-number="${count}" accept="image/*">
                 </div>
-            `;
-            }
-
-            // Event listener for the "Add More Photos" button
-            $('#add-photo-btn').on('click', function() {
-                photoCount++;
-                const newFieldHtml = createPhotoUploadField(photoCount);
-                $('#photo-upload-container').append(newFieldHtml);
-            });
-
-            // Function to show preview of selected image
-            function showPreview(event, number) {
-                var file = event.target.files[0];
-                var reader = new FileReader();
-                var previewId = "#file-ip-" + number + "-preview";
-                var errorMessageId = "#file-ip-" + number + "-error";
-
-                reader.onload = function(e) {
-                    $(previewId).attr('src', e.target.result);
-                    $(errorMessageId).text(''); // Clear any previous error message
-                };
-
-                if (file) {
-                    if (file.size <= 2 * 1024 * 1024) { // 2 MB limit
-                        if (file.type === 'image/png' || file.type === 'image/jpeg') {
-                            reader.readAsDataURL(file);
-                        } else {
-                            $(errorMessageId).text('Please upload a valid PNG or JPEG image.');
-                        }
-                    } else {
-                        $(errorMessageId).text('File size exceeds 2 MB limit.');
-                    }
-                }
-            }
-
-            // Delegate event binding for dynamically added file inputs
-            $('#photo-upload-container').on('change', 'input[type="file"]', function(event) {
-                var number = $(this).data('number'); // Use data attribute to get the number
-                showPreview(event, number);
-            });
-        });
-
-        document.addEventListener('DOMContentLoaded', function() {
-            let planCount = 1; // Initialize with existing plan count
-
-            // Function to clone the existing plan item
-            function createPlanFields() {
-                planCount++; // Increment plan count
-                const container = document.getElementById('plan-container');
-                const template = container.querySelector('.plan-item');
-
-                // Clone the template
-                const newPlan = template.cloneNode(true);
-
-                // Update IDs and Names for new plan items
-                newPlan.querySelectorAll('input, textarea, div').forEach((field) => {
-                    if (field.id) {
-                        field.id = field.id + '-' + planCount;
-                    }
-                    if (field.name) {
-                        field.name = field.name.replace(/\[\]$/, '[]');
-                    }
-                });
-
-                // Remove previous Summernote instance (if any)
-                const summernoteDiv = newPlan.querySelector('[id^="summernote3"]');
-                const hiddenInput = newPlan.querySelector('[id^="plan_description"]');
-
-                // Give unique IDs
-                const uniqueEditorId = `summernote3-${planCount}`;
-                const uniqueInputId = `plan_description-${planCount}`;
-
-                summernoteDiv.id = uniqueEditorId;
-                hiddenInput.id = uniqueInputId;
-
-                // Append the cloned item
-                container.appendChild(newPlan);
-
-                // Initialize Summernote for the new div
-                $('#' + uniqueEditorId).summernote({
-                    height: 200,
-                    callbacks: {
-                        onChange: function(contents) {
-                            // Sync to hidden input on change
-                            document.getElementById(uniqueInputId).value = contents;
-                        }
-                    }
-                });
-            }
-
-            // Event listener for the "Add" button
-            document.getElementById('add-plan-btn').addEventListener('click', function() {
-                createPlanFields();
-            });
-
-            // Event delegation to handle removal of plan items
-            document.getElementById('plan-container').addEventListener('click', function(event) {
-                if (event.target.closest('.remove-plan')) {
-                    event.preventDefault();
-                    const planItem = event.target.closest('.plan-item');
-                    planItem.remove();
-                }
-            });
-        });
-
-
-
-
-        function addCampRuleField() {
-            // Find the container where new fields will be added
-            var container = document.getElementById('camp-rule-container');
-
-            // Create a new div for the new field
-            var newField = document.createElement('div');
-            newField.className = 'row g-2 mb-4 camp-rule-field';
-            newField.innerHTML = `<div class="col">
-                <input type="text" name="camp_rule[]" class="form-control py-3 rounded-3 shadow-sm" placeholder="Payment Policy" >
             </div>
-            <div class="col-lg-1 mt-5 text-end">
-                <a class="table-link danger remove-plan" onclick="removeField(this)">
-                    <span class="fa-stack">
-                        <i class="fa fa-square fa-stack-2x"></i>
-                        <i class="fa fa-trash-o fa-stack-1x fa-inverse"></i>
-                    </span>
-                </a>
-            </div>`;
-
-            // Append the new field to the container
-            container.appendChild(newField);
+        `;
         }
 
-        function removeField(element) {
-            // Find the parent element (field container) and remove it
-            var field = element.closest('.camp-rule-field');
-            if (field) {
-                field.remove();
-            }
-        }
-
-
-        // total duration
-        document.addEventListener('DOMContentLoaded', () => {
-            const startDateInput = document.getElementById('start_date');
-            const returnDateInput = document.getElementById('return_date');
-            const totalDaysInput = document.getElementById('total_days');
-
-            function calculateDays() {
-                const startDate = new Date(startDateInput.value);
-                const returnDate = new Date(returnDateInput.value);
-                if (startDate && returnDate && returnDate >= startDate) {
-                    const diffTime = Math.abs(returnDate - startDate);
-                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-                    totalDaysInput.value = diffDays;
-                } else {
-                    totalDaysInput.value = '';
-                }
-            }
-
-            startDateInput.addEventListener('change', calculateDays);
-            returnDateInput.addEventListener('change', calculateDays);
+        // Event listener for the "Add More Photos" button
+        $('#add-photo-btn').on('click', function() {
+            photoCount++;
+            const newFieldHtml = createPhotoUploadField(photoCount);
+            $('#photo-upload-container').append(newFieldHtml);
         });
 
+        // Function to show preview of selected image
+        function showPreview(event, number) {
+            var file = event.target.files[0];
+            var reader = new FileReader();
+            var previewId = "#file-ip-" + number + "-preview";
+            var errorMessageId = "#file-ip-" + number + "-error";
+
+            reader.onload = function(e) {
+                $(previewId).attr('src', e.target.result);
+                $(errorMessageId).text(''); // Clear any previous error message
+            };
+
+            if (file) {
+                if (file.size <= 2 * 1024 * 1024) { // 2 MB limit
+                    if (file.type === 'image/png' || file.type === 'image/jpeg') {
+                        reader.readAsDataURL(file);
+                    } else {
+                        $(errorMessageId).text('Please upload a valid PNG or JPEG image.');
+                    }
+                } else {
+                    $(errorMessageId).text('File size exceeds 2 MB limit.');
+                }
+            }
+        }
+
+        // Delegate event binding for dynamically added file inputs
+        $('#photo-upload-container').on('change', 'input[type="file"]', function(event) {
+            var number = $(this).data('number'); // Use data attribute to get the number
+            showPreview(event, number);
+        });
+
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        let planCount = 1; // Initialize with existing plan count
+
+        // Function to clone the existing plan item
+        function createPlanFields() {
+            planCount++; // Increment plan count
+            const container = document.getElementById('plan-container');
+            const template = container.querySelector('.plan-item');
+
+            // Clone the template
+            const newPlan = template.cloneNode(true);
+
+            // Update IDs and Names for new plan items
+            newPlan.querySelectorAll('input, textarea, div').forEach((field) => {
+                if (field.id) {
+                    field.id = field.id + '-' + planCount;
+                }
+                if (field.name) {
+                    field.name = field.name.replace(/\[\]$/, '[]');
+                }
+            });
+
+            // Remove previous Summernote instance (if any)
+            const summernoteDiv = newPlan.querySelector('[id^="summernote3"]');
+            const hiddenInput = newPlan.querySelector('[id^="plan_description"]');
+
+            // Give unique IDs
+            const uniqueEditorId = `summernote3-${planCount}`;
+            const uniqueInputId = `plan_description-${planCount}`;
+
+            summernoteDiv.id = uniqueEditorId;
+            hiddenInput.id = uniqueInputId;
+
+            // Append the cloned item
+            container.appendChild(newPlan);
+
+            // Initialize Summernote for the new div
+            $('#' + uniqueEditorId).summernote({
+                height: 200,
+                callbacks: {
+                    onChange: function(contents) {
+                        // Sync to hidden input on change
+                        document.getElementById(uniqueInputId).value = contents;
+                    }
+                }
+            });
+        }
+
+        // Event listener for the "Add" button
+        document.getElementById('add-plan-btn').addEventListener('click', function() {
+            createPlanFields();
+        });
+
+        // Event delegation to handle removal of plan items
+        document.getElementById('plan-container').addEventListener('click', function(event) {
+            if (event.target.closest('.remove-plan')) {
+                event.preventDefault();
+                const planItem = event.target.closest('.plan-item');
+                planItem.remove();
+            }
+        });
+    });
+
+    $('#city_select').select2({
+        placeholder: "Select Destination",
+    });
+
+    const initialDestination = $('#city_select').val(); // This returns array of selected values
+    const initialpackageId = "{{ $customer->package_id ?? '' }}";
+    // Initialize package select
+    $('#package_select').select2({
+        placeholder: "Select Package",
+        allowClear: true,
+        width: '100%'
+    });
+
+    // Initialize stay select with textarea-like appearance
+    $('#package_select_stay').select2({
+        placeholder: "Select Stay",
+        allowClear: true,
+        width: '100%',
+        minimumResultsForSearch: Infinity,
+        dropdownCssClass: 'textarea-like-dropdown'
+    });
+
+    if (initialDestination && initialDestination.length > 0) {
+        fetchPackages(initialDestination);
+        fetchStays(initialDestination);
+    }
 
 
-        //package change
-        const customerid = "{{ $customer->id }}";
+    //package change
+    const customerid = "{{ $customer->id }}";
+    const customer_pricing_id = "{{ $customerservicefee->id ?? '' }}";
+    const pricingcalculatorid = @json($customerpricingid ?? []);
+    let pricingcalculatoridIns = [...pricingcalculatorid];
 
-        $(".package").change(function() {
-            var selectedOption = $(this).val();
-            var packageData = JSON.parse(selectedOption);
 
-            var package_id = packageData.id;
-            // var package_id = $('#package').val();
-            $.ajax({
-                url: '/customer-package/package-details',
-                type: 'POST',
-                data: {
-                    id: package_id,
-                },
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                success: function(response) {
+    // 🔹 When city changes → fetch packages
+    $('#city_select').on('change', function() {
+        const city_ids = $(this).val();
 
-                    response = typeof response === 'string' ? JSON.parse(response) : response;
-                    const packageStaySelect = $('#package_stay');
+        if (city_ids && city_ids.length > 0) {
+            // Fetch packages (optional)
+            fetchPackages(city_ids);
 
-                    packageStaySelect.empty().append(
-                        $('<option></option>')
-                        .val('')
-                        .text('Select Package Type')
-                        .prop('disabled', true)
-                        .prop('selected', true)
+            // Fetch stays (directly after selecting city)
+            fetchStays(city_ids);
+        } else {
+            $('#package_select').empty().append('<option disabled selected>No city selected</option>');
+            $('#package_select_stay').empty().append('<option disabled selected>No city selected</option>');
+        }
+    });
+
+    // ✅ Fetch packages function (CORRECTED)
+    function fetchPackages(city_ids) {
+        $('#package_select').empty().append('<option disabled selected>Loading packages...</option>');
+        $('#package_select').trigger('change.select2');
+
+        $.ajax({
+            url: '/customer-package/get-packages-by-city',
+            type: 'POST',
+            data: {
+                city_id: city_ids
+            },
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: function(response) {
+                const packageSelect = $('#package_select');
+                packageSelect.empty().append('<option disabled selected>Select Package</option>');
+
+                if (response && response.length > 0) {
+                    response.forEach(pkg => {
+                        const isSelected = (pkg.id == initialpackageId);
+                        packageSelect.append(
+                            $('<option></option>')
+                            .val(pkg.id)
+                            .text(pkg.title)
+                            .prop('selected', isSelected)
+                        );
+                    });
+
+                    // ✅ IMPORTANT: Re-initialize Select2 after adding options
+                    packageSelect.trigger('change.select2');
+
+                    // ✅ Setup change handler *after* loading packages
+                    setupPackageChangeHandler();
+
+
+                    // ✅ Trigger change event if initial package is selected
+                    if (initialpackageId) {
+                        setTimeout(() => {
+                            packageSelect.val(initialpackageId).trigger('change');
+                        }, 100);
+                    }
+
+                } else {
+                    packageSelect.append('<option disabled>No packages found</option>');
+                    packageSelect.trigger('change.select2');
+                }
+            },
+            error: function(xhr, status, error) {
+                $('#package_select').empty().append('<option disabled selected>Error loading packages</option>').trigger('change.select2');
+            }
+        });
+    }
+
+    var customerPricing = {
+        price_amount: <?php echo is_string($customer->price_amount) ? $customer->price_amount : json_encode($customer->price_amount ?? []); ?>,
+        price_title: <?php echo is_string($customer->price_title) ? $customer->price_title : json_encode($customer->price_title ?? []); ?>
+    };
+
+    // ✅ Package change handler (IMPROVED)
+    function setupPackageChangeHandler() {
+        // alert('change');
+        // $("#package_select").off('change').on('change', function() {
+        const city_ids = $('#city_select').val();
+        const package_id = $('#package_select').val();
+        $('#hidden_package_id').val(package_id);
+
+        $.ajax({
+            url: '/customer-package/package-details',
+            type: 'POST',
+            data: {
+                id: package_id,
+                city_ids: city_ids
+            },
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: function(response) {
+
+                response = typeof response === 'string' ? JSON.parse(response) : response;
+                const packageStaySelect = $('#package_stay');
+
+                packageStaySelect.empty().append(
+                    $('<option></option>')
+                    .val('')
+                    .text('Select Package Type')
+                    .prop('disabled', true)
+                    .prop('selected', true)
+                );
+
+                if (response && response.cities_details && Array.isArray(response.cities_details)) {
+                    const validStays = response.cities_details.filter(stay =>
+                        stay && stay.id !== undefined && stay.stay_title
                     );
 
-                    if (response && response.cities_details && Array.isArray(response.cities_details)) {
-                        const validStays = response.cities_details.filter(stay =>
-                            stay && stay.id !== undefined && stay.stay_title
-                        );
-
-                        if (validStays.length > 0) {
-                            // Add each valid stay as an option
-                            validStays.forEach(stay => {
-                                packageStaySelect.append(
-                                    $('<option></option>')
-                                    .val(stay.id)
-                                    .text(stay.stay_title)
-                                );
-                            });
-
-                            // Enable select if it was disabled
-                            packageStaySelect.prop('disabled', false);
-                        } else {
-                            // No valid stays found
+                    if (validStays.length > 0) {
+                        // Add each valid stay as an option
+                        validStays.forEach(stay => {
                             packageStaySelect.append(
                                 $('<option></option>')
-                                .val('')
-                                .text('No available stays')
+                                .val(stay.id)
+                                .text(stay.stay_title)
                             );
-                            packageStaySelect.prop('disabled', true);
-                        }
+                        });
+
+                        // Enable select if it was disabled
+                        packageStaySelect.prop('disabled', false);
                     } else {
-                        // Invalid response structure
+                        // No valid stays found
                         packageStaySelect.append(
                             $('<option></option>')
                             .val('')
-                            .text('Invalid data format')
+                            .text('No available stays')
                         );
                         packageStaySelect.prop('disabled', true);
-                        console.error('Invalid response structure:', response);
                     }
-                    // Handle tour planning and location
-                    if (response.package_details) {
-                        var tourVal = typeof response.package_details.tour_planning === 'string' ?
-                            JSON.parse(response.package_details.tour_planning) :
-                            response.package_details.tour_planning;
+                } else {
+                    // Invalid response structure
+                    packageStaySelect.append(
+                        $('<option></option>')
+                        .val('')
+                        .text('Invalid data format')
+                    );
+                    packageStaySelect.prop('disabled', true);
+                }
+                // Handle tour planning and location
+                if (response.package_details) {
+                    var tourVal = typeof response.package_details.tour_planning === 'string' ?
+                        JSON.parse(response.package_details.tour_planning) :
+                        response.package_details.tour_planning;
 
-                        console.log(tourVal);
-
-                        // First, clear all existing day blocks except the first one
+                    if (package_id != initialpackageId) {
                         $('#day-wrapper').html('');
 
                         tourVal.forEach(function(day, i) {
@@ -1408,98 +1387,165 @@
                             div.classList.add('row', 'g-2', 'mb-2', 'day-block');
 
                             div.innerHTML = `
-                                <div class="col-md-5 mb-2">
-                                    <input type="text" name="tour_planning[${i}][title]" class="form-control py-2 rounded-3 shadow-sm" value="${day.title}" placeholder="Day Title (e.g., Day ${i + 1})">
-                                </div>
-                                <div class="col-md-5 mb-2">
-                                    <input type="text" name="tour_planning[${i}][subtitle]" class="form-control py-2 rounded-3 shadow-sm" value="${day.subtitle}" placeholder="Activity Subtitle">
-                                </div>
-                                <div class="col-md-10 mb-2">
-                                    <input type="hidden" name="tour_planning[${i}][description]" class="tour-description-hidden">
-                                    <div class="tour-description-editor"></div>
-                                </div>
-                                <div class="col-md-1 d-flex align-items-end">
-                                    ${i > 0 ? `<button type="button" class="btn btn-danger remove-day" onclick="removeDay(this)">
-                                        <i class="fa fa-trash"></i>
-                                    </button>` : ''}
-                                </div>
-                                `;
+                                    <div class="col-md-5 mb-2">
+                                        <input type="text" name="tour_planning[${i}][title]" 
+                                            class="form-control py-2 rounded-3 shadow-sm" 
+                                            value="${day.title}" 
+                                            placeholder="Day Title (e.g., Day ${i + 1})">
+                                                </div>
+                                                <div class="col-md-5 mb-2">
+                                                    <input type="text" name="tour_planning[${i}][subtitle]" 
+                                                        class="form-control py-2 rounded-3 shadow-sm" 
+                                                        value="${day.subtitle}" 
+                                                        placeholder="Activity Subtitle">
+                                                </div>
+                                                <div class="col-md-10 mb-2">
+                                                    <label class="form-label fw-bold">Activity Description</label>
+                                                    <div class="rte-container">
+                                                        <div class="editor-toolbar">
+                                                            <button type="button" class="toolbar-btn" data-command="bold"><i class="fas fa-bold"></i></button>
+                                                            <button type="button" class="toolbar-btn" data-command="italic"><i class="fas fa-italic"></i></button>
+                                                            <button type="button" class="toolbar-btn" data-command="underline"><i class="fas fa-underline"></i></button>
+                                                            <button type="button" class="toolbar-btn" data-command="insertUnorderedList"><i class="fas fa-list-ul"></i></button>
+                                                            <button type="button" class="toolbar-btn" data-command="insertOrderedList"><i class="fas fa-list-ol"></i></button>
+                                                            <button type="button" class="toolbar-btn" data-command="createLink"><i class="fas fa-link"></i></button>
+                                                        </div>
+                                                        <div class="editor-content" contenteditable="true" id="editor-${i}"></div>
+                                                        <input type="hidden" name="tour_planning[${i}][description]" 
+                                                            class="tour-description-hidden">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-1 d-flex align-items-end">
+                                                    ${i > 0 ? `
+                                                                                                                            <button type="button" class="btn btn-danger remove-day" onclick="removeDay(this)">
+                                                                                                                                <i class="fa fa-trash"></i>
+                                                                                                                            </button>` : ''
+                                                    }
+                                                </div>
+                                                    `;
 
                             wrapper.appendChild(div);
 
-                            // Initialize Summernote and set saved HTML description
-                            const editor = $(div).find('.tour-description-editor');
-                            const hiddenInput = $(div).find('.tour-description-hidden');
+                            // Initialize custom RTE
+                            const container = div.querySelector(".rte-container");
+                            const editor = container.querySelector(".editor-content");
+                            const hiddenInput = container.querySelector(
+                                ".tour-description-hidden");
+                            const toolbar = container.querySelector(".editor-toolbar");
 
-                            editor.summernote({
-                                height: 120,
-                                callbacks: {
-                                    onChange: function(contents) {
-                                        hiddenInput.val(contents);
-                                    }
-                                }
+                            // Set existing description
+                            editor.innerHTML = day.description || "";
+                            hiddenInput.value = day.description || "";
+
+                            // Sync hidden input when typing
+                            editor.addEventListener("input", () => {
+                                hiddenInput.value = editor.innerHTML;
                             });
 
-                            // Set old saved description to Summernote and hidden field
-                            editor.summernote('code', day.description);
-                            hiddenInput.val(day.description);
+                            // Toolbar buttons
+                            toolbar.addEventListener("click", e => {
+                                const btn = e.target.closest("button");
+                                if (!btn) return;
+                                const command = btn.dataset.command;
+
+                                if (command === "createLink") {
+                                    const url = prompt("Enter the link URL:");
+                                    if (url) {
+                                        document.execCommand(command, false, url);
+                                    }
+                                } else {
+                                    document.execCommand(command, false, null);
+                                }
+
+                                editor.focus();
+                                hiddenInput.value = editor.innerHTML;
+                            });
                         });
-                        if (response.package_details.location) {
-                            $('#title').val(response.package_details.title)
-                            $('#summernote10').summernote('code', response.package_details.location);
+                    }
 
-                            $('#summernote3').summernote('code', tourVal);
-                        }
+                    if (response.package_details.location) {
+                        $('#title').val(response.package_details.title)
+                        $('#summernote10').summernote('code', response.package_details.location);
 
-                        // Handle price fields
-                        var priceAmount = response.package_details.price_amount ?
-                            JSON.parse(response.package_details.price_amount) : [];
+                        $('#summernote3').summernote('code', tourVal);
+                    }
 
-                        var priceTitle = response.package_details.price_tilte ?
-                            JSON.parse(response.package_details.price_tilte) : [];
+                    // ✅ PRICING HANDLING - UPDATED LOGIC
+                    handlePricingFields(response, package_id);
 
 
-                        var count = Math.max(4, priceAmount.length, priceTitle.length);
-                        var priceContainer = $('#price-fields-container');
+                    // // Handle price fields
+                    // var priceAmount = response.package_details.price_amount ?
+                    //     JSON.parse(response.package_details.price_amount) : [];
+
+                    // var priceTitle = response.package_details.price_tilte ?
+                    //     JSON.parse(response.package_details.price_tilte) : [];
 
 
-                        priceContainer.empty();
+                    // var count = Math.max(4, priceAmount.length, priceTitle.length);
+                    // var priceContainer = $('#price-fields-container');
+                    // priceContainer.empty();
 
-                        // Generate fields
-                        for (var i = 0; i < count; i++) {
-                            var fieldHtml = `
-                                        <div class="row mb-2">
-                                            <div class="col-lg-6">
-                                                <label class="form-label form-label-top form-label-auto fw-bold mb-2">
-                                                    Title
-                                                </label>
-                                                <input type="text" name="price_title[]" class="form-control py-2 rounded-3 shadow-sm"
-                                                    placeholder="Title"
-                                                    value="${priceTitle[i] || ''}">
-                                            </div>
-                                            <div class="col-lg-6">
-                                                <label class="fw-bold mb-2">Amount <span class="text-danger">*</span></label>
-                                                <div class="position-relative">
-                                                    <span class="position-absolute top-50 start-0 translate-middle-y ps-3">₹</span>
-                                                    <input type="number" name="price_amount[]" class="form-control py-2 ps-5 rounded-3 shadow-sm"
-                                                        placeholder="Actual Amount"
-                                                        value="${priceAmount[i] || ''}">
-                                                </div>
-                                            </div>
-                                        </div>`;
+                    // var selectedPriceId = "{{ $customerservicefee->package_pricing_id ?? '' }}";
+                    // var initialSelectedAmount = 0;
 
-                            priceContainer.append(fieldHtml);
-                        }
+                    // for (var i = 0; i < count; i++) {
+                    //     var isChecked = (selectedPriceId && i == selectedPriceId) ? 'checked' : '';
+                    //     var currentPriceAmount = parseFloat(priceAmount[i]) || 0;
 
-                        //camp rule
-                        var campRuleContainer = $('#camp-rule-container');
-                        var camp_rule = JSON.parse(response.package_details.camp_rule) ?? [''];
+                    //     // If this is the checked radio, set the initial selected amount
+                    //     if (isChecked) {
+                    //         initialSelectedAmount = currentPriceAmount;
+                    //         // Update the selected-amount immediately
+                    //         $('#selected-amount').text('₹ ' + currentPriceAmount.toLocaleString('en-IN'));
+                    //     }
 
-                        campRuleContainer.empty();
-                        for (var i = 0; i <= camp_rule.length - 1; i++) {
-                            var camp_ruleHTML = ` <div class="row g-2 mb-1 align-items-center camp-rule-field">
-                                        <label class="mb-1">Payment Policy <span
-                                                class="text-danger">*</span></label>
+                    //     var fieldHtml = `
+                    //                 <div class="row mb-2 align-items-center price-row" data-index="${i}">
+                    //                     <div class="col-lg-1 text-center">
+                    //                         <input type="radio" name="selected_price" class="form-check-input mt-0" value="${i}" ${isChecked}>
+                    //                     </div>
+                    //                     <div class="col-lg-5">
+                    //                         <label class="form-label fw-bold mb-2">Title</label>
+                    //                         <input type="text" name="price_title[]" class="form-control py-2 rounded-3 shadow-sm"
+                    //                             placeholder="Title"
+                    //                             value="${priceTitle[i] || ''}">
+                    //                     </div>
+                    //                     <div class="col-lg-6">
+                    //                         <label class="fw-bold mb-2">Amount <span class="text-danger">*</span></label>
+                    //                         <div class="position-relative">
+                    //                             <span class="position-absolute top-50 start-0 translate-middle-y ps-3">₹</span>
+                    //                             <input type="number" name="price_amount[]" class="form-control py-2 ps-5 rounded-3 shadow-sm price-amount"
+                    //                                 placeholder="Actual Amount"
+                    //                                 value="${priceAmount[i] || ''}">
+                    //                         </div>
+                    //                     </div>
+                    //                 </div>`;
+                    //     priceContainer.append(fieldHtml);
+                    // }
+
+                    // // Set global variable
+                    // selectedPriceAmount = initialSelectedAmount;
+
+                    // // If no radio was checked but we have price amounts, use the first one
+                    // if (initialSelectedAmount === 0 && count > 0) {
+                    //     var firstPriceAmount = parseFloat(priceAmount[0]) || 0;
+                    //     if (firstPriceAmount > 0) {
+                    //         selectedPriceAmount = firstPriceAmount;
+                    //         $('#selected-amount').text('₹ ' + firstPriceAmount.toLocaleString('en-IN'));
+                    //         // Also check the first radio button
+                    //         $('input[name="selected_price"]').first().prop('checked', true);
+                    //     }
+                    // }
+                    //camp rule
+                    var campRuleContainer = $('#camp-rule-container');
+                    var camp_rule = JSON.parse(response.package_details.camp_rule) ?? [''];
+
+                    campRuleContainer.empty();
+
+
+                    for (var i = 0; i <= camp_rule.length - 1; i++) {
+                        var camp_ruleHTML = ` <div class="row g-2 mb-1 align-items-center camp-rule-field">
 
                                         <div class="col-md-11">
                                             <input type="text" name="camp_rule[]" id="camp_rule"
@@ -1518,147 +1564,657 @@
                                             </div>
                                     </div>`
 
-                            campRuleContainer.append(camp_ruleHTML);
-
-                        }
-                        //notes
-
-                        // var notes_val = typeof response.package_details.important_info === 'string' ?
-                        //     JSON.parse(response.package_details.important_info) :
-                        //     response.package_details.important_info;
-                        $('#summernote4').summernote('code', response.package_details.important_info); // notes
-                        $('#summernote5').summernote('code', response.package_details.program_inclusion); // program Inclusion
-                        $('#summernote9').summernote('code', response.package_details.program_exclusion); // program Exclusion
-
-
-                        //aminites
-                        if (response.selectedAmenities) {
-                            // Convert array to object for faster lookup
-                            const selectedAmenities = {};
-                            $.each(response.selectedAmenities, function(index, id) {
-                                selectedAmenities[id] = true;
-                            });
-
-                            // Loop through all checkboxes just once
-                            $('input[name="amenity_services[]"]').each(function() {
-                                $(this).prop('checked', selectedAmenities[$(this).val()] || false);
-                            });
-                        }
-                        //food beverages
-                        if (response.selectedfood_beverages) {
-                            const selectedFoodBeverages = {};
-                            $.each(response.selectedfood_beverages, function(index, id) {
-                                selectedFoodBeverages[id] = true;
-                            });
-                            $('input[name="food_beverages[]"]').each(function() {
-                                $(this).prop('checked', selectedFoodBeverages[$(this).val()] || false);
-                            });
-                        }
-                        //Activities
-                        if (response.selectedactivities) {
-                            const selectedactivities = {};
-                            $.each(response.selectedactivities, function(index, id) {
-                                selectedactivities[id] = true;
-                            });
-                            $('input[name="activities[]"]').each(function() {
-                                $(this).prop('checked', selectedactivities[$(this).val()] || false);
-                            });
-                        }
-
-                        //Safety Features
-                        if (response.selectedsafety_features) {
-                            const selectedsafety_features = {};
-                            $.each(response.selectedsafety_features, function(index, id) {
-                                selectedsafety_features[id] = true;
-                            });
-                            $('input[name="safety_features[]"]').each(function() {
-                                $(this).prop('checked', selectedsafety_features[$(this).val()] || false);
-                            });
-                        }
-
-                        //pricing caluculator lsit 
-                        if (response.pricingcalculator && response.pricingcalculator.length > 0) {
-                            const pricingSelect = $('#pricing_calculator');
-                            pricingSelect.empty().append(
-                                '<option value="" disabled selected>Select Price Calculator</option>'
-                            );
-
-                            // Add each pricing calculator option
-                            response.pricingcalculator.forEach(item => {
-                                pricingSelect.append(
-                                    $('<option></option>')
-                                    .val(item.id)
-                                    .text(item.title)
-                                );
-                            });
-                        }
-
-                        //status
-                        if (response.package_details.status !== undefined) {
-                            $('input[name="status"]').prop('checked', true);
-                        }
-                        //order
-                        if (response.package_details.list_order !== null && response.package_details.list_order !== undefined) {
-                            $('input[name="list_order"]').val(response.package_details.list_order);
-                        }
-
-
-
+                        campRuleContainer.append(camp_ruleHTML);
 
                     }
+                    //notes
 
-                },
-                error: function(xhr, status, error) {
-                    alert('AJAX Error: ' + error);
+                    // var notes_val = typeof response.package_details.important_info === 'string' ?
+                    //     JSON.parse(response.package_details.important_info) :
+                    //     response.package_details.important_info;
+                    $('#summernote4').summernote('code', response.package_details.important_info); // notes
+                    $('#summernote5').summernote('code', response.package_details.program_inclusion); // program Inclusion
+                    $('#summernote9').summernote('code', response.package_details.program_exclusion); // program Exclusion
+
+
+                    //aminites
+                    if (response.selectedAmenities) {
+                        // Convert array to object for faster lookup
+                        const selectedAmenities = {};
+                        $.each(response.selectedAmenities, function(index, id) {
+                            selectedAmenities[id] = true;
+                        });
+
+                        // Loop through all checkboxes just once
+                        $('input[name="amenity_services[]"]').each(function() {
+                            $(this).prop('checked', selectedAmenities[$(this).val()] || false);
+                        });
+                    }
+                    //food beverages
+                    if (response.selectedfood_beverages) {
+                        const selectedFoodBeverages = {};
+                        $.each(response.selectedfood_beverages, function(index, id) {
+                            selectedFoodBeverages[id] = true;
+                        });
+                        $('input[name="food_beverages[]"]').each(function() {
+                            $(this).prop('checked', selectedFoodBeverages[$(this).val()] || false);
+                        });
+                    }
+                    //Activities
+                    if (response.selectedactivities) {
+                        const selectedactivities = {};
+                        $.each(response.selectedactivities, function(index, id) {
+                            selectedactivities[id] = true;
+                        });
+                        $('input[name="activities[]"]').each(function() {
+                            $(this).prop('checked', selectedactivities[$(this).val()] || false);
+                        });
+                    }
+
+                    //Safety Features
+                    if (response.selectedsafety_features) {
+                        const selectedsafety_features = {};
+                        $.each(response.selectedsafety_features, function(index, id) {
+                            selectedsafety_features[id] = true;
+                        });
+                        $('input[name="safety_features[]"]').each(function() {
+                            $(this).prop('checked', selectedsafety_features[$(this).val()] || false);
+                        });
+                    }
+
+
+                    const pricingcalculatorid = @json($customerpricingid ?? []);
+                    let pricingcalculatoridIns = [...pricingcalculatorid];
+
+                    //pricing calculator list 
+                    if (response.pricingcalculator && response.pricingcalculator.length > 0) {
+                        const pricingSelect = $('#pricing_calculator');
+                        pricingSelect.empty();
+
+                        // Add default option (don't set it as selected if we have actual selections)
+                        if (pricingcalculatoridIns.length === 0) {
+                            pricingSelect.append(
+                                '<option value="" disabled selected>Select Price Calculator</option>'
+                            );
+                        } else {
+                            pricingSelect.append(
+                                '<option value="" disabled>Select Price Calculator</option>'
+                            );
+                        }
+
+                        // Add each pricing calculator option
+                        response.pricingcalculator.forEach(item => {
+                            const isSelected = pricingcalculatoridIns.includes(item.id.toString()) ||
+                                pricingcalculatoridIns.includes(Number(item.id));
+
+                            pricingSelect.append(
+                                $('<option></option>')
+                                .val(item.id)
+                                .text(item.title)
+                                .prop('selected', isSelected) // ✅ This was missing!
+                            );
+                        });
+
+                        // ✅ Trigger change to update the UI
+                        pricingSelect.trigger('change');
+
+                        // // Hide all sections
+                        // $('#stays-section, #activities-section, #cabs-section').hide();
+                        // $('#stays-details-container, #activity-details-container, #cabsdetails-container').empty();
+                    }
+
+                    //status
+                    if (response.package_details.status !== undefined) {
+                        $('input[name="status"]').prop('checked', true);
+                    }
+                    //order
+                    if (response.package_details.list_order !== null && response.package_details.list_order !== undefined) {
+                        $('input[name="list_order"]').val(response.package_details.list_order);
+                    }
+
                 }
-            });
+
+            },
+            error: function(xhr, status, error) {
+                alert('AJAX Error: ' + error);
+            }
+        });
+        // });
+    }
+
+    function safeParseJSON(value) {
+        if (typeof value === 'string') {
+            try {
+                return JSON.parse(value);
+            } catch (e) {
+                return [];
+            }
+        }
+        return Array.isArray(value) ? value : [];
+    }
+
+    // ✅ NEW FUNCTION: Filter out null values and get only actual pricing data
+    function getValidPricingData(priceAmount, priceTitle) {
+        const validAmounts = [];
+        const validTitles = [];
+
+        for (let i = 0; i < priceAmount.length; i++) {
+            const amount = priceAmount[i];
+            const title = priceTitle[i];
+            if (amount && title) {
+                validAmounts.push(amount);
+                validTitles.push(title);
+            }
+        }
+
+        return {
+            amounts: validAmounts,
+            titles: validTitles,
+            count: validAmounts.length
+        };
+    }
+
+    function handlePricingFields(response, currentPackageId) {
+        var priceAmount, priceTitle;
+
+        if (currentPackageId && currentPackageId != initialpackageId) {
+            priceAmount = safeParseJSON(response.package_details.price_amount);
+            priceTitle = safeParseJSON(response.package_details.price_tilte);
+        } else {
+            priceAmount = safeParseJSON(customerPricing.price_amount);
+            priceTitle = safeParseJSON(customerPricing.price_title);
+        }
+
+        // Get only valid pricing data (non-null values)
+        const validPricing = getValidPricingData(priceAmount, priceTitle);
+
+        // Use minimum of 4 fields or actual valid count, whichever is larger
+        var count = Math.max(4, validPricing.count);
+        var priceContainer = $('#price-fields-container');
+        priceContainer.empty();
+
+        var selectedPriceId = "{{ $customerservicefee->package_pricing_id ?? '' }}";
+        var initialSelectedAmount = 0;
+
+        for (var i = 0; i < count; i++) {
+            // Use valid data if available, otherwise empty
+            var currentPriceAmount = validPricing.amounts[i] || '';
+            var currentPriceTitle = validPricing.titles[i] || '';
+
+            // Only check radio if we have valid data at this index
+            const normalizedSelectedPriceId = (selectedPriceId === '' || selectedPriceId === null || selectedPriceId === undefined) ?
+                null :
+                parseInt(selectedPriceId, 10);
+
+            // Only check radio if we have valid data at this index
+            const isChecked = (
+                normalizedSelectedPriceId !== null &&
+                !isNaN(normalizedSelectedPriceId) &&
+                normalizedSelectedPriceId === i &&
+                currentPriceAmount !== '' && currentPriceAmount !== null && currentPriceAmount !== undefined &&
+                currentPriceTitle !== '' && currentPriceTitle !== null && currentPriceTitle !== undefined
+            );
+
+            const checkedAttr = isChecked ? 'checked' : '';
 
 
+            // If this is the checked radio, set the initial selected amount
+            if (isChecked) {
+                initialSelectedAmount = parseFloat(currentPriceAmount) || 0;
+                // Update the selected-amount immediately
+                $('#selected-amount').text('₹ ' + initialSelectedAmount.toLocaleString('en-IN'));
+            }
+
+            var fieldHtml = `
+                        <div class="row mb-2 align-items-center price-row" data-index="${i}">
+                            <div class="col-lg-1 text-center">
+                                <input type="radio" name="selected_price" class="form-check-input mt-0 price-radio" value="${i}" ${checkedAttr}>
+                            </div>
+                            <div class="col-lg-5">
+                                <label class="form-label fw-bold mb-2">Title</label>
+                                <input type="text" name="price_title[]" class="form-control py-2 rounded-3 shadow-sm price-title"
+                                    placeholder="Title"
+                                    value="${currentPriceTitle}">
+                            </div>
+                            <div class="col-lg-6">
+                                <label class="fw-bold mb-2">Amount <span class="text-danger">*</span></label>
+                                <div class="position-relative">
+                                    <span class="position-absolute top-50 start-0 translate-middle-y ps-3">₹</span>
+                                    <input type="number" name="price_amount[]" class="form-control py-2 ps-5 rounded-3 shadow-sm price-amount"
+                                        placeholder="Actual Amount"
+                                        value="${currentPriceAmount}">
+                                </div>
+                            </div>
+                        </div>`;
+            priceContainer.append(fieldHtml);
+        }
+
+        // Set global variable
+        selectedPriceAmount = initialSelectedAmount;
+
+        // // If no radio was checked but we have valid price amounts, use the first one
+        // if (initialSelectedAmount === 0 && validPricing.count > 0) {
+        //     var firstPriceAmount = parseFloat(validPricing.amounts[0]) || 0;
+        //     if (firstPriceAmount > 0) {
+        //         selectedPriceAmount = firstPriceAmount;
+        //         $('#selected-amount').text('₹ ' + firstPriceAmount.toLocaleString('en-IN'));
+        //         // Also check the first radio button
+        //         $('input[name="selected_price"]').first().prop('checked', true);
+        //     }
+        // }
+
+        // Add event listeners for dynamic updates
+        addPricingEventListeners();
+
+    }
+
+    // ✅ NEW FUNCTION: Add event listeners for pricing fields
+    function addPricingEventListeners() {
+        // Remove existing event listeners to prevent duplicates
+        $(document).off('change', 'input[name="selected_price"]');
+        $(document).off('input', '.price-amount');
+
+        // Radio button change event
+        $(document).on('change', 'input[name="selected_price"]', function() {
+            updateSelectedAmount();
         });
 
-        // Update hidden input on form submission
-        $('form').on('submit', function() {
+        // Amount input change event
+        $(document).on('input', '.price-amount', function() {
+            // If this amount field belongs to the selected radio, update display
+            var rowIndex = $(this).closest('.price-row').data('index');
+            var isSelected = $(this).closest('.price-row').find('input[name="selected_price"]').is(':checked');
 
-            $('#plan_description').val($('#summernote3').summernote('code'));
-            $('#location').val($('#summernote10').summernote('code'));
-            $('#important_info').val($('#summernote4').summernote('code'));
-            $('#program_inclusion').val($('#summernote5').summernote('code'));
-            $('#program_exclusion').val($('#summernote9').summernote('code'));
+            if (isSelected) {
+                updateSelectedAmount();
+            }
+        });
+    }
+
+    // ✅ NEW FUNCTION: Update selected amount display
+    function updateSelectedAmount() {
+        var selectedRadio = $('input[name="selected_price"]:checked');
+        if (selectedRadio.length > 0) {
+            var rowIndex = selectedRadio.val();
+            var amountInput = $('.price-row[data-index="' + rowIndex + '"]').find('.price-amount');
+            var amountValue = parseFloat(amountInput.val()) || 0;
+
+            selectedPriceAmount = amountValue;
+            $('#selected-amount').text('₹ ' + amountValue.toLocaleString('en-IN'));
+        } else {
+            selectedPriceAmount = 0;
+            $('#selected-amount').text('₹ 0');
+        }
+    }
+
+    // ✅ Initialize pricing on page load
+    function initializePricing() {
+        const currentPackageId = $('#package_select').val();
+        // If no package is selected or it's the initial package, show customer pricing
+        if (!currentPackageId || currentPackageId == initialpackageId) {
+            handlePricingFields({}, currentPackageId);
+        }
+        // Otherwise, the package change handler will handle it
+    }
+
+    $("#package_select").on('change', function() {
+
+        setupPackageChangeHandler();
+    });
+
+    const initialstayId = "{{ $customer->stay_details_id ?? '' }}";
+
+    var customerPricing = {
+        price_amount: @json(is_string($customer -> price_amount) ? $customer -> price_amount : ($customer -> price_amount ?? [])),
+        price_title: @json(is_string($customer -> price_title) ? $customer -> price_title : ($customer -> price_title ?? []))
+    };
+
+
+    // ✅ Run this on DOM ready
+    $(document).ready(function() {
+        const initialpackageId = "{{ $customer->package_id ?? '' }}";
+
+        // Initialize pricing
+        initializePricing();
+
+        // Setup package change handler
+        $("#package_select").on('change', function() {
+            setupPackageChangeHandler();
         });
 
-        $(document).ready(function() {
+        if (initialpackageId) {
+            // ✅ Better approach: Wait for Select2 to be ready and options to be loaded
+            const initializePackage = () => {
+                const packageSelect = $('#package_select');
+                const optionExists = packageSelect.find('option[value="' + initialpackageId + '"]').length > 0;
+
+                if (optionExists) {
+                    if (packageSelect.hasClass('select2-hidden-accessible')) {
+                        packageSelect.val(initialpackageId).trigger('change.select2');
+                    } else {
+                        packageSelect.val(initialpackageId).trigger('change');
+                    }
+                } else {
+                    setTimeout(initializePackage, 200);
+                }
+            };
+
+            // ✅ Start the initialization process
+            setTimeout(initializePackage, 500);
+        }
+    });
+
+
+    // ✅ Fetch stays function
+    function fetchStays(city_ids) {
+        $('#package_select_stay').empty().append('<option disabled selected>Loading stays...</option>');
+        $('#package_select_stay').trigger('change.select2');
+
+        $.ajax({
+            url: '/customer-package/packageStay-details',
+            type: 'POST',
+            data: {
+                city_ids: city_ids
+            },
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: function(response) {
+                try {
+                    response = typeof response === 'string' ? JSON.parse(response) : response;
+
+                    const staySelect = $('#package_select_stay');
+                    staySelect.empty();
+
+                    // Get the initial stay ID from your PHP variable
+                    const initialstayId = "{{ $customer->stay_details_id ?? '' }}";
+
+                    // Add default option
+                    staySelect.append('<option value="" disabled selected>Select Stay</option>');
+
+                    if (response.cities_details && Array.isArray(response.cities_details)) {
+                        response.cities_details.forEach(stay => {
+                            if (stay && stay.id && stay.stay_title) {
+                                // Create option element
+                                const option = $('<option></option>')
+                                    .val(stay.id)
+                                    .text(stay.stay_title);
+
+                                // Set selected if this is the initial stay ID
+                                if (initialstayId && stay.id == initialstayId) {
+                                    option.attr('selected', 'selected');
+                                }
+
+                                staySelect.append(option);
+                            }
+                        });
+
+                        // If initialstayId exists and was found in the options, trigger change
+                        if (initialstayId) {
+                            const optionExists = staySelect.find('option[value="' + initialstayId + '"]').length > 0;
+                            if (optionExists) {
+                                setTimeout(() => {
+                                    if (staySelect.hasClass('select2-hidden-accessible')) {
+                                        staySelect.val(initialstayId).trigger('change.select2');
+                                    } else {
+                                        staySelect.val(initialstayId).trigger('change');
+                                    }
+                                }, 100);
+                            }
+                        }
+
+                    } else {
+                        staySelect.append('<option disabled>No stays found</option>');
+                    }
+
+                    staySelect.trigger('change.select2');
+
+                } catch (e) {
+                    $('#package_select_stay').empty().append('<option disabled selected>Error loading stays</option>').trigger('change.select2');
+                }
+            },
+            error: function(xhr, status, error) {
+             
+                $('#package_select_stay').empty().append('<option disabled selected>Error loading stays</option>').trigger('change.select2');
+            }
+        });
+    }
+
+    function addCampRuleField() {
+        // Find the container where new fields will be added
+        var container = document.getElementById('camp-rule-container');
+
+        // Create a new div for the new field
+        var newField = document.createElement('div');
+        newField.className = 'row g-2 mb-4 camp-rule-field';
+        newField.innerHTML = `<div class="col">
+                <input type="text" name="camp_rule[]" class="form-control py-3 rounded-3 shadow-sm" placeholder="Payment Policy" >
+            </div>
+            <div class="col-lg-1 mt-5 text-end">
+                <a class="table-link danger remove-plan" onclick="removeField(this)">
+                    <span class="fa-stack">
+                        <i class="fa fa-square fa-stack-2x"></i>
+                        <i class="fa fa-trash-o fa-stack-1x fa-inverse"></i>
+                    </span>
+                </a>
+            </div>`;
+
+        // Append the new field to the container
+        container.appendChild(newField);
+    }
+
+    function removeField(element) {
+        // Find the parent element (field container) and remove it
+        var field = element.closest('.camp-rule-field');
+        if (field) {
+            field.remove();
+        }
+    }
+
+
+    // total duration
+    document.addEventListener('DOMContentLoaded', () => {
+        const startDateInput = document.getElementById('start_date');
+        const returnDateInput = document.getElementById('return_date');
+        const totalDaysInput = document.getElementById('total_days');
+
+        function calculateDays() {
+            const startDate = new Date(startDateInput.value);
+            const returnDate = new Date(returnDateInput.value);
+            if (startDate && returnDate && returnDate >= startDate) {
+                const diffTime = Math.abs(returnDate - startDate);
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                totalDaysInput.value = diffDays;
+            } else {
+                totalDaysInput.value = '';
+            }
+        }
+
+        startDateInput.addEventListener('change', calculateDays);
+        returnDateInput.addEventListener('change', calculateDays);
+    });
+
+
+
+    // Update hidden input on form submission
+    $('form').on('submit', function() {
+
+        $('#plan_description').val($('#summernote3').summernote('code'));
+        $('#location').val($('#summernote10').summernote('code'));
+        $('#important_info').val($('#summernote4').summernote('code'));
+        $('#program_inclusion').val($('#summernote5').summernote('code'));
+        $('#program_exclusion').val($('#summernote9').summernote('code'));
+    });
+
+    // Global variables to store settings
+    let gstRate = 0.0; // Default 0%
+    let serviceFeeAmount = 0; // Service fee as fixed amount
+
+    // Function to calculate and update price summary
+    // 1️⃣ Global variable
+    let selectedPriceAmount = 0;
+
+    // 2️⃣ Event for radio button selection
+    $('#price-fields-container').on('change', 'input[name="selected_price"]', function() {
+        const selectedRow = $(this).closest('.row');
+
+        const index = selectedRow.data('index');
+        selectedPriceAmount = parseFloat(selectedRow.find('.price-amount').val()) || 0;
+
+        $('#selected-amount').text('₹ ' + selectedPriceAmount.toLocaleString('en-IN'));
+
+        $('#selected-price-id').val(index);
+
+        // 3️⃣ Update grand total immediately
+        updatePriceSummary();
+    });
+
+
+    function updatePriceSummary() {
+        let selectedValue = 0;
+
+        // Sum up all other price inputs if needed
+        $('.price-input').each(function() {
+            const price = parseFloat($(this).val()) || 0;
+            selectedValue += price;
+        });
+
+        // Use the global selectedPriceAmount (Package Pricing)
+        let packagePricing = selectedPriceAmount || 0;
+
+        // Get GST from input instead of backend setting
+        const userGstRate = parseFloat($('#gst-input').val()) || 0; // percentage
+        const serviceFeeAmount = parseFloat($('#service-fee-input').val()) || 0;
+
+        // ✅ CORRECTED: Calculate GST on (Package Pricing + Selected Value + Service Fee)
+        const taxableAmount = packagePricing + selectedValue + serviceFeeAmount;
+        const gstAmount = Math.round(taxableAmount * (userGstRate / 100));
+
+        const totalBeforeTax = packagePricing + selectedValue + serviceFeeAmount;
+        const grandTotal = Math.round(totalBeforeTax + gstAmount);
+
+        // Update the DOM
+        $('#selected-amount').text('₹ ' + packagePricing.toLocaleString('en-IN'));
+        $('#selected-value').text('₹ ' + selectedValue.toLocaleString('en-IN'));
+        $('#service-fee').text('₹ ' + serviceFeeAmount.toLocaleString('en-IN'));
+        $('#tax-amount').text('₹ ' + gstAmount.toLocaleString('en-IN'));
+        $('#total-amount').text('₹ ' + totalBeforeTax.toLocaleString('en-IN'));
+        $('#grand-total').text('₹ ' + grandTotal.toLocaleString('en-IN'));
+
+        // Update hidden inputs
+        $('#hidden-selected-value').val(selectedValue);
+        $('#hidden-service-fee').val(serviceFeeAmount);
+        $('#hidden-tax-amount').val(gstAmount);
+        $('#hidden-total-amount').val(totalBeforeTax);
+        $('#hidden-grand-total').val(grandTotal);
+        $('#package_pricing_value').val(packagePricing);
+    }
+
+    // Event listeners for inputs
+    $('#gst-input').on('input', function() {
+        updatePriceSummary();
+    });
+
+    $('#service-fee-input').on('input', function() {
+        updatePriceSummary();
+    });
+
+    // Also update when other price inputs change
+    $('.price-input').on('input', function() {
+        updatePriceSummary();
+    });
+
+    // ✅ Initialize on page load
+    $(document).ready(function() {
+        // Set initial selectedPriceAmount from the checked radio button
+        const initialCheckedRadio = $('input[name="selected_price"]:checked');
+        if (initialCheckedRadio.length > 0) {
+            const selectedRow = initialCheckedRadio.closest('.row');
+            selectedPriceAmount = parseFloat(selectedRow.find('.price-amount').val()) || 0;
+            $('#selected-amount').text('₹ ' + selectedPriceAmount.toLocaleString('en-IN'));
+        }
+
+        updatePriceSummary();
+    });
+
+    function setupPriceInputListeners() {
+        $(document).off('input', '.price-input').on('input', '.price-input', function() {
+            // Validate input to allow only numbers
+            const value = $(this).val();
+            if (value && !/^\d*\.?\d*$/.test(value)) {
+                $(this).val(value.replace(/[^\d.]/g, ''));
+            }
+
+            // Update price summary
+            updatePriceSummary();
+        });
+    }
+
+    // Function to update settings from backend
+    function updateSettingsFromBackend(settings) {
+        if (settings && settings.length > 0) {
+            const setting = settings[0];
+
+            // GST as percentage (convert to decimal)
+            gstRate = (parseFloat(setting.gst) || 0) / 100;
+
+            // Service fee as fixed amount
+            serviceFeeAmount = parseFloat(setting.service_fee) || 0;
+        }
+    }
+    $(document).ready(function() {
+        $('#stays-section, #activities-section, #cabs-section').hide();
+
+        // Initialize price calculation
+        setupPriceInputListeners();
+        updatePriceSummary();
+
+        $('#pricing_calculator').change(function() {
+            const pricingval = $(this).val();
+
+            // Hide all sections initially
             $('#stays-section, #activities-section, #cabs-section').hide();
-            $('#pricing_calculator').change(function() {
-                const pricingval = $(this).val();
+            $('#stayDropdownText').text('Select stays');
+            $('#activityDropdownText').text('Select activities');
+            $('#cabDropdownText').text('Select options');
+            $('#stayHiddenInput, #activityHiddenInput, #cabHiddenInput').val('');
 
-                // Hide all sections initially
-                $('#stays-section, #activities-section, #cabs-section').hide();
-                $('#stayDropdownText').text('Select stays');
-                $('#activityDropdownText').text('Select activities');
-                $('#cabDropdownText').text('Select options');
-                $('#stayHiddenInput, #activityHiddenInput, #cabHiddenInput').val('');
+            // Clear all details containers
+            $('#stays-details-container, #activity-details-container, #cabsdetails-container').empty();
+            $('#cabs-details-container').hide();
 
-                $.ajax({
-                    url: "{{ route('admin.c_pricing_details') }}",
-                    type: 'POST',
-                    data: {
-                        pricingval: pricingval,
-                        _token: "{{ csrf_token() }}"
-                    },
-                    success: function(data) {
-                        // Process Stays
-                        if (data.stays && Object.keys(data.stays).length > 0) {
-                            const staysSection = $('#stays-section');
-                            const staysDropdown = staysSection.find('.dropdown-menu');
-                            // const selectedStays = [];
-                            const selectedStays = data.pricing_stay_id;
+            // Remove existing event handlers to prevent duplicates
+            $('.stay-checkbox').off('change');
+            $('.activity-checkbox').off('change');
+            $('.cab-details-checkbox').off('change');
 
-                            staysDropdown.empty();
+            $.ajax({
+                url: "{{ route('admin.edit_pricing_details') }}",
+                type: 'POST',
+                data: {
+                    pricingval: pricingval,
+                    customer_id: customerid,
+                    customer_pricing_id: customer_pricing_id,
+                    _token: "{{ csrf_token() }}"
+                },
+                success: function(data) {
+                    // Update settings from backend
+                    if (data.settings) {
+                        updateSettingsFromBackend(data.settings);
+                    }
+                    // Process Stays
+                    if (data.stays && Object.keys(data.stays).length > 0) {
+                        const staysSection = $('#stays-section');
+                        const staysDropdown = staysSection.find('.dropdown-menu');
+                        // const selectedStays = [];
+                        const selectedStays = data.pricing_stay_id;
 
-                            staysSection.css('display', 'block');
+                        staysDropdown.empty();
 
-                            $.each(data.stays, function(id, title) {
-                                staysDropdown.append(`
+                        staysSection.css('display', 'block');
+
+                        $.each(data.stays, function(id, title) {
+                            staysDropdown.append(`
                                     <li>
                                         <div class="form-check">
                                             <input type="checkbox" class="form-check-input stay-checkbox" 
@@ -1667,48 +2223,68 @@
                                         </div>
                                     </li>
                                 `);
-                            });
+                        });
 
-                            staysSection.show();
+                        staysSection.show();
 
 
-                            // Update the dropdown text and hidden input initially
-                            $('#stayDropdownText').text(selectedStays.length > 0 ? `${selectedStays.length} selected` : 'Select stays');
-                            $('#stayHiddenInput').val(selectedStays.join(','));
+                        // Update the dropdown text and hidden input initially
+                        $('#stayDropdownText').text(selectedStays.length > 0 ?
+                            `${selectedStays.length} selected` : 'Select stays');
+                        $('#stayHiddenInput').val(selectedStays.join(','));
 
-                            // Trigger change event for pre-checked boxes on initial load
-                            if (selectedStays.length > 0) {
-                                $('.stay-checkbox:checked').trigger('change');
-                            }
-
-                            $('.stay-checkbox').change(function() {
-                                const stayId = $(this).val();
-                                if ($(this).is(':checked')) {
-                                    if (!selectedStays.includes(stayId)) selectedStays.push(stayId);
-                                } else {
-                                    const index = selectedStays.indexOf(stayId);
-                                    if (index > -1) selectedStays.splice(index, 1);
-                                }
-                                $('#stayDropdownText').text(selectedStays.length > 0 ? `${selectedStays.length} selected` : 'Select stays');
-                                $('#stayHiddenInput').val(selectedStays.join(','));
-                            });
-
-                            staysDropdown.on('click', '.form-check', function(e) {
-                                e.stopPropagation();
-                            });
+                        // Trigger change event for pre-checked boxes on initial load
+                        if (selectedStays.length > 0) {
+                            $('.stay-checkbox:checked').trigger('change');
                         }
 
-                        // Process Activities
-                        if (data.activities && Object.keys(data.activities).length > 0) {
-                            const activitiesSection = $('#activities-section');
-                            const activitiesDropdown = activitiesSection.find('.dropdown-menu');
-                            // const selectedActivities = [];
-                            const selectedActivities = data.pricing_activity_id;
+                        $('.stay-checkbox').change(function() {
+                            const stayId = $(this).val();
+                            if ($(this).is(':checked')) {
+                                if (!selectedStays.includes(stayId)) selectedStays
+                                    .push(stayId);
+                            } else {
+                                const index = selectedStays.indexOf(stayId);
+                                if (index > -1) selectedStays.splice(index, 1);
+                            }
+                            $('#stayDropdownText').text(selectedStays.length > 0 ?
+                                `${selectedStays.length} selected` :
+                                'Select stays');
+                            $('#stayHiddenInput').val(selectedStays.join(','));
 
-                            activitiesDropdown.empty();
 
-                            $.each(data.activities, function(id, title) {
-                                activitiesDropdown.append(`
+                            // Trigger AJAX call to update stays details
+                            if (selectedStays.length === 0) {
+                                $('#stays-details-container').empty();
+                                updatePriceSummary
+                                    (); // Update immediately when no stays selected
+                            } else {
+                                // This will trigger the stay-checkbox change event below
+                                $(this).trigger('stay-checkbox-change');
+                            }
+                        });
+
+                        // Trigger change event for pre-checked boxes on initial load
+                        if (selectedStays.length > 0) {
+                            $('.stay-checkbox:checked').trigger('change');
+                        }
+
+                        staysDropdown.on('click', '.form-check', function(e) {
+                            e.stopPropagation();
+                        });
+                    }
+
+                    // Process Activities
+                    if (data.activities && Object.keys(data.activities).length > 0) {
+                        const activitiesSection = $('#activities-section');
+                        const activitiesDropdown = activitiesSection.find('.dropdown-menu');
+                        // const selectedActivities = [];
+                        const selectedActivities = data.pricing_activity_id;
+
+                        activitiesDropdown.empty();
+
+                        $.each(data.activities, function(id, title) {
+                            activitiesDropdown.append(`
                                     <li>
                                         <div class="form-check">
                                             <input type="checkbox" class="form-check-input activity-checkbox" 
@@ -1717,550 +2293,527 @@
                                         </div>
                                     </li>
                                 `);
-                            });
+                        });
 
-                            activitiesSection.show();
+                        activitiesSection.show();
 
-                            // Update UI immediately
-                            $('#activityDropdownText').text(
-                                selectedActivities.length > 0 ?
-                                `${selectedActivities.length} selected` :
-                                'Select activities'
-                            );
-                            $('#activityHiddenInput').val(selectedActivities.join(','));
+                        // Update UI immediately
+                        $('#activityDropdownText').text(
+                            selectedActivities.length > 0 ?
+                            `${selectedActivities.length} selected` :
+                            'Select activities'
+                        );
+                        $('#activityHiddenInput').val(selectedActivities.join(','));
 
-                            // Trigger change event for pre-checked boxes on initial load
-                            if (selectedActivities.length > 0) {
-                                $('.activity-checkbox:checked').trigger('change');
-                            }
-
-                            $('.activity-checkbox').change(function() {
-                                const activityId = $(this).val();
-                                if ($(this).is(':checked')) {
-                                    if (!selectedActivities.includes(activityId)) selectedActivities.push(activityId);
-                                } else {
-                                    const index = selectedActivities.indexOf(activityId);
-                                    if (index > -1) selectedActivities.splice(index, 1);
-                                }
-                                $('#activityDropdownText').text(selectedActivities.length > 0 ? `${selectedActivities.length} selected` : 'Select activities');
-                                $('#activityHiddenInput').val(selectedActivities.join(','));
-                            });
-
-                            activitiesDropdown.on('click', '.form-check', function(e) {
-                                e.stopPropagation();
-                            });
+                        // Trigger change event for pre-checked boxes on initial load
+                        if (selectedActivities.length > 0) {
+                            $('.activity-checkbox:checked').trigger('change');
                         }
 
-                        // Process Cabs
-                        if (data.cabs && Object.keys(data.cabs).length > 0) {
-                            const cabsSection = $('#cabs-section');
-                            const cabsDropdown = cabsSection.find('.dropdown-menu');
-                            // const selectedCabs = [];
-                            const selectedCabs = data.pricing_cabs ?
-                                Object.keys(data.pricing_cabs)
-                                .filter(key => data.cabs[key]) // Only keep keys that exist in current cabs
-                                .map(key => ({
-                                    key: key,
-                                    value: data.cabs[key]
-                                })) : [];
+                        $('.activity-checkbox').change(function() {
+                            const activityId = $(this).val();
+                            if ($(this).is(':checked')) {
+                                if (!selectedActivities.includes(activityId))
+                                    selectedActivities.push(activityId);
+                            } else {
+                                const index = selectedActivities.indexOf(
+                                    activityId);
+                                if (index > -1) selectedActivities.splice(index, 1);
+                            }
+                            $('#activityDropdownText').text(selectedActivities
+                                .length > 0 ?
+                                `${selectedActivities.length} selected` :
+                                'Select activities');
+                            $('#activityHiddenInput').val(selectedActivities.join(
+                                ','));
 
-                            cabsDropdown.empty();
 
-                            // Using Object.keys to iterate through the key-value pairs
-                            Object.keys(data.cabs).forEach(function(key) {
-                                const value = data.cabs[key];
-                                cabsDropdown.append(`
-                                    <li>
-                                        <div class="form-check">
-                                            <input type="checkbox" class="form-check-input cab-checkbox cab_details" 
-                                                id="cab-${key}" name="${key}" value="${key}" data-text="${value}" checked>
-                                            <label class="form-check-label" for="cab-${key}">${value}</label>
-                                        </div>
-                                    </li>
-                                `);
-                            });
+                            // Trigger AJAX call to update activities details
+                            if (selectedActivities.length === 0) {
+                                $('#activity-details-container').empty();
+                                updatePriceSummary
+                                    (); // Update immediately when no activities selected
+                            } else {
+                                // This will trigger the activity-checkbox change event below
+                                $(this).trigger('activity-checkbox-change');
+                            }
+                        });
 
-                            cabsSection.show();
+                        // Trigger change event for pre-checked boxes on initial load
+                        if (selectedActivities.length > 0) {
+                            $('.activity-checkbox:checked').trigger('change');
+                        }
 
-                            // Update UI with initial selections
+                        activitiesDropdown.on('click', '.form-check', function(e) {
+                            e.stopPropagation();
+                        });
+                    }
+
+                    // Process Cabs
+                    if (data.cabs && Object.keys(data.cabs).length > 0) {
+                        const cabsSection = $('#cabs-section');
+                        const cabsDropdown = cabsSection.find('.dropdown-menu');
+
+                        const selectedCabs = data.pricing_cabs_id ?
+                            data.pricing_cabs_id
+                            .filter(cabId => data.cabs[cabId])
+                            .map(cabId => ({
+                                key: cabId,
+                                value: data.cabs[cabId]
+                            })) : [];
+
+                        cabsDropdown.empty();
+
+                        // Using Object.keys to iterate through the key-value pairs
+                        Object.keys(data.cabs).forEach(function(key) {
+                            const value = data.cabs[key];
+                            cabsDropdown.append(`
+                                <li>
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input cab-details-checkbox" 
+                                            id="cab-${key}" name="${key}" value="${key}" data-text="${value}" checked>
+                                        <label class="form-check-label" for="cab-${key}">${value}</label>
+                                    </div>
+                                </li>
+                            `);
+                        });
+
+                        cabsSection.show();
+
+                        // Update UI with initial selections
+                        $('#cabDropdownText').text(
+                            selectedCabs.length > 0 ?
+                            selectedCabs.map(item => item.value).join(', ') :
+                            'Select options'
+                        );
+                        $('#cabHiddenInput').val(selectedCabs.map(item => item.key).join(','));
+
+                        // Load cab details immediately for pre-selected cabs
+                        if (selectedCabs.length > 0) {
+                            loadCabDetailsDirectly(selectedCabs.map(item => item.key));
+                        }
+
+                        // Handle cab details checkbox changes directly
+                        $(document).on('change', '.cab-details-checkbox', function() {
+                            const selectedCabDetails = $('.cab-details-checkbox:checked').map(function() {
+                                return {
+                                    id: $(this).val(),
+                                    text: $(this).data('text')
+                                };
+                            }).get();
+
+                            // Update dropdown text
                             $('#cabDropdownText').text(
-                                selectedCabs.length > 0 ?
-                                selectedCabs.map(item => item.value).join(', ') :
+                                selectedCabDetails.length > 0 ?
+                                selectedCabDetails.map(item => item.text).join(', ') :
                                 'Select options'
                             );
-                            $('#cabHiddenInput').val(selectedCabs.map(item => item.key).join(','));
+                            $('#cabHiddenInput').val(selectedCabDetails.map(item => item.id).join(','));
 
-                            if (selectedCabs.length > 0) {
-                                $('.cab-checkbox:checked').trigger('change');
+                            // Load cab details
+                            if (selectedCabDetails.length === 0) {
+                                $('#cabsdetails-container').empty().hide();
+                                updatePriceSummary();
+                            } else {
+                                loadCabDetailsDirectly(selectedCabDetails.map(item => item.id));
                             }
+                        });
 
-                            $('.cab-checkbox').change(function() {
-                                const cabKey = $(this).val();
-                                const cabValue = $(this).data('text');
-
-                                if ($(this).is(':checked')) {
-                                    if (!selectedCabs.some(item => item.key === cabKey)) {
-                                        selectedCabs.push({
-                                            key: cabKey,
-                                            value: cabValue
-                                        });
-                                    }
-                                } else {
-                                    const index = selectedCabs.findIndex(item => item.key === cabKey);
-                                    if (index > -1) selectedCabs.splice(index, 1);
-                                }
-
-                                // Update button text with selected values
-                                $('#cabDropdownText').text(
-                                    selectedCabs.length > 0 ?
-                                    selectedCabs.map(item => item.value).join(', ') :
-                                    'Select options'
-                                );
-
-                                // Store keys in hidden input
-                                $('#cabHiddenInput').val(selectedCabs.map(item => item.key).join(','));
-                            });
-
-                            cabsDropdown.on('click', '.form-check', function(e) {
-                                e.stopPropagation();
-                            });
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        console.error('Error:', error);
-                        $('#stays-section, #activities-section, #cabs-section').html('<div class="alert alert-danger">Error loading data</div>').show();
+                        cabsDropdown.on('click', '.form-check', function(e) {
+                            e.stopPropagation();
+                        });
                     }
-                });
+                    // Setup price listeners after all data is loaded
+                    setupPriceInputListeners();
+                    updatePriceSummary();
+                },
+                error: function(xhr, status, error) {
+                    $('#stays-section, #activities-section, #cabs-section').html(
+                            '<div class="alert alert-danger">Error loading data</div>')
+                        .show();
+                }
+            });
+        });
+
+        //stay details - stay-checkbox
+        $(document).on('change', '.stay-checkbox', function() {
+            const pricingval = $('#pricing_calculator').val();
+            const selectedStays = [];
+
+            $('.stay-checkbox:checked').each(function() {
+                selectedStays.push($(this).val());
             });
 
-            // Trigger change on page load if value exists
-            if ($('#pricing_calculator').val()) {
-                $('#pricing_calculator').trigger('change');
+            if (selectedStays.length === 0) {
+                $('#stays-details-container').empty();
+                updatePriceSummary(); // Update summary when no stays selected
+                return;
             }
 
-            //stay details - stay-checkbox
-            $(document).on('change', '.stay-checkbox', function() {
-                const pricingval = $('#pricing_calculator').val();
-                const selectedStays = [];
+            $.ajax({
+                url: "{{ route('admin.ec_stay_details') }}",
+                type: 'POST',
+                data: {
+                    pricingval: pricingval,
+                    staydetails: selectedStays,
+                    _token: "{{ csrf_token() }}"
+                },
+                success: function(data) {
+                    const container = $('#stays-details-container');
+                    container.empty();
 
-                $('.stay-checkbox:checked').each(function() {
-                    selectedStays.push($(this).val());
-                });
-
-                if (selectedStays.length === 0) {
-                    $('#stays-details-container').empty();
-                    return;
-                }
-
-                $.ajax({
-                    url: "{{ route('admin.ec_stay_details') }}",
-                    type: 'POST',
-                    data: {
-                        pricingval: pricingval,
-                        customerid: customerid,
-                        staydetails: selectedStays,
-                        _token: "{{ csrf_token() }}"
-                    },
-                    success: function(data) {
-                        const container = $('#stays-details-container');
-                        container.empty();
-
-                        data.stays_details.forEach((stayGroup, index) => {
-                            const groupTitle = stayGroup[0]?.title || '';
-                            const groupHeaderHtml = `
+                    data.stays_details.forEach((stayGroup, index) => {
+                        const groupTitle = stayGroup[0]?.title || '';
+                        const groupHeaderHtml = `
                             <div class="row stay-group-header mb-2">
                                 <div class="col-md-12">
                                     <h5>${groupTitle}</h5>
                                 </div>
                             </div>
                         `;
-                            container.append(groupHeaderHtml);
+                        container.append(groupHeaderHtml);
 
-                            stayGroup.forEach((stay, subIndex) => {
-                                const stayHtml = `
+                        stayGroup.forEach((stay, subIndex) => {
+                            const stayHtml = `
                                 <div class="row stay-price-row mb-3" data-stay-id="${selectedStays[index]}">
-                                    <div class="col-md-2">
+                                    <div class="col-md-4">
                                         <input type="hidden" name="stays[${index}][${subIndex}][stay_id]" value="${stay.stay_id}">
                                         <input type="hidden" name="stays[${index}][${subIndex}][title]" value="${stay.title}">
                                         <!-- Title removed from display (already shown in header) -->
                                     </div>
-                                    <div class="col-md-2">
+                                    <div class="col-md-4">
                                         <input type="hidden" name="stays[${index}][${subIndex}][price_title]" value="${stay.price_title}">
                                         <input type="text" class="form-control" value="${stay.price_title}" readonly>
                                     </div>
-                                    <div class="col-md-2">
+                                    <div class="col-md-4">
                                         <input type="text" class="form-control price-input" 
                                             name="stays[${index}][${subIndex}][price]" 
-                                            value="${stay.price}" required>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <button type="button" class="btn btn-outline-danger btn-sm deleterow" 
-                                            data-id="${stay.existingPricesid}" data-type="stay">
-                                            <i class="fas fa-times"></i> Remove
-                                        </button>
+                                            value="${stay.price}" readonly> 
                                     </div>
                                 </div>
                             `;
-                                container.append(stayHtml);
-                            });
+                            container.append(stayHtml);
                         });
-                    },
-                    error: function(xhr, status, error) {
-                        console.error('Error:', error);
-                    }
-                });
+                    });
+
+                    // Setup listeners and update price after stays are loaded
+                    setupPriceInputListeners();
+                    updatePriceSummary();
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error:', error);
+                }
+            });
+        });
+
+        //activity details
+        $(document).on('change', '.activity-checkbox', function() {
+            const pricingval = $('#pricing_calculator').val();
+            const selectedStays = [];
+
+            $('.activity-checkbox:checked').each(function() {
+                selectedStays.push($(this).val());
             });
 
-            //activity details
-            $(document).on('change', '.activity-checkbox', function() {
-                const pricingval = $('#pricing_calculator').val();
-                const selectedStays = [];
+            if (selectedStays.length === 0) {
+                $('#activity-details-container').empty();
+                updatePriceSummary(); // Update summary when no activities selected
+                return;
+            }
 
-                $('.activity-checkbox:checked').each(function() {
-                    selectedStays.push($(this).val());
-                });
+            $.ajax({
+                url: "{{ route('admin.c_activity_details') }}",
+                type: 'POST',
+                data: {
+                    pricingval: pricingval,
+                    staydetails: selectedStays,
+                    _token: "{{ csrf_token() }}"
+                },
+                success: function(data) {
+                    const container = $('#activity-details-container');
+                    container.empty();
 
-                if (selectedStays.length === 0) {
-                    $('#activity-details-container').empty();
-                    return;
-                }
-
-                $.ajax({
-                    url: "{{ route('admin.ec_activity_details') }}",
-                    type: 'POST',
-                    data: {
-                        pricingval: pricingval,
-                        staydetails: selectedStays,
-                        customerid: customerid,
-                        _token: "{{ csrf_token() }}"
-                    },
-                    success: function(data) {
-                        const container = $('#activity-details-container');
-                        container.empty();
-
-                        data.activity_details.forEach((activityGroup, groupIndex) => {
-                            // Add a group header showing the title just once
-                            if (activityGroup.length > 0) {
-                                const groupHeaderHtml = `
+                    data.activity_details.forEach((activityGroup, groupIndex) => {
+                        // Add a group header showing the title just once
+                        if (activityGroup.length > 0) {
+                            const groupHeaderHtml = `
                                 <div class="row activity-group-header mb-2">
                                     <div class="col-md-12">
                                         <h5>${activityGroup[0].title}</h5>
                                     </div>
                                 </div>
                             `;
-                                container.append(groupHeaderHtml);
-                            }
+                            container.append(groupHeaderHtml);
+                        }
 
-                            // Process each activity in the group
-                            activityGroup.forEach((activity, itemIndex) => {
-                                const activityHtml = `
+                        // Process each activity in the group
+                        activityGroup.forEach((activity, itemIndex) => {
+                            const activityHtml = `
                                 <div class="row activity-price-row mb-3" data-activity-id="${selectedStays[groupIndex]}">
-                                    <div class="col-md-2">
+                                    <div class="col-md-4">
                                         <input type="hidden" name="activity[${groupIndex}][${itemIndex}][activity_id]" value="${activity.activity_id}">
                                         <input type="hidden" name="activity[${groupIndex}][${itemIndex}][title]" value="${activity.title}">
                                         <!-- Title removed from display (shown in header) -->
                                     </div>
-                                    <div class="col-md-2">
+                                    <div class="col-md-4">
                                         <input type="hidden" name="activity[${groupIndex}][${itemIndex}][price_title]" value="${activity.price_title}">
                                         <input type="text" class="form-control" value="${activity.price_title}" readonly>
                                     </div>
-                                    <div class="col-md-2">
+                                    <div class="col-md-4">
                                         <input type="text" class="form-control price-input" 
                                             name="activity[${groupIndex}][${itemIndex}][price]" 
-                                            value="${activity.price}" required>
-                                    </div>
-
-                                     <div class="col-md-2">
-                                        <button type="button" class="btn btn-outline-danger btn-sm deleterow" 
-                                            data-id="${activity.existingPricesid}" data-type="activity">
-                                            <i class="fas fa-times"></i> Remove
-                                        </button>
+                                            value="${activity.price}" readonly>
                                     </div>
                                 </div>
                             `;
-                                container.append(activityHtml);
-                            });
+                            container.append(activityHtml);
                         });
-                    },
-                    error: function(xhr, status, error) {
-                        console.error('Error:', error);
-                    }
-                });
-            });
-
-            // Handle main cab type selection
-            $(document).on('change', '.cab-checkbox', function() {
-                const pricingval = $('#pricing_calculator').val();
-                const selectedCabIds = [];
-
-                $('.cab-checkbox:checked').each(function() {
-                    selectedCabIds.push($(this).val());
-                });
-
-                if (selectedCabIds.length === 0) {
-                    $('#cabs-details-container, #cabsdetails-container').hide();
-                    return;
-                }
-
-                $.ajax({
-                    url: "{{ route('admin.c_travel_details') }}",
-                    type: 'POST',
-                    data: {
-                        pricingval: pricingval,
-                        travelmodes: selectedCabIds,
-                        _token: "{{ csrf_token() }}"
-                    },
-                    success: function(data) {
-                        updateCabDetailsDropdown(data.cabs, data.pricing_cab);
-                    },
-                    error: function(xhr, status, error) {
-                        console.error('Error:', error);
-                        $('#cabs-details-container, #cabsdetails-container').hide();
-                    }
-                });
-            });
-
-            // Handle cab details selection
-            $(document).on('change', '.cab-details-checkbox', function() {
-                const pricingval = $('#pricing_calculator').val();
-                const selectedCabDetails = [];
-
-                $('.cab-details-checkbox:checked').each(function() {
-                    selectedCabDetails.push({
-                        id: $(this).val(),
-                        text: $(this).data('text')
                     });
-                });
 
-                if (selectedCabDetails.length === 0) {
-                    $('#cabsdetails-container').empty().hide();
-                    return;
+                    // Setup listeners and update price after activities are loaded
+                    setupPriceInputListeners();
+                    updatePriceSummary();
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error:', error);
                 }
-
-                const selectedCabIds = [];
-                $('.cab-checkbox:checked').each(function() {
-                    selectedCabIds.push($(this).val());
-                });
-
-                $.ajax({
-                    url: "{{ route('admin.ec_cabs_details') }}",
-                    type: 'POST',
-                    data: {
-                        pricingval: pricingval,
-                        cabdetails: selectedCabDetails.map(d => d.id),
-                        travelmodes: selectedCabIds,
-                        customerid: customerid,
-                        _token: "{{ csrf_token() }}"
-                    },
-                    success: function(data) {
-                        displayCabDetails(data.activity_details);
-                    },
-                    error: function(xhr, status, error) {
-                        console.error('Error:', error);
-                        $('#cabsdetails-container').empty().hide();
-                    }
-                });
             });
+        });
 
-            // Helper function to update cab details dropdown
-            function updateCabDetailsDropdown(cabsData, cabids) {
-                const container = $('#cabs-details-container');
-                const dropdownMenu = container.find('.dropdown-menu');
-                const dropdownText = container.find('#cabDetailsDropdownText');
-                const hiddenInput = container.find('#cabDetailsHiddenInput');
 
-                // Reset previous selections
-                dropdownMenu.empty();
-                hiddenInput.val(cabids);
-                dropdownText.text(cabids.length > 0 ? `${cabids.length} selected` : 'Select options');
+        // New function to load cab details directly
+        function loadCabDetailsDirectly(selectedCabIds) {
+            const pricingval = $('#pricing_calculator').val();
+
+            if (selectedCabIds.length === 0) {
                 $('#cabsdetails-container').empty().hide();
-
-                if (cabsData && Object.keys(cabsData).length > 0) {
-                    const selectedCabDetails = cabids
-                        .filter(id => cabsData[id]) // Only keep IDs that exist in current data
-                        .map(id => ({
-                            id: id,
-                            text: cabsData[id]
-                        }));
-
-                    $.each(cabsData, function(id, title) {
-                        const isChecked = cabids.includes(id.toString());
-                        dropdownMenu.append(`
-                            <li>
-                                <div class="form-check">
-                                    <input type="checkbox" class="form-check-input cab-details-checkbox" 
-                                        id="cab-detail-${id}" value="${id}" 
-                                        ${isChecked ? 'checked' : ''} 
-                                        data-text="${title}">
-                                    <label class="form-check-label" for="cab-detail-${id}">${title}</label>
-                                </div>
-                            </li>
-                        `);
-                    });
-
-                    // Update UI with initial selections
-                    if (selectedCabDetails.length > 0) {
-                        dropdownText.text(selectedCabDetails.map(opt => opt.text).join(', '));
-                        hiddenInput.val(selectedCabDetails.map(opt => opt.id).join(','));
-                    }
-
-                    // Single unified change handler
-                    $(document).off('change', '.cab-details-checkbox').on('change', '.cab-details-checkbox', function() {
-                        const pricingval = $('#pricing_calculator').val();
-                        const currentSelections = [];
-
-                        // Get all checked cab details
-                        $('.cab-details-checkbox:checked').each(function() {
-                            currentSelections.push({
-                                id: $(this).val(),
-                                text: $(this).data('text')
-                            });
-                        });
-
-                        // Get all checked main cab types
-                        const selectedCabIds = $('.cab-checkbox:checked').map(function() {
-                            return $(this).val();
-                        }).get();
-
-                        // Update UI
-                        dropdownText.text(
-                            currentSelections.length > 0 ?
-                            currentSelections.map(opt => opt.text).join(', ') :
-                            'Select options'
-                        );
-                        hiddenInput.val(currentSelections.map(opt => opt.id).join(','));
-
-                        // Make AJAX call if we have selections
-                        if (currentSelections.length > 0) {
-                            $.ajax({
-                                url: "{{ route('admin.ec_cabs_details') }}",
-                                type: 'POST',
-                                data: {
-                                    pricingval: pricingval,
-                                    cabdetails: currentSelections.map(d => d.id),
-                                    travelmodes: selectedCabIds,
-                                    customerid: customerid,
-                                    _token: "{{ csrf_token() }}"
-                                },
-                                success: function(data) {
-                                    displayCabDetails(data.activity_details);
-                                },
-                                error: function(xhr, status, error) {
-                                    console.error('Error:', error);
-                                    $('#cabsdetails-container').empty().hide();
-                                }
-                            });
-                        } else {
-                            $('#cabsdetails-container').empty().hide();
-                        }
-                    });
-
-                    // Trigger change for pre-checked boxes
-                    if (cabids.length > 0) {
-                        $('.cab-details-checkbox:checked').trigger('change');
-                    }
-
-                    container.show();
-                } else {
-                    container.hide();
-                }
+                updatePriceSummary();
+                return;
             }
 
-            // Helper function to display cab details (unchanged)
-            function displayCabDetails(detailsData) {
-                const container = $('#cabsdetails-container');
-                container.empty();
+            $.ajax({
+                url: "{{ route('admin.c_cabs_details') }}",
+                type: 'POST',
+                data: {
+                    pricingval: pricingval,
+                    cabdetails: selectedCabIds,
+                    travelmodes: selectedCabIds, // Pass same IDs for consistency
+                    _token: "{{ csrf_token() }}"
+                },
+                success: function(data) {
+                    displayCabDetails(data.activity_details || data.cab_details || data.details || []);
+                },
+                error: function(xhr, status, error) {
+                    $('#cabsdetails-container').empty().hide();
+                }
+            });
+        }
 
-                if (detailsData && detailsData.length > 0) {
-                    detailsData.forEach((cabGroup, groupIndex) => {
-                        // Add group header with title (shown once per group)
-                        if (cabGroup.length > 0) {
-                            container.append(`
-                            <div class="row cab-group-header mb-2">
-                                <div class="col-md-12">
-                                    <h5>${cabGroup[0].title}</h5>
-                                </div>
-                            </div>
-                        `);
-                        }
+        // Handle main cab type selection - UPDATED
+        // $(document).on('change', '.cab-checkbox', function() {
+        //     const pricingval = $('#pricing_calculator').val();
+        //     const selectedCabIds = $('.cab-checkbox:checked').map(function() {
+        //         return $(this).val();
+        //     }).get();
+        //     if (selectedCabIds.length === 0) {
+        //         $('#cabs-details-container, #cabsdetails-container').hide().empty();
+        //         updatePriceSummary();
+        //         return;
+        //     }
 
-                        // Add each cab detail (without repeating title)
+        //     $.ajax({
+        //         url: "{{ route('admin.c_travel_details') }}",
+        //         type: 'POST',
+        //         data: {
+        //             pricingval: pricingval,
+        //             travelmodes: selectedCabIds,
+        //             _token: "{{ csrf_token() }}"
+        //         },
+        //         success: function(data) {
+        //             updateCabDetailsDropdown(data.cabs, data.pricing_cab || []);
+        //         },
+        //         error: function(xhr, status, error) {
+        //             $('#cabs-details-container, #cabsdetails-container').hide();
+        //         }
+        //     });
+        // });
+
+        // Helper: Update cab details dropdown - UPDATED
+        // function updateCabDetailsDropdown(cabsData, selectedCabIds) {
+        //     const container = $('#cabs-details-container');
+        //     const dropdownMenu = container.find('.dropdown-menu');
+        //     const dropdownText = container.find('#cabDetailsDropdownText');
+        //     const hiddenInput = container.find('#cabDetailsHiddenInput');
+
+        //     dropdownMenu.empty();
+
+        //     // Ensure selectedCabIds is an array
+        //     const cabIdsArray = Array.isArray(selectedCabIds) ? selectedCabIds :
+        //         (selectedCabIds ? [selectedCabIds.toString()] : []);
+
+        //     hiddenInput.val(cabIdsArray.join(','));
+        //     dropdownText.text(cabIdsArray.length > 0 ? `${cabIdsArray.length} selected` : 'Select options');
+
+        //     $('#cabsdetails-container').empty().hide();
+
+        //     if (cabsData && Object.keys(cabsData).length > 0) {
+        //         $.each(cabsData, function(id, title) {
+        //             const isChecked = cabIdsArray.includes(id.toString());
+        //             const checkboxId = `cab-detail-${id}`;
+
+        //             dropdownMenu.append(`
+        //         <li>
+        //             <div class="form-check">
+        //                 <input type="checkbox" class="form-check-input cab-details-checkbox" 
+        //                     id="${checkboxId}" value="${id}" 
+        //                     ${isChecked ? 'checked' : ''} 
+        //                     data-text="${title}">
+        //                 <label class="form-check-label" for="${checkboxId}">${title}</label>
+        //             </div>
+        //         </li>
+        //     `);
+        //         });
+
+        //         // Show the container
+        //         container.show();
+
+        //         // Prevent dropdown close when clicking checkboxes
+        //         dropdownMenu.off('click', '.form-check').on('click', '.form-check', function(e) {
+        //             e.stopPropagation();
+        //         });
+
+        //         // Update the dropdown text immediately
+        //         updateCabDetailsDropdownText();
+
+        //         // Trigger change for pre-checked boxes
+        //         if (cabIdsArray.length > 0) {
+        //             setTimeout(() => {
+        //                 $('.cab-details-checkbox:checked').trigger('change');
+        //             }, 100);
+        //         }
+        //     } else {
+        //         container.hide();
+        //     }
+        // }
+
+        // Helper: Update cab details dropdown text
+        // function updateCabDetailsDropdownText() {
+        //     const selectedCabDetails = $('.cab-details-checkbox:checked').map(function() {
+        //         return $(this).data('text');
+        //     }).get();
+
+        //     const dropdownText = $('#cabDetailsDropdownText');
+        //     const hiddenInput = $('#cabDetailsHiddenInput');
+
+        //     const selectedIds = $('.cab-details-checkbox:checked').map(function() {
+        //         return $(this).val();
+        //     }).get();
+
+        //     dropdownText.text(selectedCabDetails.length > 0 ?
+        //         selectedCabDetails.join(', ') : 'Select options');
+        //     hiddenInput.val(selectedIds.join(','));
+        // }
+
+        // // Handle cab details selection - UPDATED
+        // $(document).on('change', '.cab-details-checkbox', function() {
+        //     updateCabDetailsDropdownText(); // Update dropdown text immediately
+        //     handleCabDetailsChange();
+        // });
+
+        // Helper: Handle cab details selection logic - UPDATED
+        // function handleCabDetailsChange() {
+        //     const pricingval = $('#pricing_calculator').val();
+        //     const selectedCabDetails = $('.cab-details-checkbox:checked').map(function() {
+        //         return {
+        //             id: $(this).val(),
+        //             text: $(this).data('text')
+        //         };
+        //     }).get();
+
+        //     const selectedCabIds = $('.cab-checkbox:checked').map(function() {
+        //         return $(this).val();
+        //     }).get();
+
+        //     if (selectedCabDetails.length === 0) {
+        //         $('#cabsdetails-container').empty().hide();
+        //         updatePriceSummary();
+        //         return;
+        //     }
+
+        //     $.ajax({
+        //         url: "{{ route('admin.c_cabs_details') }}",
+        //         type: 'POST',
+        //         data: {
+        //             pricingval: pricingval,
+        //             cabdetails: selectedCabDetails.map(d => d.id),
+        //             travelmodes: selectedCabIds,
+        //             _token: "{{ csrf_token() }}"
+        //         },
+        //         success: function(data) {
+        //             displayCabDetails(data.activity_details || data.cab_details || data.details || []);
+        //         },
+        //         error: function(xhr, status, error) {
+        //             console.error('Error loading cab details:', error);
+        //             $('#cabsdetails-container').empty().hide();
+        //         }
+        //     });
+        // }
+
+        // Helper: Display cab details - UPDATED
+        function displayCabDetails(detailsData) {
+            const container = $('#cabsdetails-container');
+            container.empty();
+            if (detailsData && detailsData.length > 0) {
+                detailsData.forEach((cabGroup, groupIndex) => {
+                    if (cabGroup && cabGroup.length > 0 && cabGroup[0]) {
+                        const groupTitle = cabGroup[0].title || cabGroup[0].name || 'Cab Details';
+                        container.append(`
+                    <div class="row cab-group-header mb-2">
+                        <div class="col-md-12">
+                            <h5>${groupTitle}</h5>
+                        </div>
+                    </div>
+                `);
+
                         cabGroup.forEach((cab, itemIndex) => {
-                            container.append(`
+                            if (cab) {
+                                container.append(`
                             <div class="row cab-detail-row mb-3">
-                                <div class="col-md-2">
-                                    <input type="hidden" name="cabs[${groupIndex}][${itemIndex}][cab_id]" value="${cab.cab_id}">
-                                    <input type="hidden" name="cabs[${groupIndex}][${itemIndex}][title]" value="${cab.title}">
-                                    <!-- Title removed from display (shown in header) -->
+                                <div class="col-md-4">
+                                    <input type="hidden" name="cabs[${groupIndex}][${itemIndex}][cab_id]" value="${cab.cab_id || cab.id || ''}">
+                                    <input type="hidden" name="cabs[${groupIndex}][${itemIndex}][title]" value="${cab.title || cab.name || ''}">
                                 </div>
-                                <div class="col-md-2">
-                                    <input type="hidden" name="cabs[${groupIndex}][${itemIndex}][price_title]" value="${cab.price_title}">
-                                    <input type="text" class="form-control" value="${cab.price_title}" readonly>
+                                <div class="col-md-4">
+                                    <input type="hidden" name="cabs[${groupIndex}][${itemIndex}][price_title]" value="${cab.price_title || cab.title || ''}">
+                                    <input type="text" class="form-control" value="${cab.price_title || cab.title || ''}" readonly>
                                 </div>
-                                <div class="col-md-2">
+                                <div class="col-md-4">
                                     <input type="text" class="form-control price-input" 
                                         name="cabs[${groupIndex}][${itemIndex}][price]" 
-                                        value="${cab.price}" required>
-                                </div>
-
-                                <div class="col-md-2">
-                                    <button type="button" class="btn btn-outline-danger btn-sm deleterow" 
-                                        data-id="${cab.existingPricesid}" data-type="cabs">
-                                        <i class="fas fa-times"></i> Remove
-                                    </button>
+                                        value="${cab.price || '0'}" readonly>
                                 </div>
                             </div>
                         `);
+                            }
                         });
-                    });
-                    container.show();
-                } else {
-                    container.hide();
-                }
+                    }
+                });
+
+                setupPriceInputListeners();
+                updatePriceSummary();
+                container.show();
+            } else {
+                container.hide();
             }
+        }
+        // // Add event listeners for checkbox changes to recalculate prices
+        // $(document).on('change', '.stay-checkbox, .activity-checkbox, .cab-checkbox, .cab-details-checkbox', function() {
+        //     // Small delay to allow DOM to update
+        //     setTimeout(() => {
+        //         updatePriceSummary();
+        //     }, 100);
+        // });
 
-            $(document).on('click', '.deleterow', function(e) {
-                e.preventDefault();
-
-                const button = $(this);
-                const customerid = button.data('id');
-                const type = button.data('type');
-
-                if (!customerid) {
-                    alert('Invalid item ID');
-                    return;
-                }
-
-                if (confirm('Are you sure you want to remove this item?')) {
-                    // Show loading state
-                    button.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Removing...');
-
-                    $.ajax({
-                        url: "{{ route('admin.delete_customer_details') }}",
-                        type: 'POST',
-                        data: {
-                            customerid: customerid,
-                            type: type,
-                            _token: "{{ csrf_token() }}"
-                        },
-                        success: function(response) {
-                            button.closest('.row').fadeOut(300, function() {
-                                $(this).remove();
-                            });
-
-                            // Show success message
-                            toastr.success(response.message || 'Item removed successfully');
-
-                        },
-                        error: function(xhr) {
-                            console.error('Error:', xhr.responseText);
-                            alert('Error removing item. Please try again.');
-                            button.prop('disabled', false).html('<i class="fas fa-times"></i> Remove');
-                        }
-                    });
-                }
-            });
-
-        });
-    </script>
-    @endsection
+    });
+</script>
+@endsection

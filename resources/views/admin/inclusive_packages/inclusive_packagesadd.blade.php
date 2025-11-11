@@ -244,14 +244,22 @@
                                 @endforeach
                             </select>
                         </div>
-<!-- 
+
                         <div class="add_form col-md-4">
                             <label class="mb-2">Location <span class="text-danger">*</span></label>
-                            <select id="district_name" name="district_name"
-                                class="form-select py-2 rounded-3 shadow-sm">
-                                <option value="" disabled selected>Select Location</option>
-                            </select>
-                        </div> -->
+                            <div class="dropdown">
+                                <button class="btn btn-outline-secondary dropdown-toggle w-100 text-start d-flex justify-content-between align-items-center"
+                                    type="button" id="locationDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <span id="locationDropdownText">Select Locations</span>
+                                </button>
+                                <ul class="dropdown-menu w-100 p-2" aria-labelledby="locationDropdown"
+                                    style="max-height: 200px; overflow-y: auto;" id="districts-checkboxes">
+                                    <!-- Districts will be loaded here dynamically -->
+                                </ul>
+                            </div>
+                            <!-- Hidden field to store selected values for form submission -->
+                            <input type="hidden" name="district_name" id="selectedDistricts">
+                        </div>
 
                         <!-- Title -->
                         <div class="add_form col-md-4">
@@ -451,6 +459,37 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+                </div>
+
+
+                <!-- stays (multi-checkbox) -->
+                <div class="add_form col-md-4">
+                    <label class="mb-2">Stays</label>
+                    <div class="dropdown">
+                        <button
+                            class="btn btn-outline-secondary dropdown-toggle w-100 text-start d-flex justify-content-between align-items-center"
+                            type="button" id="stayDropdown" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            <span id="stayDropdownText">Select Stays</span>
+                        </button>
+                        <ul class="dropdown-menu w-100 p-2" aria-labelledby="stayDropdown"
+                            style="max-height: 200px; overflow-y: auto;">
+                            @foreach ($stay_details as $id => $val)
+                            <li>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox"
+                                        id="theme-{{ $val->id }}" class="stays_name" name="stays_name[]"
+                                        value="{{ $val->id }}"
+                                        @if (is_array(old('stays_name', [])) && in_array($val->id, old('stays_name', []))) checked @endif>
+                                    <label class="form-check-label w-100"
+                                        for="theme-{{ $val->id }}">
+                                        {{ $val->stay_title }}
+                                    </label>
+                                </div>
+                            </li>
+                            @endforeach
+                        </ul>
                     </div>
                 </div>
 
@@ -956,26 +995,26 @@
                     </div>
                 </div>
 
-                <div class="row g-3">
+                {{-- <div class="row g-3">
                     <div class="col-lg-4">
                         <label class="add_head fw-bold mb-3 mt-2">Order <span class="text-danger">*</span></label>
                         <input type="number" placeholder="Order" id="list_order" name="list_order"
                             value="{{ old('order') }}" class="form-control py-2 rounded-3 shadow-sm"
-                            required>
-                    </div>
-                </div>
-
-
-
-                <div class="col-lg-12 text-center mt-5">
-                    <a href="{{ route('admin.inclusive_package_list') }}">
-                        <button type="button" class="cancel-btn"> Cancel </button>
-                    </a>
-                    <button class="submit-btn sbmtBtn ms-4 mb-5"> Submit </button>
-                </div>
-            </form>
+                required>
         </div>
+    </div> --}}
+
+
+
+    <div class="col-lg-12 text-center mt-5">
+        <a href="{{ route('admin.inclusive_package_list') }}">
+            <button type="button" class="cancel-btn"> Cancel </button>
+        </a>
+        <button class="submit-btn sbmtBtn ms-4 mb-5"> Submit </button>
     </div>
+    </form>
+</div>
+</div>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -1187,55 +1226,98 @@
             const selectedOption = $(this).find('option:selected');
             const destinationId = selectedOption.val();
             const destinationName = selectedOption.data('name');
-            const districtSelect = $('#district_name');
+            const districtsContainer = $('#districts-checkboxes');
+            const locationDropdown = $('#locationDropdown');
+            const locationDropdownText = $('#locationDropdownText');
+
+            // Clear previous checkboxes and reset dropdown text
+            districtsContainer.empty();
+            locationDropdownText.text('Select Locations');
+            $('#selectedDistricts').val('');
 
             if (!destination) {
-                districtSelect.empty().append(
-                    '<option value="" disabled selected>Select District</option>'
-                ).prop('disabled', true);
+                locationDropdown.prop('disabled', true);
                 return;
             }
 
-            // Show loading state
-            districtSelect.empty().append(
-                '<option value="" disabled>Loading districts...</option>'
-            ).prop('disabled', true);
+            // Enable dropdown and show loading
+            locationDropdown.prop('disabled', false);
+            districtsContainer.html('<li><div class="text-muted p-2">Loading districts...</div></li>');
 
             // AJAX request
             $.ajax({
-                url: '/get-districts-program/' + encodeURIComponent(destinationName),
+                url: '/get-multi-districts',
                 type: 'GET',
+                data: {
+                    destination: destination
+                },
                 success: function(data) {
-                    console.log('Received data:', data); // Debugging
+                    console.log('Received data:', data);
 
-                    districtSelect.empty().append(
-                        '<option value="" disabled selected>Select District</option>'
-                    );
+                    districtsContainer.empty();
 
                     if (data && data.length > 0) {
+                        // Create checkboxes for each district
                         $.each(data, function(index, district) {
-                            districtSelect.append(
-                                $('<option>', {
-                                    value: district,
-                                    text: district
-                                })
+                            const checkboxId = 'district-' + district.id;
+                            districtsContainer.append(
+                                '<li>' +
+                                '<div class="form-check">' +
+                                '<input class="form-check-input district-checkbox" type="checkbox" ' +
+                                'value="' + district.name + '" id="' + checkboxId + '" data-name="' + district.name + '">' +
+                                '<label class="form-check-label w-100" for="' + checkboxId + '">' +
+                                district.name + '</label>' +
+                                '</div>' +
+                                '</li>'
                             );
                         });
-                        districtSelect.prop('disabled', false);
+
+                        // Initialize checkbox change event
+                        $('.district-checkbox').change(function() {
+                            updateSelectedDistricts();
+                        });
+
                     } else {
-                        districtSelect.append(
-                            '<option value="" disabled>No districts found for this destination</option>'
-                        );
+                        districtsContainer.html('<li><div class="text-muted p-2">No districts found for this destination</div></li>');
                     }
                 },
                 error: function(xhr, status, error) {
-                    console.error('AJAX Error:', status, error); // Debugging
-                    districtSelect.empty().append(
-                        '<option value="" disabled>Error loading districts</option>'
-                    );
+                    console.error('AJAX Error:', status, error);
+                    districtsContainer.html('<li><div class="text-danger p-2">Error loading districts</div></li>');
                 }
             });
         });
+
+        // Function to update selected districts
+        function updateSelectedDistricts() {
+            const selectedIds = [];
+            const selectedNames = [];
+
+            $('.district-checkbox:checked').each(function() {
+                selectedIds.push($(this).val()); // Store ID for backend
+                selectedNames.push($(this).data('name')); // Store name for display
+            });
+
+            // Update hidden field with IDs (for database operations)
+            $('#selectedDistricts').val(selectedIds.join(','));
+
+            // Update dropdown text with names (for user display)
+            const dropdownText = selectedNames.length > 0 ?
+                selectedNames.join(', ') :
+                'Select Locations';
+            $('#locationDropdownText').text(dropdownText);
+        }
+        // Close dropdown when clicking outside
+        $(document).on('click', function(e) {
+            if (!$(e.target).closest('.dropdown').length) {
+                $('.dropdown-menu').removeClass('show');
+            }
+        });
+
+        // Optional: Prevent dropdown from closing when clicking inside checkboxes
+        // $('#districts-checkboxes').on('click', function(e) {
+        //     e.stopPropagation();
+        // });
 
         $('#themes_name').multiselect({
             includeSelectAllOption: true,
@@ -1428,35 +1510,53 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        const dropdownButton = document.getElementById('themeDropdown');
-        const dropdownText = document.getElementById('themeDropdownText');
-        const checkboxes = document.querySelectorAll('#themeDropdown ~ .dropdown-menu input[type="checkbox"]');
+        // ======================
+        // THEME DROPDOWN
+        // ======================
+        const themeDropdownText = document.getElementById('themeDropdownText');
+        const themeCheckboxes = document.querySelectorAll('#themeDropdown ~ .dropdown-menu input[type="checkbox"]');
 
-        // Initialize with any pre-checked boxes
-        updateButtonText();
-
-        // Update when checkboxes change
-        checkboxes.forEach(checkbox => {
-            checkbox.addEventListener('change', updateButtonText);
-        });
-
-        function updateButtonText() {
-            const checked = Array.from(checkboxes).filter(cb => cb.checked);
-
+        function updateThemeButtonText() {
+            const checked = Array.from(themeCheckboxes).filter(cb => cb.checked);
             if (checked.length === 0) {
-                dropdownText.textContent = 'Select Themes';
+                themeDropdownText.textContent = 'Select Themes';
             } else if (checked.length === 1) {
-                dropdownText.textContent = checked[0].nextElementSibling.textContent;
+                themeDropdownText.textContent = checked[0].nextElementSibling.textContent.trim();
             } else {
-                dropdownText.textContent = `${checked.length} themes selected`;
+                themeDropdownText.textContent = `${checked.length} themes selected`;
             }
         }
 
-        // Prevent dropdown from closing when clicking checkboxes
+        // Init + Bind
+        updateThemeButtonText();
+        themeCheckboxes.forEach(cb => cb.addEventListener('change', updateThemeButtonText));
         document.querySelector('#themeDropdown ~ .dropdown-menu').addEventListener('click', function(e) {
-            if (e.target.type === 'checkbox') {
-                e.stopPropagation();
+            if (e.target.type === 'checkbox') e.stopPropagation();
+        });
+
+
+        // ======================
+        // STAY DROPDOWN
+        // ======================
+        const stayDropdownText = document.getElementById('stayDropdownText');
+        const stayCheckboxes = document.querySelectorAll('#stayDropdown ~ .dropdown-menu input[type="checkbox"]');
+
+        function updateStayButtonText() {
+            const checked = Array.from(stayCheckboxes).filter(cb => cb.checked);
+            if (checked.length === 0) {
+                stayDropdownText.textContent = 'Select Stays';
+            } else if (checked.length === 1) {
+                stayDropdownText.textContent = checked[0].nextElementSibling.textContent.trim();
+            } else {
+                stayDropdownText.textContent = `${checked.length} stays selected`;
             }
+        }
+
+        // Init + Bind
+        updateStayButtonText();
+        stayCheckboxes.forEach(cb => cb.addEventListener('change', updateStayButtonText));
+        document.querySelector('#stayDropdown ~ .dropdown-menu').addEventListener('click', function(e) {
+            if (e.target.type === 'checkbox') e.stopPropagation();
         });
     });
 </script>

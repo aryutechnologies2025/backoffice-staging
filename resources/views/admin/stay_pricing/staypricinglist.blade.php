@@ -17,10 +17,20 @@
         color:#282833;
         font-size:13px;
     }
+    .sticky-btn {
+        position: fixed;
+        bottom: 10px;
+        right: 10px;
+        width: 40px;
+        height: 40px;
+        background-color: #ff0000ff;
+        underline: none;
+        /* z-index: 999; */
+    }
 
 </style>
 
-<div class="row body-sec py-3 px-5 justify-content-around">
+<div class="row body-sec py-3 px-5 justify-content-around" id="watch">
     <div class="text-start col-lg-6 ">
         <h3 class="admin-title fw-bold">{{$title}}</h3>
     </div>
@@ -59,7 +69,13 @@
                     <tr>
                         <td class="text-start">{{ $loop->iteration }}</td>
                         <td class="text-start">{{ ucfirst($row->title) }}</td>
-                        <td class="text-start">{{ ucfirst($row->destination_id) }}</td>
+                        <td class="text-start">
+                            @if($row->city)
+                                {{ ucfirst($row->city->city_name) }}
+                            @else
+                                N/A
+                            @endif
+                        </td>
                         @php
                         $disp_status = 'In Active';
                         $actTitle = 'Click to activate';
@@ -75,13 +91,13 @@
                         @endphp
                         <td class="text-start"><a data-toggle="tooltip" data-csrf_token="{{ csrf_token() }}" data-original-title="{{ $actTitle }}" class="stsconfirm" href="javascript:void(0);" data-row_id="{{ $row->id }}" data-act_url="{{ route('admin.staypricing_change_status') }}" data-stsmode="{{ $mode }}"><button type="button" class="btn {{ $btnColr }} px-5">{{ $disp_status }}</button></a></td>
                         <td class="text-start" style="width: 20%;">
-                            <a href="{{ route('admin.staypricing_edit_form',$row->id) }}" class="table-edit-link">
+                            <a href="{{ route('admin.staypricing_edit_form',$row->id) }}" title="Edit" class="table-edit-link">
                                 <span class="fa-stack">
                                     <i class="fa fa-pencil fa-stack-1x fa-inverse"></i>
                                 </span>
                             </a>
 
-                            <a href="javascript:void(0);" class="table-link danger delconfirm" data-row_id="{{ $row->id }}" data-act_url="{{ route('admin.staypricingdelete') }}" data-csrf_token="{{ csrf_token() }}">
+                            <a href="javascript:void(0);" class="table-link danger delconfirm" title="Delete" data-row_id="{{ $row->id }}" data-act_url="{{ route('admin.staypricingdelete') }}" data-csrf_token="{{ csrf_token() }}">
                                 <span class="fa-stack">
                                     <!-- <i class="fa fa-square fa-stack-2x"></i> -->
                                     <i class="fa fa-trash" style="color: red !important;"></i>
@@ -96,7 +112,7 @@
         </div>
     </div>
 </div>
-
+<button class="sticky-btn" id="myBtn"><a href="#watch"><i class="bi bi-caret-up-square text-white"></i></button>
 @endsection
 
 
