@@ -169,12 +169,12 @@
                         </div>
 
                         <!-- Stay Location -->
-                        <div class="row mt-4 px-2">
+                        <div class="row mt-4 px-2"> 
                             <div class="add_form col-md-6">
-                                <label class="mb-2">Location Name <span class="text-danger">*</span></label>
+                                <label class="mb-2">Location Name </label>
                                 <input type="text" placeholder="Stay Location - Name" id="stay_location_title" name="stay_location_title"
                                     class="form-control py-2 rounded-3 shadow-sm"
-                                    value="{{$stay_details->stay_location_title}}" required>
+                                    value="{{$stay_details->stay_location_title}}">
                             </div>
                         </div>
 
@@ -302,7 +302,7 @@
                                             placeholder="Title" value="{{$stay_details->no_of_days}}">
                                     </div>
                                     <div class="add_form col-lg-6 ">
-                                        <label class="fw-bold mb-2">Actual Amount <span class="text-danger">*</span></label>
+                                        <label class="fw-bold mb-2">Actual Amount</label>
                                         <div class="position-relative">
                                             <span class="position-absolute top-50 start-0 translate-middle-y ps-3">₹</span>
                                             <input type="number" name="actual_price_amount" class="form-control py-2 ps-5 rounded-3 shadow-sm"
@@ -310,7 +310,7 @@
                                         </div>
                                     </div>
                                     <div class="add_formcol-lg-6 mt-2">
-                                        <label class="fw-bold mb-2">Discount Amount <span class="text-danger">*</span></label>
+                                        <label class="fw-bold mb-2">Discount Amount</label>
                                         <div class="position-relative">
                                             <span class="position-absolute top-50 start-0 translate-middle-y ps-3">₹</span>
                                             <input type="number" name="price_amount" class="form-control py-2 ps-5 rounded-3 shadow-sm"
@@ -475,7 +475,7 @@
                                 <div class="col-lg-3">
                                     <h4 class="add_head fw-bold mb-2">Order</h4>
                                     <input type="number" placeholder="Order" id="list_order" name="list_order"
-                                        value="{{$stay_details->order}}" class="form-control py-2 rounded-3 shadow-sm" required>
+                                        value="{{$stay_details->order}}" class="form-control py-2 rounded-3 shadow-sm">
                                 </div>
                             </div>
 
