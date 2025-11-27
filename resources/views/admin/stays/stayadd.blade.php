@@ -175,10 +175,10 @@
                             <!-- Stay Location -->
                             <div class="row mt-4 px-2">
                                 <div class="add_form col-md-6">
-                                    <label class="mb-2">Location Name <span class="text-danger">*</span></label>
+                                    <label class="mb-2">Location Name</label>
                                     <input type="text" placeholder="Stay Location - Name" id="stay_location_title" name="stay_location_title"
                                         class="form-control py-2 rounded-3 shadow-sm"
-                                        value="{{ old('stay_location_title') }}" required>
+                                        value="{{ old('stay_location_title') }}">
                                 </div>
                             </div>
 
@@ -283,7 +283,7 @@
                                                         placeholder="number of days">
                                                 </div>
                                                 <div class="add_form col-lg-6 ">
-                                                    <label class="fw-bold mb-2">Actual Price <span class="text-danger">*</span></label>
+                                                    <label class="fw-bold mb-2">Actual Price </label>
                                                     <div class="position-relative">
                                                         <span class="position-absolute top-50 start-0 translate-middle-y ps-3">₹</span>
                                                         <input type="number" name="actual_price_amount" class="form-control py-2 ps-5 rounded-3 shadow-sm"
@@ -291,7 +291,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="add_form col-lg-6 mt-2">
-                                                    <label class="fw-bold mb-2">Discount Price <span class="text-danger">*</span></label>
+                                                    <label class="fw-bold mb-2">Discount Price</label>
                                                     <div class="position-relative">
                                                         <span class="position-absolute top-50 start-0 translate-middle-y ps-3">₹</span>
                                                         <input type="number" name="price_amount" class="form-control py-2 ps-5 rounded-3 shadow-sm"
@@ -496,9 +496,9 @@
 
                             <div class="row g-3 px-2 mt-2">
                                 <div class="col-lg-3">
-                                    <label class="fw-bold mb-2">Order <span class="text-danger">*</span></label>
+                                    <label class="fw-bold mb-2">Order</label>
                                     <input type="number" placeholder="Order" id="list_order" name="list_order"
-                                        value="{{old('order')}}" class="form-control py-2 rounded-3 shadow-sm" required>
+                                        value="{{old('order')}}" class="form-control py-2 rounded-3 shadow-sm">
                                 </div>
                             </div>
 
