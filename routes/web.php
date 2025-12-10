@@ -54,9 +54,9 @@ use App\Models\stay_desitination;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 
-
-use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Http;
+use App\Http\Controllers\Admin\GoogleAnalyticsController;
+use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\Admin\AdminUserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -186,7 +186,7 @@ Route::prefix('/')->group(function () {
                 Route::post('/c_activity-details', 'activity_details')->name('admin.c_activity_details');
                 Route::post('/c_travel-details', 'travel_details')->name('admin.c_travel_details');
                 Route::post('/c_cabs-details', 'cabs_details')->name('admin.c_cabs_details');
-                 Route::post('/edit-pricing-details', 'edit_pricing_details')->name('admin.edit_pricing_details');
+                Route::post('/edit-pricing-details', 'edit_pricing_details')->name('admin.edit_pricing_details');
                 //Edit stay
 
                 Route::post('/stay-details', 'edit_stay_details')->name('admin.ec_stay_details');
@@ -758,6 +758,57 @@ Route::prefix('/')->group(function () {
                 Route::post('/{id}/update', 'update')->name('admin.mailtemplateupdate');
                 Route::post('/delete', 'delete')->name('admin.mailtemplatedelete');
                 Route::post('/change-status', 'change_status')->name('admin.mailtemplatestatus');
+            });
+        });
+
+        //google analytics
+        Route::controller(GoogleAnalyticsController::class)->group(function () {
+            Route::prefix('analytics')->group(function () {
+                Route::get('/', [GoogleAnalyticsController::class, 'getindex'])->name('analytics.index');
+                Route::get('/channels', [GoogleAnalyticsController::class, 'getChannels'])->name('analytics.channels');
+                Route::get('/sources', [GoogleAnalyticsController::class, 'getSources'])->name('analytics.sources');
+                Route::get('/top-pages', [GoogleAnalyticsController::class, 'getTopPages'])->name('analytics.top-pages');
+                Route::get('/entry-pages', [GoogleAnalyticsController::class, 'getEntryPages'])->name('analytics.entry-pages');
+                Route::get('/exit-pages', [GoogleAnalyticsController::class, 'getExitPages'])->name('analytics.exit-pages');
+                Route::get('/browser', [GoogleAnalyticsController::class, 'getBrowserData'])->name('analytics.browser');
+                Route::get('/os', [GoogleAnalyticsController::class, 'getOSData'])->name('analytics.os');
+                Route::get('/size', [GoogleAnalyticsController::class, 'getDeviceSizeData'])->name('analytics.size');
+                Route::get('/channels-detailed', [GoogleAnalyticsController::class, 'getChanneldetails'])->name('analytics.channels-detailed');
+                Route::get('/pages-detailed', [GoogleAnalyticsController::class, 'getPagedetails'])->name('analytics.pages-detailed');
+                Route::get('/devices-detailed', [GoogleAnalyticsController::class, 'getDevicedetails'])->name('analytics.devices-detailed');
+                Route::get('/chart-data', [GoogleAnalyticsController::class, 'getChartDataApi'])->name('analytics.chart-data');
+                Route::get('/map-data', [GoogleAnalyticsController::class, 'getMapData'])->name('analytics.map-data');
+                Route::get('/countries-data', [GoogleAnalyticsController::class, 'getCountriesData'])->name('analytics.countries-data');
+                Route::get('/regions-data', [GoogleAnalyticsController::class, 'getRegionsData'])->name('analytics.regions-data');
+                Route::get('/cities-data', [GoogleAnalyticsController::class, 'getCitiesData'])->name('analytics.cities-data');
+                Route::get('/locations-detailed', [GoogleAnalyticsController::class, 'getLocationdetails'])->name('analytics.locations-detailed');
+                Route::get('/website-stats', [GoogleAnalyticsController::class, 'getWebsiteStats'])->name('analytics.website-stats');
+                Route::get('/realtime-activity', [GoogleAnalyticsController::class, 'getRealtimeActivity'])->name('analytics.realtime-activity');
+            });
+        });
+        
+        //role
+        Route::controller(RoleController::class)->group(function () {
+            Route::prefix('role')->group(function () {
+                Route::get('/', 'list')->name('admin.role_list');
+                Route::get('/add', 'add_form')->name('admin.role_add_form');
+                Route::get('/{id}/edit', 'edit_form')->name('admin.role_edit_form');
+                Route::post('/insert', 'insert')->name('admin.role_insert');
+                Route::post('/{id}/update', 'update')->name('admin.role_update');
+                Route::post('/delete', 'delete')->name('admin.role_delete');
+                Route::post('/change-status', 'change_status')->name('admin.role_status');
+            });
+        });
+
+        Route::controller(AdminUserController::class)->group(function () {
+            Route::prefix('adminuser')->group(function () {
+                Route::get('/', 'list')->name('admin.admin_user_list');
+                Route::get('/add', 'add_form')->name('admin.admin_user_add_form');
+                Route::get('/{id}/edit', 'edit_form')->name('admin.admin_user_edit_form');
+                Route::post('/insert', 'insert')->name('admin.admin_user_insert');
+                Route::post('/{id}/update', 'update')->name('admin.admin_user_update');
+                Route::post('/delete', 'delete')->name('admin.admin_user_delete');
+                Route::post('/change-status', 'change_status')->name('admin.admin_user_status');
             });
         });
     });

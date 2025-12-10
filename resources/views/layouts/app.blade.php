@@ -474,6 +474,23 @@
                         <img src="/assets/image/dashboard/settings.svg" alt="">
                         <span class="nav_name" style="color: #fff;"> Mail Template </span>
                     </a>
+                     <!-- <a href="{{ route('analytics.index') }}"
+                        class="nav_link {{ request()->routeIs(['analytics.index']) ? 'active' : '' }} mb-3">
+                        <img src="/assets/image/dashboard/settings.svg" alt="">
+                        <span class="nav_name" style="color: #fff;"> Google Analytic </span>
+                    </a> -->
+                    <a href="{{ route('admin.role_list') }}"
+                        class="nav_link {{ request()->routeIs(['admin.role_list','admin.role_add_form', 'admin.role_edit_form']) ? 'active' : '' }} mb-3">
+                        <img src="/assets/image/dashboard/settings.svg" alt="">
+                        <span class="nav_name" style="color: #fff;"> Role </span>
+                    </a>
+
+                      <a href="{{ route('admin.admin_user_list') }}"
+                        class="nav_link {{ request()->routeIs(['admin.admin_user_list', 'admin.admin_user_add_form', 'admin.admin_user_edit_form']) ? 'active' : '' }} mb-3">
+                        <img src="/assets/image/dashboard/settings.svg" alt="">
+                        <span class="nav_name" style="color: #fff;"> Admin User </span>
+                    </a>
+
                     <div class="profile-content mb-4">
                         <a href="{{ route('admin.logout') }}" class="nav_link mb-5 ">
                             <img class="" src="/assets/image/dashboard/turn-off.svg" alt="">
