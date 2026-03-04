@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 use App\Models\Admin;
 use Hash;
 
-
 class AdminUserController extends Controller
 {
     public function list(Request $request)
@@ -19,49 +18,52 @@ class AdminUserController extends Controller
 
     public function add_form()
     {
-        $title = ' Add User';
-
+        $title = 'Add User';
         return view('admin.adminuser.useradd', compact('title'));
     }
 
     public function insert(Request $request)
     {
-        $request->validate([
+        $validator = \Validator::make($request->all(), [
             'first_name'   => 'required',
             'last_name'    => 'required',
             'email'        => 'required|email|unique:admin,email',
             'phone'        => 'required|unique:admin,phone',
-            'profile_pic'  => 'required|image',
-            'password'     => 'required',
+            'profile_pic'  => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'password'     => 'required|min:6',
         ]);
 
-        // Create upload path
-        $sliderPath = public_path('uploads/user_profile');
-        if (!file_exists($sliderPath)) {
-            mkdir($sliderPath, 0755, true);
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
         }
 
-        $filePath = null;
+        $uploadPath = public_path('uploads/user_profile');
 
-        // Handle profile pic
+        if (!file_exists($uploadPath)) {
+            mkdir($uploadPath, 0755, true);
+        }
+
+        // 🔥 Default image path (IMPORTANT FIX)
+        $filePath = "uploads/user_profile/default.png";
+
+        // If profile pic uploaded
         if ($request->hasFile('profile_pic')) {
             $file = $request->file('profile_pic');
-            $filename = time() . '_' . preg_replace('/[^A-Za-z0-9_\-]/', '_', pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME));
+            $filename = time().'_'.preg_replace('/[^A-Za-z0-9_\-]/', '_', pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME));
             $filename .= '.' . $file->getClientOriginalExtension();
 
-            $file->move($sliderPath, $filename);
+            $file->move($uploadPath, $filename);
 
             $filePath = "uploads/user_profile/" . $filename;
         }
 
-        // Create User
         $user = new Admin;
         $user->first_name   = $request->first_name;
         $user->last_name    = $request->last_name;
         $user->email        = $request->email;
         $user->phone        = $request->phone;
         $user->password     = Hash::make($request->password);
-        $user->profile_pic  = $filePath;
+        $user->profile_pic  = $filePath; // NEVER NULL now
         $user->status       = $request->status ? '1' : '0';
         $user->created_date = now();
         $user->created_by   = 'admin';
@@ -72,10 +74,9 @@ class AdminUserController extends Controller
             ->with('success', 'User created successfully.');
     }
 
-
     public function edit_form(Request $request, $id)
     {
-        $user_details = Admin::find($id);
+        $user_details = Admin::findOrFail($id);
         $title = 'Edit Admin';
         return view('admin.adminuser.useredit', compact('user_details', 'title'));
     }
@@ -89,102 +90,90 @@ class AdminUserController extends Controller
             'last_name'   => 'required',
             'email'       => 'required|email|unique:admin,email,' . $id,
             'phone'       => 'required|unique:admin,phone,' . $id,
-            'profile_pic' => 'nullable|image',
+            'profile_pic' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
             'password'    => 'nullable|min:6',
         ]);
 
-        // Profile pic upload
-        if ($request->hasFile('profile_pic')) {
-            $sliderPath = public_path('uploads/user_profile');
+        $uploadPath = public_path('uploads/user_profile');
 
-            if (!file_exists($sliderPath)) {
-                mkdir($sliderPath, 0755, true);
+        if (!file_exists($uploadPath)) {
+            mkdir($uploadPath, 0755, true);
+        }
+
+        // If new image uploaded
+        if ($request->hasFile('profile_pic')) {
+
+            if ($user->profile_pic && file_exists(public_path($user->profile_pic))) {
+                unlink(public_path($user->profile_pic));
             }
 
             $file = $request->file('profile_pic');
-            $filename = time() . '_' . preg_replace('/[^A-Za-z0-9_\-]/', '_', pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME));
+            $filename = time().'_'.preg_replace('/[^A-Za-z0-9_\-]/', '_', pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME));
             $filename .= '.' . $file->getClientOriginalExtension();
 
-            $file->move($sliderPath, $filename);
+            $file->move($uploadPath, $filename);
 
             $user->profile_pic = "uploads/user_profile/" . $filename;
         }
 
-        // Update fields
         $user->first_name = $request->first_name;
         $user->last_name  = $request->last_name;
         $user->email      = $request->email;
         $user->phone      = $request->phone;
-        $user->status      = $request->status ? '1' : '0';
+        $user->status     = $request->status ? '1' : '0';
+
+        if ($request->filled('password')) {
+            $user->password = Hash::make($request->password);
+        }
+
         $user->save();
 
         return redirect()->route('admin.admin_user_list')
             ->with('success', 'User updated successfully.');
     }
 
-
-
     public function change_status(Request $request)
     {
-        // Retrieve the request data
         $record_id = $request->input('record_id');
         $mode = $request->input('mode');
 
-        // Find the admin record by ID
-        $slider = Admin::find($record_id);
+        $user = Admin::find($record_id);
 
-        if ($slider) {
-            // Update the status based on the mode value
-            if ($mode == 0) {
-                $slider->status = "0";
-            } else {
-                $slider->status = "1";
-            }
+        if ($user) {
+            $user->status = $mode == 0 ? "0" : "1";
+            $user->save();
 
-            $slider->save();
-
-            // Prepare the response
-            $response = [
+            return response()->json([
                 'status' => '1',
                 'response' => 'User status changed successfully.'
-            ];
-        } else {
-            // Record not found
-            $response = [
-                'status' => '0',
-                'response' => 'Record not found.'
-            ];
+            ]);
         }
 
-        // Return the response as JSON
-        return response()->json($response);
+        return response()->json([
+            'status' => '0',
+            'response' => 'Record not found.'
+        ]);
     }
 
     public function delete(Request $request)
     {
-        // Retrieve the request data
         $record_id = $request->input('record_id');
 
-        // Find the admin record by ID
-        $slider = Admin::find($record_id);
-        if ($slider) {
-            $slider->is_deleted = "1";
-            $slider->save();
+        $user = Admin::find($record_id);
 
-            // Prepare the response
-            $response = [
+        if ($user) {
+            $user->is_deleted = "1";
+            $user->save();
+
+            return response()->json([
                 'status' => '1',
                 'response' => 'Record marked as deleted successfully.'
-            ];
-        } else {
-            // Record not found
-            $response = [
-                'status' => '0',
-                'response' => 'Record not found.'
-            ];
+            ]);
         }
 
-        // Return the response as JSON
-        return response()->json($response);
+        return response()->json([
+            'status' => '0',
+            'response' => 'Record not found.'
+        ]);
     }
 }

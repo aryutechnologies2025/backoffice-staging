@@ -109,16 +109,13 @@
         $('#cityTable').DataTable({
             "pageLength": 10,
             "lengthChange": true,
-            "ordering": true,
+            "ordering": false,
             "searching": true,
             "language": {
                 "emptyTable": "No records found",
                 "searchPlaceholder": "Search cities...",  // 👈 Your placeholder text
                 "search": ""  // 👈 This removes the "Search:" label
-            },
-            "columnDefs": [
-                { "orderable": true, "targets": [0, 3] }
-            ]
+            }
         });
     });
 </script>

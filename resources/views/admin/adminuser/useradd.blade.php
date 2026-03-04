@@ -56,7 +56,7 @@
                                         alt="Alternate Image Name">
                                     <p class="text-center fw-light mt-3">Add Pic</p>
                                 </label>
-                                <input type="file" id="file-ip-1" name="profile_pic" accept="image/png, image/jpeg, image/webp" required>
+                                <input type="file" id="file-ip-1" name="profile_pic" accept="image/png, image/jpeg, image/webp">
                                 <!-- <label class="fw-bold mb-5 text-danger border-0">
                                     <small>* Upload size [up to 600x120] *</small>
                                 </label> -->
@@ -83,12 +83,12 @@
                     </div>
                      <div class="add_form col-md-4">
                         <label class="fw-bold mb-2">Phone Number</label>
-                        <input type="text" placeholder="Phone Number" id="phone" name="phone"
+                        <input type="number" placeholder="Phone Number" id="phone" name="phone"
                             value="{{ old('phone') }}" class="form-control py-2 rounded-2 shadow-sm">
                     </div>
                      <div class="add_form col-md-4">
                         <label class="fw-bold mb-2">Password</label>
-                        <input type="password" placeholder="Password" id="password" name="password"
+                        <input type="text" placeholder="Password" id="password" name="password"
                             value="{{ old('password') }}" class="form-control py-2 rounded-2 shadow-sm">
                     </div>
                 </div>
