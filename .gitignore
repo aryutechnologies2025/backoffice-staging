@@ -1,3 +1,5 @@
 .env
-storage/logs
-public/upload/
+vendor/
+node_modules/
+public/uploads/
+storage/logs/
