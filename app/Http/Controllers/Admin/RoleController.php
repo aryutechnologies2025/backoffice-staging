@@ -43,6 +43,7 @@ class RoleController extends Controller
         $role->created_by = 'admin';
         $role->is_deleted = '0';
         $role->save();
+        
 
         return redirect()->route('admin.role_list')
             ->with('success', 'Role created successfully.');
