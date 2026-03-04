@@ -9,18 +9,20 @@ use App\Models\Role;
 class RoleController extends Controller
 {
 
+    // Role List
     public function list(Request $request)
     {
         $title = 'Role List';
 
         $roles = Role::where('is_deleted', '0')
-                        ->orderBy('id', 'desc')
-                        ->get();
+                    ->orderBy('id', 'desc')
+                    ->get();
 
         return view('admin.roles.rolelist', compact('title', 'roles'));
     }
 
 
+    // Add Role Form
     public function add_form()
     {
         $title = 'Add Role';
@@ -28,12 +30,15 @@ class RoleController extends Controller
     }
 
 
+    // Insert Role
     public function insert(Request $request)
     {
+        // Validation
         $request->validate([
             'role_name' => 'required|unique:roles,role_name'
-        ], [
-            'role_name.unique' => 'This role name is already taken.'
+        ],[
+            'role_name.required' => 'Role name is required.',
+            'role_name.unique' => 'This role name already exists.'
         ]);
 
         $role = new Role();
@@ -43,28 +48,31 @@ class RoleController extends Controller
         $role->created_by = 'admin';
         $role->is_deleted = '0';
         $role->save();
-        
 
         return redirect()->route('admin.role_list')
             ->with('success', 'Role created successfully.');
     }
 
 
+    // Edit Role Form
     public function edit_form(Request $request, $id)
     {
         $title = 'Edit Role';
+
         $role_details = Role::findOrFail($id);
 
         return view('admin.roles.roleedit', compact('role_details', 'title'));
     }
 
 
+    // Update Role
     public function update(Request $request, $id)
     {
         $request->validate([
             'role_name' => 'required|unique:roles,role_name,' . $id
-        ], [
-            'role_name.unique' => 'This role name is already taken.'
+        ],[
+            'role_name.required' => 'Role name is required.',
+            'role_name.unique' => 'This role name already exists.'
         ]);
 
         $role = Role::findOrFail($id);
@@ -77,6 +85,7 @@ class RoleController extends Controller
     }
 
 
+    // Change Status
     public function change_status(Request $request)
     {
         $record_id = $request->record_id;
@@ -86,12 +95,7 @@ class RoleController extends Controller
 
         if ($role) {
 
-            if ($mode == 0) {
-                $role->status = "0";
-            } else {
-                $role->status = "1";
-            }
-
+            $role->status = $mode == 0 ? "0" : "1";
             $role->save();
 
             return response()->json([
@@ -107,6 +111,7 @@ class RoleController extends Controller
     }
 
 
+    // Delete Role
     public function delete(Request $request)
     {
         $record_id = $request->record_id;
