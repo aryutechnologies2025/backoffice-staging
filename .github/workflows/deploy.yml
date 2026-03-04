@@ -1,39 +1,27 @@
-name: Laravel Deploy (Hostinger Shared Hosting)
+name: Deploy Laravel to Hostinger
 
 on:
-push:
-branches:
-- main
+  push:
+    branches:
+      - main
 
 jobs:
-deploy:
-runs-on: ubuntu-latest
+  deploy:
+    runs-on: ubuntu-latest
 
-```
-steps:
-  - name: Deploy via SSH
-    uses: appleboy/ssh-action@v1.0.3
-    with:
-      host: 31.97.225.238
-      username: u925800196
-      password: ${{ secrets.SERVER_PASSWORD }}
-      port: 65002
-      script: |
-        cd /home/u925800196/domains/innerpece.com/public_html/backoffice-staging
-
-        echo "Pull latest code"
-        git pull origin main
-
-        echo "Install dependencies (only if composer files changed)"
-        if git diff --name-only HEAD@{1} HEAD | grep -E "composer.json|composer.lock"; then
-          composer install --no-dev --optimize-autoloader --no-interaction
-        fi
-
-        echo "Laravel optimization"
-        php artisan optimize:clear
-        php artisan config:cache
-        php artisan route:cache
-        php artisan view:cache
-
-        echo "Deployment finished"
-```
+    steps:
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: 31.97.225.238
+          username: u925800196
+          password: ${{ secrets.SERVER_PASSWORD }}
+          port: 65002
+          script: |
+            cd /home/u925800196/domains/innerpece.com/public_html/backoffice-staging
+            git pull origin main
+            composer install --no-dev --no-interaction --prefer-dist
+            php artisan optimize:clear
+            php artisan config:cache
+            php artisan route:cache
+            php artisan view:cache
