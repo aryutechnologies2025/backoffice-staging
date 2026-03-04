@@ -9,4 +9,7 @@ class Group_tour extends Authenticatable
 {
     use HasFactory;
     protected $table = 'group_tour';
+
 }
+
+
