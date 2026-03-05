@@ -260,7 +260,7 @@
                         <img src="/assets/image/dashboard/stay.png" alt="" class="stay-img">
                         <span class="nav_name"> Stays Destination </span>
                     </a> -->
-                    <p class=" nav_link mb-0 text-white fw-bold">PRICING CALCULATOR </p>
+                    <p class=" nav_link mb-0 text-black fw-bold">PRICING CALCULATOR </p>
                     <a href="{{ route('admin.staypricinglist') }}"
                         class="nav_link {{ request()->routeIs(['admin.staypricing_add_form', 'admin.staypricinglist', 'admin.staypricing_edit_form']) ? 'active' : '' }} mb-0 text-white">
                         <img src="/assets/image/dashboard/stay.png" alt="" class="stay-img">
