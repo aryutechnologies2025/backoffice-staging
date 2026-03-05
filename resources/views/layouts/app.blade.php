@@ -201,7 +201,7 @@
                         <img src="/assets/image/dashboard/enquiry.svg" alt="">
                         <span class="nav_name"> Enquiry </span>
                     </a>
-                    <p class=" nav_link mb-0 text-black fw-bold">PROGRAM</p>
+                    <p class=" nav_link mb-0 text-white fw-bold">PROGRAM</p>
                     <a href="{{ route('admin.inclusive_package_list') }}"
                         class="nav_link {{ request()->routeIs(['admin.inclusive_package_list', 'admin.inclusive_package_add_form', 'admin.inclusive_package_edit_form']) ? 'active' : '' }} mb-0 text-white">
                         <img src="/assets/image/dashboard/program.svg" alt="">
@@ -217,7 +217,7 @@
                         <img src="/assets/image/dashboard/themes.svg" alt="">
                         <span class="nav_name">Theme</span>
                     </a>
-                    <p class=" nav_link mb-0 text-black fw-bold">AMENITIES </p>
+                    <p class=" nav_link mb-0 text-white fw-bold">AMENITIES </p>
                     <a href="{{ route('admin.amenitieslist') }}"
                         class="nav_link {{ request()->routeIs(['admin.amenitieslist', 'admin.amenities_add_form', 'admin.amenities_edit_form']) ? 'active' : '' }} mb-0 text-white">
                         <img src="/assets/image/dashboard/amenities.svg" alt="">
@@ -239,7 +239,7 @@
                         <img src="/assets/image/dashboard/security.svg" alt="">
                         <span class="nav_name">Safety Features</span>
                     </a>
-                    <p class=" nav_link text-black fw-bold mb-0">STAYS</p>
+                    <p class=" nav_link text-white fw-bold mb-0">STAYS</p>
                     <a href="{{ route('admin.staylist') }}"
                         class="nav_link {{ request()->routeIs(['admin.staylist', 'admin.stays_add_form', 'admin.stay_details_edit_form']) ? 'active' : '' }} mb-0 text-white">
                         <img src="/assets/image/dashboard/stay.png" alt="" class="stay-img">
@@ -260,7 +260,7 @@
                         <img src="/assets/image/dashboard/stay.png" alt="" class="stay-img">
                         <span class="nav_name"> Stays Destination </span>
                     </a> -->
-                    <p class=" nav_link mb-0 text-black fw-bold">PRICING CALCULATOR </p>
+                    <p class=" nav_link mb-0 text-white fw-bold">PRICING CALCULATOR </p>
                     <a href="{{ route('admin.staypricinglist') }}"
                         class="nav_link {{ request()->routeIs(['admin.staypricing_add_form', 'admin.staypricinglist', 'admin.staypricing_edit_form']) ? 'active' : '' }} mb-0 text-white">
                         <img src="/assets/image/dashboard/stay.png" alt="" class="stay-img">
@@ -282,7 +282,7 @@
                         <span class="nav_name"> Pricing Calculator </span>
                     </a>
 
-                    <p class=" nav_link text-black fw-bold mb-0">EVENTS</p>
+                    <p class=" nav_link text-white fw-bold mb-0">EVENTS</p>
                     <a class="nav_link {{ request()->routeIs(['admin.programeventslist', 'admin.programeventsadd', 'admin.programeventedit']) ? 'active' : '' }} mb-0 text-white"
                         href="{{ route('admin.programeventslist') }}">
                         <img src="/assets/image/dashboard/themes.svg" alt="">
