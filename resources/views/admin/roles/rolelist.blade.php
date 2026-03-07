@@ -5,6 +5,7 @@
     a:hover {
         color: rgb(27, 108, 138);
     }
+
     a{
         font-family: 'Poppins', sans-serif;
         font-weight:500;
@@ -20,7 +21,7 @@
     }
 
     #cityTable thead th {
-        color: #000 !important; 
+        color: #000 !important;
     }
 
     .th{
@@ -75,7 +76,7 @@
         </div>
     </div>
 
-</div>  
+</div>
 
 
 <!-- ROLE LIST TABLE -->
@@ -92,7 +93,7 @@
                     <tr class="rounded-top-4">
                         <th class="text-start">S.No</th>
                         <th class="text-start">Name</th>
-                        <th class="text-start">Created Date</th>
+                        <th class="text-start">Created Date & Time</th>
                         <th class="text-start">Status</th>
                         <th class="text-start">Action</th>
                     </tr>
@@ -108,9 +109,11 @@
 
                         <td class="text-start">{{ $row->role_name }}</td>
 
+                        <!-- FIXED TIMESTAMP -->
                         <td class="text-start">
-                            {{ \App\Helpers\DateHelper::formatDate($row->created_at) }}
+                            {{ $row->created_at ? $row->created_at->format('d-m-Y h:i A') : '-' }}
                         </td>
+
 
                         @php
                             $disp_status = 'In Active';
@@ -201,15 +204,15 @@ $(document).ready(function() {
 
     $('#cityTable').DataTable({
 
-        "pageLength": 10,
-        "lengthChange": true,
-        "ordering": false,
-        "searching": true,
+        pageLength:10,
+        lengthChange:true,
+        ordering:false,
+        searching:true,
 
-        "language": {
-            "emptyTable": "No records found",
-            "searchPlaceholder": "Search roles...",
-            "search": ""
+        language:{
+            emptyTable:"No records found",
+            searchPlaceholder:"Search roles...",
+            search:""
         }
 
     });

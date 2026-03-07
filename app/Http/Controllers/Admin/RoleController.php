@@ -15,7 +15,7 @@ class RoleController extends Controller
         $title = 'Role List';
 
         $roles = Role::where('is_deleted', '0')
-                    ->orderBy('id', 'desc')
+                    ->orderBy('created_at', 'desc') // latest role first
                     ->get();
 
         return view('admin.roles.rolelist', compact('title', 'roles'));
@@ -33,7 +33,7 @@ class RoleController extends Controller
     // Insert Role
     public function insert(Request $request)
     {
-        // Validation
+
         $request->validate([
             'role_name' => 'required|unique:roles,role_name'
         ],[
@@ -42,11 +42,16 @@ class RoleController extends Controller
         ]);
 
         $role = new Role();
+
         $role->role_name = $request->role_name;
         $role->status = $request->has('status') ? '1' : '0';
-        $role->created_date = now();
         $role->created_by = 'admin';
         $role->is_deleted = '0';
+
+        // Timestamp
+        $role->created_at = now();
+        $role->updated_at = now();
+
         $role->save();
 
         return redirect()->route('admin.role_list')
@@ -57,17 +62,20 @@ class RoleController extends Controller
     // Edit Role Form
     public function edit_form(Request $request, $id)
     {
+
         $title = 'Edit Role';
 
         $role_details = Role::findOrFail($id);
 
         return view('admin.roles.roleedit', compact('role_details', 'title'));
+
     }
 
 
     // Update Role
     public function update(Request $request, $id)
     {
+
         $request->validate([
             'role_name' => 'required|unique:roles,role_name,' . $id
         ],[
@@ -76,8 +84,13 @@ class RoleController extends Controller
         ]);
 
         $role = Role::findOrFail($id);
+
         $role->role_name = $request->role_name;
         $role->status = $request->has('status') ? '1' : '0';
+
+        // update timestamp
+        $role->updated_at = now();
+
         $role->save();
 
         return redirect()->route('admin.role_list')
@@ -88,6 +101,7 @@ class RoleController extends Controller
     // Change Status
     public function change_status(Request $request)
     {
+
         $record_id = $request->record_id;
         $mode = $request->mode;
 
@@ -96,6 +110,8 @@ class RoleController extends Controller
         if ($role) {
 
             $role->status = $mode == 0 ? "0" : "1";
+            $role->updated_at = now();
+
             $role->save();
 
             return response()->json([
@@ -114,6 +130,7 @@ class RoleController extends Controller
     // Delete Role
     public function delete(Request $request)
     {
+
         $record_id = $request->record_id;
 
         $role = Role::find($record_id);
@@ -121,6 +138,8 @@ class RoleController extends Controller
         if ($role) {
 
             $role->is_deleted = "1";
+            $role->updated_at = now();
+
             $role->save();
 
             return response()->json([
