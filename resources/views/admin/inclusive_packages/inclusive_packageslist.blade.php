@@ -93,7 +93,9 @@
                         <td class="text-start"><img src="{{ $row->cover_img ? asset($row->cover_img) : asset($settings->footer_logo) }}" alt="{{ $row->alternate_name ?? 'Default Alt Text' }}" style="max-width: 100px; max-height: 100px; object-fit: cover;"></td>
 
                         <td class="text-start">{{ $formattedCategories }}</td>
-                        <td class="text-start">{{ \App\Helpers\DateHelper::formatDate($row->created_at) }}</td>
+        <td class="text-start">
+{{ $row->created_at->timezone('Asia/Kolkata')->format('d-m-Y h:i:s A') }}
+</td>
                         <td class="text-start">
                             <button type="button" class="btn  text-dark duplicate_package" data-package_id="{{ $row->id }}">
                                 <i class="fa fa-copy" style="color:blue !important"></i> Duplicate

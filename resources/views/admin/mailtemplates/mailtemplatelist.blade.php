@@ -48,12 +48,15 @@
                     <tr class="rounded-top-4">
                         <th class="text-start"><span> S.No </span></th>
                         <th class="text-start"><span> Title</span></th>
+                        <th class="text-start"><span> Data </span></th>
                         <th class="text-start"><span> Status </span></th>
                         <th class="text-start"><span> Action </span></th>
                     </tr>
                 </thead>
+                
                 <tbody>
-
+                    
+ 
                     @foreach ($mail_details as $row)
                     <tr>
                         <td class="text-start">{{ $loop->iteration }}</td>
@@ -71,6 +74,9 @@
                         $actTitle = 'Click to deactivate';
                         }
                         @endphp
+                        <td class="text-start">
+{{ $row->created_at->timezone('Asia/Kolkata')->format('d-m-Y h:i:s A') }}
+</td>
                         <td class="text-start"><a data-toggle="tooltip" data-csrf_token="{{ csrf_token() }}" data-original-title="{{ $actTitle }}" class="stsconfirm" href="javascript:void(0);" data-row_id="{{ $row->id }}" data-act_url="{{ route('admin.mailtemplatestatus') }}" data-stsmode="{{ $mode }}"><button type="button" class="btn {{ $btnColr }} px-5">{{ $disp_status }}</button></a></td>
                         <td class="text-start" style="width: 20%;">
                             <a href="{{ route('admin.mailtemplateedit',$row->id) }}" title="Edit" class="table-edit-link">

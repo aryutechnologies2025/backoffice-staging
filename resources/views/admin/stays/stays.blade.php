@@ -63,7 +63,8 @@
                         <th class="text-start"><span> Destination </span></th>
                         <th class="text-start"><span> Title </span></th>
                         <th class="text-start"><span> Tag Line </span></th>
-                        <!-- <th class="text-center"><span> Description </span></th>                -->
+                        <!-- <th class="text-center"><span> Description </span></th>  -->
+                         <th class="text-start"><span>Date</span></th>
                         <th class="text-start"><span> Stay URL </span></th>
                         <th class="text-start"><span> Status </span></th>
                         <th class="text-start"><span> Action </span></th>
@@ -85,6 +86,7 @@
                         <td class="text-start">{{ $row->stay_title }}</td>
                         <td class="text-start">{{ $row->tag_line }}</td>
                         <!-- <td class="text-center">{{ $row->stay_description }}</td> -->
+                         <td class="text-start">{{ $row->created_at->format('d-m-Y H:i:s') }}</td>
 
                         @php
                         $disp_status = 'In Active';

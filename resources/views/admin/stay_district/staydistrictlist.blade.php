@@ -67,7 +67,7 @@
                             <img src="{{ asset($row->city_image) }}" alt="{{ $row->alternate_name ?? 'Default Alt Text' }}" style="max-width: 56px; max-height: 56px; object-fit: cover;">
                         </td> -->
                         <td class="text-start">{{ $row->city ? $row->city->city_name : 'N/A' }}</td>
-                        <td class="text-start">{{ \App\Helpers\DateHelper::formatDate($row->created_at) }}</td>
+                      <td class="text-start">{{ $row->created_at->format('d-m-Y H:i:s') }}</td>
                           @php
                             $disp_status = 'In Active';
                             $actTitle = 'Click to activate';

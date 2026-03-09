@@ -4,20 +4,20 @@
     a:hover {
         color: rgb(27, 108, 138);
     }
-    a{
+
+    a {
         font-family: 'Poppins', sans-serif;
-        font-weight:500;
-        color:#8B7eff;
-        font-size:13px;
+        font-weight: 500;
+        color: #8B7eff;
+        font-size: 13px;
     }
 
-    .city{
+    .city {
         font-family: 'Poppins', sans-serif;
-        font-weight:600;
-        color:#282833;
-        font-size:13px;
+        font-weight: 600;
+        color: #282833;
+        font-size: 13px;
     }
-
 </style>
 
 <div class="row body-sec py-3 px-5 justify-content-around">
@@ -25,7 +25,7 @@
         <h3 class="admin-title fw-bold">{{$title}}</h3>
     </div>
     <div class="text-end col-lg-6 ">
-          <b><a href="/dashboard" >Dashboard</a> > <a class="city" href="/amenities" >Amenities</a></b>
+        <b><a href="/dashboard">Dashboard</a> > <a class="city" href="/amenities">Amenities</a></b>
     </div>
     <div class="mt-2 mb-2 col-lg-12">
         <div class="d-flex justify-content-end">
@@ -35,14 +35,14 @@
         </div>
     </div>
 
-</div>  
+</div>
 
 <!-- EVENT LIST -->
 <div class="row body-sec px-5">
     <div class="bg-white pt-3 col-lg-12">
         <div class="table-sec rounded-bottom-4 mb-5">
-        <table id="cityTable" class="table table-bordered pt-2">
-        <thead>
+            <table id="cityTable" class="table table-bordered pt-2">
+                <thead>
                     <tr class="rounded-top-4">
                         <th class="text-start"><span>S.No</span></th>
                         <th class="text-start "><span> Amenity Logo</span></th>
@@ -62,10 +62,10 @@
                     @else
                     @foreach ($amenities as $row)
                     <tr>
-                    <td class="text-start">{{ $loop->iteration }}</td>
-                    <td class="text-start"><img src="{{ asset($row->amenity_pic) }}" alt="{{ $row->alternate_name ?? 'Default Alt Text' }}" style="max-width: 100px; max-height: 100px; object-fit: cover;"></td>
+                        <td class="text-start">{{ $loop->iteration }}</td>
+                        <td class="text-start"><img src="{{ asset($row->amenity_pic) }}" alt="{{ $row->alternate_name ?? 'Default Alt Text' }}" style="max-width: 100px; max-height: 100px; object-fit: cover;"></td>
                         <td class="text-start">{{ $row->amenity_name }}</td>
-                        <td class="text-start">{{ \App\Helpers\DateHelper::formatDate($row->created_at) }}</td>
+                        <td class="text-start">{{ $row->created_at->timezone('Asia/Kolkata')->format('d-m-Y h:i:s A') }}</td>
                         @php
                         $disp_status = 'In Active';
                         $actTitle = 'Click to activate';
@@ -101,7 +101,7 @@
 
                 </tbody>
             </table>
-           
+
         </div>
     </div>
 </div>
@@ -117,12 +117,13 @@
             "searching": true,
             "language": {
                 "emptyTable": "No records found",
-                "searchPlaceholder": "Search cities...",  // 👈 Your placeholder text
-                "search": ""  // 👈 This removes the "Search:" label
+                "searchPlaceholder": "Search cities...", // 👈 Your placeholder text
+                "search": "" // 👈 This removes the "Search:" label
             },
-            "columnDefs": [
-                { "orderable": true, "targets": [0, 3] }
-            ]
+            "columnDefs": [{
+                "orderable": true,
+                "targets": [0, 3]
+            }]
         });
     });
 </script>

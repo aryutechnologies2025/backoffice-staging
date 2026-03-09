@@ -134,6 +134,7 @@
                             <th class="text-start">Name</th>
                             <th class="text-start">Email</th>
                             <th class="text-start">Phone Number</th>
+                            <th class="text-start">Date</th>
                             <th class="text-start">Status</th>
                             <th class="text-start">Notes</th>
                             <th class="text-start">Action</th>
@@ -142,7 +143,9 @@
 
                     <tbody>
                         @foreach ($programdetails as $row)
-
+ <td class="text-start">
+{{ $row->created_at->timezone('Asia/Kolkata')->format('d-m-Y h:i:s A') }}
+</td>
                         <tr>
                             <td class="text-start">{{ $loop->iteration }}</td>
                             <td class="text-start">{{ ucfirst(optional($row->event)->event_name) }}</td>

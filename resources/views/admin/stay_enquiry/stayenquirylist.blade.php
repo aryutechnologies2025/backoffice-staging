@@ -91,7 +91,7 @@
                         @else
                         <td class="text-start">N/A</td>
                         @endif
-                        <td class="text-start">{{ \App\Helpers\DateHelper::formatDate($row->created_at) }}</td>
+                     <td class="text-start">{{ $row->created_at->format('d-m-Y H:i:s') }}</td>
                         <!-- <td class="text-center">
                             <select
                                 class="form-select followUpStatus"

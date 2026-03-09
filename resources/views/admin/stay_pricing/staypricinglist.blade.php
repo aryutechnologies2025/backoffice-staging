@@ -57,6 +57,7 @@
                         <th class="text-start">S.No</th>
                          <th class="text-start">Title</th>
                         <th class="text-start">Destination</th>
+                        <th class="text-start">Date</th>
                         <th class="text-start">Status</th>
                         <th class="text-start">Action</th>
                     </tr>
@@ -69,6 +70,7 @@
                     <tr>
                         <td class="text-start">{{ $loop->iteration }}</td>
                         <td class="text-start">{{ ucfirst($row->title) }}</td>
+                       
                         <td class="text-start">
                             @if($row->city)
                                 {{ ucfirst($row->city->city_name) }}
@@ -76,6 +78,9 @@
                                 N/A
                             @endif
                         </td>
+                         <td class="text-start">
+{{ $row->created_at->timezone('Asia/Kolkata')->format('d-m-Y h:i:s A') }}
+</td>
                         @php
                         $disp_status = 'In Active';
                         $actTitle = 'Click to activate';
