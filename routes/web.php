@@ -108,7 +108,7 @@ Route::prefix('/')->group(function () {
     Route::post('/do-login', [AdminController::class, 'check_login'])->name('admin.doLogin');
     Route::get('auth/facebook', [FacebookController::class, 'redirectToFacebook']);
     Route::get('auth/facebook/callback', [FacebookController::class, 'handleFacebookCallback']);
-    Route::middleware(['auth:admin'])->group(function () {
+    Route::middleware(['auth:admin', 'admin.status'])->group(function () {
         Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
         Route::get('/logout', [AdminController::class, 'logout'])->name('admin.logout');
         // Route::get('/dashboard', [AdminController::class, 'getInclusivePackagesCount'])->name('admin.dashboard');

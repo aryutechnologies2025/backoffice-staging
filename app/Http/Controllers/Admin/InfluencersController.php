@@ -12,7 +12,7 @@ class InfluencersController extends Controller
     {
         $title = 'Influencers List';
         $influencers = Influencers::where('is_deleted', '0')
-            ->orderBy('created_at', 'desc')
+            ->orderBy('id', 'desc')
             ->get();
 
         // Fetch affiliate links for each influencer
@@ -80,7 +80,9 @@ class InfluencersController extends Controller
         $influencer->reference_id = $newReferenceId;
         $influencer->referral_code = $newReferralCode; // Set the referral code
         $influencer->created_by = 'admin';
+        $influencer->created_by = auth()->user()->email;
         $influencer->status = $request->has('status') && $request->input('status') === 'on' ? '1' : '0';
+        
         $influencer->is_deleted = '0';
 
         $influencer->save();

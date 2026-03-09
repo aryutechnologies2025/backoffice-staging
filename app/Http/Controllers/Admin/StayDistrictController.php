@@ -114,7 +114,8 @@ class StayDistrictController extends Controller
         // Store all districts in a single row as JSON
         stay_district::create([
             'destination' =>  $request->cities_name,
-            'districts_data' => $processedData
+            'districts_data' => $processedData,
+            'created_by' => auth()->user()->email
         ]);
 
         return redirect()->route('admin.staydistrictlist')

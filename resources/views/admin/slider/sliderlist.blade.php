@@ -61,6 +61,7 @@
 <th class="text-start">S.No</th>
 <th class="text-start">Image</th>
 <th class="text-start">Title</th>
+<th class="text-start">Created By</th>
 <th class="text-start">Date & Time</th>
 <th class="text-start">Status</th>
 <th class="text-start">Action</th>
@@ -72,7 +73,7 @@
 @if($slider_dts->isEmpty())
 
 <tr>
-<td colspan="6" class="text-center">No records</td>
+<td colspan="7" class="text-center">No records</td>
 </tr>
 
 @else
@@ -91,6 +92,8 @@ style="max-width:70px;max-height:70px;object-fit:cover;">
 </td>
 
 <td>{{ $row->slider_name }}</td>
+
+<td>{{ $row->created_by ?? 'N/A' }}</td>
 
 <!-- TIMESTAMP -->
 <td>

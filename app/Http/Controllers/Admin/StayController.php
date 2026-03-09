@@ -124,7 +124,7 @@ class StayController extends Controller
         $stay_details->is_deleted = '0';
         $stay_details->status = $request->has('status') && $request->input('status') === 'on' ? '1' : '0';
         $stay_details->created_date = now();
-        $stay_details->created_by = 'admin';
+        $stay_details->created_by = auth()->user()->email;
 
         $stay_details->save();
 

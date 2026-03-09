@@ -47,6 +47,7 @@
                         <th class="text-start"><span>S.No</span></th>
                         <th class="text-start "><span> Amenity Logo</span></th>
                         <th class="text-start "><span> Amenity </span></th>
+                        <th class="text-start "><span> Created By </span></th>
                         <th class="text-start "><span>Date </span></th>
 
                         <th class="text-start"><span> Status </span></th>
@@ -57,7 +58,7 @@
 
                     @if($amenities->isEmpty())
                     <tr>
-                        <td colspan="9" class="text-center">No records</td>
+                        <td colspan="7" class="text-center">No records</td>
                     </tr>
                     @else
                     @foreach ($amenities as $row)
@@ -65,6 +66,7 @@
                         <td class="text-start">{{ $loop->iteration }}</td>
                         <td class="text-start"><img src="{{ asset($row->amenity_pic) }}" alt="{{ $row->alternate_name ?? 'Default Alt Text' }}" style="max-width: 100px; max-height: 100px; object-fit: cover;"></td>
                         <td class="text-start">{{ $row->amenity_name }}</td>
+                        <td class="text-start">{{ $row->created_by ?? 'N/A' }}</td>
                         <td class="text-start">{{ $row->created_at->timezone('Asia/Kolkata')->format('d-m-Y h:i:s A') }}</td>
                         @php
                         $disp_status = 'In Active';

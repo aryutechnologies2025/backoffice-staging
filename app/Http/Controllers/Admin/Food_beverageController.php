@@ -11,7 +11,7 @@ class Food_beverageController extends Controller
     public function list(Request $request)
     {
         $title = 'Food&Beverage List';
-        $food_beverage = FoodBeverage::where('is_deleted', '0')->get();
+        $food_beverage = FoodBeverage::where('is_deleted', '0')->orderBy('created_at', 'desc')->get();
         return view('admin.food_beverage.food_beveragelist', compact('title', 'food_beverage'));
     }
 
@@ -46,7 +46,7 @@ class Food_beverageController extends Controller
         $food_beverage->upload_image_name = $request->input('upload_image_name');
         $food_beverage->status = $request->has('status') && $request->input('status') === 'on' ? '1' : '0';
         $food_beverage->created_date = date('Y-m-d H:i:s');
-        $food_beverage->created_by = 'admin';
+        $food_beverage->created_by = auth()->user()->email;
         $food_beverage->is_deleted = '0';
         $food_beverage->updated_at = null;
         $food_beverage->save();

@@ -58,7 +58,7 @@ class UserController extends Controller
         $user->newsletter_sub = $request->has('newsletter_sub') && $request->input('newsletter_sub') === 'on' ? '1' : '0';
         $user->terms_condition = $request->has('terms_condition') && $request->input('terms_condition') === 'on' ? '1' : '0';
         $user->created_date = date('Y-m-d H:i:s');
-        $user->created_by = 'admin';
+        $user->created_by = auth()->user()->email;
         $user->is_deleted = '0';
         $user->updated_at = null;
         $user->password = Hash::make($request->input('password'));

@@ -13,7 +13,7 @@ class ActivityController extends Controller
     public function list(Request $request)
     {
         $title = 'Activity List';
-        $stay_details = ActivityP::where('is_deleted', '0')->with(['destination'])->orderBy('id', 'desc')->get();
+        $stay_details = ActivityP::where('is_deleted', '0')->with(['destination'])->orderBy('created_at', 'desc')->get();
         return view('admin.activities_m.activitylist', compact('title', 'stay_details'));
     }
 
@@ -51,6 +51,7 @@ class ActivityController extends Controller
 
         $pricing->status = $request->has('status') && $request->input('status') === 'on' ? '1' : '0';
         $pricing->is_deleted = '0';
+        $pricing->created_by = auth()->user()->email;
         $pricing->save();
 
         return redirect()->route('admin.activitylist')

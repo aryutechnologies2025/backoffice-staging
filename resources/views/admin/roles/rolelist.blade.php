@@ -93,6 +93,7 @@
                     <tr class="rounded-top-4">
                         <th class="text-start">S.No</th>
                         <th class="text-start">Name</th>
+                        <th class="text-start">Created By</th>
                         <th class="text-start">Created Date & Time</th>
                         <th class="text-start">Status</th>
                         <th class="text-start">Action</th>
@@ -108,6 +109,8 @@
                         <td class="text-start">{{ $loop->iteration }}</td>
 
                         <td class="text-start">{{ $row->role_name }}</td>
+
+                        <td class="text-start">{{ $row->created_by ?? 'N/A' }}</td>
 
                         <!-- FIXED TIMESTAMP -->
                         <td class="text-start">

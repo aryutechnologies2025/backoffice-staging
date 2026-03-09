@@ -48,6 +48,7 @@
                     <tr class="rounded-top-4">
                         <th class="text-start"><span> S.No </span></th>
                         <th class="text-start"><span> Title</span></th>
+                        <th class="text-start"><span> Created By</span></th>
                         <th class="text-start"><span> Data </span></th>
                         <th class="text-start"><span> Status </span></th>
                         <th class="text-start"><span> Action </span></th>
@@ -61,6 +62,7 @@
                     <tr>
                         <td class="text-start">{{ $loop->iteration }}</td>
                         <td class="text-start">{{ $row->title }}</td>
+                        <td class="text-start">{{ auth('admin')->user()->email ?? 'N/A' }}</td>
                         @php
                         $disp_status = 'In Active';
                         $actTitle = 'Click to activate';

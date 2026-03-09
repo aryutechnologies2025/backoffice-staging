@@ -50,6 +50,7 @@
                         <th class="text-start"><span>S.No</span></th>
                         <th class="text-start"><span>  Image </span></th>
                         <th class="text-start"><span> Title </span></th>
+                        <th class="text-start"><span> Created By </span></th>
                         <th class="text-start"><span>Date </span></th>
                         <th class="text-start"><span> Status </span></th>
                         <th class="text-start"><span> Action </span></th>
@@ -59,7 +60,7 @@
 
                     @if($themes->isEmpty())
                     <tr>
-                        <td colspan="9" class="text-center">No records</td>
+                        <td colspan="7" class="text-center">No records</td>
                     </tr>
                     @else
                     @foreach ($themes as $row)
@@ -68,6 +69,7 @@
 
                     <td class="text-start"><img src="{{ $row->theme_pic ? asset($row->theme_pic) : asset('uploads/settings/footer_logo/innerpecelogo.png') }}"  alt="{{ $row->alternate_name ?? 'Default Alt Text' }}" style="max-width: 100px; max-height: 100px; object-fit: cover;"></td>
                         <td class="text-start">{{ $row->themes_name }}</td>
+                        <td class="text-start">{{ $row->created_by ?? 'N/A' }}</td>
                         <!-- <td class="text-start">{{ \App\Helpers\DateHelper::formatDate($row->created_at) }}</td> -->
                          <td class="text-start">{{ $row->created_at->format('d-m-Y H:i:s') }}</td>
                         @php

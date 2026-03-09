@@ -47,6 +47,7 @@
                         <th class="text-start">S.No</th>
                        
                         <th class="text-start">Title</th>
+                        <th class="text-start">Created By</th>
                         <th class="text-start">Date</th>
 
                         <th class="text-start">Status</th>
@@ -56,7 +57,7 @@
                 <tbody>
                     @if($destination_dts->isEmpty())
                     <tr>
-                        <td colspan="4" class="text-center">No records</td>
+                        <td colspan="6" class="text-center">No records</td>
                     </tr>
                     @else
                     @foreach ($destination_dts as $row)
@@ -67,6 +68,7 @@
                             <img src="{{ asset($row->city_image) }}" alt="{{ $row->alternate_name ?? 'Default Alt Text' }}" style="max-width: 56px; max-height: 56px; object-fit: cover;">
                         </td> -->
                         <td class="text-start">{{ $row->city ? $row->city->city_name : 'N/A' }}</td>
+                      <td class="text-start">{{ $row->created_by ?? 'N/A' }}</td>
                       <td class="text-start">{{ $row->created_at->format('d-m-Y H:i:s') }}</td>
                           @php
                             $disp_status = 'In Active';

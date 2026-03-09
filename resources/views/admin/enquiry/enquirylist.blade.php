@@ -109,6 +109,9 @@
                         <th class="text-start"><span>Phone</span></th>
                         <th class="text-start"><span>Budget</span></th>
                         <th class="text-start"><span>Program Name</span></th>
+                     
+                        <th class="text-start"><span>Date</span></th>
+                           <th class="text-start"><span>Created By</span></th>
                         <th class="text-start"><span>Trip Date</span></th>
                         <!-- <th class="text-start"><span>Refered By</span></th> -->
                         <th class="text-start"><span>Mail Processing</span></th>
@@ -130,6 +133,8 @@
                         <td class="text-start">{{ $row->pricing }}</td>
                         <td class="text-start">{{ $row->program_title ?? 'null' }}</td>
                         <td class="text-start">{{ $row->travel_date ?? 'null' }}</td>
+                        <td class="text-start">{{ auth('admin')->user()->email ?? 'N/A' }}</td>
+                      <td class="text-start"> {{ $row->created_at->timezone('Asia/Kolkata')->format('d-m-Y h:i:s A') }}</td>
                         {{-- <td class="text-start">
                             <select name="status"
                                 class="form-select statuschange"

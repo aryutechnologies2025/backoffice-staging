@@ -11,9 +11,17 @@ class ProgramEventsController extends Controller
     public function list()
     {
         $title = 'Events List';
+
+        
         $programdetails = ProgramEvents::where('is_deleted', '0')->orderBy('id', 'desc')->get();
         return view('admin.programevents.programEventList', compact('title', 'programdetails'));
+
+
+        
+    
     }
+     
+
 
     public function add()
     {

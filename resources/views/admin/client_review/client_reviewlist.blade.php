@@ -50,6 +50,7 @@
                         <th class="text-start"><span> Client Name </span></th>
                         <th class="text-start"><span> Program Name </span></th>
                         <th class="text-start"><span> Rating </span></th>
+                        <th class="text-start"><span> Created By</span></th>
                         <th class="text-start"><span> Date </span></th>
                         <th class="text-start"><span> Status </span></th>
                         <th class="text-start"><span> Action </span></th>
@@ -72,6 +73,11 @@
                         </td>
                         <td class="text-start">{{ $row->package ? $row->package->title : 'N/A' }}</td>
                         <td class="text-start">{{ $row->rating }}</td>
+
+<td class="text-start">
+{{ $row->created_by ?? '' }}
+</td>
+
                          <td class="text-start">
 {{ $row->created_at->timezone('Asia/Kolkata')->format('d-m-Y h:i:s A') }}
 </td>

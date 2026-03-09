@@ -12,7 +12,7 @@ class SliderController extends Controller
     public function list(Request $request)
     {
         $title = 'Slider List';
-        $slider_dts = Slider::where('is_deleted', '0')->get();
+        $slider_dts = Slider::where('is_deleted', '0')->orderBy('created_at', 'desc')->get();
     //   dd($slider_dts);
         return view('admin.slider.sliderlist', compact('title', 'slider_dts'));
     }
@@ -55,7 +55,7 @@ class SliderController extends Controller
         $slider->upload_image_name = $request->input('upload_image_name');
         $slider->status = $request->has('status') && $request->input('status') === 'on' ? '1' : '0';
         $slider->created_date = now();
-        $slider->created_by = 'admin';
+        $slider->created_by = auth()->user()->email;
         $slider->is_deleted = '0';
         $slider->updated_at = null;
         $slider->save();

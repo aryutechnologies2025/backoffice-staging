@@ -56,6 +56,7 @@ a{
 <th class="text-start">Client Name</th>
 <th class="text-start">Stay Name</th>
 <th class="text-start">Rating</th>
+<th class="text-start">Created By</th>
 <th class="text-start">Created At</th>
 <th class="text-start">Status</th>
 <th class="text-start">Action</th>
@@ -96,6 +97,11 @@ a{
 
 <td class="text-start">
 {{ $row->rating }}
+</td>
+
+
+<td class="text-start">
+{{ auth('admin')->user()->email ?? 'N/A' }}
 </td>
 
 

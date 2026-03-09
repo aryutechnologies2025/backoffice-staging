@@ -68,7 +68,7 @@ class CityController extends Controller
         $City->stay_alternate_name = $request->input('stay_alternate_image_name'); // Save alternate name
         $City->status = $request->has('status') && $request->input('status') === 'on' ? '1' : '0';
         $City->created_date = date('Y-m-d H:i:s');
-        $City->created_by = 'admin';
+        $City->created_by = auth()->user()->email;
         $City->is_deleted = '0';
         $City->updated_at = null;
         $City->save();
