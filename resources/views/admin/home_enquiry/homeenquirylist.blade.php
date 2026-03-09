@@ -97,7 +97,9 @@
                         @else
                         <td class="text-start">N/A</td>
                         @endif
-                        <td class="text-start">{{ \App\Helpers\DateHelper::formatDate($row->created_at) }}</td>
+                         <td class="text-start">
+{{ $row->created_at->timezone('Asia/Kolkata')->format('d-m-Y h:i:s A') }}
+</td>
                         <td class="text-start">{{ \App\Helpers\DateHelper::formatDate($row->travel_date) }}</td>
                         <td class="text-start">
                             <select

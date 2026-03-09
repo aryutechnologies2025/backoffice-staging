@@ -59,7 +59,9 @@
                     <td class="text-start">{{ $row->user ? $row->user->first_name : 'N/A' }}{{$row->user ? $row->user->last_name : 'N/A'}}</td>
                <td class="text-start">{{ $row->user ? $row->user->email : 'N/A' }}</td>
                <td class="text-start">{{ $row->user ? $row->user->phone : 'N/A' }}</td>
-               <td class="text-start">{{ \App\Helpers\DateHelper::formatDate($row->created_at) }}</td>   
+             <td class="text-start">
+{{ $row->created_at->timezone('Asia/Kolkata')->format('d-m-Y h:i:s A') }}
+</td>
                     </tr>
                     @endforeach
                     @endif

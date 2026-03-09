@@ -25,6 +25,8 @@
                         <th class="text-center"><span> Title </span></th>
                         <th class="text-center"><span> Location </span></th>
                         <th class="text-center"><span>Price</span></th>
+                        <!-- <th class="text-center"><span>Date</span></th> -->
+                         <th class="text-center"><span>Guests</span></th>
                         <th class="text-center"><span>Guests</span></th>
                         <th class="text-center"><span>Action</span></th>
                     </tr>

@@ -62,7 +62,9 @@
                         <td class="text-start">{{ $loop->iteration }}</td>
                         <td class="text-start">{{ $row->activities }}</td>
                         <td class="text-start"><img src="{{ asset($row->activities_pic) }}" alt="{{ $row->alternate_name ?? 'Default Alt Text' }}" style="max-width: 100px; max-height: 100px; object-fit: cover;"></td>
-                        <td class="text-start">{{ \App\Helpers\DateHelper::formatDate($row->created_at) }}</td>
+                        <td class="text-start">
+{{ $row->created_at->timezone('Asia/Kolkata')->format('d-m-Y h:i:s A') }}
+</td>
                         @php
                         $disp_status = 'In Active';
                         $actTitle = 'Click to activate';

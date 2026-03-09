@@ -88,7 +88,7 @@
                     </div>
                      <div class="add_form col-md-4">
                         <label class="fw-bold mb-2">Password</label>
-                        <input type="text" placeholder="Password" id="password" name="password"
+                        <input type="password" placeholder="Password" id="password" name="password"
                             value="{{ old('password') }}" class="form-control py-2 rounded-2 shadow-sm">
                     </div>
                 </div>
