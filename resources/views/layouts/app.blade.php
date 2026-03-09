@@ -185,6 +185,13 @@
                         <span class="nav_name"> User Registration </span>
                     </a>
 
+
+                     <a href="{{ route('admin.role_list') }}"
+                        class="nav_link {{ request()->routeIs(['admin.role_list','admin.role_add_form', 'admin.role_edit_form']) ? 'active' : '' }} mb-3">
+                        <img src="/assets/image/dashboard/settings.svg" alt="">
+                        <span class="nav_name" style="color: #fff;"> Role </span>
+                    </a>
+
                      <a href="{{ route('admin.admin_user_list') }}"
                         class="nav_link {{ request()->routeIs(['admin.admin_user_list', 'admin.admin_user_add_form', 'admin.admin_user_edit_form']) ? 'active' : '' }} mb-3">
                         <img src="/assets/image/dashboard/settings.svg" alt="">
@@ -244,16 +251,30 @@
                         <img src="/assets/image/dashboard/program.svg" alt="">
                         <span class="nav_name"> Programs </span>
                     </a>
+
+                     <a href="{{ route('admin.themes_list') }}"
+                        class="nav_link {{ request()->routeIs(['admin.themes_list', 'admin.themes_add_form', 'admin.themes_edit_form']) ? 'active' : '' }} mb-1 text-white">
+                        <img src="/assets/image/dashboard/themes.svg" alt="">
+                        <span class="nav_name">Theme</span>
+                    </a>
+
                     <a href="{{ route('admin.citylist') }}"
                         class="nav_link {{ request()->routeIs(['admin.citylist', 'admin.city_add_form', 'admin.city_edit_form']) ? 'active' : '' }} mb-0 text-white">
                         <img src="/assets/image/dashboard/location-pin.svg" alt="">
                         <span class="nav_name"> Packages Destionation </span>
                     </a>
-                    <a href="{{ route('admin.themes_list') }}"
+
+                    <a href="{{ route('admin.staydistrictlist') }}"
+                        class="nav_link {{ request()->routeIs(['admin.staydistrictlist']) ? 'active' : '' }} mb-0 text-white">
+                        <img src="/assets/image/dashboard/stay.png" alt="" class="stay-img">
+                        <span class="nav_name"> Package District </span>
+                    </a>
+
+                    <!-- <a href="{{ route('admin.themes_list') }}"
                         class="nav_link {{ request()->routeIs(['admin.themes_list', 'admin.themes_add_form', 'admin.themes_edit_form']) ? 'active' : '' }} mb-3 text-white">
                         <img src="/assets/image/dashboard/themes.svg" alt="">
                         <span class="nav_name">Theme</span>
-                    </a>
+                    </a> -->
 
                       <a href="{{ route('admin.CustomerPackage_list') }}"
                         class="nav_link {{ request()->routeIs(['admin.CustomerPackage_list', 'admin.CustomerPackage_insert']) ? 'active' : '' }} mb-3 text-white">
@@ -274,11 +295,11 @@
                         <img src="/assets/image/dashboard/enquiry.svg" alt="">
                         <span class="nav_name"> Stay Enquiry </span>
                     </a>
-                    <a href="{{ route('admin.staydistrictlist') }}"
+                    <!-- <a href="{{ route('admin.staydistrictlist') }}"
                         class="nav_link {{ request()->routeIs(['admin.staydistrictlist']) ? 'active' : '' }} mb-0 text-white">
                         <img src="/assets/image/dashboard/stay.png" alt="" class="stay-img">
-                        <span class="nav_name"> Stays District </span>
-                    </a>
+                        <span class="nav_name"> Package District </span>
+                    </a> -->
 
 
 
@@ -568,11 +589,11 @@
                     </a> -->
 
 
-                    <a href="{{ route('admin.role_list') }}"
+                    <!-- <a href="{{ route('admin.role_list') }}"
                         class="nav_link {{ request()->routeIs(['admin.role_list','admin.role_add_form', 'admin.role_edit_form']) ? 'active' : '' }} mb-3">
                         <img src="/assets/image/dashboard/settings.svg" alt="">
                         <span class="nav_name" style="color: #fff;"> Role </span>
-                    </a>
+                    </a> -->
 
                       <!-- <a href="{{ route('admin.admin_user_list') }}"
                         class="nav_link {{ request()->routeIs(['admin.admin_user_list', 'admin.admin_user_add_form', 'admin.admin_user_edit_form']) ? 'active' : '' }} mb-3">
