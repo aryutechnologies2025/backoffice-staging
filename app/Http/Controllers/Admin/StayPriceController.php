@@ -13,7 +13,7 @@ class StayPriceController extends Controller
     public function list(Request $request)
     {
         $title = 'Stay Pricing List';
-        $stay_details = StayPricing::with('city')->where('is_deleted', '0')->with(['destination'])->orderBy('id', 'desc')->get();
+        $stay_details = StayPricing::with('city')->where('is_deleted', '0')->with(['destination'])->orderBy('created_at', 'desc')->get();
 
         return view('admin.stay_pricing.staypricinglist', compact('title', 'stay_details'));
     }
@@ -51,6 +51,7 @@ class StayPriceController extends Controller
 
         $pricing->status = $request->has('status') && $request->input('status') === 'on' ? '1' : '0';
         $pricing->is_deleted = '0';
+        $pricing->created_by = auth()->user()->email;
         $pricing->save();
 
         return redirect()->route('admin.staypricinglist')

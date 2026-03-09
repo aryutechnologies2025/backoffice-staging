@@ -45,7 +45,7 @@ class RoleController extends Controller
 
         $role->role_name = $request->role_name;
         $role->status = $request->has('status') ? '1' : '0';
-        $role->created_by = 'admin';
+        $role->created_by = auth()->user()->email;
         $role->is_deleted = '0';
 
         // Timestamp

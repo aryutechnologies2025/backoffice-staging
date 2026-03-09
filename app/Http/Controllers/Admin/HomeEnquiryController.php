@@ -119,6 +119,7 @@ class HomeEnquiryController extends Controller
     {
         $enquirydetails = new HomeEnquiryDetail();
         $enquirydetails->fill($request->all());
+        $enquirydetails->created_by = auth()->user()->email;
         $enquirydetails->save();
         return redirect()->route('admin.home_enquiry_list')->with('success', 'Enquiry added successfully!');
     }

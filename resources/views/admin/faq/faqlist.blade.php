@@ -49,6 +49,7 @@
                         <th class="text-start"><span>S.No</span></th>
                         <th class="text-start "><span> Question </span></th>
                         <th class="text-start "><span> Answer </span></th>
+                        <th class="text-start"><span>Created By</span></th>
                         <th class="text-start"><span>Date </span></th>
 
                         <th class="text-start"><span> Status </span></th>
@@ -68,6 +69,7 @@
 
                         <td class="text-start">{{ $row->question }}</td>
                         <td class="text-start">{{ $row->answer }}</td>
+                        <td class="text-start">{{ auth('admin')->user()->email ?? 'N/A' }}</td>
                          <td class="text-start">
 {{ $row->created_at->timezone('Asia/Kolkata')->format('d-m-Y h:i:s A') }}
 </td>

@@ -66,6 +66,7 @@
 <th class="text-start">Name</th>
 <th class="text-start">Reference ID</th>
 <th class="text-start">Email</th>
+  <th class="text-start">Created By</th>
 <th class="text-start">Date & Time</th>
 <th class="text-start">Information</th>
 <th class="text-start">Affiliate Link</th>
@@ -88,6 +89,8 @@
 <td>{{ $row->email }}</td>
 
 <!-- TIMESTAMP -->
+
+ <td class="text-start">{{ $row->created_by ?? 'N/A' }}</td>
 <td>
 {{ $row->created_at ? $row->created_at->format('d-m-Y h:i A') : '-' }}
 </td>

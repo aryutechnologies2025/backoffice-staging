@@ -53,6 +53,7 @@
 <th class="text-start">Email</th>
 <th class="text-start">Phone Number</th>
 <th class="text-start">Address</th>
+<th class="text-start ">Created By</th>
 <th class="text-start">Created Date</th>
 <th class="text-start">Status</th>
 <th class="text-start">Action</th>
@@ -82,6 +83,8 @@
 <td>{{ $row->phone }}</td>
 
 <td>{{ $row->city }}</td>
+
+<td>{{ $row->created_by ?? 'N/A' }}</td>
 
 <!-- TIMESTAMP DATE + TIME -->
 <td>

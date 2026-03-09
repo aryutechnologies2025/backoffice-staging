@@ -11,7 +11,7 @@ class ActivitiesController extends Controller
     public function list(Request $request)
     {
         $title = 'Activities List';
-        $activities = Activities::where('is_deleted', '0')->get();
+        $activities = Activities::where('is_deleted', '0')->orderBy('created_at', 'desc')->get();
         return view('admin.activities.activitieslist', compact('title', 'activities'));
     }
 
@@ -48,7 +48,7 @@ class ActivitiesController extends Controller
         $activities->activities_pic = $filePath1;
         $activities->status = $request->has('status') && $request->input('status') === 'on' ? '1' : '0';
         $activities->created_date = date('Y-m-d H:i:s');
-        $activities->created_by = 'admin';
+        $activities->created_by = auth()->user()->email;
         $activities->is_deleted = '0';
         $activities->updated_at = null;
         $activities->save();

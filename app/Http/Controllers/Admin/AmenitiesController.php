@@ -12,7 +12,7 @@ class AmenitiesController extends Controller
     public function list(Request $request)
     {
         $title = 'Amenities List';
-        $amenities = Amenities::where('is_deleted', '0')->paginate(100);
+        $amenities = Amenities::where('is_deleted', '0')->orderBy('created_at', 'desc')->paginate(100);
         return view('admin.amenities.amenitieslist', compact('title', 'amenities'));
     }
 
@@ -49,7 +49,7 @@ class AmenitiesController extends Controller
         $amenities->upload_image_name = $request->input('upload_image_name');
         $amenities->status = $request->has('status') && $request->input('status') === 'on' ? '1' : '0';
         $amenities->created_date = date('Y-m-d H:i:s');
-        $amenities->created_by = 'admin';
+        $amenities->created_by = auth()->user()->email;
         $amenities->is_deleted = '0';
         $amenities->updated_at = null;
         $amenities->save();

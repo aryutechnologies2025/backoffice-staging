@@ -48,6 +48,7 @@
                         <th class="text-start">Title</th>
                         <th class="text-start">Destination</th>
                         <th class="text-start">Travel Mode</th>
+                        <th class="text-start">Created By</th>
                         <th class="text-start">Date</th>
                         <th class="text-start">Status</th>
                         <th class="text-start">Action</th>
@@ -69,6 +70,7 @@
                             @endif
                         </td>
                         <td class="text-start">{{ $row->travel_mode }}</td>
+                        <td class="text-start">{{ $row->created_by ?? 'N/A' }}</td>
                          <td class="text-start">
 {{ $row->created_at->timezone('Asia/Kolkata')->format('d-m-Y h:i:s A') }}
 </td>

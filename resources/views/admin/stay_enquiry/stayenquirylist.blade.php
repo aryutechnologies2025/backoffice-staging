@@ -69,6 +69,7 @@
                         <th class="text-start">Email</th>
                         <th class="text-start">Phone</th>
                         <th class="text-start">Next FollowUp</th>
+                        <th class="text-start">Created By</th>
                         <th class="text-start">Date</th>
                         <!-- <th class="text-center">Status</th> -->
                         <th class="text-start">Action</th>
@@ -77,7 +78,7 @@
                 <tbody>
                     @if($enquiry_dts->isEmpty())
                     <tr>
-                        <td colspan="7" class="text-center">No records</td>
+                        <td colspan="8" class="text-center">No records</td>
                     </tr>
                     @else
                     @foreach ($enquiry_dts as $row)
@@ -91,6 +92,7 @@
                         @else
                         <td class="text-start">N/A</td>
                         @endif
+                        <td class="text-start">{{ $row->created_by ?? 'N/A' }}</td>
                      <td class="text-start">{{ $row->created_at->format('d-m-Y H:i:s') }}</td>
                         <!-- <td class="text-center">
                             <select

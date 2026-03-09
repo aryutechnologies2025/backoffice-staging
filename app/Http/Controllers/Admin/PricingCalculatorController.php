@@ -77,7 +77,7 @@ class PricingCalculatorController extends Controller
         // Store stay IDs as comma-separated string or first ID
         $stayIds = $request->stay_id;
         $pricingcalculator_v->stays_id = $stayIds;
-
+$pricingcalculator_v->created_by = auth()->user()->email;
         $pricingcalculator_v->activitys_id = $request->activity_ids;
         $pricingcalculator_v->cab_details_id = $request->selected_cab_options;
         $pricingcalculator_v->cab_type = $request->cab_types;

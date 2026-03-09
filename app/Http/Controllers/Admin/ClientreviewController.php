@@ -24,6 +24,7 @@ class ClientreviewController extends Controller
         ->where('is_deleted', '0')
         ->orderBy('id', 'desc')
         ->get();
+     
        
         return view('admin.client_review.client_reviewlist', compact('title', 'review_dts','stay_reviews'));
     }
@@ -138,7 +139,7 @@ class ClientreviewController extends Controller
         $client_review->client_pic = $filePath1;
         $client_review->status = $request->has('status') && $request->input('status') === 'on' ? '1' : '0';
         $client_review->created_date = date('Y-m-d H:i:s');
-        $client_review->created_by = 'admin';
+        $client_review->created_by = auth('admin')->user()->email;
         $client_review->is_deleted = '0';
         $client_review->updated_at = null;
         $client_review->save();

@@ -50,6 +50,7 @@
                         <th class="text-start"><span> Title </span></th>
                         <th class="text-start"><span> Image </span></th>
                         <th class="text-start"><span> Category </span></th>
+                        <th class="text-start"><span>Created By</span></th>
                         <th class="text-start"><span>Date </span></th>
                         <th class="text-start"><span> Package Duplicate </span></th>
                         <th class="text-start">
@@ -93,6 +94,7 @@
                         <td class="text-start"><img src="{{ $row->cover_img ? asset($row->cover_img) : asset($settings->footer_logo) }}" alt="{{ $row->alternate_name ?? 'Default Alt Text' }}" style="max-width: 100px; max-height: 100px; object-fit: cover;"></td>
 
                         <td class="text-start">{{ $formattedCategories }}</td>
+                        <td class="text-start   ">{{ auth('admin')->user()->email ?? 'N/A' }}</td>  
         <td class="text-start">
 {{ $row->created_at->timezone('Asia/Kolkata')->format('d-m-Y h:i:s A') }}
 </td>

@@ -52,7 +52,7 @@ class ThemesController extends Controller
         $themes->upload_image_name = $request->input('upload_image_name');
         $themes->alternate_name = $request->input('alternate_image_name'); // Save alternate name
 
-        $themes->created_by = 'admin';
+        $themes->created_by = auth()->user()->email;
         $themes->is_deleted = '0';
         $themes->theme_pic = $filePath1;
         $themes->updated_at = null;

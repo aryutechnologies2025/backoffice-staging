@@ -13,7 +13,7 @@ class CabController extends Controller
     public function list(Request $request)
     {
         $title = 'Cab List';
-        $stay_details = Cab::where('is_deleted', '0')->with(['destination'])->orderBy('id', 'desc')->get();
+        $stay_details = Cab::where('is_deleted', '0')->with(['destination'])->orderBy('created_at', 'desc')->get();
         return view('admin.cabs.cablist', compact('title', 'stay_details'));
     }
 
@@ -53,6 +53,7 @@ class CabController extends Controller
 
         $pricing->status = $request->has('status') && $request->input('status') === 'on' ? '1' : '0';
         $pricing->is_deleted = '0';
+        $pricing->created_by = auth()->user()->email;
         $pricing->save();
 
         return redirect()->route('admin.cablist')

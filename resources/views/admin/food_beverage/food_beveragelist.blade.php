@@ -48,6 +48,7 @@
                         <th class="text-start"><span>S.No</span></th>
                         <th class="text-start"><span> Food&Beverage Logo </span></th>
                         <th class="text-start"><span> Food&Beverage Items </span></th>
+                        <th class="text-start"><span> Created By </span></th>
                         <th class="text-start"><span> Date </span></th>
 
                         <th class="text-start"><span> Status </span></th>
@@ -58,7 +59,7 @@
 
                     @if($food_beverage->isEmpty())
                     <tr>
-                        <td colspan="9" class="text-start">No records</td>
+                        <td colspan="7" class="text-start">No records</td>
                     </tr>
                     @else
                     @foreach ($food_beverage as $row)
@@ -67,6 +68,7 @@
 
                         <td class="text-start"><img src="{{ asset($row->food_beverage_pic) }}" alt="{{ $row->alternate_name ?? 'Default Alt Text' }}" style="max-width: 100px; max-height: 100px; object-fit: cover;"></td>
                         <td class="text-start">{{ $row->food_beverage }}</td>
+                        <td class="text-start">{{ $row->created_by ?? 'N/A' }}</td>
                         <td class="text-start">
                             {{ $row->created_at->timezone('Asia/Kolkata')->format('d-m-Y h:i:s A') }}
                         </td>

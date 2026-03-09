@@ -46,6 +46,7 @@
                         <th class="text-start"><span>S.No</span></th>
                         <th class="text-start text-white"><span>Activities</span></th>
                         <th class="text-start text-white"><span>Activities Logo</span></th>
+                        <th class="text-start"><span>Created By</span></th>
                         <th class="text-start"><span>Date</span></th>
                         <th class="text-start text-white"><span>Status</span></th>
                         <th class="text-start text-white "><span>Action</span></th>
@@ -54,7 +55,7 @@
                 <tbody>
                     @if($activities->isEmpty())
                     <tr>
-                        <td colspan="6" class="text-center">No records</td>
+                        <td colspan="7" class="text-center">No records</td>
                     </tr>
                     @else
                     @foreach ($activities as $row)
@@ -62,6 +63,7 @@
                         <td class="text-start">{{ $loop->iteration }}</td>
                         <td class="text-start">{{ $row->activities }}</td>
                         <td class="text-start"><img src="{{ asset($row->activities_pic) }}" alt="{{ $row->alternate_name ?? 'Default Alt Text' }}" style="max-width: 100px; max-height: 100px; object-fit: cover;"></td>
+                        <td class="text-start">{{ $row->created_by ?? 'N/A' }}</td>
                         <td class="text-start">
 {{ $row->created_at->timezone('Asia/Kolkata')->format('d-m-Y h:i:s A') }}
 </td>

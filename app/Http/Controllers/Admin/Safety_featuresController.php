@@ -11,7 +11,7 @@ class Safety_featuresController extends Controller
     public function list(Request $request)
     {
         $title = 'Safety Features List';
-        $safety_features = Safetyfeatures::where('is_deleted', '0')->get();
+        $safety_features = Safetyfeatures::where('is_deleted', '0')->orderBy('created_at', 'desc')->get();
         return view('admin.safety_features.safety_featureslist', compact('title', 'safety_features'));
     }
 
@@ -48,7 +48,7 @@ class Safety_featuresController extends Controller
 
         $safety_feature->status = $request->has('status') && $request->input('status') === 'on' ? '1' : '0';
         $safety_feature->created_date = date('Y-m-d H:i:s');
-        $safety_feature->created_by = 'admin';
+        $safety_feature->created_by = auth()->user()->email;
         $safety_feature->is_deleted = '0';
         $safety_feature->updated_at = null;
         $safety_feature->save();

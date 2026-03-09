@@ -74,6 +74,7 @@
                         <th class="text-start">Email</th>
                         <th class="text-start">Phone</th>
                         <th class="text-start">Next FollowUp</th>
+                        <th class="text-start">Created By</th>
                         <th class="text-start">Date</th>
                         <th class="text-start">Travel Date</th>
                         <th class="text-start w-25">Status</th>
@@ -83,7 +84,7 @@
                 <tbody>
                     @if($enquiry_dts->isEmpty())
                     <tr>
-                        <td colspan="8" class="text-center">No records</td>
+                        <td colspan="10" class="text-center">No records</td>
                     </tr>
                     @else
                     @foreach ($enquiry_dts as $row)
@@ -97,6 +98,7 @@
                         @else
                         <td class="text-start">N/A</td>
                         @endif
+                        <td class="text-start">{{ $row->created_by ?? 'N/A' }}</td>
                          <td class="text-start">
 {{ $row->created_at->timezone('Asia/Kolkata')->format('d-m-Y h:i:s A') }}
 </td>
@@ -349,7 +351,7 @@
 
                     // Prepare data for Excel
                     var excelData = [
-                        ["S.No", "Name", "Email", "Phone", "Next FollowUp", "Date", "Status", "Location", "Days", "Travel Destination", "Budget Per Head", "Cab Need", "Total Count", "Male Count", "Female Count", "Travel Date", "Rooms Count", "Comments"]
+                        ["S.No", "Name", "Email", "Phone", "Next FollowUp", "Created By", "Date", "Status", "Location", "Days", "Travel Destination", "Budget Per Head", "Cab Need", "Total Count", "Male Count", "Female Count", "Travel Date", "Rooms Count", "Comments"]
                     ];
 
                     // Add all data to Excel
@@ -367,6 +369,7 @@
                             item.email || '',
                             item.phone || '',
                             nextFollowUp,
+                            item.created_by || 'N/A',
                             item.created_at ? formatExcelDate(item.created_at) : '',
                             item.followup || '',
                             item.location || '',

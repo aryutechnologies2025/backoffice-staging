@@ -48,6 +48,7 @@
                         <th class="text-start"><span>S.No</span></th>
                         <th class="text-start"><span> Safety Features Logo</span></th>
                         <th class="text-start"><span> Safety Features </span></th>
+                        <th class="text-start"><span> Created By </span></th>
                         <th class="text-start "><span> Date </span></th>
 
                         <th class="text-start"><span> Status </span></th>
@@ -58,7 +59,7 @@
 
                     @if($safety_features->isEmpty())
                     <tr>
-                        <td colspan="9" class="text-start">No records</td>
+                        <td colspan="7" class="text-start">No records</td>
                     </tr>
                     @else
                     @foreach ($safety_features as $row)
@@ -67,6 +68,7 @@
 
                     <td class="text-start"><img src="{{ asset($row->safety_features_pic) }}" alt="Thumbnail" style="max-width: 100px; max-height: 100px; object-fit: cover;"></td>
                     <td class="text-start">{{ $row->safety_features }}</td>
+                    <td class="text-start">{{ $row->created_by ?? 'N/A' }}</td>
                        <td class="text-start">
 {{ $row->created_at->timezone('Asia/Kolkata')->format('d-m-Y h:i:s A') }}
 </td>

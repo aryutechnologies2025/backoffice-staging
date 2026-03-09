@@ -49,7 +49,7 @@ class EnquiryController extends Controller
             $enquiry_dts->whereDate('travel_date', '>=', $today);
         }
 
-        $enquiry_dts = $enquiry_dts->orderBy('travel_date', 'asc')->get();
+        $enquiry_dts = $enquiry_dts->orderBy('id', 'desc')->get();
 
         return view('admin.enquiry.enquirylist', compact('title', 'enquiry_dts', 'fromdate', 'todate'));
     }

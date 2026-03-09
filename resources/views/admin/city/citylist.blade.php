@@ -66,6 +66,8 @@
 
 <th class="text-start">Title</th>
 
+<th class="text-start">Created By</th>
+
 <th class="text-start">Date & Time</th>
 
 <th class="text-start">Status</th>
@@ -110,7 +112,7 @@ style="max-width:56px;max-height:56px;object-fit:cover;">
 {{ $row->city_name }}
 </td>
 
-
+ <td class="text-center">{{ $row->created_by ?? 'N/A' }}</td>
 <!-- TIMESTAMP -->
 
 <td class="text-start">

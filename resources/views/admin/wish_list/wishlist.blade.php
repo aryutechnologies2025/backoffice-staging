@@ -40,6 +40,7 @@
                         <th class="text-start"><span> User Name </span></th>
                         <th class="text-start"><span>User Email</span></th>
                         <th class="text-start"><span>User Phone</span></th>
+                        <th class="text-start"><span>Created By</span></th>
                         <th class="text-start"><span>Date</span></th>
 
                     </tr>
@@ -59,6 +60,7 @@
                     <td class="text-start">{{ $row->user ? $row->user->first_name : 'N/A' }}{{$row->user ? $row->user->last_name : 'N/A'}}</td>
                <td class="text-start">{{ $row->user ? $row->user->email : 'N/A' }}</td>
                <td class="text-start">{{ $row->user ? $row->user->phone : 'N/A' }}</td>
+               <td class="text-start">{{ auth('admin')->user()->email ?? 'N/A' }}</td>
              <td class="text-start">
 {{ $row->created_at->timezone('Asia/Kolkata')->format('d-m-Y h:i:s A') }}
 </td>

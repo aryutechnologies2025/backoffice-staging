@@ -49,6 +49,7 @@
                         <th class="text-start"><span> Phone Number </span></th>
                         <th class="text-start"><span> Email </span></th>
                         <th class="text-start"><span> Package Type </span></th>
+                        <th class="text-start"><span> Created By </span></th>
                         <th class="text-start"><span> Date </span></th>
                         <th class="text-start"><span> Status </span></th>
                         <th class="text-start"><span> Package URL </span></th>
@@ -59,7 +60,7 @@
                 <tbody>
                     @if($customer_package_list->isEmpty())
                     <tr>
-                        <td colspan="10" class="text-center">No records</td>
+                        <td colspan="11" class="text-center">No records</td>
                     </tr>
                     @else
                     @foreach ($customer_package_list as $row)
@@ -71,6 +72,7 @@
                         <td class="text-start">{{ $row->phone_number }}</td>
                         <td class="text-start">{{ $row->email }}</td>
                         <td class="text-start">{{ $row->package_type }}</td>
+                        <td class="text-start">{{ $row->created_by ?? 'N/A' }}</td>
 
                         <!-- Timestamp -->
                         <td class="text-start">{{ $row->created_at->format('d-m-Y H:i:s') }}</td>
