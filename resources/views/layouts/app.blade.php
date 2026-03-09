@@ -253,7 +253,7 @@
                     </a>
 
                      <a href="{{ route('admin.themes_list') }}"
-                        class="nav_link {{ request()->routeIs(['admin.themes_list', 'admin.themes_add_form', 'admin.themes_edit_form']) ? 'active' : '' }} mb-3 text-white">
+                        class="nav_link {{ request()->routeIs(['admin.themes_list', 'admin.themes_add_form', 'admin.themes_edit_form']) ? 'active' : '' }} mb-1 text-white">
                         <img src="/assets/image/dashboard/themes.svg" alt="">
                         <span class="nav_name">Theme</span>
                     </a>
