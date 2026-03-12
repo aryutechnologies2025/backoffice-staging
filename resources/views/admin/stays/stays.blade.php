@@ -85,7 +85,7 @@
                        <td class="text-start">{{ $row->city ? $row->city->city_name : 'N/A' }}</td>
                         <td class="text-start">{{ $row->stay_title }}</td>
                         <td class="text-start">{{ $row->tag_line }}</td>
-                        <td class="text-start">{{ $row->created_by ?? 'N/A' }}</td>
+                        <td class="text-start">{{ $row->created_by ?? 'admin' }}</td>
                          <td class="text-start">{{ $row->created_at->format('d-m-Y H:i:s') }}</td>
 
                         @php

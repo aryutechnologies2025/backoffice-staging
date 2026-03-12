@@ -27,6 +27,20 @@
     .th {
         color: black
     }
+
+
+    #resetPasswordModal .modal-dialog {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+    }
+
+    #resetPasswordModal .modal-content {
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    }
+
 </style>
 
 <div class="row body-sec py-3 px-5 justify-content-around">
@@ -154,11 +168,19 @@
                             <a href="{{ route('admin.admin_user_edit_form',$row->id) }}"
                                 title="Edit"
                                 class="table-edit-link">
-
                                 <span class="fa-stack">
                                     <i class="fa fa-pencil fa-stack-1x fa-inverse"></i>
                                 </span>
+                            </a>
 
+                            <a href="javascript:void(0);"
+                                class="btn btn-sm reset-password-btn"
+                                title="Reset Password"
+                                data-user-id="{{ $row->id }}"
+                                data-user-name="{{ $row->first_name }} {{ $row->last_name }}"
+                                data-bs-toggle="modal"
+                                data-bs-target="#resetPasswordModal">
+                                <i class="bi bi-eye" style="color: #0d6efd;"></i>
                             </a>
 
                             <a href="javascript:void(0);"
@@ -167,12 +189,10 @@
                                 data-row_id="{{ $row->id }}"
                                 data-act_url="{{ route('admin.admin_user_delete') }}"
                                 data-csrf_token="{{ csrf_token() }}">
-
                                 <span class="fa-stack">
                                     <i class="fa fa-trash-o fa-stack-1x fa-inverse"
                                         style="color:red !important;"></i>
                                 </span>
-
                             </a>
 
                         </td>
@@ -190,40 +210,153 @@
     </div>
 
 </div>
-
 @endsection
+
+
+ 
+
+
+<!-- Reset Password Modal -->
+@section('modal')
+<div class="modal fade" id="resetPasswordModal" tabindex="-1" aria-labelledby="resetPasswordModalLabel" aria-hidden="true">
+    
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold" id="resetPasswordModalLabel">Reset Password</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                <form id="resetPasswordForm">
+                    @csrf
+
+                    <input type="hidden" id="userId" name="user_id">
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">User Name</label>
+                        <input type="text" class="form-control" id="userName" readonly>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">
+                            New Password <span class="text-danger">*</span>
+                        </label>
+
+                        <input type="password" class="form-control" id="newPassword" name="password" required>
+
+                        <small class="text-muted">Minimum 6 characters</small>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">
+                            Confirm Password <span class="text-danger">*</span>
+                        </label>
+
+                        <input type="password" class="form-control" id="confirmPassword" name="password_confirmation" required>
+                    </div>
+
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button class="btn btn-primary" id="savePasswordBtn">Reset Password</button>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+@endsection
+
+
+
+
+
+
+
 
 
 @section('scripts')
 
 <script>
-
 $(document).ready(function(){
-
 $('#cityTable').DataTable({
-
 pageLength:10,
 lengthChange:true,
 ordering:true,
 searching:true,
-
 language:{
 emptyTable:"No records found",
 searchPlaceholder:"Search users...",
 search:""
 },
-
 columnDefs:[
-{
-orderable:true,
-targets:[0,3]
-}
+{orderable:true,targets:[0,3]}
 ]
+});
 
+$('.reset-password-btn').on('click', function() {
+    var userId = $(this).data('user-id');
+    var userName = $(this).data('user-name');
+    $('#userId').val(userId);
+    $('#userName').val(userName);
+    $('#newPassword').val('');
+    $('#confirmPassword').val('');
+});
+
+$('#savePasswordBtn').on('click', function() {
+    var userId = $('#userId').val();
+    var password = $('#newPassword').val();
+    var passwordConfirm = $('#confirmPassword').val();
+    var token = $('input[name="_token"]').val();
+
+    if (!password || !passwordConfirm) {
+        toastr.error('Please fill in all fields');
+        return;
+    }
+
+    if (password.length < 6) {
+        toastr.error('Password must be at least 6 characters');
+        return;
+    }
+
+    if (password !== passwordConfirm) {
+        toastr.error('Passwords do not match');
+        return;
+    }
+
+    var $btn = $(this);
+    $btn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm"></span> Resetting...');
+
+    $.ajax({
+        url: '{{ route("admin.reset_user_password") }}',
+        type: 'POST',
+        data: {_token: token, user_id: userId, password: password},
+        success: function(response) {
+            if (response.success) {
+                $('#resetPasswordModal').modal('hide');
+                toastr.success(response.message || 'Password reset successfully!');
+            } else {
+                toastr.error(response.message || 'Error resetting password');
+            }
+        },
+        error: function(xhr) {
+            var msg = 'Error resetting password';
+            if (xhr.responseJSON && xhr.responseJSON.message) msg = xhr.responseJSON.message;
+            toastr.error(msg);
+        },
+        complete: function() {
+            $btn.prop('disabled', false).html('Reset Password');
+        }
+    });
 });
 
 });
 
 </script>
-
 @endsection

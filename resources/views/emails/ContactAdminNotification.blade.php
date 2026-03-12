@@ -51,7 +51,8 @@
 <body>
     <!-- Header Section -->
    <div class="header">
-    <img src="{{ env('APP_URL') }}uploads/settings/fav_icon/innerpece_logo1.png" alt="Logo" style="max-width:150px;">
+    <!-- <img src="{{ env('APP_URL') }}uploads/settings/fav_icon/innerpece_logo1.png" alt="Logo" style="max-width:150px;"> -->
+     <img src="{{ asset('uploads/settings/fav_icon/innerpece_logo.png') }}" alt="Logo" style="max-width:150px;">
 </div>
     
     <!-- Main Content Section -->

@@ -90,7 +90,7 @@
 
 <!-- TIMESTAMP -->
 
- <td class="text-start">{{ $row->created_by ?? 'N/A' }}</td>
+ <td class="text-start">{{ $row->created_by ?? 'admin' }}</td>
 <td>
 {{ $row->created_at ? $row->created_at->format('d-m-Y h:i A') : '-' }}
 </td>

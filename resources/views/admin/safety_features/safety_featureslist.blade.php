@@ -68,7 +68,7 @@
 
                     <td class="text-start"><img src="{{ asset($row->safety_features_pic) }}" alt="Thumbnail" style="max-width: 100px; max-height: 100px; object-fit: cover;"></td>
                     <td class="text-start">{{ $row->safety_features }}</td>
-                    <td class="text-start">{{ $row->created_by ?? 'N/A' }}</td>
+                    <td class="text-start">{{ $row->created_by ?? 'admin' }}</td>
                        <td class="text-start">
 {{ $row->created_at->timezone('Asia/Kolkata')->format('d-m-Y h:i:s A') }}
 </td>

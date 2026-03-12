@@ -101,7 +101,7 @@ a{
 
 
 <td class="text-start">
-{{ auth('admin')->user()->email ?? 'N/A' }}
+{{ auth('admin')->user()->email ?? 'admin' }}
 </td>
 
 

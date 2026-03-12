@@ -108,7 +108,7 @@ class EnquiryController extends Controller
 
     public function view_form(Request $request, $id)
     {
-        $user_details = EnquiryDetail::find($id);
+        $user_details = EnquiryDetail::findOrFail($id);
         $title = 'View User';
         return view('admin.enquiry.enquiryview', compact('user_details', 'title'));
     }

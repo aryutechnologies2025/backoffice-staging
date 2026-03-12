@@ -44,7 +44,7 @@
                         </div>
                         <div class="row g-2">
                             <div class="col">
-                                <label class="fw-bold ">Statusttttt</label>
+                                <label class="fw-bold ">Statustttt</label>
                                 <div class="form-check form-switch">
                                     <input class="form-check-input check_bx" type="checkbox" id="status" name="status">
                                 </div>

@@ -52,6 +52,7 @@
         margin-top: 0.25rem;
         font-size: 0.875em;
         color: #dc3545;
+
     }
 
     .is-invalid~.invalid-feedback {
@@ -201,7 +202,7 @@
                                     aria-label="View message">
                                     <i class="fa fa-eye" style="color: #0d6efd;"></i>
                                 </a> --}}
-                                <a class="btn view-btn" title="View" href="{{ route('admin.home_enquiry_view', $row->id) }}">
+                                <a class="btn view-btn" title="View" href="{{ route('admin.registereventsview', $row->id) }}">
                                 <i class="bi bi-eye-fill" style="color:#000 !important;"></i>
                             </a>
                                 <a href="javascript:void(0);" class="table-link danger delconfirm" data-row_id="{{ $row->id }}" data-act_url="{{ route('admin.registereventdelete') }}" data-csrf_token="{{ csrf_token() }}">

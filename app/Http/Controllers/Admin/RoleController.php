@@ -23,11 +23,13 @@ class RoleController extends Controller
 
 
     // Add Role Form
-    public function add_form()
-    {
-        $title = 'Add Role';
-        return view('admin.roles.roleadd', compact('title'));
-    }
+  public function add_form()
+{
+    $title = 'Add User';
+    $roles = Role::where('is_deleted','0')->get();
+
+    return view('admin.roles.roleadd', compact('title','roles'));
+}
 
 
     // Insert Role

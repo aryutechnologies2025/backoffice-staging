@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use App\Models\Role;
 
 class UserController extends Controller
 {
@@ -16,12 +17,24 @@ class UserController extends Controller
         return view('admin.user.userlist', compact('title', 'user_dts'));
     }
 
-    public function add_form()
+    // public function add_form()
+    // {
+    //     $title = 'Add User';
+
+    //     return view('admin.user.useradd', compact('title'));
+    // }
+//   
+ public function add_form()
     {
         $title = 'Add User';
 
-        return view('admin.user.useradd', compact('title'));
+        // Get roles from roles table
+        $roles = Role::where('is_deleted','0')->get();
+
+        return view('admin.user.useradd', compact('title','roles'));
     }
+
+
 
     public function insert(Request $request)
     {

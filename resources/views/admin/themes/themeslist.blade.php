@@ -69,7 +69,7 @@
 
                     <td class="text-start"><img src="{{ $row->theme_pic ? asset($row->theme_pic) : asset('uploads/settings/footer_logo/innerpecelogo.png') }}"  alt="{{ $row->alternate_name ?? 'Default Alt Text' }}" style="max-width: 100px; max-height: 100px; object-fit: cover;"></td>
                         <td class="text-start">{{ $row->themes_name }}</td>
-                        <td class="text-start">{{ $row->created_by ?? 'N/A' }}</td>
+                        <td class="text-start">{{ $row->created_by ?? 'admin' }}</td>
                         <!-- <td class="text-start">{{ \App\Helpers\DateHelper::formatDate($row->created_at) }}</td> -->
                          <td class="text-start">{{ $row->created_at->format('d-m-Y H:i:s') }}</td>
                         @php

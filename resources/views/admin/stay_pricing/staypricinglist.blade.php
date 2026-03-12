@@ -79,7 +79,7 @@
                                 N/A
                             @endif
                         </td>
-                        <td class="text-start">{{ $row->created_by ?? 'N/A' }}</td>
+                        <td class="text-start">{{ $row->created_by ?? 'admin' }}</td>
                          <td class="text-start">
 {{ $row->created_at->timezone('Asia/Kolkata')->format('d-m-Y h:i:s A') }}
 </td>

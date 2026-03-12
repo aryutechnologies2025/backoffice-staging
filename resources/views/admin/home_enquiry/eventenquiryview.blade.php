@@ -1,5 +1,10 @@
 @extends('layouts.app')
 @Section('content')
+@if(!$user_details)
+<div class="alert alert-danger" role="alert">
+    Record not found.
+</div>
+@else
 <style>
     a:hover {
         color: red;
@@ -49,7 +54,7 @@
                         <label class="fw-bold mb-2">Name:</label>
                         <input type="text" class="form-control "
                             name="name"
-                            value="{{ $user_details->first_name ?? '' }}{{ $user_details->last_name ?? '' }}"
+                            value="{{ $user_details->name ?? '' }}"
                             readonly>
                     </div>
 
@@ -67,15 +72,15 @@
                         <label class="fw-bold mb-2">Phone:</label>
                         <input type="number" class="form-control "
                             name="phone"
-                            value="{{ $user_details->phone }}"
+                            value="{{ $user_details->phone ?? '' }}"
                             readonly>
                     </div>
 
                     <div class="add_form col">
                         <label class="fw-bold mb-2">Location:</label>
                         <input type="text" class="form-control"
-                            name="location"
-                            value="{{ $user_details->state }}"
+                            name="state"
+                            value="{{ $user_details->state ?? '' }}"
                             readonly>
                     </div>
                 </div>
@@ -84,15 +89,15 @@
                     <div class="add_form col-lg-6 pe-3">
                         <label class="fw-bold mb-2">DOB:</label>
                         <input type="date" class="form-control "
-                            name="Budget Per Head"
-                            value="{{ $user_details->dob }}"
+                            name="dob"
+                            value="{{ $user_details->dob ?? '' }}"
                             readonly>
                     </div>
                     <div class="add_form col">
                         <label class="fw-bold mb-2">Anniversary Date:</label>
                         <input type="text" class="form-control"
-                            name="Female Count"
-                            value="{{ $user_details->anniversary_date }}"
+                            name="anniversary_date"
+                            value="{{ $user_details->anniversary_date ?? '' }}"
                             readonly>
                     </div>
                 </div>
@@ -101,16 +106,16 @@
                     <div class="add_form col pe-4">
                         <label class="fw-bold mb-2">Street:</label>
                         <input type="text" class="form-control "
-                            name="Cab Need"
-                            value="{{ $user_details->street }}"
+                            name="street"
+                            value="{{ $user_details->street ?? '' }}"
                             readonly>
                     </div>
 
                     <div class="add_form col">
                         <label class="fw-bold mb-2">City:</label>
                         <input type="text" class="form-control"
-                            name="Total Count"
-                            value="{{ $user_details->city }}"
+                            name="city"
+                            value="{{ $user_details->city ?? '' }}"
                             readonly>
                     </div>
                 </div>
@@ -119,15 +124,15 @@
                     <div class="add_form col pe-4">
                         <label class="fw-bold mb-2">Country:</label>
                         <input type="text" class="form-control "
-                            name="Male Count"
-                            value="{{ $user_details->country }}"
+                            name="country"
+                            value="{{ $user_details->country ?? '' }}"
                             readonly>
                     </div>
                     <div class="add_form col">
                         <label class="fw-bold mb-2">Date & Time:</label>
                         <input type="text" class="form-control"
-                            name="Date & Time"
-                            value="{{ $user_details->created_at->format('d/m/Y h:i:s') }}"
+                            name="created_at"
+                            value="{{ $user_details->created_at ? $user_details->created_at->format('d/m/Y h:i:s') : '' }}"
                             readonly>
                     </div>
 
@@ -138,9 +143,9 @@
                         <div class="add_form col">
                             <label class="fw-bold mb-2">Notes:</label>
                             <textarea class="form-control"
-                                name="Notes"
+                                name="notes"
                                 rows="4"
-                                readonly>{{ htmlspecialchars($user_details->notes, ENT_QUOTES) }}</textarea>
+                                readonly>{{ htmlspecialchars($user_details->notes ?? '', ENT_QUOTES) }}</textarea>
                         </div>
                     </div>
                 </div>
@@ -151,11 +156,11 @@
                     <button type="button" class="cancel-btn"> Cancel </button>
                 </a>
             </div>
-            </form>
         </div>
     </div>
 </div>
 
 </div>
 
+@endif
 @endsection
