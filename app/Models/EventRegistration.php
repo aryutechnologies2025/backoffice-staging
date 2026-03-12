@@ -7,10 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class EventRegistration extends Model
 {
-    use HasFactory;
+    protected $table = 'event_registrations';
+    public $timestamps = true;
 
     protected $fillable = [
         'event_id',
+        'name',
         'first_name',
         'last_name',
         'profile_image',
@@ -28,8 +30,8 @@ class EventRegistration extends Model
         'created_by',
         'created_date',
         'anniversary_date',
+        'notes',
         'status',
-        // Add any other fields you want to be mass assignable
     ];
 
 

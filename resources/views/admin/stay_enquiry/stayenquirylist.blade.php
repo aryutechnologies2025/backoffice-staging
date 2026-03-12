@@ -92,7 +92,7 @@
                         @else
                         <td class="text-start">N/A</td>
                         @endif
-                        <td class="text-start">{{ $row->created_by ?? 'N/A' }}</td>
+                        <td class="text-start">{{ $row->created_by ?? 'admin' }}</td>
                      <td class="text-start">{{ $row->created_at->format('d-m-Y H:i:s') }}</td>
                         <!-- <td class="text-center">
                             <select

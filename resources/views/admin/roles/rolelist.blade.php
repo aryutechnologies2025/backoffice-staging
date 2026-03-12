@@ -45,13 +45,22 @@
 
 
     <!-- Success Message -->
-    @if(session('success'))
+    <!-- @if(session('success'))
     <div class="col-lg-12 mt-2">
         <div class="alert alert-success">
             {{ session('success') }}
         </div>
     </div>
-    @endif
+    @endif -->
+
+
+    @if(session('success'))
+<div class="col-lg-12 mt-2" id="successMessage">
+    <div class="alert alert-success">
+        {{ session('success') }}
+    </div>
+</div>
+@endif
 
 
     <!-- Error Message -->
@@ -110,7 +119,7 @@
 
                         <td class="text-start">{{ $row->role_name }}</td>
 
-                        <td class="text-start">{{ $row->created_by ?? 'N/A' }}</td>
+                        <td class="text-start">{{ $row->created_by ?? 'admin' }}</td>
 
                         <!-- FIXED TIMESTAMP -->
                         <td class="text-start">
@@ -222,6 +231,19 @@ $(document).ready(function() {
 
 });
 
+</script>
+
+
+
+<script>
+setTimeout(function() {
+    let msg = document.getElementById('successMessage');
+    if(msg){
+        msg.style.transition = "opacity 0.5s";
+        msg.style.opacity = "0";
+        setTimeout(()=>msg.remove(),500);
+    }
+}, 3000);
 </script>
 
 @endsection

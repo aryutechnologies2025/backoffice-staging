@@ -49,7 +49,7 @@
                         <label class="fw-bold mb-2">Name:</label>
                         <input type="text" class="form-control "
                             name="name"
-                            value="{{ $user_details->name }}"
+                            value="{{ $user_details->name ?? '' }}"
                             readonly>
                     </div>
 
@@ -57,7 +57,7 @@
                         <label class="fw-bold mb-2">Email:</label>
                         <input type="email" class="form-control"
                             name="email"
-                            value="{{ $user_details->email }}"
+                            value="{{ $user_details->email ?? '' }}"
                             readonly>
                     </div>
                 </div>
@@ -67,7 +67,7 @@
                         <label class="fw-bold mb-2">Phone:</label>
                         <input type="number" class="form-control "
                             name="phone"
-                            value="{{ $user_details->phone }}"
+                            value="{{ $user_details->phone ?? '' }}"
                             readonly>
                     </div>
 
@@ -75,7 +75,7 @@
                         <label class="fw-bold mb-2">Location:</label>
                         <input type="text" class="form-control"
                             name="location"
-                            value="{{ $user_details->location }}"
+                            value="{{ $user_details->location ?? '' }}"
                             readonly>
                     </div>
                 </div>
@@ -85,7 +85,7 @@
                         <label class="fw-bold mb-2">Days:</label>
                         <input type="number" class="form-control "
                             name="days"
-                            value="{{ $user_details->days }}"
+                            value="{{ $user_details->days ?? '' }}"
                             readonly>
                     </div>
 
@@ -93,7 +93,7 @@
                         <label class="fw-bold mb-2">No.of.child:</label>
                         <input type="text" class="form-control"
                             name="no.of.child"
-                            value="{{ $user_details->child_count }}"
+                            value="{{ $user_details->child_count ?? '' }}"
                             readonly>
                     </div>
                 </div>
@@ -103,7 +103,7 @@
                         <label class="fw-bold mb-2">Travel Destination:</label>
                         <input type="text" class="form-control "
                             name="Travel Destination"
-                            value="{{ $user_details->travel_destination }}"
+                            value="{{ $user_details->travel_destination ?? '' }}"
                             readonly>
                     </div>
 
@@ -111,7 +111,7 @@
                         <label class="fw-bold mb-2">Budget:</label>
                         <input type="number" class="form-control"
                             name="Budget"
-                            value="{{ $user_details->pricing }}"
+                            value="{{ $user_details->pricing ?? $user_details->budget_per_head ?? '' }}"
                             readonly>
                     </div>
                 </div>
@@ -121,7 +121,7 @@
                         <label class="fw-bold mb-2">Cab Need:</label>
                         <input type="text" class="form-control "
                             name="cab Need"
-                            value="{{ $user_details->cab_need }}"
+                            value="{{ $user_details->cab_need ?? '' }}"
                             readonly>
                     </div>
 
@@ -129,7 +129,7 @@
                         <label class="fw-bold mb-2">Total Count:</label>
                         <input type="number" class="form-control"
                             name="Total Count"
-                            value="{{ $user_details->total_count }}"
+                            value="{{ $user_details->total_count ?? '' }}"
                             readonly>
                     </div>
                 </div>
@@ -140,7 +140,7 @@
                         <label class="fw-bold mb-2">Male Count:</label>
                         <input type="text" class="form-control "
                             name="Male Count"
-                            value="{{ $user_details->male_count }}"
+                            value="{{ $user_details->male_count ?? '' }}"
                             readonly>
                     </div>
 
@@ -148,7 +148,7 @@
                         <label class="fw-bold mb-2">Female Count:</label>
                         <input type="text" class="form-control"
                             name="Female Count"
-                            value="{{ $user_details->female_count }}"
+                            value="{{ $user_details->female_count ?? '' }}"
                             readonly>
                     </div>
                 </div>
@@ -159,7 +159,7 @@
                         <label class="fw-bold mb-2">Travel Date:</label>
                         <input type="text" class="form-control "
                             name="Travel date"
-                            value="{{$user_details->travel_date }}"
+                            value="{{ $user_details->travel_date ?? '' }}"
                             readonly>
                     </div>
 
@@ -167,7 +167,7 @@
                         <label class="fw-bold mb-2">Rooms Count:</label>
                         <input type="text" class="form-control"
                             name="Rooms Count"
-                            value="{{ $user_details->rooms_count }}"
+                            value="{{ $user_details->rooms_count ?? '' }}"
                             readonly>
                     </div>
                 </div>
@@ -177,7 +177,7 @@
                         <label class="fw-bold mb-2">Comments:</label>
                         <input type="text" class="form-control "
                             name="Comments"
-                            value="{{$user_details->comments }}"
+                            value="{{ $user_details->comments ?? '' }}"
                             readonly>
                     </div>
 
@@ -185,7 +185,7 @@
                         <label class="fw-bold mb-2">Date & Time:</label>
                         <input type="text" class="form-control"
                             name="Date & Time"
-                            value="{{ $user_details->created_at->format('d/m/Y h:i:s') }}"
+                            value="{{ $user_details->created_at ? $user_details->created_at->format('d/m/Y h:i:s') : '' }}"
                             readonly>
                     </div>
                 </div>  

@@ -9,6 +9,7 @@ use App\Models\FollowUp;
 use App\Models\HomeEnquiryDetail;
 use App\Models\EnquiryDetail;
 use App\Models\Review;
+use App\Models\ModulePermission;
 
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
@@ -76,6 +77,26 @@ class AdminController extends Controller
             $request->session()->put('admin_email', $admin->email);
             $request->session()->put('admin_name', $adminName);
             $request->session()->put('admin_profile_pic', $admin->profile_pic);
+            
+            // Load permissions based on admin's role
+            $permissions = [];
+            if ($admin->role_id) {
+                $modulePermissions = ModulePermission::whereHas('permission', function($query) use ($admin) {
+                    $query->where('role_id', $admin->role_id)->where('status', '1');
+                })->get();
+                
+                foreach ($modulePermissions as $perm) {
+                    $permissions[$perm->module] = [
+                        'view' => (bool)$perm->is_view,
+                        'create' => (bool)$perm->is_create,
+                        'edit' => (bool)$perm->is_edit,
+                        'delete' => (bool)$perm->is_delete,
+                        'list' => (bool)$perm->is_list,
+                    ];
+                }
+            }
+            $request->session()->put('permissions', $permissions);
+            
             return redirect()->route('admin.dashboard')
                 ->withSuccess('You have successfully logged in!');
         }

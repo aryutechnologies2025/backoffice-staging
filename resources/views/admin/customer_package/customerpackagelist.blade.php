@@ -72,7 +72,7 @@
                         <td class="text-start">{{ $row->phone_number }}</td>
                         <td class="text-start">{{ $row->email }}</td>
                         <td class="text-start">{{ $row->package_type }}</td>
-                        <td class="text-start">{{ $row->created_by ?? 'N/A' }}</td>
+                        <td class="text-start">{{ $row->created_by ?? 'admin' }}</td>
 
                         <!-- Timestamp -->
                         <td class="text-start">{{ $row->created_at->format('d-m-Y H:i:s') }}</td>

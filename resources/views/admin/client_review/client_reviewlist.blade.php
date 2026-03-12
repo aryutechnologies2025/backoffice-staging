@@ -71,7 +71,7 @@
                             {{ optional($row->user)->first_name ?? '' }}
                             {{ optional($row->user)->last_name ?? '' }}
                         </td>
-                        <td class="text-start">{{ $row->package ? $row->package->title : 'N/A' }}</td>
+                        <td class="text-start">{{ $row->package ? $row->package->title : 'admin' }}</td>
                         <td class="text-start">{{ $row->rating }}</td>
 
 <td class="text-start">

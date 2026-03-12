@@ -67,7 +67,7 @@
                         <!-- <td class="text-center">
                             <img src="{{ asset($row->city_image) }}" alt="{{ $row->alternate_name ?? 'Default Alt Text' }}" style="max-width: 56px; max-height: 56px; object-fit: cover;">
                         </td> -->
-                        <td class="text-start">{{ $row->city ? $row->city->city_name : 'N/A' }}</td>
+                        <td class="text-start">{{ $row->city ? $row->city->city_name : 'admin' }}</td>
                       <td class="text-start">{{ $row->created_by ?? 'N/A' }}</td>
                       <td class="text-start">{{ $row->created_at->format('d-m-Y H:i:s') }}</td>
                           @php

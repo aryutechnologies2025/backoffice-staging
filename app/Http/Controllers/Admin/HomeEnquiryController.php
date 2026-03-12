@@ -10,32 +10,66 @@ use App\Models\stay_enquiry_details;
 
 class HomeEnquiryController extends Controller
 {
+    // public function list(Request $request)
+    // {
+    //     $title = 'Enquiry List';
+
+    //     // Get followup IDs from request if exists
+    //     $followupIds = $request->get('followupids');
+
+    //     if ($followupIds) {
+    //         // Convert string of IDs to array
+    //         $followupIdsArray = explode(',', $followupIds);
+
+    //         // Filter enquiries by followup IDs
+    //         $enquiry_dts = HomeEnquiryDetail::whereIn('id', $followupIdsArray)
+    //             ->orderBy('created_at', 'desc')
+    //             ->where('is_deleted', '0')
+    //             ->get();
+
+                
+    //     } else {
+    //         // Show all enquiries (normal behavior)
+    //         $enquiry_dts = HomeEnquiryDetail::orderBy('created_at', 'desc')
+    //             ->where('is_deleted', '0')
+    //             ->get();
+    //     }
+
+    //     return view('admin.home_enquiry.homeenquirylist', compact('title', 'enquiry_dts'));
+    // }
+
+    
+    
     public function list(Request $request)
-    {
-        $title = 'Enquiry List';
+{
+    $title = 'Enquiry List';
 
-        // Get followup IDs from request if exists
-        $followupIds = $request->get('followupids');
+    // Get followup IDs from request if exists
+    $followupIds = $request->get('followupids');
 
-        if ($followupIds) {
-            // Convert string of IDs to array
-            $followupIdsArray = explode(',', $followupIds);
+    if ($followupIds) {
 
-            // Filter enquiries by followup IDs
-            $enquiry_dts = HomeEnquiryDetail::whereIn('id', $followupIdsArray)
-                ->orderBy('created_at', 'desc')
-                ->where('is_deleted', '0')
-                ->get();
-        } else {
-            // Show all enquiries (normal behavior)
-            $enquiry_dts = HomeEnquiryDetail::orderBy('created_at', 'desc')
-                ->where('is_deleted', '0')
-                ->get();
-        }
+        // Convert string of IDs to array
+        $followupIdsArray = explode(',', $followupIds);
 
-        return view('admin.home_enquiry.homeenquirylist', compact('title', 'enquiry_dts'));
+        // Filter enquiries by followup IDs
+        $enquiry_dts = HomeEnquiryDetail::whereIn('id', $followupIdsArray)
+            ->where('is_deleted', '0')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+    } else {
+
+        // Show all enquiries
+        $enquiry_dts = HomeEnquiryDetail::where('is_deleted', '0')
+            ->orderBy('created_at', 'desc')
+            ->get();
     }
 
+    return view('admin.home_enquiry.homeenquirylist', compact('title', 'enquiry_dts'));
+}
+    
+    
     public function downloadAll(Request $request)
     {
         try {
@@ -200,6 +234,7 @@ class HomeEnquiryController extends Controller
         $user_details = HomeEnquiryDetail::find($id);
 
         // dd($user_details);
+
         $title = 'View Details';
         return view('admin.home_enquiry.homeenquiryview', compact('user_details', 'title'));
     }
@@ -244,6 +279,7 @@ class HomeEnquiryController extends Controller
         $title = 'View Details';
         return view('admin.home_enquiry.stayenquiryview', compact('user_details', 'title'));
     }
+
 
     public function staydelete(Request $request)
     {

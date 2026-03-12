@@ -45,6 +45,20 @@
         <div class="form-body px-4 mb-5 ms-4 me-5 rounded-4">
             <form id="form_valid" action="{{ route('admin.admin_user_insert') }}" method="POST" autocomplete="off" enctype="multipart/form-data">
                 @csrf
+                @if ($errors->any())
+                    <!-- <div class="alert alert-danger">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div> -->
+                @endif
+                @if (session('success'))
+                    <div class="alert alert-success">
+                        {{ session('success') }}
+                    </div>
+                @endif
                 <!-- Image Section -->
                 <div class="mb-3">
                     <div class="row align-items-center w-50% ">
@@ -57,6 +71,9 @@
                                     <p class="text-center fw-light mt-3">Add Pic</p>
                                 </label>
                                 <input type="file" id="file-ip-1" name="profile_pic" accept="image/png, image/jpeg, image/webp">
+                                @error('profile_pic')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
                                 <!-- <label class="fw-bold mb-5 text-danger border-0">
                                     <small>* Upload size [up to 600x120] *</small>
                                 </label> -->
@@ -64,34 +81,103 @@
                         </div>
                     </div>
                 </div>
-                <!-- Title, Subtitle, and Order -->
-                <div class="row g-2 mb-4">
-                    <div class="add_form col-md-4">
-                        <label class="fw-bold mb-2">First Name</label>
-                        <input type="text" placeholder="First Name" id="first_name" name="first_name"
-                            value="{{ old('first_name') }}" class="form-control py-2 rounded-2 shadow-sm">
-                    </div>
-                    <div class="add_form col-md-4">
-                        <label class="fw-bold mb-2">Last Name</label>
-                        <input type="text" placeholder="Last Name" id="last_name" name="last_name"
-                            value="{{ old('last_name') }}" class="form-control py-2 rounded-2 shadow-sm">
-                    </div>
-                    <div class="add_form col-md-4">
-                        <label class="fw-bold mb-2">Email</label>
-                        <input type="email" placeholder="Email" id="email" name="email"
-                            value="{{ old('email') }}" class="form-control py-2 rounded-2 shadow-sm">
-                    </div>
-                     <div class="add_form col-md-4">
-                        <label class="fw-bold mb-2">Phone Number</label>
-                        <input type="number" placeholder="Phone Number" id="phone" name="phone"
-                            value="{{ old('phone') }}" class="form-control py-2 rounded-2 shadow-sm">
-                    </div>
-                     <div class="add_form col-md-4">
-                        <label class="fw-bold mb-2">Password</label>
-                        <input type="password" placeholder="Password" id="password" name="password"
-                            value="{{ old('password') }}" class="form-control py-2 rounded-2 shadow-sm">
-                    </div>
-                </div>
+
+
+
+
+
+              <!-- Title, Subtitle, and Order -->
+<div class="row g-2 mb-4">
+
+    <div class="add_form col-md-4">
+        <label class="fw-bold mb-2">First Name</label>
+           <input type="text" id="first_name" name="first_name" placeholder="First Name"
+value="{{ old('first_name') }}" class="form-control">
+
+@error('first_name')
+<span class="text-danger error-msg" data-field="first_name">{{ $message }}</span>
+@enderror
+    </div>
+
+
+
+    <div class="add_form col-md-4">
+        <label class="fw-bold mb-2">Last Name</label>
+        <!-- <input type="text" placeholder="Last Name" id="last_name" name="last_name"
+            value="{{ old('last_name') }}" class="form-control py-2 rounded-2 shadow-sm">
+
+        @error('last_name')
+            <span class="text-danger error-msg">{{ $message }}</span>
+        @enderror -->
+        <input type="text" id="last_name" name="last_name" placeholder="Last Name"
+value="{{ old('last_name') }}" class="form-control">
+
+@error('last_name')
+<span class="text-danger error-msg" data-field="last_name">{{ $message }}</span>
+@enderror
+    </div>
+
+    <div class="add_form col-md-4">
+        <label class="fw-bold mb-2">Email</label>
+        <input type="email" placeholder="Email" id="email" name="email"
+            value="{{ old('email') }}" class="form-control py-2 rounded-2 shadow-sm">
+
+        @error('email')
+            <span class="text-danger error-msg">{{ $message }}</span>
+        @enderror
+    </div>
+
+    <div class="add_form col-md-4">
+        <label class="fw-bold mb-2">Phone Number</label>
+        <input type="number" id="phone" name="phone" placeholder="Phone Number"
+value="{{ old('phone') }}" class="form-control">
+
+@error('phone')
+<span class="text-danger error-msg" data-field="phone">{{ $message }}</span>
+@enderror
+    </div>
+
+    <div class="add_form col-md-4">
+        <label class="fw-bold mb-2">Password</label>
+        <!-- <input type="password" placeholder="Password" id="password" name="password"
+            value="{{ old('password') }}" class="form-control py-2 rounded-2 shadow-sm">
+
+        @error('password')
+            <span class="text-danger error-msg">{{ $message }}</span>
+        @enderror -->
+        <input type="password" id="password" name="password" placeholder="Password"
+value="{{ old('password') }}" class="form-control">
+
+@error('password')
+<span class="text-danger error-msg" data-field="password">{{ $message }}</span>
+@enderror
+    </div>
+
+    <div class="add_form col-md-4">
+        <label class="fw-bold mb-2">Role</label>
+
+        <select class="form-select" name="role_id" id="role_id">
+            <option value="">Please select role</option>
+
+            @foreach($roles as $role)
+                <option value="{{ $role->id }}" {{ old('role_id') == $role->id ? 'selected' : '' }}>
+                    {{ ucfirst($role->role_name) }}
+                </option>
+            @endforeach
+        </select>
+
+        @error('role_id')
+            <span class="text-danger error-msg">{{ $message }}</span>
+        @enderror
+    </div>
+
+</div>
+
+
+
+
+
+
                 <div class="row g-2 mb-4">
                     <div class="add_form col">
                         <label class="fw-bold">Status</label>
@@ -105,7 +191,7 @@
                     <a href="{{ route('admin.admin_user_list') }}">
                         <button type="button" class="cancel-btn">Cancel</button>
                     </a>
-                    <button class="submit-btn sbmtBtn ms-4">Submit</button>
+                    <button type="submit" class="submit-btn sbmtBtn ms-4">Submit</button>
                 </div>
             </form>
         </div>
@@ -113,3 +199,28 @@
 </div>
 
 @endsection
+
+
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+    const inputs = document.querySelectorAll("input, select");
+    inputs.forEach(function(input){
+        input.addEventListener("input", function(){
+
+            let fieldName = this.name;
+
+            let error = document.querySelector('.error-msg[data-field="'+fieldName+'"]');
+
+            if(error){
+                error.style.display = "none";
+            }
+
+        });
+
+    });
+
+});
+
+</script>

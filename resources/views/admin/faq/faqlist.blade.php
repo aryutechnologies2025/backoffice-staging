@@ -69,7 +69,7 @@
 
                         <td class="text-start">{{ $row->question }}</td>
                         <td class="text-start">{{ $row->answer }}</td>
-                        <td class="text-start">{{ auth('admin')->user()->email ?? 'N/A' }}</td>
+                        <td class="text-start">{{ auth('admin')->user()->email ?? 'admin' }}</td>
                          <td class="text-start">
 {{ $row->created_at->timezone('Asia/Kolkata')->format('d-m-Y h:i:s A') }}
 </td>

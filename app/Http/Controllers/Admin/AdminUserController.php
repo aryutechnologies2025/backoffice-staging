@@ -5,8 +5,11 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Admin;
+use App\Models\Role;    
 use Illuminate\Support\Facades\Auth;
-use Hash;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Hash;
+
 
 class AdminUserController extends Controller
 {
@@ -26,27 +29,27 @@ class AdminUserController extends Controller
     public function add_form()
     {
         $title = 'Add User';
-        return view('admin.adminuser.useradd', compact('title'));
+         $roles = Role::where('status', '1')->where('is_deleted', '0')->select('role_name', 'id')->get();
+    
+         return view('admin.adminuser.useradd', compact('title', 'roles'));
     }
 
 
     public function insert(Request $request)
     {
 
-        $validator = \Validator::make($request->all(), [
+        $request->validate([
+            'first_name'   => 'required',
+            'last_name'    => 'required',
+            'email'        => 'required|email|unique:admin,email',
+            'phone'        => 'required|unique:admin,phone',
+            'profile_pic'  => 'required|image',
+            'password'     => 'required',
+            'role_id'      => 'nullable',
 
-            'first_name' => 'required',
-            'last_name'  => 'required',
-            'email'      => 'required|email|unique:admin,email',
-            'phone'      => 'required|unique:admin,phone',
-            'profile_pic'=> 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-            'password'   => 'required|min:6',
-
+            
         ]);
 
-        if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator)->withInput();
-        }
 
         $uploadPath = public_path('uploads/user_profile');
 
@@ -81,14 +84,9 @@ class AdminUserController extends Controller
         $user->password     = Hash::make($request->password);
         $user->profile_pic  = $filePath;
         $user->status       = $request->status ? '1' : '0';
-
-        // 🔥 Save logged-in admin email
+        $user->role_id      = $request->role_id;
         $user->created_by   = Auth::user()->email;
-
         $user->is_deleted   = '0';
-
-        $user->created_at   = now();
-        $user->updated_at   = now();
 
         $user->save();
 
@@ -149,6 +147,7 @@ class AdminUserController extends Controller
 
         $user->first_name = $request->first_name;
         $user->last_name  = $request->last_name;
+        $user->name       = $request->first_name . ' ' . $request->last_name;
         $user->email      = $request->email;
         $user->phone      = $request->phone;
         $user->status     = $request->status ? '1' : '0';
@@ -216,6 +215,32 @@ class AdminUserController extends Controller
             'status'=>'0',
             'response'=>'Record not found.'
         ]);
+    }
+
+    public function reset_password(Request $request)
+    {
+        $request->validate([
+            'user_id' => 'required|exists:admin,id',
+            'password' => 'required|min:6'
+        ]);
+
+        $user = Admin::find($request->user_id);
+
+        if ($user) {
+            $user->password = Hash::make($request->password);
+            $user->updated_at = now();
+            $user->save();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Password reset successfully!'
+            ]);
+        }
+
+        return response()->json([
+            'success' => false,
+            'message' => 'User not found.'
+        ], 404);
     }
 
 }

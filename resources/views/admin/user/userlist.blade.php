@@ -53,8 +53,8 @@
 <th class="text-start">Email</th>
 <th class="text-start">Phone Number</th>
 <th class="text-start">Address</th>
-<th class="text-start ">Created By</th>
-<th class="text-start">Created Date</th>
+<th class="text-start">Created By</th>
+<th class="text-start">Date</th>
 <th class="text-start">Status</th>
 <th class="text-start">Action</th>
 </tr>
@@ -84,7 +84,7 @@
 
 <td>{{ $row->city }}</td>
 
-<td>{{ $row->created_by ?? 'N/A' }}</td>
+<td>{{ $row->created_by ?? 'admin' }}</td>
 
 <!-- TIMESTAMP DATE + TIME -->
 <td>
@@ -148,7 +148,6 @@ data-csrf_token="{{ csrf_token() }}">
 </a>
 
 </td>
-
 </tr>
 
 @endforeach

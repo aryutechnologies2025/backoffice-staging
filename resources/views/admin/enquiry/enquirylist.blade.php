@@ -109,7 +109,6 @@
                         <th class="text-start"><span>Phone</span></th>
                         <th class="text-start"><span>Budget</span></th>
                         <th class="text-start"><span>Program Name</span></th>
-                     
                         <th class="text-start"><span>Date</span></th>
                            <th class="text-start"><span>Created By</span></th>
                         <th class="text-start"><span>Trip Date</span></th>
@@ -133,7 +132,7 @@
                         <td class="text-start">{{ $row->pricing }}</td>
                         <td class="text-start">{{ $row->program_title ?? 'null' }}</td>
                         <td class="text-start">{{ $row->travel_date ?? 'null' }}</td>
-                        <td class="text-start">{{ auth('admin')->user()->email ?? 'N/A' }}</td>
+                        <td class="text-start">{{ auth('admin')->user()->email ?? 'admin' }}</td>
                       <td class="text-start"> {{ $row->created_at->timezone('Asia/Kolkata')->format('d-m-Y h:i:s A') }}</td>
                         {{-- <td class="text-start">
                             <select name="status"
@@ -173,25 +172,73 @@
                             </select>
                         </td>
 
-                        <td class="text-start d-flex gap-1">
+                        <!-- <td class="text-start d-flex gap-1">
                             <a class="btn view-btn" title="View"
                                 href="{{ route('admin.enquiry_view', $row->id) }}">
                                 <i class="bi bi-eye-fill" style="color:#000 !important;"></i>
                             </a>
                             <a href="{{ route('admin.enquiry.enquiryfollowups', $row->id) }}" title="List"
                                 class="btn "><i class="bi bi-list-check"
-                                    style="color:blue !important;"></i></a>
+                                    style="color:blue !important;"></i>
+                                </a>
                             <a href="javascript:void(0);" class="table-link danger delconfirm" title="Delete"
                                 data-row_id="{{ $row->id }}"
                                 data-act_url="{{ route('admin.enquiry_delete') }}"
                                 data-csrf_token="{{ csrf_token() }}">
                                 <span class="fa-stack">
-                                    <!-- <i class="fa fa-square fa-stack-2x"></i> -->
                                     <i class="fa fa-trash-o fa-stack-1x fa-inverse"
                                         style="color:red !important;"></i>
                                 </span>
                             </a>
-                        </td>
+                        </td> -->
+
+
+<td class="text-start">
+<div class="action-btns">
+
+<a class="btn view-btn" title="View"
+href="{{ route('admin.enquiry_view', $row->id) }}"
+data-name="{{ $row->name }}"
+data-email="{{ $row->email }}"
+data-phone="{{ $row->phone }}"
+data-location="{{ $row->location }}"
+data-days="{{ $row->days }}"
+data-child_count="{{ $row->child_count }}"
+data-travel_destination="{{ $row->travel_destination }}"
+data-pricing="{{ $row->pricing }}"
+data-cab_need="{{ $row->cab_need }}"
+data-total_count="{{ $row->total_count }}"
+data-male_count="{{ $row->male_count }}"
+data-female_count="{{ $row->female_count }}"
+data-travel_date="{{ $row->travel_date }}"
+data-rooms_count="{{ $row->rooms_count }}"
+data-comments="{{ $row->comments }}"
+data-date="{{ $row->created_at->timezone('Asia/Kolkata')->format('d-m-Y h:i:s A') }}">
+<i class="bi bi-eye-fill" style="color:#000 !important;"></i>
+</a>
+
+<a href="{{ route('admin.enquiry.enquiryfollowups', $row->id) }}"
+title="List" class="btn">
+<i class="bi bi-list-check" style="color:blue !important;"></i>
+</a>
+
+<a href="javascript:void(0);" 
+class="table-link danger delconfirm"
+title="Delete"
+data-row_id="{{ $row->id }}"
+data-act_url="{{ route('admin.enquiry_delete') }}"
+data-csrf_token="{{ csrf_token() }}">
+
+<span class="fa-stack">
+<i class="fa fa-trash-o fa-stack-1x fa-inverse"
+style="color:red !important;"></i>
+</span>
+
+
+</a>
+</div>
+</td>
+
                     </tr>
                     @endforeach
                     @endif
@@ -238,6 +285,16 @@
 <button class="sticky-btn" id="myBtn"><a href="#watch"><i
             class="bi bi-caret-up-square text-white"></i></button>
 @endsection
+
+
+
+
+
+
+
+
+
+
 
 @section('scripts')
 <script>

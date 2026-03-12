@@ -58,6 +58,43 @@ return [
 
     'asset_url' => env('ASSET_URL', '/'),
 
+    'modules' => [
+        'user_registration' => 'User Registration',
+        'contact_us' => 'Contact-Us',
+        'booking' => 'Booking',
+        'enquiry' => 'Enquiry',
+        'programs' => 'Programs',
+        'packages_destination' => 'Packages Destination',
+        'theme' => 'Theme',
+        'amenities' => 'Amenities',
+        'food_beverage' => 'Food & Beverage',
+        'activities' => 'Activities',
+        'safety_features' => 'Safety Features',
+        'add_stays' => 'ADD Stays',
+        'stay_enquiry' => 'Stay Enquiry',
+        'stays_district' => 'Stays District',
+        'stay_pricing_pc' => 'Stay Pricing (PC)',
+        'cab_pc' => 'Cab (PC)',
+        'activity_pc' => 'Activity (PC)',
+        'pricing_calculator' => 'Pricing Calculator',
+        'event_list' => 'Event List',
+        'event_registration' => 'Event Registration',
+        'influencer' => 'Influencer',
+        'slider' => 'Slider',
+        'customer_package' => 'Customer Package',
+        'review' => 'Review',
+        'stay_review' => 'Stay Review',
+        'wishlist' => 'Wishlist',
+        'faq' => 'FAQ',
+        'general_setting' => 'General Setting',
+        'mail_template' => 'Mail Template',
+        'google_analytics' => 'Google Analytic',
+        'role' => 'Role',
+        'admin_user' => 'Admin User',
+        'user_permission' => 'User Permission',
+    ],
+    
+
     /*
     |--------------------------------------------------------------------------
     | Application Timezone

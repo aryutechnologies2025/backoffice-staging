@@ -1,6 +1,5 @@
 <?php
 
-
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\EventController;
 use App\Http\Controllers\Admin\CityController;
@@ -57,6 +56,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\GoogleAnalyticsController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\AdminUserController;
+use App\Http\Controllers\Admin\UserPermissionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -221,6 +221,7 @@ Route::prefix('/')->group(function () {
                 Route::post('/delete/{id}', 'destroy')->name('admin.program_pdf_delete');
             });
         });
+
 
 
         //address
@@ -740,7 +741,7 @@ Route::prefix('/')->group(function () {
         Route::controller(EventRegisterController::class)->group(function () {
             Route::prefix('events-register')->group(function () {
                 Route::get('/', 'list')->name('admin.registereventslist');
-                Route::get('/{id}/view', 'view_form')->name('admin.home_enquiry_view');
+                Route::get('/{id}/view', 'view_form')->name('admin.registereventsview');
                 Route::post('/delete', 'delete')->name('admin.registereventdelete');
                 Route::post('/change-status', 'change_status')->name('admin.registereventstatus');
                 Route::post('/update-event-notes', 'updateEventNotes')->name('admin.updateEventNotes');
@@ -809,6 +810,19 @@ Route::prefix('/')->group(function () {
                 Route::post('/{id}/update', 'update')->name('admin.admin_user_update');
                 Route::post('/delete', 'delete')->name('admin.admin_user_delete');
                 Route::post('/change-status', 'change_status')->name('admin.admin_user_status');
+                Route::post('/reset-password', 'reset_password')->name('admin.reset_user_password');
+            });
+        });
+
+         Route::controller(UserPermissionController::class)->group(function () {
+            Route::prefix('permission')->group(function () {
+                Route::get('/', 'list')->name('admin.user_permission_list');
+                Route::get('/add', 'add')->name('admin.user_permission_add_form');
+                Route::post('/insert', 'insert')->name('admin.user_permission_insert');
+                Route::get('/{id}/edit', 'edit')->name('admin.user_permission_edit_form');
+                Route::post('/{id}/update', 'update')->name('admin.user_permission_user_update');
+                Route::post('/delete', 'delete')->name('admin.user_permission_delete');
+                Route::post('/change-status', 'change_status')->name('admin.user_permission_status');
             });
         });
     });

@@ -39,12 +39,33 @@ class All_Inclusive_PackController extends Controller
     public function list(Request $request)
     {
         $title = 'Programs List';
-        $inclusive_packages = InclusivePackages::where('is_deleted', '0')->orderBy('created_at', 'desc')->get();
+        $query = InclusivePackages::where('is_deleted', '0');
+        
+        if ($request->has('themes') && $request->themes) {
+            $themes = explode(',', $request->themes);
+            $query->whereIn('theme_id', $themes);
+        }
+        
+        if ($request->has('destination') && $request->destination) {
+            $query->where('city_details', $request->destination);
+        }
+        
+        if ($request->has('locations') && $request->locations) {
+            $locations = explode(',', $request->locations);
+            $query->where(function($q) use ($locations) {
+                foreach ($locations as $location) {
+                    $q->orWhere('location_name', 'like', '%' . $location . '%');
+                }
+            });
+        }
+        
+        $inclusive_packages = $query->orderBy('created_at', 'desc')->get();
         foreach ($inclusive_packages as $package) {
             $package->category = json_decode($package->category, true);
-            // Decode other JSON fields if needed
         }
-        return view('admin.inclusive_packages.inclusive_packageslist', compact('title', 'inclusive_packages'));
+        $themes = Themes::where('status', '1')->where('is_deleted', '0')->pluck('themes_name', 'id');
+        $cities = City::where('status', '1')->where('is_deleted', '0')->pluck('city_name', 'id');
+        return view('admin.inclusive_packages.inclusive_packageslist', compact('title', 'inclusive_packages', 'themes', 'cities'));
     }
 
     public function add_form()
