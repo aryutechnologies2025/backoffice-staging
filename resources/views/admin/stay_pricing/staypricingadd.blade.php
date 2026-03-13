@@ -216,9 +216,6 @@
                 </div>
 
 
-
-
-
             </form>
 
         </div>
@@ -293,14 +290,11 @@
     function addPriceField() {
         // Find the container where new fields will be added
         const container = document.getElementById('camp-rule-container');
-
         // Increment counter for new field
         fieldCounter++;
-
         // Create a new field group
         const newField = document.createElement('div');
         newField.className = 'camp-rule-field mb-4 p-3 border rounded';
-
         // HTML for the new fields with dynamic names using index
         newField.innerHTML = `
                 <div class="row g-2">

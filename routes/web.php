@@ -133,7 +133,7 @@ Route::prefix('/')->group(function () {
             Route::prefix('packages')->group(function () {
                 Route::get('/', 'list')->name('admin.packageList');
                 Route::get('/add', 'add_form')->name('admin.package_add_form');
-                // Route::get('/{id}/edit', 'edit_form')->name('admin.package_edit_form');
+                Route::get('/{id}/edit', 'edit_form')->name('admin.package_edit_form');
                 // Route::post('/insert', 'insert')->name('admin.event_insert');
                 // Route::post('/{id}/update', 'update')->name('admin.company_update');
                 // Route::get('/{id}/view',  'view')->name('admin.company_view');

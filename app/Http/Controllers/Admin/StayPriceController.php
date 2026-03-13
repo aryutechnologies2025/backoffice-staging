@@ -51,7 +51,6 @@ class StayPriceController extends Controller
 
         $pricing->status = $request->has('status') && $request->input('status') === 'on' ? '1' : '0';
         $pricing->is_deleted = '0';
-        $pricing->created_by = auth()->user()->email;
         $pricing->save();
 
         return redirect()->route('admin.staypricinglist')
