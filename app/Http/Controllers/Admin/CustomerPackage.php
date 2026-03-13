@@ -134,7 +134,6 @@ class CustomerPackage extends Controller
         $customer_package->list_order = $request->input('list_order');
         $customer_package->status = $request->has('status') && $request->input('status') === 'on' ? '1' : '0';
         $customer_package->location = json_encode($request->input('location'));
-        $customer_package->created_by = auth()->user()->email;
         $customer_package->save();
         // dd($customer_package);
 
@@ -500,7 +499,6 @@ class CustomerPackage extends Controller
 
             $customer_package->location =  $location;
             $customer_package->destination_id = $original->destination_id;
-            $customer_package->created_by = auth()->user()->email;
             $customer_package->save();
 
 
