@@ -35,6 +35,13 @@
         background: #29292960;
     }
 
+
+    .action-btns{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    white-space:nowrap;
+}
     .sticky-btn {
         position: fixed;
         bottom: 10px;
@@ -45,6 +52,15 @@
         underline: none;
         /* z-index: 999; */
     }
+
+    /* .table-responsive {
+    overflow-x: auto;
+}
+
+#cityTable th,
+#cityTable td {
+    white-space: nowrap;
+} */
 
     @media (max-width: 768px) {
         .sticky-btn {
@@ -96,7 +112,9 @@
 
 <div class="row body-sec px-5">
     <div class="bg-white pt-3 col-lg-12">
-        <div class="table-sec rounded-bottom-4 mb-5">
+        <!-- <div class="table-sec rounded-bottom-4 mb-5"> -->
+
+        <div class="table-sec rounded-bottom-4 mb-5 table-responsive">
             <!-- Button to Download Excel -->
             <button id="downloadExcel" class="btn btn-success mb-3">Download List</button>
 
@@ -105,13 +123,13 @@
                     <tr class="rounded-top-4">
                         <th class="text-start"><span>S.No</span></th>
                         <th class="text-start"><span>Name</span></th>
-                        <th class="text-start"><span>Email</span></th>
+                        <!-- <th class="text-start"><span>Email</span></th> -->
                         <th class="text-start"><span>Phone</span></th>
                         <th class="text-start"><span>Budget</span></th>
                         <th class="text-start"><span>Program Name</span></th>
                         <th class="text-start"><span>Date</span></th>
-                           <th class="text-start"><span>Created By</span></th>
-                        <th class="text-start"><span>Trip Date</span></th>
+                        <th class="text-start"><span>Created By</span></th>
+                        <!-- <th class="text-start"><span>Trip Date</span></th> -->
                         <!-- <th class="text-start"><span>Refered By</span></th> -->
                         <th class="text-start"><span>Mail Processing</span></th>
                         <th class="text-start"><span>Action</span></th>
@@ -127,13 +145,13 @@
                     <tr>
                         <td class="text-start">{{ $loop->iteration }}</td>
                         <td class="text-start">{{ $row->name }}</td>
-                        <td class="text-start">{{ $row->email }}</td>
+                        <!-- <td class="text-start">{{ $row->email }}</td> -->
                         <td class="text-start">{{ $row->phone }}</td>
                         <td class="text-start">{{ $row->pricing }}</td>
                         <td class="text-start">{{ $row->program_title ?? 'null' }}</td>
                         <td class="text-start">{{ $row->travel_date ?? 'null' }}</td>
                         <td class="text-start">{{ auth('admin')->user()->email ?? 'admin' }}</td>
-                      <td class="text-start"> {{ $row->created_at->timezone('Asia/Kolkata')->format('d-m-Y h:i:s A') }}</td>
+                        <!-- <td class="text-start"> {{ $row->created_at->timezone('Asia/Kolkata')->format('d-m-Y h:i:s A') }}</td> -->
                         {{-- <td class="text-start">
                             <select name="status"
                                 class="form-select statuschange"
@@ -188,32 +206,61 @@
                                 <span class="fa-stack">
                                     <i class="fa fa-trash-o fa-stack-1x fa-inverse"
                                         style="color:red !important;"></i>
-                                </span>
+                                </span>     
                             </a>
                         </td> -->
 
 
-<td class="text-start">
-<div class="action-btns">
+                        <!-- <td class="text-start">
+                            <div class="action-btns">
+
+                                <a class="btn view-btn" title="View"
+                                    href="{{ route('admin.enquiry_view', $row->id) }}"
+                                    data-name="{{ $row->name }}"
+                                    data-email="{{ $row->email }}"
+                                    data-phone="{{ $row->phone }}"
+                                    data-location="{{ $row->location }}"
+                                    data-days="{{ $row->days }}"
+                                    data-child_count="{{ $row->child_count }}"
+                                    data-travel_destination="{{ $row->travel_destination }}"
+                                    data-pricing="{{ $row->pricing }}"
+                                    data-cab_need="{{ $row->cab_need }}"
+                                    data-total_count="{{ $row->total_count }}"
+                                    data-male_count="{{ $row->male_count }}"
+                                    data-female_count="{{ $row->female_count }}"
+                                    data-travel_date="{{ $row->travel_date }}"
+                                    data-rooms_count="{{ $row->rooms_count }}"
+                                    data-comments="{{ $row->comments }}"
+                                    data-date="{{ $row->created_at->timezone('Asia/Kolkata')->format('d-m-Y h:i:s A') }}">
+                                    <i class="bi bi-eye-fill" style="color:#000 !important;"></i>
+                                </a>
+
+                                <a href="{{ route('admin.enquiry.enquiryfollowups', $row->id) }}"
+                                    title="List" class="btn">
+                                    <i class="bi bi-list-check" style="color:blue !important;"></i>
+                                </a>
+
+                                <a href="javascript:void(0);"
+                                    class="table-link danger delconfirm"
+                                    title="Delete"
+                                    data-row_id="{{ $row->id }}"
+                                    data-act_url="{{ route('admin.enquiry_delete') }}"
+                                    data-csrf_token="{{ csrf_token() }}">
+
+                                    <span class="fa-stack">
+                                        <i class="fa fa-trash-o fa-stack-1x fa-inverse"
+                                            style="color:red !important;"></i>
+                                    </span>
+                                </a>
+                            </div>
+                        </td> -->
+
+
+                        <td class="text-start">
+<div class="action-btns d-flex align-items-center gap-2">
 
 <a class="btn view-btn" title="View"
-href="{{ route('admin.enquiry_view', $row->id) }}"
-data-name="{{ $row->name }}"
-data-email="{{ $row->email }}"
-data-phone="{{ $row->phone }}"
-data-location="{{ $row->location }}"
-data-days="{{ $row->days }}"
-data-child_count="{{ $row->child_count }}"
-data-travel_destination="{{ $row->travel_destination }}"
-data-pricing="{{ $row->pricing }}"
-data-cab_need="{{ $row->cab_need }}"
-data-total_count="{{ $row->total_count }}"
-data-male_count="{{ $row->male_count }}"
-data-female_count="{{ $row->female_count }}"
-data-travel_date="{{ $row->travel_date }}"
-data-rooms_count="{{ $row->rooms_count }}"
-data-comments="{{ $row->comments }}"
-data-date="{{ $row->created_at->timezone('Asia/Kolkata')->format('d-m-Y h:i:s A') }}">
+href="{{ route('admin.enquiry_view', $row->id) }}">
 <i class="bi bi-eye-fill" style="color:#000 !important;"></i>
 </a>
 
@@ -229,13 +276,10 @@ data-row_id="{{ $row->id }}"
 data-act_url="{{ route('admin.enquiry_delete') }}"
 data-csrf_token="{{ csrf_token() }}">
 
-<span class="fa-stack">
-<i class="fa fa-trash-o fa-stack-1x fa-inverse"
-style="color:red !important;"></i>
-</span>
-
+<i class="fa fa-trash" style="color:red;"></i>
 
 </a>
+
 </div>
 </td>
 
@@ -245,6 +289,7 @@ style="color:red !important;"></i>
                 </tbody>
             </table>
         </div>
+
     </div>
 </div>
 
