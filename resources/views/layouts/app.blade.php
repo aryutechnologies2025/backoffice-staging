@@ -380,6 +380,21 @@
                     </a>
                     @endif
 
+
+
+                      @if(empty($permissions) || isset($permissions['stays_district']) &&
+                    ($permissions['stays_district']['create'] ||
+                    $permissions['stays_district']['edit'] ||
+                    $permissions['stays_district']['view'] ||
+                    $permissions['stays_district']['list'] ||
+                    $permissions['stays_district']['delete']))
+                    <a href="{{ route('admin.staydistrictlist') }}"
+                        class="nav_link {{ request()->routeIs(['admin.staydistrictlist']) ? 'active' : '' }} mb-0 text-white">
+                        <img src="/assets/image/dashboard/stay.png" alt="" class="stay-img">
+                        <span class="nav_name"> Packages District </span>
+                    </a>
+                    @endif
+
                     @if(empty($permissions) || (isset($permissions['theme']) &&
                     ($permissions['theme']['create'] ||
                     $permissions['theme']['edit'] ||
@@ -442,7 +457,7 @@
                     </a>
                     @endif
 
-                    @if(empty($permissions) || isset($permissions['stays_district']) &&
+                    <!-- @if(empty($permissions) || isset($permissions['stays_district']) &&
                     ($permissions['stays_district']['create'] ||
                     $permissions['stays_district']['edit'] ||
                     $permissions['stays_district']['view'] ||
@@ -451,9 +466,9 @@
                     <a href="{{ route('admin.staydistrictlist') }}"
                         class="nav_link {{ request()->routeIs(['admin.staydistrictlist']) ? 'active' : '' }} mb-0 text-white">
                         <img src="/assets/image/dashboard/stay.png" alt="" class="stay-img">
-                        <span class="nav_name"> Stays District </span>
+                        <span class="nav_name"> Packages District </span>
                     </a>
-                    @endif
+                    @endif -->
                     @endif
 
 
