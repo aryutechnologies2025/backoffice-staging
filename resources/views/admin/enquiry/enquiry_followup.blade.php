@@ -5,7 +5,8 @@
 <style>
     .modal {
         width: 100% !important;
-        padding-top: 10% !important;
+        /* padding-top: 10% !important; */
+        height: -500px !important;
     }
 
     a:hover {
@@ -18,6 +19,11 @@
 
     .enquiry {
         color: blue;
+
+    }
+
+     .modal-backdrop.show {
+        opacity: 0.2 !important;
     }
 </style>
 <div class="row body-sec py-5 px-5 justify-content-around">

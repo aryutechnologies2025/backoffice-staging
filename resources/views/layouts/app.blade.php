@@ -186,7 +186,7 @@
                 @endphp
 
                 <div class="nav_list ">
-                    <img class="pt-3 px-2 " style="width:90%;"
+                    <img class="pt-3 px-2 " style="width:0%;"
                         src="{{ $settings->footer_logo ? asset($settings->footer_logo) : '/assets/image/login/inner_pece_logo.png' }}"
                         alt="">
                     <div>

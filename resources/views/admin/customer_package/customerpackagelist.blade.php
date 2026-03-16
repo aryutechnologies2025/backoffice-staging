@@ -19,6 +19,136 @@
         color: #282833;
         font-size: 13px;
     }
+
+    /* Table responsive styling */
+    .table-sec {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    #cityTable {
+        font-size: 12px;
+        margin-bottom: 0;
+    }
+
+    #cityTable thead th {
+        padding: 10px 6px;
+        font-size: 11px;
+        font-weight: 600;
+        white-space: nowrap;
+        vertical-align: middle;
+    }
+
+    #cityTable tbody td {
+        padding: 8px 6px;
+        font-size: 11px;
+        vertical-align: middle;
+        word-break: break-word;
+    }
+
+    #cityTable .btn {
+        padding: 4px 8px;
+        font-size: 15px;
+        margin: 2px;
+    }
+
+    #cityTable .btn-add {
+        padding: 8px 16px;
+    }
+
+#cityTable .fa-stack {
+    height: 2.5em;
+    width: 2.5em;
+    line-height: 2.5em;
+}
+
+#cityTable .fa-stack-2x {
+    font-size: 1.8em;
+}
+
+#cityTable .fa-stack-1x {
+    font-size: 1em;
+}
+
+#cityTable i {
+    font-size: 18px;
+}
+    /* Column width optimization */
+    #cityTable th:nth-child(1),
+    #cityTable td:nth-child(1) {
+        width: 5%;
+        min-width: 35px;
+    }
+
+    #cityTable th:nth-child(2),
+    #cityTable td:nth-child(2) {
+        width: 10%;
+        min-width: 80px;
+    }
+
+    #cityTable th:nth-child(3),
+    #cityTable td:nth-child(3) {
+        width: 10%;
+        min-width: 90px;
+    }
+
+    #cityTable th:nth-child(4),
+    #cityTable td:nth-child(4) {
+        width: 12%;
+        min-width: 100px;
+    }
+
+    #cityTable th:nth-child(5),
+    #cityTable td:nth-child(5) {
+        width: 10%;
+        min-width: 85px;
+    }
+
+    #cityTable th:nth-child(6),
+    #cityTable td:nth-child(6) {
+        width: 8%;
+        min-width: 70px;
+    }
+
+    #cityTable th:nth-child(7),
+    #cityTable td:nth-child(7) {
+        width: 10%;
+        min-width: 90px;
+    }
+
+    #cityTable th:nth-child(8),
+    #cityTable td:nth-child(8) {
+        width: 8%;
+        min-width: 70px;
+    }
+
+    #cityTable th:nth-child(9),
+    #cityTable td:nth-child(9) {
+        width: 8%;
+        min-width: 70px;
+    }
+
+    #cityTable th:nth-child(10),
+    #cityTable td:nth-child(10) {
+        width: 10%;
+        min-width: 85px;
+    }
+
+    #cityTable th:nth-child(11),
+    #cityTable td:nth-child(11) {
+        width: 9%;
+        min-width: 75px;
+    }
+
+    /* DataTables responsive adjustments */
+    .dataTables_wrapper .dataTables_length,
+    .dataTables_wrapper .dataTables_filter {
+        margin-bottom: 10px;
+    }
+
+    .dataTables_wrapper .dataTables_paginate {
+        margin-top: 10px;
+    }
 </style>
 
 <div class="row body-sec py-3 px-5 justify-content-around">
@@ -38,10 +168,10 @@
 </div>
 
 <!-- EVENT LIST -->
-<div class="row body-sec px-5">
-    <div class="bg-white pt-3 col-lg-12">
-        <div class="table-sec rounded-bottom-4 mb-5">
-            <table id="cityTable" class="table table-bordered pt-2">
+<div class="row body-sec px-2 px-md-5">
+    <div class="bg-white pt-3 col-12">
+        <div class="table-sec rounded-bottom-4 mb-5" style="overflow-x: auto;">
+            <table id="cityTable" class="table table-bordered pt-2" style="width: 100%; min-width: 1000px;">
                 <thead>
                     <tr class="rounded-top-4">
                         <th class="text-start"><span>S.No</span></th>
@@ -60,7 +190,7 @@
                 <tbody>
                     @if($customer_package_list->isEmpty())
                     <tr>
-                        <td colspan="11" class="text-center">No records</td>
+                        <td colspan="11" class="text-center py-3">No records</td>
                     </tr>
                     @else
                     @foreach ($customer_package_list as $row)

@@ -137,21 +137,16 @@ value="{{ old('phone') }}" class="form-control">
 @enderror
     </div>
 
-    <div class="add_form col-md-4">
-        <label class="fw-bold mb-2">Password</label>
-        <!-- <input type="password" placeholder="Password" id="password" name="password"
-            value="{{ old('password') }}" class="form-control py-2 rounded-2 shadow-sm">
+  <div class="add_form col-md-4">
+    <label class="fw-bold mb-2">Password</label>
 
-        @error('password')
-            <span class="text-danger error-msg">{{ $message }}</span>
-        @enderror -->
-        <input type="password" id="password" name="password" placeholder="Password"
-value="{{ old('password') }}" class="form-control">
+    <input type="password" id="password" name="password" placeholder="Password"
+        value="{{ old('password') }}" class="form-control" minlength="8" required>
 
-@error('password')
-<span class="text-danger error-msg" data-field="password">{{ $message }}</span>
-@enderror
-    </div>
+    @error('password')
+        <span class="text-danger error-msg" data-field="password">{{ $message }}</span>
+    @enderror
+</div>
 
     <div class="add_form col-md-4">
         <label class="fw-bold mb-2">Role</label>

@@ -27,6 +27,7 @@ class EnquiryDetail extends Model
         'travel_date',
         'rooms_count',
         'reference_id',
+        'created_by',
 
         'program_title',
         'child_count',

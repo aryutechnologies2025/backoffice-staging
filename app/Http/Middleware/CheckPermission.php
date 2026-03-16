@@ -7,33 +7,22 @@ use Illuminate\Http\Request;
 
 class CheckPermission
 {
- public function handle(Request $request, Closure $next, $module, $action = null)
-{
-    $permissions = session('permissions', []);
+    public function handle(Request $request, Closure $next, $module, $action)
+    {
+        $permissions = session('permissions', []);
 
-    // If module not found in permissions → deny
-     // ❌ Empty permissions → deny (secure by default)
-    if (empty($permissions)) {
-        abort(403, 'Unauthorized');
-    }
+        // Empty permissions = super admin, allow all
+        if (empty($permissions)) {
+            return $next($request);
+        }
 
-    if (!isset($permissions[$module])) {
-        abort(403, 'Unauthorized');
-    }
+        if (!isset($permissions[$module]) || empty($permissions[$module][$action])) {
+            if ($request->expectsJson()) {
+                return response()->json(['message' => 'Unauthorized'], 403);
+            }
+            abort(403, 'You do not have permission to perform this action.');
+        }
 
-    // If no action specified → module access is enough
-    if ($action === null) {
         return $next($request);
     }
-
-    // Check if specific action is allowed
-    if (
-        !isset($permissions[$module][$action]) ||
-        $permissions[$module][$action] !== true
-    ) {
-        abort(403, 'Unauthorized');
-    }
-
-    return $next($request);
-}
 }

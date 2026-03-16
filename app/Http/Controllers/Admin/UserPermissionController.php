@@ -14,6 +14,7 @@ class UserPermissionController extends Controller
     {
         $title = 'Permission List';
         $users = Permission::with(['role', 'modules'])
+        ->where('is_deleted', '0')
             ->orderBy('id', 'DESC')
             ->get();
         return view('admin.permission.list', compact('title', 'users'));
