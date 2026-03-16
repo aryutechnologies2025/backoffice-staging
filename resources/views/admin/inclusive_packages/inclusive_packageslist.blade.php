@@ -102,13 +102,11 @@
                         <th class="text-start"><span>Created By</span></th>
                         <th class="text-start"><span>Date </span></th>
                         <th class="text-start"><span> Package Duplicate </span></th>
-                        <th class="text-start">
-                            <span> Status </span>
-                        </th>
+                        <th class="text-start"> <span> Status </span> </th>
                         <th class="text-start"><span> Action </span></th>
                     </tr>
                 </thead>
-                <tbody>
+                <!-- <tbody>
                     @if($inclusive_packages->isEmpty())
                     <tr>
                         <td colspan="9" class="text-start">No records</td>
@@ -177,7 +175,75 @@
                     @endforeach
                     @endif
 
-                </tbody>
+                </tbody> -->
+
+
+                <tbody>
+    @foreach ($inclusive_packages as $row)
+        @php
+            $eventsPackageImages = is_array($row->events_package_images)
+                ? $row->events_package_images
+                : json_decode($row->events_package_images, true);
+
+            $categories = is_array($row->category)
+                ? $row->category
+                : json_decode($row->category, true);
+
+            $formattedCategories = is_array($categories)
+                ? implode(', ', array_map(fn($cat) => str_replace('_', ' ', $cat), $categories))
+                : str_replace('_', ' ', $categories);
+        @endphp
+
+        <tr>
+            <td class="text-start">{{ $loop->iteration }}</td>
+            <td class="text-start">{{ $row->title }}</td>
+            <td class="text-start">
+                <img src="{{ $row->cover_img ? asset($row->cover_img) : asset($settings->footer_logo) }}"
+                     alt="{{ $row->alternate_name ?? 'Default Alt Text' }}"
+                     style="max-width: 100px; max-height: 100px; object-fit: cover;">
+            </td>
+            <td class="text-start">{{ $formattedCategories }}</td>
+            <td class="text-start">{{ auth('admin')->user()->email ?? 'N/A' }}</td>
+            <td class="text-start">
+                {{ $row->created_at ? $row->created_at->timezone('Asia/Kolkata')->format('d-m-Y h:i:s A') : 'N/A' }}
+            </td>
+            <td class="text-start">
+                <button type="button" class="btn text-dark duplicate_package" data-package_id="{{ $row->id }}">
+                    <i class="fa fa-copy" style="color:blue !important"></i> Duplicate
+                </button>
+            </td>
+            <td class="text-start">
+                <a data-toggle="tooltip"
+                   data-csrf_token="{{ csrf_token() }}"
+                   class="stsconfirm"
+                   href="javascript:void(0);"
+                   data-row_id="{{ $row->id }}"
+                   data-act_url="{{ route('admin.inclusive_package_status') }}"
+                   data-stsmode="{{ $row->status == 1 ? 0 : 1 }}">
+                    <button type="button" class="btn {{ $row->status == 1 ? 'btn-live' : 'btn-hold' }} px-5">
+                        {{ $row->status == 1 ? 'Active' : 'In Active' }}
+                    </button>
+                </a>
+            </td>
+            <td class="text-start" style="width: 20%;">
+                <a href="{{ route('admin.inclusive_package_edit_form',$row->id) }}" title="Edit" class="table-edit-link">
+                    <span class="fa-stack">
+                        <i class="fa fa-pencil fa-stack-1x fa-inverse"></i>
+                    </span>
+                </a>
+
+                <a href="javascript:void(0);" class="table-link danger delconfirm" title="Delete"
+                   data-row_id="{{ $row->id }}"
+                   data-act_url="{{ route('admin.inclusive_package_delete') }}"
+                   data-csrf_token="{{ csrf_token() }}">
+                    <span class="fa-stack">
+                        <i class="fa fa-trash-o fa-stack-1x fa-inverse" style="color: red !important;"></i>
+                    </span>
+                </a>
+            </td>
+        </tr>
+    @endforeach
+</tbody>
             </table>
 
         </div>
@@ -186,9 +252,39 @@
 
 @endsection
 
+
+
+
+
+
+
+
+
+
+
 @section('scripts')
 <script>
     $(document).ready(function() {
+        // Read URL params to restore filter state after page reload
+        const urlParams = new URLSearchParams(window.location.search);
+        const selectedThemes = urlParams.get('themes') ? urlParams.get('themes').split(',').filter(Boolean) : [];
+        const selectedDestination = urlParams.get('destination') || '';
+        const selectedLocations = urlParams.get('locations') ? urlParams.get('locations').split(',').filter(Boolean) : [];
+
+        // Restore theme checkboxes
+        if (selectedThemes.length) {
+            selectedThemes.forEach(function(id) {
+                $('#filter-theme-' + id).prop('checked', true);
+            });
+            updateFilterThemeText();
+        }
+
+        // Restore destination dropdown
+        if (selectedDestination) {
+            $('#filterDestination').val(selectedDestination);
+            loadDistricts(selectedDestination, selectedLocations);
+        }
+
         function updateFilterThemeText() {
             const checked = $('.filter-theme:checked').length;
             $('#filterThemeText').text(checked === 0 ? 'Select Themes' : (checked === 1 ? $('.filter-theme:checked').next('label').text().trim() : checked + ' themes selected'));
@@ -197,7 +293,10 @@
         $('#filterThemeDropdown ~ .dropdown-menu').click(e => e.target.type === 'checkbox' && e.stopPropagation());
 
         $('#filterDestination').change(function() {
-            const destination = $(this).val();
+            loadDistricts($(this).val(), []);
+        });
+
+        function loadDistricts(destination, restoreLocations) {
             const container = $('#filter-districts-checkboxes');
             container.empty();
             $('#filterLocationText').text('Select Locations');
@@ -214,14 +313,21 @@
                         $.each(data, function(index, district) {
                             container.append('<li><div class="form-check"><input class="form-check-input filter-location" type="checkbox" value="' + district.name + '" id="filter-district-' + district.id + '"><label class="form-check-label w-100" for="filter-district-' + district.id + '">' + district.name + '</label></div></li>');
                         });
+                        // Restore previously selected locations
+                        if (restoreLocations.length) {
+                            restoreLocations.forEach(function(loc) {
+                                $('.filter-location[value="' + loc + '"]').prop('checked', true);
+                            });
+                        }
                         $('.filter-location').change(updateFilterLocationText);
+                        updateFilterLocationText();
                     }
                 },
                 error: function(xhr) {
                     console.error('Error loading districts:', xhr);
                 }
             });
-        });
+        }
 
         function updateFilterLocationText() {
             const checked = $('.filter-location:checked').length;
@@ -285,5 +391,8 @@
             });
         });
     });
+
 </script>
 @endsection
+
+

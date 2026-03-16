@@ -154,9 +154,7 @@ Route::prefix('/')->group(function () {
                 Route::post('/change-status', 'change_status')->name('admin.inclusive_package_status');
                 Route::get('/theme-categories/{themeId}', 'getThemeCategories')->name('admin.theme_categories');
                 Route::get('/destination-categories',  'getDestinationCategories')->name('admin.destination_categories');
-
                 Route::post('/duplicate-entry-details', 'duplicatePackage')->name('admin.ProgramPackage_dupdetails');
-
                 Route::post('/update-latest', 'updateNew')->name('admin.inclusive_package_update_latest');
             });
         });
@@ -458,18 +456,30 @@ Route::prefix('/')->group(function () {
         });
 
         //User Details
+        // Route::controller(UserController::class)->group(function () {
+        //     Route::prefix('user')->group(function () {
+        //         Route::get('/', 'list')->name('admin.user_list')->middleware('check.permission:User,list');
+        //         Route::get('/add', 'add_form')->name('admin.user_add_form')->middleware('check.permission:User,add');
+        //         Route::get('/{id}/edit', 'edit_form')->name('admin.user_edit_form');
+        //         Route::get('/{id}/view', 'view_form')->name('admin.user_view_form');
+        //         Route::post('/insert', 'insert')->name('admin.user_insert');
+        //         Route::post('/{id}/update', 'update')->name('admin.user_update');
+        //         Route::post('/delete', 'delete')->name('admin.user_delete');
+        //         Route::post('/change-status', 'change_status')->name('admin.user_status');
+        //     });
+        // });
         Route::controller(UserController::class)->group(function () {
-            Route::prefix('user')->group(function () {
-                Route::get('/', 'list')->name('admin.user_list');
-                Route::get('/add', 'add_form')->name('admin.user_add_form');
-                Route::get('/{id}/edit', 'edit_form')->name('admin.user_edit_form');
-                Route::get('/{id}/view', 'view_form')->name('admin.user_view_form');
-                Route::post('/insert', 'insert')->name('admin.user_insert');
-                Route::post('/{id}/update', 'update')->name('admin.user_update');
-                Route::post('/delete', 'delete')->name('admin.user_delete');
-                Route::post('/change-status', 'change_status')->name('admin.user_status');
-            });
-        });
+        Route::prefix('user')->group(function () {
+        Route::get('/', 'list')->name('admin.user_list')->middleware('check.permission:User,list');
+        Route::get('/add', 'add_form')->name('admin.user_add_form')->middleware('check.permission:User,add');
+        Route::get('/{id}/edit', 'edit_form')->name('admin.user_edit_form')->middleware('check.permission:User,edit');
+        Route::get('/{id}/view', 'view_form')->name('admin.user_view_form')->middleware('check.permission:User,view');
+        Route::post('/insert', 'insert')->name('admin.user_insert')->middleware('check.permission:User,add');
+        Route::post('/{id}/update', 'update')->name('admin.user_update')->middleware('check.permission:User,edit');
+        Route::post('/delete', 'delete')->name('admin.user_delete')->middleware('check.permission:User,delete');
+        Route::post('/change-status', 'change_status')->name('admin.user_status')->middleware('check.permission:User,status');
+    });
+});
 
         //Contat-us Details
         Route::controller(Contact_usController::class)->group(function () {
@@ -653,7 +663,7 @@ Route::prefix('/')->group(function () {
         });
 
         Route::controller(StayDistrictController::class)->group(function () {
-            Route::prefix('staydestrict')->group(function () {
+            Route::prefix('staydistrict')->group(function () {
                 Route::get('/', 'list')->name('admin.staydistrictlist');
                 Route::get('/add', 'add_form')->name('admin.staydistrict_add_form');
                 Route::get('/{id}/edit', 'edit_form')->name('admin.staydistrict_edit_form');

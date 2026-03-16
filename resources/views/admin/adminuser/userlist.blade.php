@@ -27,6 +27,9 @@
     .th {
         color: black
     }
+     .modal-backdrop.show {
+        opacity: 0.2 !important;
+    }
 
 
     #resetPasswordModal .modal-dialog {
