@@ -143,14 +143,14 @@ Route::prefix('/')->group(function () {
         });
 
         //All-Inclusive Packages
-        Route::controller(All_Inclusive_PackController::class)->group(function () {
+          Route::controller(All_Inclusive_PackController::class)->group(function () {
             Route::prefix('all-inclusive-package')->group(function () {
-                Route::get('/', 'list')->name('admin.inclusive_package_list');
-                Route::get('/add', 'add_form')->name('admin.inclusive_package_add_form');
-                Route::get('/{id}/edit', 'edit_form')->name('admin.inclusive_package_edit_form');
+                Route::get('/', 'list')->name('admin.inclusive_package_list')->middleware('check.permission:programs,list');
+                Route::get('/add', 'add_form')->name('admin.inclusive_package_add_form')->middleware('check.permission:programs,add');
+                Route::get('/{id}/edit', 'edit_form')->name('admin.inclusive_package_edit_form')->middleware('check.permission:programs,edit');
                 Route::post('/insert', 'insert')->name('admin.inclusive_package_insert');
                 Route::post('/{id}/update', 'update')->name('admin.inclusive_package_update');
-                Route::post('/delete', 'delete')->name('admin.inclusive_package_delete');
+                Route::post('/delete', 'delete')->name('admin.inclusive_package_delete')->middleware('check.permission:programs,delete');
                 Route::post('/change-status', 'change_status')->name('admin.inclusive_package_status');
                 Route::get('/theme-categories/{themeId}', 'getThemeCategories')->name('admin.theme_categories');
                 Route::get('/destination-categories',  'getDestinationCategories')->name('admin.destination_categories');
@@ -161,15 +161,14 @@ Route::prefix('/')->group(function () {
         //   Route::get('/dashboard', [All_Inclusive_PackController::class, 'showDashboard'])->name('dashboard');
 
         //CustomerPackage
-        Route::controller(CustomerPackage::class)->group(function () {
+          Route::controller(CustomerPackage::class)->group(function () {
             Route::prefix('customer-package')->group(function () {
-                Route::get('/', 'list')->name('admin.CustomerPackage_list');
-                Route::get('/add', 'add_form')->name('admin.CustomerPackage_form');
-                // Route::get('/get-packages-by-city/{city_id}','getPackagesByCity');
+                Route::get('/', 'list')->name('admin.CustomerPackage_list')->middleware('check.permission:customer_package,list');
+                Route::get('/add', 'add_form')->name('admin.CustomerPackage_form')->middleware('check.permission:customer_package,create');
                 Route::post('/get-packages-by-city', 'getPackagesByCity');
 
                 Route::post('/insert', 'insert')->name('admin.CustomerPackage_insert');
-                Route::post('/delete', 'delete')->name('admin.CustomerPackage_delete');
+                Route::post('/delete', 'delete')->name('admin.CustomerPackage_delete')->middleware('check.permission:customer_package,delete');
                 Route::post('/change-status', 'change_status')->name('admin.CustomerPackage_status');
 
                 Route::get('/{id}/edit', 'edit_form')->name('admin.CustomerPackage_edit_form');
@@ -197,15 +196,15 @@ Route::prefix('/')->group(function () {
         });
 
         //Program
-        Route::controller(ProgramController::class)->group(function () {
-            Route::prefix('program')->group(function () {
-                Route::get('/', 'list')->name('admin.program_list');
-                Route::get('/add', 'add_form')->name('admin.program_add_form');
-                Route::get('/{id}/edit', 'edit_form')->name('admin.program_edit_form');
-                Route::post('/insert', 'insert')->name('admin.program_insert');
-                Route::post('/{id}/update', 'update')->name('admin.program_update');
-                Route::post('/delete', 'delete')->name('admin.program_delete');
-                Route::post('/change-status', 'change_status')->name('admin.program_status');
+       Route::controller(ProgramEventsController::class)->group(function () {
+            Route::prefix('program-events')->group(function () {
+                Route::get('/', 'list')->name('admin.programeventslist')->middleware('check.permission:event_list,list');
+                Route::get('/add', 'add')->name('admin.programeventsadd')->middleware('check.permission:event_list,create');
+                Route::post('/insert', 'insert')->name('admin.programeventstore');
+                Route::get('/{id}/edit', 'edit')->name('admin.programeventedit')->middleware('check.permission:event_list,edit');
+                Route::post('/{id}/update', 'update')->name('admin.programeventupdate');
+                Route::post('/delete', 'delete')->name('admin.programeventdelete')->middleware('check.permission:event_list,delete');
+                Route::post('/change-status', 'change_status')->name('admin.programeventstatus');
             });
         });
 
@@ -280,29 +279,43 @@ Route::prefix('/')->group(function () {
         //FAQ
         Route::controller(FAQController::class)->group(function () {
             Route::prefix('faq')->group(function () {
-                Route::get('/', 'list')->name('admin.faqlist');
-                Route::get('/add', 'add_form')->name('admin.faq_add_form');
-                Route::get('/{id}/edit', 'edit_form')->name('admin.faq_edit_form');
+                Route::get('/', 'list')->name('admin.faqlist')->middleware('check.permission:faq,list');
+                Route::get('/add', 'add_form')->name('admin.faq_add_form')->middleware('check.permission:faq,create');
+                Route::get('/{id}/edit', 'edit_form')->name('admin.faq_edit_form')->middleware('check.permission:faq,edit');
                 Route::post('/insert', 'insert')->name('admin.faq_insert');
                 Route::post('/{id}/update', 'update')->name('admin.faq_update');
-                Route::post('/delete', 'delete')->name('admin.faq_delete');
+                Route::post('/delete', 'delete')->name('admin.faq_delete')->middleware('check.permission:faq,delete');
                 Route::post('/change-status', 'change_status')->name('admin.faq_status');
             });
         });
 
         //FAQ
-        Route::controller(InfluencersController::class)->group(function () {
+        // Route::controller(InfluencersController::class)->group(function () {
+        //     Route::prefix('influencer')->group(function () {
+        //         Route::get('/', 'list')->name('admin.influencer_list');
+        //         Route::get('/add', 'add_form')->name('admin.influencer_add_form');
+        //         Route::get('/{id}/edit', 'edit_form')->name('admin.influencer_edit_form');
+        //         Route::post('/insert', 'insert')->name('admin.influencer_insert');
+        //         Route::post('/{id}/update', 'update')->name('admin.influencer_update');
+        //         Route::post('/delete', 'delete')->name('admin.influencer_delete');
+        //         Route::post('/change-status', 'change_status')->name('admin.influencer_status');
+        //         Route::get('/{id}/view', 'view_form')->name('admin.influencer_view');
+        //     });
+        // });
+
+         Route::controller(InfluencersController::class)->group(function () {
             Route::prefix('influencer')->group(function () {
-                Route::get('/', 'list')->name('admin.influencer_list');
-                Route::get('/add', 'add_form')->name('admin.influencer_add_form');
-                Route::get('/{id}/edit', 'edit_form')->name('admin.influencer_edit_form');
+                Route::get('/', 'list')->name('admin.influencer_list')->middleware('check.permission:influencer,list');
+                Route::get('/add', 'add_form')->name('admin.influencer_add_form')->middleware('check.permission:influencer,create');
+                Route::get('/{id}/edit', 'edit_form')->name('admin.influencer_edit_form')->middleware('check.permission:influencer,edit');
                 Route::post('/insert', 'insert')->name('admin.influencer_insert');
                 Route::post('/{id}/update', 'update')->name('admin.influencer_update');
-                Route::post('/delete', 'delete')->name('admin.influencer_delete');
+                Route::post('/delete', 'delete')->name('admin.influencer_delete')->middleware('check.permission:influencer,delete');
                 Route::post('/change-status', 'change_status')->name('admin.influencer_status');
-                Route::get('/{id}/view', 'view_form')->name('admin.influencer_view');
+                Route::get('/{id}/view', 'view_form')->name('admin.influencer_view')->middleware('check.permission:influencer,view');
             });
         });
+
         // web.php
         Route::get('/track-click/{id}', [InfluencersController::class, 'trackClick'])->name('affiliate.link.track');
 
@@ -341,25 +354,25 @@ Route::prefix('/')->group(function () {
         //Amenities
         Route::controller(AmenitiesController::class)->group(function () {
             Route::prefix('amenities')->group(function () {
-                Route::get('/', 'list')->name('admin.amenitieslist');
-                Route::get('/add', 'add_form')->name('admin.amenities_add_form');
-                Route::get('/{id}/edit', 'edit_form')->name('admin.amenities_edit_form');
+                Route::get('/', 'list')->name('admin.amenitieslist')->middleware('check.permission:amenities,list');
+                Route::get('/add', 'add_form')->name('admin.amenities_add_form')->middleware('check.permission:amenities,create');
+                Route::get('/{id}/edit', 'edit_form')->name('admin.amenities_edit_form')->middleware('check.permission:amenities,edit');
                 Route::post('/insert', 'insert')->name('admin.amenities_insert');
                 Route::post('/{id}/update', 'update')->name('admin.amenities_update');
-                Route::post('/delete', 'delete')->name('admin.amenities_delete');
+                Route::post('/delete', 'delete')->name('admin.amenities_delete')->middleware('check.permission:amenities,delete');
                 Route::post('/change-status', 'change_status')->name('admin.amenities_status');
             });
         });
 
         //Food & beverage
-        Route::controller(Food_beverageController::class)->group(function () {
+         Route::controller(Food_beverageController::class)->group(function () {
             Route::prefix('food_beverage')->group(function () {
-                Route::get('/', 'list')->name('admin.food_beveragelist');
-                Route::get('/add', 'add_form')->name('admin.food_beverage_add_form');
-                Route::get('/{id}/edit', 'edit_form')->name('admin.food_beverage_edit_form');
+                Route::get('/', 'list')->name('admin.food_beveragelist')->middleware('check.permission:food_beverage,list');
+                Route::get('/add', 'add_form')->name('admin.food_beverage_add_form')->middleware('check.permission:food_beverage,create');
+                Route::get('/{id}/edit', 'edit_form')->name('admin.food_beverage_edit_form')->middleware('check.permission:food_beverage,edit');
                 Route::post('/insert', 'insert')->name('admin.food_beverage_insert');
                 Route::post('/{id}/update', 'update')->name('admin.food_beverage_update');
-                Route::post('/delete', 'delete')->name('admin.food_beverage_delete');
+                Route::post('/delete', 'delete')->name('admin.food_beverage_delete')->middleware('check.permission:food_beverage,delete');
                 Route::post('/change-status', 'change_status')->name('admin.food_beverage_status');
             });
         });
@@ -367,25 +380,25 @@ Route::prefix('/')->group(function () {
         //Activities
         Route::controller(ActivitiesController::class)->group(function () {
             Route::prefix('activities')->group(function () {
-                Route::get('/', 'list')->name('admin.activitieslist');
-                Route::get('/add', 'add_form')->name('admin.activities_add_form');
-                Route::get('/{id}/edit', 'edit_form')->name('admin.activities_edit_form');
+                Route::get('/', 'list')->name('admin.activitieslist')->middleware('check.permission:activities,list');
+                Route::get('/add', 'add_form')->name('admin.activities_add_form')->middleware('check.permission:activities,create');
+                Route::get('/{id}/edit', 'edit_form')->name('admin.activities_edit_form')->middleware('check.permission:activities,edit');
                 Route::post('/insert', 'insert')->name('admin.activities_insert');
                 Route::post('/{id}/update', 'update')->name('admin.activities_update');
-                Route::post('/delete', 'delete')->name('admin.activities_delete');
+                Route::post('/delete', 'delete')->name('admin.activities_delete')->middleware('check.permission:activities,delete');
                 Route::post('/change-status', 'change_status')->name('admin.activities_status');
             });
         });
 
         //Safety Features
-        Route::controller(Safety_featuresController::class)->group(function () {
+         Route::controller(Safety_featuresController::class)->group(function () {
             Route::prefix('safety_features')->group(function () {
-                Route::get('/', 'list')->name('admin.safety_features_list');
-                Route::get('/add', 'add_form')->name('admin.safety_features_add_form');
-                Route::get('/{id}/edit', 'edit_form')->name('admin.safety_features_edit_form');
+                Route::get('/', 'list')->name('admin.safety_features_list')->middleware('check.permission:safety_features,list');
+                Route::get('/add', 'add_form')->name('admin.safety_features_add_form')->middleware('check.permission:safety_features,create');
+                Route::get('/{id}/edit', 'edit_form')->name('admin.safety_features_edit_form')->middleware('check.permission:safety_features,edit');
                 Route::post('/insert', 'insert')->name('admin.safety_features_insert');
                 Route::post('/{id}/update', 'update')->name('admin.safety_features_update');
-                Route::post('/delete', 'delete')->name('admin.safety_features_delete');
+                Route::post('/delete', 'delete')->name('admin.safety_features_delete')->middleware('check.permission:safety_features,delete');
                 Route::post('/change-status', 'change_status')->name('admin.safety_features_status');
             });
         });
@@ -456,36 +469,24 @@ Route::prefix('/')->group(function () {
         });
 
         //User Details
-        // Route::controller(UserController::class)->group(function () {
-        //     Route::prefix('user')->group(function () {
-        //         Route::get('/', 'list')->name('admin.user_list')->middleware('check.permission:User,list');
-        //         Route::get('/add', 'add_form')->name('admin.user_add_form')->middleware('check.permission:User,add');
-        //         Route::get('/{id}/edit', 'edit_form')->name('admin.user_edit_form');
-        //         Route::get('/{id}/view', 'view_form')->name('admin.user_view_form');
-        //         Route::post('/insert', 'insert')->name('admin.user_insert');
-        //         Route::post('/{id}/update', 'update')->name('admin.user_update');
-        //         Route::post('/delete', 'delete')->name('admin.user_delete');
-        //         Route::post('/change-status', 'change_status')->name('admin.user_status');
-        //     });
-        // });
         Route::controller(UserController::class)->group(function () {
-        Route::prefix('user')->group(function () {
-        Route::get('/', 'list')->name('admin.user_list')->middleware('check.permission:User,list');
-        Route::get('/add', 'add_form')->name('admin.user_add_form')->middleware('check.permission:User,add');
-        Route::get('/{id}/edit', 'edit_form')->name('admin.user_edit_form')->middleware('check.permission:User,edit');
-        Route::get('/{id}/view', 'view_form')->name('admin.user_view_form')->middleware('check.permission:User,view');
-        Route::post('/insert', 'insert')->name('admin.user_insert')->middleware('check.permission:User,add');
-        Route::post('/{id}/update', 'update')->name('admin.user_update')->middleware('check.permission:User,edit');
-        Route::post('/delete', 'delete')->name('admin.user_delete')->middleware('check.permission:User,delete');
-        Route::post('/change-status', 'change_status')->name('admin.user_status')->middleware('check.permission:User,status');
-    });
-});
-
+            Route::prefix('user')->group(function () {
+                Route::get('/', 'list')->name('admin.user_list')->middleware('check.permission:User,list');
+                Route::get('/add', 'add_form')->name('admin.user_add_form')->middleware('check.permission:User,add');
+                Route::get('/{id}/edit', 'edit_form')->name('admin.user_edit_form')->middleware('check.permission:User,edit');
+                Route::get('/{id}/view', 'view_form')->name('admin.user_view_form')->middleware('check.permission:User,list');
+                Route::post('/insert', 'insert')->name('admin.user_insert');
+                Route::post('/{id}/update', 'update')->name('admin.user_update');
+                Route::post('/delete', 'delete')->name('admin.user_delete')->middleware('check.permission:User,delete');
+                Route::post('/change-status', 'change_status')->name('admin.user_status');
+            });
+        });
+    
         //Contat-us Details
-        Route::controller(Contact_usController::class)->group(function () {
+         Route::controller(Contact_usController::class)->group(function () {
             Route::prefix('contact-us')->group(function () {
-                Route::get('/', 'list')->name('admin.contact_list');
-                Route::post('/delete', 'delete')->name('admin.contact_delete');
+                Route::get('/', 'list')->name('admin.contact_list')->middleware('check.permission:contact_us,list');
+                Route::post('/delete', 'delete')->name('admin.contact_delete')->middleware('check.permission:contact_us,delete');
             });
         });
 
@@ -501,16 +502,17 @@ Route::prefix('/')->group(function () {
         //Enquiry Details
         Route::controller(EnquiryController::class)->group(function () {
             Route::prefix('enquiry')->group(function () {
-                Route::get('/', 'list')->name('admin.enquiry_list');
+                Route::get('/', 'list')->name('admin.enquiry_list')->middleware('check.permission:booking,list');
                 Route::get('/download-all', 'downloadAll')->name('admin.downloadAll');
                 Route::post('/store', 'insert')->name('admin.enquiry_store');
-                Route::get('/add', 'add_form')->name('admin.enquiry_add_form');
-                Route::get('/{id}/view', 'view_form')->name('admin.enquiry_view');
-                Route::post('/delete', 'delete')->name('admin.enquiry_delete');
+                Route::get('/add', 'add_form')->name('admin.enquiry_add_form')->middleware('check.permission:booking,create');
+                Route::get('/{id}/view', 'view_form')->name('admin.enquiry_view')->middleware('check.permission:booking,view');
+                Route::post('/delete', 'delete')->name('admin.enquiry_delete')->middleware('check.permission:booking,delete');
                 Route::post('/status-change', 'change_status')->name('admin.followupstatuschange');
                 Route::post('/mailtemplate', 'mailtemplate')->name('admin.mailtemplate');
             });
         });
+
         Route::post('/enquiry/followup', [EnquiryController::class, 'markFollowUp']);
         Route::get('admin/home-enquiry/followups/{id}', [EnquiryController::class, 'viewFollowUps'])->name('admin.enquiry.followups');
         Route::post('/admin/home-enquiry/{id}/add-follow-up', [EnquiryController::class, 'addFollowUp'])->name('admin.enquiry.addFollowUp');
@@ -545,9 +547,9 @@ Route::prefix('/')->group(function () {
         Route::post('/mark-followup/{id}', [HomeEnquiryController::class, 'markFollowUp'])->name('mark.followup');
 
         //settings features
-        Route::controller(SettingController::class)->group(function () {
+         Route::controller(SettingController::class)->group(function () {
             Route::prefix('settings')->group(function () {
-                Route::get('/', 'list')->name('admin.settings_list');
+                Route::get('/', 'list')->name('admin.settings_list')->middleware('check.permission:general_setting,list');
                 Route::post('/insert', 'insert')->name('admin.settings_insert');
             });
         });
@@ -555,12 +557,12 @@ Route::prefix('/')->group(function () {
         //Slider Details
         Route::controller(SliderController::class)->group(function () {
             Route::prefix('slider')->group(function () {
-                Route::get('/', 'list')->name('admin.slider_list');
-                Route::get('/add', 'add_form')->name('admin.slider_add_form');
-                Route::get('/{id}/edit', 'edit_form')->name('admin.slider_edit_form');
+                Route::get('/', 'list')->name('admin.slider_list')->middleware('check.permission:slider,list');
+                Route::get('/add', 'add_form')->name('admin.slider_add_form')->middleware('check.permission:slider,create');
+                Route::get('/{id}/edit', 'edit_form')->name('admin.slider_edit_form')->middleware('check.permission:slider,edit');
                 Route::post('/insert', 'insert')->name('admin.slider_insert');
                 Route::post('/{id}/update', 'update')->name('admin.slider_update');
-                Route::post('/delete', 'delete')->name('admin.slider_delete');
+                Route::post('/delete', 'delete')->name('admin.slider_delete')->middleware('check.permission:slider,delete');
                 Route::post('/change-status', 'change_status')->name('admin.slider_status');
             });
         });
@@ -579,62 +581,63 @@ Route::prefix('/')->group(function () {
         });
 
         //client Review
-        Route::controller(ClientreviewController::class)->group(function () {
+       Route::controller(ClientreviewController::class)->group(function () {
             Route::prefix('client_review')->group(function () {
-                Route::get('/', 'list')->name('admin.client_review_list');
+                Route::get('/', 'list')->name('admin.client_review_list')->middleware('check.permission:review,list');
                 Route::get('/review_list', 'review_list')->name('admin.review_review_list');
-                Route::get('/add', 'add_form')->name('admin.client_review_add_form');
-                Route::get('/{id}/edit', 'edit_form')->name('admin.client_review_edit_form');
+                Route::get('/add', 'add_form')->name('admin.client_review_add_form')->middleware('check.permission:review,create');
+                Route::get('/{id}/edit', 'edit_form')->name('admin.client_review_edit_form')->middleware('check.permission:review,edit');
                 Route::post('/insert', 'insert')->name('admin.client_review_insert');
                 Route::post('/{id}/update', 'update')->name('admin.client_review_update');
-                Route::post('/delete', 'delete')->name('admin.client_review_delete');
+                Route::post('/delete', 'delete')->name('admin.client_review_delete')->middleware('check.permission:review,delete');
                 Route::post('/change-status', 'change_status')->name('admin.client_review_status');
                 Route::post('/review_delete', 'review_delete')->name('admin.review_delete');
             });
         });
 
-
         //stay Review
         Route::controller(StayreviewController::class)->group(function () {
             Route::prefix('stay_review')->group(function () {
-                Route::get('/', 'list')->name('admin.stay_review_list');
-                Route::get('/add', 'add_form')->name('admin.stay_review_add_form');
-                Route::get('/{id}/edit', 'edit_form')->name('admin.stay_review_edit_form');
+                Route::get('/', 'list')->name('admin.stay_review_list')->middleware('check.permission:stay_review,list');
+                Route::get('/add', 'add_form')->name('admin.stay_review_add_form')->middleware('check.permission:stay_review,create');
+                Route::get('/{id}/edit', 'edit_form')->name('admin.stay_review_edit_form')->middleware('check.permission:stay_review,edit');
                 Route::post('/insert', 'insert')->name('admin.stay_review_insert');
                 Route::post('/{id}/update', 'update')->name('admin.stay_review_update');
-                Route::post('/delete', 'delete')->name('admin.stay_review_delete');
+                Route::post('/delete', 'delete')->name('admin.stay_review_delete')->middleware('check.permission:stay_review,delete');
                 Route::post('/change-status', 'change_status')->name('admin.stay_review_status');
                 Route::post('/review_delete', 'review_delete')->name('admin.stay_review_delete');
             });
         });
 
+
         //client Review
         Route::controller(WishlistController::class)->group(function () {
             Route::prefix('wish-list')->group(function () {
-                Route::get('/', 'list')->name('admin.wish_list');
-                Route::get('/add', 'add_form')->name('admin.wishlist_add_form');
-                Route::get('/{id}/edit', 'edit_form')->name('admin.wishlist_edit_form');
+                Route::get('/', 'list')->name('admin.wish_list')->middleware('check.permission:wishlist,list');
+                Route::get('/add', 'add_form')->name('admin.wishlist_add_form')->middleware('check.permission:wishlist,create');
+                Route::get('/{id}/edit', 'edit_form')->name('admin.wishlist_edit_form')->middleware('check.permission:wishlist,edit');
                 Route::post('/insert', 'insert')->name('admin.wishlist_insert');
                 Route::post('/{id}/update', 'update')->name('admin.wishlist_update');
-                Route::post('/delete', 'delete')->name('admin.wishlist_delete');
+                Route::post('/delete', 'delete')->name('admin.wishlist_delete')->middleware('check.permission:wishlist,delete');
                 Route::post('/change-status', 'change_status')->name('admin.wishlist_status');
             });
         });
 
         //stays module
-        Route::controller(StayController::class)->group(function () {
+      Route::controller(StayController::class)->group(function () {
             Route::prefix('stay_list')->group(function () {
-                Route::get('/', 'list')->name('admin.staylist');
-                Route::get('/add', 'add_form')->name('admin.stays_add_form');
+                Route::get('/', 'list')->name('admin.staylist')->middleware('check.permission:add_stays,list');
+                Route::get('/add', 'add_form')->name('admin.stays_add_form')->middleware('check.permission:add_stays,create');
                 Route::post('/insert', 'insert')->name('admin.stay_details_insert');
-                Route::post('/delete', 'delete')->name('admin.stay_details_delete');
-                Route::get('/{id}/edit', 'edit_form')->name('admin.stay_details_edit_form');
+                Route::post('/delete', 'delete')->name('admin.stay_details_delete')->middleware('check.permission:add_stays,delete');
+                Route::get('/{id}/edit', 'edit_form')->name('admin.stay_details_edit_form')->middleware('check.permission:add_stays,edit');
                 Route::post('/{id}/update', 'update')->name('admin.stay_details_update');
                 Route::post('/change-status', 'change_status')->name('admin.stay_change_status');
                 Route::get('/get-districts-list', [StayController::class, 'getDistrictsList'])
                     ->name('stay_list.getdistrictslist');
             });
         });
+
 
         Route::get('/get-districts/{destination}', [StayController::class, 'getDistricts'])
             ->name('get-districts');
@@ -661,67 +664,68 @@ Route::prefix('/')->group(function () {
             });
         });
 
-        Route::controller(StayDistrictController::class)->group(function () {
+           Route::controller(StayDistrictController::class)->group(function () {
             Route::prefix('staydistrict')->group(function () {
-                Route::get('/', 'list')->name('admin.staydistrictlist');
-                Route::get('/add', 'add_form')->name('admin.staydistrict_add_form');
-                Route::get('/{id}/edit', 'edit_form')->name('admin.staydistrict_edit_form');
+                Route::get('/', 'list')->name('admin.staydistrictlist')->middleware('check.permission:stays_district,list');
+                Route::get('/add', 'add_form')->name('admin.staydistrict_add_form')->middleware('check.permission:stays_district,create');
+                Route::get('/{id}/edit', 'edit_form')->name('admin.staydistrict_edit_form')->middleware('check.permission:stays_district,edit');
                 Route::post('/insert', 'store')->name('admin.staydistricts_insert');
                 Route::post('/{id}/update', 'update')->name('admin.staydistrict_update');
-                Route::post('/delete', 'delete')->name('admin.staydistrict_delete');
+                Route::post('/delete', 'delete')->name('admin.staydistrict_delete')->middleware('check.permission:stays_district,delete');
                 Route::post('/change-status', 'change_status')->name('admin.staydistrict_change_status');
             });
         });
 
         //stay pricing
 
-        Route::controller(StayPriceController::class)->group(function () {
+         Route::controller(StayPriceController::class)->group(function () {
             Route::prefix('staypricing')->group(function () {
-                Route::get('/', 'list')->name('admin.staypricinglist');
-                Route::get('/add', 'add_form')->name('admin.staypricing_add_form');
-                Route::get('/{id}/edit', 'edit_form')->name('admin.staypricing_edit_form');
+                Route::get('/', 'list')->name('admin.staypricinglist')->middleware('check.permission:stay_pricing_pc,list');
+                Route::get('/add', 'add_form')->name('admin.staypricing_add_form')->middleware('check.permission:stay_pricing_pc,create');
+                Route::get('/{id}/edit', 'edit_form')->name('admin.staypricing_edit_form')->middleware('check.permission:stay_pricing_pc,edit');
                 Route::post('/insert', 'insert')->name('admin.staypricing_insert');
                 Route::post('/{id}/update', 'update')->name('admin.staypricing_update');
-                Route::post('/delete', 'delete')->name('admin.staypricingdelete');
+                Route::post('/delete', 'delete')->name('admin.staypricingdelete')->middleware('check.permission:stay_pricing_pc,delete');
                 Route::post('/change-status', 'change_status')->name('admin.staypricing_change_status');
             });
         });
 
         //cab
 
-        Route::controller(CabController::class)->group(function () {
+       Route::controller(CabController::class)->group(function () {
             Route::prefix('cab')->group(function () {
-                Route::get('/', 'list')->name('admin.cablist');
-                Route::get('/add', 'add_form')->name('admin.cab_add_form');
-                Route::get('/{id}/edit', 'edit_form')->name('admin.cab_edit_form');
+                Route::get('/', 'list')->name('admin.cablist')->middleware('check.permission:cab_pc,list');
+                Route::get('/add', 'add_form')->name('admin.cab_add_form')->middleware('check.permission:cab_pc,add');
+                Route::get('/{id}/edit', 'edit_form')->name('admin.cab_edit_form')->middleware('check.permission:cab_pc,edit');
                 Route::post('/insert', 'insert')->name('admin.cab_insert');
                 Route::post('/{id}/update', 'update')->name('admin.cab_update');
-                Route::post('/delete', 'delete')->name('admin.cabdelete');
+                Route::post('/delete', 'delete')->name('admin.cabdelete')->middleware('check.permission:cab_pc,delete');
                 Route::post('/change-status', 'change_status')->name('admin.cab_change_status');
             });
         });
 
+
         //activity
         Route::controller(ActivityController::class)->group(function () {
             Route::prefix('activity')->group(function () {
-                Route::get('/', 'list')->name('admin.activitylist');
-                Route::get('/add', 'add_form')->name('admin.activity_add_form');
-                Route::get('/{id}/edit', 'edit_form')->name('admin.activity_edit_form');
+                Route::get('/', 'list')->name('admin.activitylist')->middleware('check.permission:activity_pc,list');
+                Route::get('/add', 'add_form')->name('admin.activity_add_form')->middleware('check.permission:activity_pc,add');
+                Route::get('/{id}/edit', 'edit_form')->name('admin.activity_edit_form')->middleware('check.permission:activity_pc,edit');
                 Route::post('/insert', 'insert')->name('admin.activity_insert');
                 Route::post('/{id}/update', 'update')->name('admin.activity_update');
-                Route::post('/delete', 'delete')->name('admin.activitydelete');
+                Route::post('/delete', 'delete')->name('admin.activitydelete')->middleware('check.permission:activity_pc,delete');
                 Route::post('/change-status', 'change_status')->name('admin.activity_change_status');
             });
         });
         //pricing calculator
-        Route::controller(PricingCalculatorController::class)->group(function () {
+       Route::controller(PricingCalculatorController::class)->group(function () {
             Route::prefix('pricingcalculator')->group(function () {
-                Route::get('/', 'list')->name('admin.pricinglist');
-                Route::get('/add', 'add_form')->name('admin.pricing_add_form');
-                Route::get('/{id}/edit', 'edit_form')->name('admin.pricing_edit_form');
+                Route::get('/', 'list')->name('admin.pricinglist')->middleware('check.permission:pricing_calculator,list');
+                Route::get('/add', 'add_form')->name('admin.pricing_add_form')->middleware('check.permission:pricing_calculator,create');
+                Route::get('/{id}/edit', 'edit_form')->name('admin.pricing_edit_form')->middleware('check.permission:pricing_calculator,edit');
                 Route::post('/insert', 'insert')->name('admin.pricing_insert');
                 Route::post('/{id}/update', 'update')->name('admin.pricing_update');
-                Route::post('/delete', 'delete')->name('admin.pricingdelete');
+                Route::post('/delete', 'delete')->name('admin.pricingdelete')->middleware('check.permission:pricing_calculator,delete');
                 Route::post('/change-status', 'change_status')->name('admin.pricing_change_status');
                 Route::post('/pricing-details', 'pricing_details')->name('admin.pricing_details');
                 Route::post('/travel-details', 'travel_details')->name('admin.travel_details');
@@ -731,6 +735,7 @@ Route::prefix('/')->group(function () {
                 Route::post('/cabs-details', 'cabs_details')->name('admin.cabs_details');
             });
         });
+
 
         //Event Modules
         Route::controller(ProgramEventsController::class)->group(function () {
@@ -747,11 +752,11 @@ Route::prefix('/')->group(function () {
 
         //Event Registration
 
-        Route::controller(EventRegisterController::class)->group(function () {
+         Route::controller(EventRegisterController::class)->group(function () {
             Route::prefix('events-register')->group(function () {
-                Route::get('/', 'list')->name('admin.registereventslist');
-                Route::get('/{id}/view', 'view_form')->name('admin.registereventsview');
-                Route::post('/delete', 'delete')->name('admin.registereventdelete');
+                Route::get('/', 'list')->name('admin.registereventslist')->middleware('check.permission:event_registration,list');
+                Route::get('/{id}/view', 'view_form')->name('admin.home_enquiry_view')->middleware('check.permission:event_registration,view');
+                Route::post('/delete', 'delete')->name('admin.registereventdelete')->middleware('check.permission:event_registration,delete');
                 Route::post('/change-status', 'change_status')->name('admin.registereventstatus');
                 Route::post('/update-event-notes', 'updateEventNotes')->name('admin.updateEventNotes');
             });
@@ -759,18 +764,18 @@ Route::prefix('/')->group(function () {
 
 
         //Mail Template
-        Route::controller(MailTemplateController::class)->group(function () {
+         Route::controller(MailTemplateController::class)->group(function () {
             Route::prefix('mail-template')->group(function () {
-                Route::get('/', 'list')->name('admin.mailtemplatelist');
-                Route::get('/add', 'add')->name('admin.mailtemplateadd');
+                Route::get('/', 'list')->name('admin.mailtemplatelist')->middleware('check.permission:mail_template,list');
+                Route::get('/add', 'add')->name('admin.mailtemplateadd')->middleware('check.permission:mail_template,create');
                 Route::post('/insert', 'insert')->name('admin.mailtemplatestore');
-                Route::get('/{id}/edit', 'edit')->name('admin.mailtemplateedit');
+                Route::get('/{id}/edit', 'edit')->name('admin.mailtemplateedit')->middleware('check.permission:mail_template,edit');
                 Route::post('/{id}/update', 'update')->name('admin.mailtemplateupdate');
-                Route::post('/delete', 'delete')->name('admin.mailtemplatedelete');
+                Route::post('/delete', 'delete')->name('admin.mailtemplatedelete')->middleware('check.permission:mail_template,delete');
                 Route::post('/change-status', 'change_status')->name('admin.mailtemplatestatus');
             });
         });
-
+        
         //google analytics
         Route::controller(GoogleAnalyticsController::class)->group(function () {
             Route::prefix('analytics')->group(function () {
@@ -819,27 +824,55 @@ Route::prefix('/')->group(function () {
             });
         });
 
-        Route::controller(AdminUserController::class)->group(function () {
+        // Route::controller(AdminUserController::class)->group(function () {
+        //     Route::prefix('adminuser')->group(function () {
+        //         Route::get('/', 'list')->name('admin.admin_user_list');
+        //         Route::get('/add', 'add_form')->name('admin.admin_user_add_form');
+        //         Route::get('/{id}/edit', 'edit_form')->name('admin.admin_user_edit_form');
+        //         Route::post('/insert', 'insert')->name('admin.admin_user_insert');
+        //         Route::post('/{id}/update', 'update')->name('admin.admin_user_update');
+        //         Route::post('/delete', 'delete')->name('admin.admin_user_delete');
+        //         Route::post('/change-status', 'change_status')->name('admin.admin_user_status');
+        //         Route::post('/reset-password', 'reset_password')->name('admin.reset_user_password');
+        //     });
+        // });
+
+          Route::controller(AdminUserController::class)->group(function () {
             Route::prefix('adminuser')->group(function () {
-                Route::get('/', 'list')->name('admin.admin_user_list');
-                Route::get('/add', 'add_form')->name('admin.admin_user_add_form');
-                Route::get('/{id}/edit', 'edit_form')->name('admin.admin_user_edit_form');
+                Route::get('/', 'list')->name('admin.admin_user_list')->middleware('check.permission:admin_user,list');
+                Route::get('/add', 'add_form')->name('admin.admin_user_add_form')->middleware('check.permission:admin_user,create');
+                Route::get('/{id}/edit', 'edit_form')->name('admin.admin_user_edit_form')->middleware('check.permission:admin_user,edit');
                 Route::post('/insert', 'insert')->name('admin.admin_user_insert');
                 Route::post('/{id}/update', 'update')->name('admin.admin_user_update');
-                Route::post('/delete', 'delete')->name('admin.admin_user_delete');
+                Route::post('/delete', 'delete')->name('admin.admin_user_delete')->middleware('check.permission:admin_user,delete');
                 Route::post('/change-status', 'change_status')->name('admin.admin_user_status');
-                Route::post('/reset-password', 'reset_password')->name('admin.reset_user_password');
+                Route::post('/user/reset-password', [UserController::class, 'resetPassword'])
+    ->name('admin.reset_user_password');
             });
         });
 
-         Route::controller(UserPermissionController::class)->group(function () {
+        //  Route::controller(UserPermissionController::class)->group(function () {
+        //     Route::prefix('permission')->group(function () {
+        //         Route::get('/', 'list')->name('admin.user_permission_list');
+        //         Route::get('/add', 'add')->name('admin.user_permission_add_form');
+        //         Route::post('/insert', 'insert')->name('admin.user_permission_insert');
+        //         Route::get('/{id}/edit', 'edit')->name('admin.user_permission_edit_form');
+        //         Route::post('/{id}/update', 'update')->name('admin.user_permission_user_update');
+        //         Route::post('/delete', 'delete')->name('admin.user_permission_delete');
+        //         Route::post('/change-status', 'change_status')->name('admin.user_permission_status');
+        //     });
+        // });
+
+
+
+           Route::controller(UserPermissionController::class)->group(function () {
             Route::prefix('permission')->group(function () {
-                Route::get('/', 'list')->name('admin.user_permission_list');
-                Route::get('/add', 'add')->name('admin.user_permission_add_form');
+                Route::get('/', 'list')->name('admin.user_permission_list')->middleware('check.permission:user_permission,list');
+                Route::get('/add', 'add')->name('admin.user_permission_add_form')->middleware('check.permission:user_permission,create');
                 Route::post('/insert', 'insert')->name('admin.user_permission_insert');
-                Route::get('/{id}/edit', 'edit')->name('admin.user_permission_edit_form');
+                Route::get('/{id}/edit', 'edit')->name('admin.user_permission_edit_form')->middleware('check.permission:user_permission,edit');
                 Route::post('/{id}/update', 'update')->name('admin.user_permission_user_update');
-                Route::post('/delete', 'delete')->name('admin.user_permission_delete');
+                Route::post('/delete', 'delete')->name('admin.user_permission_delete')->middleware('check.permission:user_permission,delete');
                 Route::post('/change-status', 'change_status')->name('admin.user_permission_status');
             });
         });

@@ -60,11 +60,21 @@
         </b>
     </div>
 
+        @php
+        $permissions = session('permissions', []);
+        @endphp
+
     <div class="mt-2 mb-2 col-lg-12">
         <div class="d-flex justify-content-end">
+            <!-- <a href="{{ route('admin.admin_user_add_form') }}">
+                <button class="btn-add px-4" type="button">Add User</button>
+            </a> -->
+            @if(\App\Helpers\PermissionHelper::has($permissions, 'admin_user', 'create'))
             <a href="{{ route('admin.admin_user_add_form') }}">
                 <button class="btn-add px-4" type="button">Add User</button>
             </a>
+            @endif
+
         </div>
     </div>
 
@@ -222,22 +232,25 @@
 
 <!-- Reset Password Modal -->
 @section('modal')
-<div class="modal fade" id="resetPasswordModal" tabindex="-1" aria-labelledby="resetPasswordModalLabel" aria-hidden="true">
+
+<div class="modal fade" id="resetPasswordModal" tabindex="-1">
     
     <div class="modal-dialog modal-dialog-centered">
-
         <div class="modal-content">
 
             <div class="modal-header">
-                <h5 class="modal-title fw-bold" id="resetPasswordModalLabel">Reset Password</h5>
+                <h5 class="modal-title fw-bold">Reset Password</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
 
             <div class="modal-body">
-                <form id="resetPasswordForm">
+
+                <!-- 🔥 FIX: action + method added -->
+                <form id="resetPasswordForm" method="POST" action="{{ route('admin.reset_user_password') }}">
                     @csrf
 
-                    <input type="hidden" id="userId" name="user_id">
+                    <!-- 🔥 FIX: name should be 'id' (controller expects $request->id) -->
+                    <input type="hidden" id="userId" name="id">
 
                     <div class="mb-3">
                         <label class="form-label fw-semibold">User Name</label>
@@ -249,8 +262,7 @@
                             New Password <span class="text-danger">*</span>
                         </label>
 
-                        <input type="password" class="form-control" id="newPassword" name="password" required>
-
+                        <input type="password" class="form-control" name="password" required>
                         <small class="text-muted">Minimum 6 characters</small>
                     </div>
 
@@ -259,24 +271,28 @@
                             Confirm Password <span class="text-danger">*</span>
                         </label>
 
-                        <input type="password" class="form-control" id="confirmPassword" name="password_confirmation" required>
+                        <input type="password" class="form-control" name="password_confirmation" required>
                     </div>
 
                 </form>
+
             </div>
 
             <div class="modal-footer">
                 <button class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
-                <button class="btn btn-primary" id="savePasswordBtn">Reset Password</button>
+
+                <!-- 🔥 FIX: submit form -->
+                <button type="submit" form="resetPasswordForm" class="btn btn-primary">
+                    Reset Password
+                </button>
             </div>
 
         </div>
-
     </div>
 
 </div>
-@endsection
 
+@endsection
 
 
 

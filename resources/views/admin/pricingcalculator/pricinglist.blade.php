@@ -31,12 +31,16 @@
             <a class="city" href="">Pricing Calculator</a>
         </b>
     </div>
-
+     @php
+    $permissions = session('permissions', []);
+    @endphp
     <div class="mt-2 mb-2 col-lg-12">
         <div class="d-flex justify-content-end">
+            @if(\App\Helpers\PermissionHelper::has($permissions, 'pricing_calculator', 'create'))
             <a href="{{ route('admin.pricing_add_form') }}">
                 <button class="btn btn-add px-4" type="button">Add Pricing</button>
             </a>
+            @endif
         </div>
     </div>
 </div>

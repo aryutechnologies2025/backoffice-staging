@@ -30,11 +30,17 @@
     <div class="text-end col-lg-6 ">
         <b><a href="/dashboard" >Dashboard</a> > <a class="city" href="/themes" >Themes</a></b>
     </div>
+
+      @php
+    $permissions = session('permissions', []);
+    @endphp
     <div class="mt-2 mb-2 col-lg-12">
         <div class="d-flex justify-content-end">
+            @if(\App\Helpers\PermissionHelper::has($permissions, 'theme', 'create'))
             <a href="{{ route('admin.themes_add_form') }}">
                 <button class="btn-add px-4" type="button">Add Theme</button>
             </a>
+            @endif
         </div>
     </div>
 

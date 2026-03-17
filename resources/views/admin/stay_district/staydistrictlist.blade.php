@@ -27,11 +27,19 @@
     <div class="text-end col-lg-6 ">
       <b><a href="/dashboard" >Dashboard</a> > <a class="city" href="" >Stay Destination</a></b>
     </div>
+
+    
+    @php
+    $permissions = session('permissions', []);
+    @endphp
+
     <div class="mt-2 mb-2 col-lg-12">
         <div class="d-flex justify-content-end">
+            @if(\App\Helpers\PermissionHelper::has($permissions, 'stays_district', 'create'))
             <a href="{{ route('admin.staydistrict_add_form') }}">
                 <button class="btn btn-add px-4" type="button">Add Stay District</button>
             </a>
+            @endif
         </div>
     </div>
 

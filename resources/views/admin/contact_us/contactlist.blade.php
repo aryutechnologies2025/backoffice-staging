@@ -42,7 +42,9 @@
 </style>
 
 <div>
-
+   @php
+    $permissions = session('permissions', []);
+    @endphp
 <div class="row body-sec py-3 px-5 justify-content-around" id="watch">
 
 <div class="text-start col-lg-6">
@@ -60,6 +62,8 @@
 
 
 <div class="row body-sec px-5">
+
+
 <div class="bg-white pt-3 col-lg-12">
 <div class="table-sec rounded-bottom-4 mb-5">
 
@@ -104,7 +108,7 @@
 </td>
 
 <td>
-
+   @if(\App\Helpers\PermissionHelper::has($permissions, 'contact_us', 'view'))
 <a href="#"
 class="btn btn-sm view-message-btn"
 title="View"
@@ -115,19 +119,21 @@ data-bs-target="#customMessageModal">
 <i class="fa fa-eye" style="color:#0d6efd;"></i>
 
 </a>
+@endif
 
+
+ @if(\App\Helpers\PermissionHelper::has($permissions, 'contact_us', 'delete'))
 <a href="javascript:void(0);"
 class="table-link danger delconfirm"
 title="Delete"
 data-row_id="{{ $row->id }}"
 data-act_url="{{ route('admin.contact_delete') }}"
 data-csrf_token="{{ csrf_token() }}">
-
 <span class="fa-stack">
 <i class="fa fa-trash-o fa-stack-1x fa-inverse" style="color:red !important;"></i>
 </span>
-
 </a>
+@endif
 
 </td>
 

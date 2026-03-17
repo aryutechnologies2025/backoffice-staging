@@ -28,11 +28,17 @@
     <div class="text-end col-lg-6 ">
         <b><a href="/dashboard">Dashboard</a> > <a class="user" href="/client_review">Client Review</a></b>
     </div>
+
+     @php
+    $permissions = session('permissions', []);
+    @endphp
     <div class="mt-2 mb-2 col-lg-12">
         <div class="d-flex justify-content-end">
+             @if(\App\Helpers\PermissionHelper::has($permissions, 'review', 'create'))
             <a href="{{ route('admin.client_review_add_form') }}">
                 <button class="btn btn-add px-4" type="button">Add Review</button>
             </a>
+            @endif
         </div>
     </div>
 

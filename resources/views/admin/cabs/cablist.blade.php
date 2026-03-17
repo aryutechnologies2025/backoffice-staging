@@ -27,11 +27,17 @@
     <div class="text-end col-lg-6 ">
         <b><a href="/dashboard">Dashboard</a> > <a class="city" href="">Cab</a></b>
     </div>
+
+    @php
+    $permissions = session('permissions', []);
+    @endphp
     <div class="mt-2 mb-2 col-lg-12">
         <div class="d-flex justify-content-end">
-            <a href="{{ route('admin.cab_add_form') }}">
-                <button class="btn btn-add px-4" type="button">Add Cab</button>
-            </a>
+            @if(\App\Helpers\PermissionHelper::has($permissions, 'cab_pc', 'create'))
+                <a href="{{ route('admin.cab_add_form') }}">
+                    <button class="btn btn-add px-4" type="button">Add Cab</button>
+                </a>
+            @endif
         </div>
     </div>
 

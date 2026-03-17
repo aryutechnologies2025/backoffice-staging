@@ -42,12 +42,16 @@
     <div class="text-end col-lg-6 ">
          <b><a href="/dashboard">Dashboard</a> > <a class="city" href="/address">Address</a></b>
     </div>
-
+    @php
+    $permissions = session('permissions', []);
+    @endphp
     <div class="mt-2 mb-2 col-lg-12">
         <div class="d-flex justify-content-end">
-           <a href="{{ route('admin.influencer_add_form') }}">
-                 <button class="btn btn-add px-4" type="button">Add Influencer</button>
+            @if(\App\Helpers\PermissionHelper::has($permissions, 'influencer', 'create'))
+            <a href="{{ route('admin.influencer_add_form') }}">
+                <button class="btn btn-add px-4" type="button">Add Influencer</button>
             </a>
+            @endif
         </div>
     </div>
 </div>

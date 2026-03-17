@@ -183,7 +183,7 @@
                                 </span>
                             </a> -->
 
-                                @if(\App\Helpers\PermissionHelper::has($permissions, 'role', 'delete'))
+                            @if(\App\Helpers\PermissionHelper::has($permissions, 'role', 'delete'))
                             <a href="javascript:void(0);"
                                class="table-link danger delconfirm"
                                title="Delete"
