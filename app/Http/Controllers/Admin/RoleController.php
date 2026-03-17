@@ -36,12 +36,20 @@ class RoleController extends Controller
     public function insert(Request $request)
     {
 
+        // $request->validate([
+        //     'role_name' => 'required|unique:roles,role_name'
+        // ],[
+        //     'role_name.required' => 'Role name is required.',
+        //     'role_name.unique' => 'This role name already exists.'
+        // ]);
+
+
         $request->validate([
-            'role_name' => 'required|unique:roles,role_name'
-        ],[
-            'role_name.required' => 'Role name is required.',
-            'role_name.unique' => 'This role name already exists.'
-        ]);
+    'role_name' => 'required|unique:roles,role_name'
+],[
+    'role_name.required' => 'Role name is required.',
+    'role_name.unique' => 'This role name is already taken.'
+]);
 
         $role = new Role();
 
@@ -82,7 +90,7 @@ class RoleController extends Controller
             'role_name' => 'required|unique:roles,role_name,' . $id
         ],[
             'role_name.required' => 'Role name is required.',
-            'role_name.unique' => 'This role name already exists.'
+            'role_name.unique' => 'This role name is already taken.'
         ]);
 
         $role = Role::findOrFail($id);

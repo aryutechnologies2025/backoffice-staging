@@ -18,6 +18,26 @@
         color: #282833;
         font-size: 13px;
     }
+
+
+    /* DATE COLUMN WIDER */
+#cityTable th:nth-child(7),
+#cityTable td:nth-child(7) {
+    width: 180px;
+    white-space: nowrap;
+}
+
+/* ACTION COLUMN SMALLER */
+#cityTable th:nth-child(9),
+#cityTable td:nth-child(9) {
+    width: 120px;
+    text-align: center;
+}
+
+/* OPTIONAL: prevent wrapping */
+#cityTable td {
+    vertical-align: middle;
+}   
 </style>
 
 <div class="row body-sec py-3 px-5 justify-content-around">

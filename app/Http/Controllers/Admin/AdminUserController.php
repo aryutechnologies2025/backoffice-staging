@@ -46,8 +46,9 @@ class AdminUserController extends Controller
             'profile_pic'  => 'required|image',
             'password'     => 'required',
             'role_id'      => 'nullable',
-
-            
+        ],[
+            'email.unique' => 'This email is already taken.',
+            'phone.unique' => 'This phone number is already taken.'
         ]);
 
 
@@ -110,14 +111,15 @@ class AdminUserController extends Controller
         $user = Admin::findOrFail($id);
 
         $request->validate([
-
             'first_name'  => 'required',
             'last_name'   => 'required',
             'email'       => 'required|email|unique:admin,email,'.$id,
             'phone'       => 'required|unique:admin,phone,'.$id,
             'profile_pic' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
             'password'    => 'nullable|min:6',
-
+        ],[
+            'email.unique' => 'This email is already taken.',
+            'phone.unique' => 'This phone number is already taken.'
         ]);
 
         $uploadPath = public_path('uploads/user_profile');

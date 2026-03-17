@@ -51,6 +51,9 @@
                         <label class="fw-bold mb-2">Role Name</label>
                         <input type="text" placeholder="Role Name" id="role_name" name="role_name"
                                value="{{ old('role_name') }}" class="form-control py-2 rounded-2 shadow-sm">
+                        @error('role_name')
+                            <span class="text-danger">{{ $message }}</span>
+                        @enderror
                     </div>
                 </div>
                 <div class="row g-2 mb-4">

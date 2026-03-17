@@ -76,12 +76,21 @@
     </div>
     @endif
 
+        @php
+        $permissions = session('permissions', []);
+        @endphp
 
     <div class="mt-2 mb-2 col-lg-12">
         <div class="d-flex justify-content-end">
+            <!-- <a href="{{ route('admin.role_add_form') }}">
+                <button class="btn-add px-4" type="button">Add Role</button>
+            </a> -->
+             @if(\App\Helpers\PermissionHelper::has($permissions, 'role', 'create'))
             <a href="{{ route('admin.role_add_form') }}">
                 <button class="btn-add px-4" type="button">Add Role</button>
             </a>
+            @endif
+
         </div>
     </div>
 
@@ -91,13 +100,9 @@
 <!-- ROLE LIST TABLE -->
 
 <div class="row body-sec px-5">
-
     <div class="bg-white pt-3 col-lg-12">
-
         <div class="table-sec rounded-bottom-4 mb-5">
-
             <table id="cityTable" class="table table-bordered pt-2">
-
                 <thead>
                     <tr class="rounded-top-4">
                         <th class="text-start">S.No</th>
@@ -114,18 +119,14 @@
                     @foreach ($roles as $row)
 
                     <tr>
-
                         <td class="text-start">{{ $loop->iteration }}</td>
-
                         <td class="text-start">{{ $row->role_name }}</td>
-
                         <td class="text-start">{{ $row->created_by ?? 'admin' }}</td>
-
+                        <!-- <td class="text-start">{{ \App\Helpers\DateHelper::formatDate($row->created_at) }}</td> -->
                         <!-- FIXED TIMESTAMP -->
                         <td class="text-start">
                             {{ $row->created_at ? $row->created_at->format('d-m-Y h:i A') : '-' }}
                         </td>
-
 
                         @php
                             $disp_status = 'In Active';
@@ -164,17 +165,25 @@
 
                         <td class="text-start" style="width:20%;">
 
-                            <a href="{{ route('admin.role_edit_form',$row->id) }}"
+                        @if(\App\Helpers\PermissionHelper::has($permissions, 'role', 'edit'))
+                            <a href="{{ route('admin.role_edit_form',$row->id) }}" title="Edit" class="table-edit-link">
+                                <span class="fa-stack">
+                                    <!-- <i class="fa fa-square fa-stack-2x"></i> -->
+                                    <i class="fa fa-pencil fa-stack-1x fa-inverse"></i>
+                                </span>
+                            </a>
+                            @endif
+
+                            <!-- <a href="{{ route('admin.role_edit_form',$row->id) }}"
                                title="Edit"
                                class="table-edit-link">
 
                                 <span class="fa-stack">
                                     <i class="fa fa-pencil fa-stack-1x fa-inverse"></i>
                                 </span>
+                            </a> -->
 
-                            </a>
-
-
+                                @if(\App\Helpers\PermissionHelper::has($permissions, 'role', 'delete'))
                             <a href="javascript:void(0);"
                                class="table-link danger delconfirm"
                                title="Delete"
@@ -188,7 +197,8 @@
                                 </span>
 
                             </a>
-
+                            @endif
+                            
                         </td>
 
                     </tr>

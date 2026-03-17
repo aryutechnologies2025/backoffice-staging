@@ -15,8 +15,10 @@ class ModulePermission extends Model
         'permission_id',
         'module',
         'is_view',
+        'is_create',
         'is_edit',
-        'is_delete'
+        'is_delete',
+        'is_list'
     ];
 //  'permission_id',
 //         'module',

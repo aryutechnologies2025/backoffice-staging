@@ -44,6 +44,7 @@
         box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
     }
 
+
 </style>
 
 <div class="row body-sec py-3 px-5 justify-content-around">
@@ -342,8 +343,11 @@ $('#savePasswordBtn').on('click', function() {
         data: {_token: token, user_id: userId, password: password},
         success: function(response) {
             if (response.success) {
-                $('#resetPasswordModal').modal('hide');
                 toastr.success(response.message || 'Password reset successfully!');
+                var modal = bootstrap.Modal.getInstance(document.getElementById('resetPasswordModal'));
+                if (modal) modal.hide();
+                $('.modal-backdrop').remove();
+                $('body').removeClass('modal-open');
             } else {
                 toastr.error(response.message || 'Error resetting password');
             }

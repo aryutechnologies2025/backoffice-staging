@@ -148,9 +148,11 @@ class UserPermissionController extends Controller
                 ModulePermission::create([
                     'permission_id' => $id,
                     'module'        => $module['module'],
-                    'is_view'       => $module['permission']['create'],
-                    'is_edit'       => $module['permission']['edit'],
-                    'is_delete'     => $module['permission']['delete']
+                    'is_view'       => $module['permission']['view'] ?? 0,
+                    'is_create'     => $module['permission']['create'] ?? 0,
+                    'is_edit'       => $module['permission']['edit'] ?? 0,
+                    'is_delete'     => $module['permission']['delete'] ?? 0,
+                    'is_list'       => $module['permission']['list'] ?? 0
                 ]);
             }
 
