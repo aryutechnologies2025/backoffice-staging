@@ -191,6 +191,9 @@
                                     <i class="fa fa-eye" style="color: #0d6efd;"></i>
                                 </a> -->
                             </td>
+                             @php
+                            $permissions = session('permissions', []);
+                            @endphp
                             <td class="text-start" style="width: 20%;">
 
                                 {{-- <a href="#"
@@ -202,15 +205,19 @@
                                     aria-label="View message">
                                     <i class="fa fa-eye" style="color: #0d6efd;"></i>
                                 </a> --}}
-                                <a class="btn view-btn" title="View" href="{{ route('admin.registereventsview', $row->id) }}">
-                                <i class="bi bi-eye-fill" style="color:#000 !important;"></i>
-                            </a>
+                                @if(\App\Helpers\PermissionHelper::has($permissions, 'event_registration', 'view'))
+                                <a class="btn view-btn" title="View" href="{{ route('admin.home_enquiry_view', $row->id) }}">
+                                    <i class="bi bi-eye-fill" style="color:#000 !important;"></i>
+                                </a>
+                                @endif
+                                @if(\App\Helpers\PermissionHelper::has($permissions, 'event_registration', 'delete'))
                                 <a href="javascript:void(0);" class="table-link danger delconfirm" data-row_id="{{ $row->id }}" data-act_url="{{ route('admin.registereventdelete') }}" data-csrf_token="{{ csrf_token() }}">
                                     <span class="fa-stack">
                                         <!-- <i class="fa fa-square fa-stack-2x"></i> -->
                                         <i class="fa fa-trash" style="color: red !important;"></i>
                                     </span>
                                 </a>
+                                @endif
 
                             </td>
                         </tr>

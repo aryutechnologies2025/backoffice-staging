@@ -49,11 +49,22 @@
         <b><a href="/dashboard">Dashboard</a> > <a class="user" href="/user">User</a></b>
     </div>
 
+    @php
+    $permissions = session('permissions', []);
+    @endphp
+    
     <div class="mt-2 mb-2 col-lg-12">
         <div class="d-flex justify-content-end">
+            <!-- <a href="{{ route('admin.user_add_form') }}">
+                <button class="btn-add px-4" type="button">Add User</button>
+            </a> -->
+ 
+            @if(\App\Helpers\PermissionHelper::has($permissions, 'User', 'create'))
             <a href="{{ route('admin.user_add_form') }}">
                 <button class="btn-add px-4" type="button">Add User</button>
             </a>
+            @endif
+
         </div>
     </div>
 

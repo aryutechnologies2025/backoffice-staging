@@ -32,11 +32,19 @@ a{
 <a class="user" href="/stay_review">Stay Review</a></b>
 </div>
 
+
+    @php
+    $permissions = session('permissions', []);
+    @endphp
+    
 <div class="mt-2 mb-2 col-lg-12">
 <div class="d-flex justify-content-end">
-<a href="{{ route('admin.stay_review_add_form') }}">
-<button class="btn btn-add px-4" type="button">Add Review</button>
-</a>
+
+            @if(\App\Helpers\PermissionHelper::has($permissions, 'stay_review', 'create'))
+            <a href="{{ route('admin.stay_review_add_form') }}">
+                <button class="btn btn-add px-4" type="button">Add Review</button>
+            </a>
+            @endif
 </div>
 </div>
 </div>
@@ -44,6 +52,8 @@ a{
 
 
 <div class="row body-sec px-5">
+
+ 
 <div class="bg-white pt-3 col-lg-12">
 <div class="table-sec rounded-bottom-4 mb-5">
 

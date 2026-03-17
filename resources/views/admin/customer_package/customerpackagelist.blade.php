@@ -158,11 +158,19 @@
     <div class="text-end col-lg-6 ">
         <b><a href="/dashboard">Dashboard</a> > <a class="city" href="">Customer Package</a></b>
     </div>
+
+    
+    @php
+    $permissions = session('permissions', []);
+    @endphp
+
     <div class="mt-2 mb-2 col-lg-12">
         <div class="d-flex justify-content-end">
+            @if(\App\Helpers\PermissionHelper::has($permissions, 'customer_package', 'create'))
             <a href="{{ route('admin.CustomerPackage_form') }}">
                 <button class="btn btn-add px-5" type="button"> Create Customer </button>
             </a>
+            @endif
         </div>
     </div>
 </div>

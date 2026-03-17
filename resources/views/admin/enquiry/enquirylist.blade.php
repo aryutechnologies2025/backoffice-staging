@@ -76,11 +76,18 @@
     <div class="text-end col-lg-6 ">
         <b><a href="/dashboard">Dashboard</a> > <a class="enquiry" href="">Booking</a></b>
     </div>
+
+       @php
+    $permissions = session('permissions', []);
+    @endphp
+    <!-- Success Message -->
     <div class="mt-2 mb-2 col-lg-12">
         <div class="d-flex justify-content-end">
+            @if(\App\Helpers\PermissionHelper::has($permissions, 'booking', 'create'))
             <a href="{{ route('admin.enquiry_add_form') }}">
                 <button class="btn-add px-4" type="button">Add Booking</button>
             </a>
+            @endif
         </div>
     </div>
 

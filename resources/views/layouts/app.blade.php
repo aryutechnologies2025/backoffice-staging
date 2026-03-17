@@ -164,10 +164,8 @@
         <nav class="nav w-100">
             <div>
                 @php
-                $permissions = session('permissions', []); // get permissions or empty array
-                // helper function to check permission
+                $permissions = session('permissions', []);
                 function hasPermission($permissions, $module, $action = null) {
-                // if permissions array is empty, allow everything
                 if(empty($permissions)) return true;
 
                 if(!isset($permissions[$module])) return false;
@@ -176,7 +174,7 @@
                 return isset($permissions[$module][$action]) && $permissions[$module][$action];
                 }
 
-                // if no specific action, check any of create/edit/delete
+               
                 return $permissions[$module]['create'] ?? false
                 || $permissions[$module]['edit'] ?? false
                 || $permissions[$module]['delete'] ?? false 

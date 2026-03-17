@@ -36,8 +36,13 @@
         <div class="text-end col-lg-6 ">
           <b><a href="/dashboard">Dashboard</a> > <a class="city" href="">Program</a></b>
     </div>
+
+      @php
+    $permissions = session('permissions', []);
+    @endphp
     <div class="mt-2 mb-2 col-lg-12">
         <div class="row g-3 mb-3">
+           
             <div class="col-md-3">
                 <label class="mb-2">Theme</label>
                 <div class="dropdown">
@@ -80,9 +85,11 @@
             </div>
         </div>
         <div class="d-flex justify-content-end">
+            @if(\App\Helpers\PermissionHelper::has($permissions, 'programs', 'create'))
             <a href="{{ route('admin.inclusive_package_add_form') }}">
                 <button class="btn btn-add px-4" type="button"> Add Program</button>
             </a>
+            @endif
         </div>
     </div>
 

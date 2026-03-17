@@ -28,11 +28,17 @@
     <div class="text-end col-lg-6 ">
         <b><a href="/dashboard">Dashboard</a> > <a class="user" href="/mail-template">Mail Template</a></b>
     </div>
+
+     @php
+    $permissions = session('permissions', []);
+    @endphp
     <div class="mt-2 mb-2 col-lg-12">
         <div class="d-flex justify-content-end">
+            @if(\App\Helpers\PermissionHelper::has($permissions, 'mail_template', 'create'))
             <a href="{{ route('admin.mailtemplateadd') }}">
                 <button class="btn btn-add px-4" type="button">Add Mail Template</button>
             </a>
+            @endif
         </div>
     </div>
 
@@ -75,7 +81,7 @@
                         $btnColr = 'btn-live';
                         $actTitle = 'Click to deactivate';
                         }
-                        @endphp
+                         @endphp
                         <td class="text-start">
 {{ $row->created_at->timezone('Asia/Kolkata')->format('d-m-Y h:i:s A') }}
 </td>

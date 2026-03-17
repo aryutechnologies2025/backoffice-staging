@@ -28,11 +28,17 @@
     <div class="text-end col-lg-6 ">
       <b><a href="/dashboard" >Dashboard</a> > <a class="Safety" href="/safety_features" >Safety Features</a></b>
     </div>
+
+    @php
+    $permissions = session('permissions', []);
+    @endphp
     <div class="mt-2 mb-2 col-lg-12">
         <div class="d-flex justify-content-end">
-             <a href="{{ route('admin.safety_features_add_form') }}">
-                <button class="btn btn-add px-4" type="button">Add Safety Features </button>
-            </a>
+                    @if(\App\Helpers\PermissionHelper::has($permissions, 'safety_features', 'create'))
+                    <a href="{{ route('admin.safety_features_add_form') }}">
+                        <button class="btn btn-add px-4" type="button">Add Safety Features </button>
+                    </a>
+                    @endif
         </div>
     </div>
 

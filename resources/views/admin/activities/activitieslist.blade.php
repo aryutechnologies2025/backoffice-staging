@@ -26,11 +26,16 @@
     <div class="text-end col-lg-6 ">
      <b><a href="/dashboard">Dashboard</a> > <a class="Activities" href="/activities">Activities</a></b>
     </div>
+    @php
+    $permissions = session('permissions', []);
+    @endphp
     <div class="mt-2 mb-2 col-lg-12">
         <div class="d-flex justify-content-end">
-           <a href="{{ route('admin.activities_add_form') }}">
+            @if(\App\Helpers\PermissionHelper::has($permissions, 'activities', 'create'))
+            <a href="{{ route('admin.activities_add_form') }}">
                 <button class="btn btn-add px-4" type="button">Add Activities</button>
             </a>
+            @endif
         </div>
     </div>
 
