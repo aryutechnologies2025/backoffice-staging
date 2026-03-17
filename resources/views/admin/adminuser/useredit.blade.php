@@ -52,7 +52,7 @@
                                 <label for="file-ip-1" class="d-block text-center py-2" style="cursor: pointer;">
                                     <p class="text-center fw-light">Add Pic</p>
                                 </label>
-                                <input type="file" id="file-ip-1" name="profile_pic" accept="image/png, image/jpeg, image/webp" required>
+                                <input type="file" id="file-ip-1" name="profile_pic" accept="image/png, image/jpeg, image/webp">
                             </div>
                         </div>
                     </div>
@@ -73,11 +73,17 @@
                         <label class="fw-bold mb-2">Email</label>
                         <input type="email" placeholder="Email" id="email" name="email"
                             value="{{ $user_details->email }}" class="form-control py-2 rounded-2 shadow-sm">
+                        @error('email')
+                            <span class="text-danger">{{ $message }}</span>
+                        @enderror
                     </div>
                     <div class="add_form col-md-4">
                         <label class="fw-bold mb-2">Phone Number</label>
                         <input type="text" placeholder="Phone Number" id="phone" name="phone"
                             value="{{ $user_details->phone }}" class="form-control py-2 rounded-2 shadow-sm">
+                        @error('phone')
+                            <span class="text-danger">{{ $message }}</span>
+                        @enderror
                     </div>
                 </div>
                 <div class="row g-2 mb-4">

@@ -21,7 +21,6 @@ class AdminController extends Controller
 {
     public function index()
     {
-
         if (Auth::guard('admin')->check()) {
             return redirect()->route('admin.dashboard');
         }
@@ -29,41 +28,55 @@ class AdminController extends Controller
         $title = 'Admin';
         $megatitle = 'Login';
         return view('admin.page.admin_login', compact('title', 'megatitle'));
-        // return view('admin.pages.login');
     }
 
     public function signup_form()
     {
-        $megatitle = 'Signup';
-        $title = 'Admin sign up';
-        return view('admin.page.sign_up', compact('title', 'megatitle'));
+        if (Auth::guard('admin')->check()) {
+            return redirect()->route('admin.dashboard');
+        }
+
+        $title = 'Register';
+        $megatitle = 'Registration';
+        return view('admin.page.admin_register', compact('title', 'megatitle'));
     }
 
     public function register(Request $request)
     {
-
         $validated = $request->validate([
-            'name' => 'required',
+            'first_name' => 'required|string|min:2|max:50',
+            'last_name' => 'required|string|min:2|max:50',
             'email' => 'required|email|unique:admin,email',
-            'phone' => 'required',
-            'password' => 'required',
+            'phone' => 'required|unique:admin,phone|regex:/^[0-9]{10,}$/',
+            'password' => 'required|min:8|confirmed',
+        ], [
+            'first_name.required' => 'First name is required',
+            'last_name.required' => 'Last name is required',
+            'email.unique' => 'This email is already registered',
+            'phone.unique' => 'This phone number is already registered',
+            'phone.regex' => 'Phone number must be at least 10 digits',
+            'password.confirmed' => 'Passwords do not match',
         ]);
 
         $admin = new Admin();
-        $admin->name = $request->input('name');
-        $admin->email = $request->input('email');
-        $admin->phone = $request->input('phone');
-        $admin->password = bcrypt($request->input('password')); // Encrypt password as needed
-
+        $admin->first_name = $request->first_name;
+        $admin->last_name = $request->last_name;
+        $admin->email = $request->email;
+        $admin->phone = $request->phone;
+        $admin->password = Hash::make($request->password);
+        $admin->profile_pic = 'uploads/user_profile/default.png';
+        $admin->status = '1';
+        $admin->role_id = null;
+        $admin->is_deleted = '0';
+        $admin->created_by = 'self';
         $admin->save();
+
         return redirect()->route('admin.login')
-            ->withSuccess('Admin registered successfully. Please log in.');
-        // return redirect()->route('admin.login')->with('success', 'Admin created successfully. Please log in.');
+            ->with('success', 'Registration successful! Please log in with your credentials.');
     }
 
     public function check_login(Request $request)
     {
-
         $credentials = $request->validate([
             'email' => 'required|email',
             'password' => 'required',
@@ -107,7 +120,6 @@ class AdminController extends Controller
         ])->onlyInput('email');
     }
 
-
     public function dashboard()
     {
         $title = 'Dashboard';
@@ -128,11 +140,9 @@ class AdminController extends Controller
             ->where('is_deleted', '0')
             ->count();
 
-        $clientReview = Review::with('package','user') // Eager load the related theme
+        $clientReview = Review::with('package','user')
             ->where('is_deleted', '0')
             ->count();
-
-      
 
         $userRegisterGoogle = DB::table('users')->where('is_deleted', "0")->where('login_type', 'google')->count();
 
@@ -148,34 +158,19 @@ class AdminController extends Controller
                 ->where('is_deleted', '0')
                 ->get();
         } else {
-            $enquiry_dts = collect(); // Empty collection
+            $enquiry_dts = collect();
         }
 
         $followupCount = count($followupIds);
 
-
         return view('dashboard.dashboard', compact('title', 'programCount', 'userRegister', 'enquiryCount','enquiryHomeCount', 'clientReview', 'userRegisterGoogle', 'followupCount', 'followupIds'));
     }
 
-
-    // public function getInclusivePackagesCount()
-    // {
-    //     // Get the count of inclusive packages
-    //     $programCount = DB::table('inclusive_package_details')->where('is_deleted', "0")->count();
-
-    //     // Return view with the count
-    //     return view('dashboard.dashboard', compact('programCount'));
-    // }
-
     public function logout(Request $request)
     {
-
         Auth::guard('admin')->logout();
-
         $request->session()->invalidate();
-
         $request->session()->regenerateToken();
-
         return redirect()->route('admin.login');
     }
 }

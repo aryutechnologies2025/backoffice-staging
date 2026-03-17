@@ -33,6 +33,12 @@
         height: 40px;
         background-color: #ff0000ff;
     }
+
+    .modal-backdrop.show {
+    opacity: 0.2 !important;
+}
+
+
 </style>
 
 <div>

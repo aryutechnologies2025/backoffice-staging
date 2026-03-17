@@ -251,15 +251,15 @@ Route::prefix('/')->group(function () {
 
 
 
-        //cities
+       //cities
         Route::controller(CityController::class)->group(function () {
             Route::prefix('destination-c')->group(function () {
-                Route::get('/', 'list')->name('admin.citylist');
-                Route::get('/add', 'add_form')->name('admin.city_add_form');
-                Route::get('/{id}/edit', 'edit_form')->name('admin.city_edit_form');
+                Route::get('/', 'list')->name('admin.citylist')->middleware('check.permission:packages_destination,list');
+                Route::get('/add', 'add_form')->name('admin.city_add_form')->middleware('check.permission:packages_destination,create');
+                Route::get('/{id}/edit', 'edit_form')->name('admin.city_edit_form')->middleware('check.permission:packages_destination,edit');
                 Route::post('/insert', 'insert')->name('admin.city_insert');
                 Route::post('/{id}/update', 'update')->name('admin.city_update');
-                Route::post('/delete', 'delete')->name('admin.city_delete');
+                Route::post('/delete', 'delete')->name('admin.city_delete')->middleware('check.permission:packages_destination,delete');
                 Route::post('/change-status', 'change_status')->name('admin.city_status');
             });
         });
@@ -512,7 +512,6 @@ Route::prefix('/')->group(function () {
             });
         });
         Route::post('/enquiry/followup', [EnquiryController::class, 'markFollowUp']);
-
         Route::get('admin/home-enquiry/followups/{id}', [EnquiryController::class, 'viewFollowUps'])->name('admin.enquiry.followups');
         Route::post('/admin/home-enquiry/{id}/add-follow-up', [EnquiryController::class, 'addFollowUp'])->name('admin.enquiry.addFollowUp');
         Route::get('/admin/enquiry/{id}/form', [EnquiryController::class, 'showEnquiryForm'])->name('admin.enquiry.form');
@@ -800,13 +799,22 @@ Route::prefix('/')->group(function () {
         
         //role
         Route::controller(RoleController::class)->group(function () {
-            Route::prefix('role')->group(function () {
-                Route::get('/', 'list')->name('admin.role_list');
-                Route::get('/add', 'add_form')->name('admin.role_add_form');
-                Route::get('/{id}/edit', 'edit_form')->name('admin.role_edit_form');
+            // Route::prefix('role')->group(function () {
+            //     Route::get('/', 'list')->name('admin.role_list');
+            //     Route::get('/add', 'add_form')->name('admin.role_add_form');
+            //     Route::get('/{id}/edit', 'edit_form')->name('admin.role_edit_form');
+            //     Route::post('/insert', 'insert')->name('admin.role_insert');
+            //     Route::post('/{id}/update', 'update')->name('admin.role_update');
+            //     Route::post('/delete', 'delete')->name('admin.role_delete');
+            //     Route::post('/change-status', 'change_status')->name('admin.role_status');
+            // });
+              Route::prefix('role')->group(function () {
+                Route::get('/', 'list')->name('admin.role_list')->middleware('check.permission:role,list');
+                Route::get('/add', 'add_form')->name('admin.role_add_form')->middleware('check.permission:role,create');
+                Route::get('/{id}/edit', 'edit_form')->name('admin.role_edit_form')->middleware('check.permission:role,edit');
                 Route::post('/insert', 'insert')->name('admin.role_insert');
                 Route::post('/{id}/update', 'update')->name('admin.role_update');
-                Route::post('/delete', 'delete')->name('admin.role_delete');
+                Route::post('/delete', 'delete')->name('admin.role_delete')->middleware('check.permission:role,delete');
                 Route::post('/change-status', 'change_status')->name('admin.role_status');
             });
         });
