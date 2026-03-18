@@ -1010,9 +1010,28 @@
         <a href="{{ route('admin.inclusive_package_list') }}">
             <button type="button" class="cancel-btn"> Cancel </button>
         </a>
-        <button class="submit-btn sbmtBtn ms-4 mb-5"> Submit </button>
+        <button type="submit" class="submit-btn sbmtBtn ms-4 mb-5"> Submit </button>
     </div>
     </form>
+
+    <script>
+        document.getElementById('form_valid').addEventListener('submit', function() {
+            // Sync all tour planning editor contents to hidden inputs before submit
+            document.querySelectorAll('.editor-content').forEach(function(editor) {
+                const hiddenInput = editor.nextElementSibling;
+                if (hiddenInput && hiddenInput.type === 'hidden') {
+                    hiddenInput.value = editor.innerHTML;
+                }
+            });
+
+            // Sync summernote fields
+            $('#program_description').val($('#summernote1').summernote('code'));
+            $('#location').val($('#summernote10').summernote('code'));
+            $('#important_info').val($('#summernote4').summernote('code'));
+            $('#program_inclusion').val($('#summernote5').summernote('code'));
+            $('#program_exclusion').val($('#summernote9').summernote('code'));
+        });
+    </script>
 </div>
 </div>
 </div>

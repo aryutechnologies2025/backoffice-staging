@@ -36,7 +36,18 @@ class All_Inclusive_PackController extends Controller
     }
 
 
-    public function list(Request $request)
+    // public function list(Request $request)
+    // {
+    //     $title = 'Programs List';
+    //     $inclusive_packages = InclusivePackages::where('is_deleted', '0')->orderBy('created_at', 'desc')->get();
+    //     foreach ($inclusive_packages as $package) {
+    //         $package->category = json_decode($package->category, true);
+    //         // Decode other JSON fields if needed
+    //     }
+    //     return view('admin.inclusive_packages.inclusive_packageslist', compact('title', 'inclusive_packages'));
+    // }
+
+     public function list(Request $request)
     {
         $title = 'Programs List';
         $query = InclusivePackages::where('is_deleted', '0');
@@ -118,7 +129,7 @@ class All_Inclusive_PackController extends Controller
             'tour_planning' => 'required|array',
             'tour_planning.*.title' => 'required|string',
             'tour_planning.*.subtitle' => 'nullable|string',
-            'tour_planning.*.description' => 'required|string',
+            'tour_planning.*.description' => 'nullable|string',
         ]);
 
         // dd($request->all());
