@@ -56,7 +56,7 @@
                                 <label for="file-ip-1" class="d-block text-center py-2" style="cursor: pointer;">
                                     <p class="text-center fw-light">Add Pic</p>
                                 </label>
-                                <input type="file" id="file-ip-1" name="image_1" accept="image/png, image/jpeg" onchange="validateImage(this)" required>
+                                <input type="file" id="file-ip-1" name="image_1" accept="image/png, image/jpeg" onchange="validateImage(this)">
                                 <!-- <label class="fw-bold mb-5 text-danger border-0"><small>* Upload size [600*120] *</small></label> -->
                             </div>
                         </div>
@@ -68,11 +68,11 @@
                             <!-- First Input: Upload Image Name -->
                                 <div class="add_form col-lg-6">
                                     <label class="fw-bold mt-4 mb-2">Upload Image Name <span class="text-danger">*</span></label>
-                                    <input type="text" placeholder="Rename the Photo" id="upload_image_name" name="upload_image_name" value="{{ $themes_details->upload_image_name }}" class="form-control py-2 rounded-3 shadow-sm  " required> <!-- Added mt-4 here -->
+                                    <input type="text" placeholder="Rename the Photo" id="upload_image_name" name="upload_image_name" value="{{ $themes_details->upload_image_name }}" class="form-control py-2 rounded-3 shadow-sm  "> <!-- Added mt-4 here -->
                                 </div>
                                 <div class="add_form col-lg-6 px-4">
                                     <label class="fw-bold mt-4 mb-2">Alternate Image Name <span class="text-danger">*</span></label>
-                                    <input type="text" placeholder="Alternate Name" id="alternate_image_name" name="alternate_image_name" value="{{ $themes_details->alternate_name }}" class="form-control py-2 rounded-3 shadow-sm " required> <!-- Added mt-4 here -->
+                                    <input type="text" placeholder="Alternate Name" id="alternate_image_name" name="alternate_image_name" value="{{ $themes_details->alternate_name }}" class="form-control py-2 rounded-3 shadow-sm "> <!-- Added mt-4 here -->
                                 </div>
                             </div>
                         </div>
