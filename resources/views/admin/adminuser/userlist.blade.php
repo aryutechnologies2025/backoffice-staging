@@ -43,12 +43,10 @@
         border-radius: 10px;
         box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
     }
-    .aaa{
-        /* display: flex;
-        align-items: center;
-        gap: 10px; */
-        width: 20%;
-    }
+    
+.email-table{
+    max-width: 50px !important;
+}
 
 
 </style>
@@ -101,8 +99,8 @@
                         <th class="text-start">S.No</th>
                         <th class="text-start">Profile Image</th>
                         <th class="text-start">First Name</th>
-                        <th class="text-start">First Name</th>
-                        <th class="text-start">Email</th>
+                        <th class="text-start">Last Name</th>
+                        <th class="text-start email-table">Email</th>
                         <th class="text-start">Phone</th>
                         <th class="text-start">Created By</th>
                         <th class="text-start">Created Date</th>
