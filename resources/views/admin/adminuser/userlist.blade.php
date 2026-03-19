@@ -101,7 +101,7 @@
                         <th class="text-start">S.No</th>
                         <th class="text-start">Profile Image</th>
                         <th class="text-start">First Name</th>
-                        <th class="text-start">Last Name</th>
+                        <th class="text-start">First Name</th>
                         <th class="text-start">Email</th>
                         <th class="text-start">Phone</th>
                         <th class="text-start">Created By</th>
