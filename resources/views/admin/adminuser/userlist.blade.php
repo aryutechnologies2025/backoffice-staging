@@ -43,6 +43,12 @@
         border-radius: 10px;
         box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
     }
+    .aaa{
+        /* display: flex;
+        align-items: center;
+        gap: 10px; */
+        width: 20%;
+    }
 
 
 </style>
@@ -159,7 +165,7 @@
                         }
                         @endphp
 
-                        <td>
+                        <td class="aaa">
                             <a
                                 data-toggle="tooltip"
                                 data-csrf_token="{{ csrf_token() }}"
