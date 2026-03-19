@@ -135,7 +135,7 @@
                 </div>
 
                 <div class="d-flex justify-content-center">
-                    <button type="submit" class="submit-btn mb-5">Submit</button>
+                    <button type="submit" class="submit-btn mb-5">Submit </button>
                 </div>
             </form>
         </div>
