@@ -6,7 +6,6 @@
     .checkbox-dropdown {
         position: relative;
         width: 100%;
-        user-select: none;
     }
 
     .checkbox-dropdown button {
@@ -19,123 +18,133 @@
         top: 100%;
         left: 0;
         width: 100%;
-        background: #fff;
-        border: 1px solid #ddd;
-        border-radius: 8px;
-        max-height: 250px;
-        overflow-y: auto;
-        display: none;
-        z-index: 9999;
-    }
-
-    .search-box {
-        padding: 10px;
-        border-bottom: 1px solid #eee;
-    }
-
-    .search-box input {
-        width: 100%;
-        padding: 7px;
+        background: white;
         border: 1px solid #ddd;
         border-radius: 6px;
+        padding: 10px;
+        display: none;
+        z-index: 10;
+    }
+
+    .checkbox-list label {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        cursor: pointer;
+        padding: 4px 0;
+    }
+
+    table th,
+    table td {
+        padding: 12px;
+        text-align: center;
+    }
+
+    #permTable {
+        display: none;
+    }
+
+    .checkbox-list {
+        max-height: 250px;
+        overflow-y: auto;
     }
 </style>
 
-<div class="container mt-4">
-
-    <!-- ROLE -->
-    <div class="mb-3">
-        <label class="fw-bold mb-2">Role</label>
-        <select id="roleSelect" class="form-control py-2 rounded-3 shadow-sm" name="role_name">
-            <option selected>Please select role</option>
-            @foreach($roles as $role)
-            <option value="{{ $role->id }}">{{ $role->role_name }}</option>
-            @endforeach
-        </select>
+<div class="row body-sec py-3 px-5 justify-content-around">
+    <div class="text-start col-lg-6">
+        <h3 class="admin-title fw-bold">Edit Permission</h3>
     </div>
-
-    <!-- MODULE MULTI SELECT -->
-    <div class="mb-3">
-        <label class="fw-bold mb-2">Modules</label>
-
-       <div id="moduleDropdown" class="dropdown">
-    <button 
-        id="moduleDropdownBtn" 
-        class="btn btn-light border shadow-sm w-100 text-start" 
-        data-bs-toggle="dropdown"
-        data-bs-auto-close="false"
-    >
-        Select Modules
-    </button>
-
-    <ul class="dropdown-menu w-100 p-3" style="max-height: 300px; overflow-y:auto;">
-
-        <!-- Search -->
-        <li class="mb-2">
-            <input type="text" id="moduleSearch" class="form-control" placeholder="Search module...">
-        </li>
-
-        <!-- MODULE LIST (FIXED) -->
-        <li id="moduleList" class="p-0">
-            @foreach($modules as $key => $module)
-            <label class="d-block px-2 py-1">
-                <input type="checkbox" class="moduleChk me-2" name="modules[]" value="{{ $key }}">
-                {{ $module }}
-            </label>
-            @endforeach
-        </li>
-
-    </ul>
+    <div class="text-end col-lg-6">
+        <b>
+            <a href="/dashboard">Dashboard</a> >
+            <a href="{{ route('admin.user_permission_list') }}">Permission</a> >
+            <a style="color:blue;">Edit</a>
+        </b>
+    </div>
 </div>
 
+<div class="row mb-5">
+    <div class="col-lg-12">
+        <div class="form-body px-4 mb-5 ms-4 me-5 rounded-4">
 
-    <!-- TABLE -->
-    <div id="tableSection" class="mt-4" style="display:none;">
-        <table id="permTable" class="table table-bordered table-striped">
-            <thead>
-            <tr>
-                <th>Module</th>
+            <div class="row g-4">
 
-                <th>
-                    <label class="d-flex align-items-center gap-2">
-                        View
-                        <input type="checkbox" id="selectAllView">
-                    </label>
-                </th>
+                <!-- ROLE -->
+                <div class="col-lg-4">
+                    <label class="fw-bold mb-2">Role</label>
+                    <select class="form-select" name="role_name" id="roleSelect">
+                        <option selected>Please select role</option>
+                        @foreach($roles as $role)
+                        <option value="{{ $role->id }}">{{ $role->role_name }}</option>
+                        @endforeach
+                    </select>
+                </div>
 
-                <th>
-                    <label class="d-flex align-items-center gap-2">
-                        Create
-                        <input type="checkbox" id="selectAllCreate">
-                    </label>
-                </th>
+                <!-- MODULE MULTI SELECT with SEARCH -->
+                <div class="col-lg-4">
+                    <label class="fw-bold mb-2">Module</label>
+                    <div class="checkbox-dropdown">
+                        <button type="button" class="form-control" id="pageDropdownBtn">
+                            Select Module
+                        </button>
+                        <div class="checkbox-list shadow-sm p-2" id="pageCheckboxMenu">
+                            <input type="text" id="moduleSearch" class="form-control mb-2" placeholder="Search module...">
+                            <div id="moduleList">
+                                @foreach($modules as $key => $module)
+                                <label class="d-block">
+                                    <input type="checkbox" class="pageChk" name="modules[]" value="{{ $key }}">
+                                    {{ $module }}
+                                </label>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-                <th>
-                    <label class="d-flex align-items-center gap-2">
-                        Edit
-                        <input type="checkbox" id="selectAllEdit">
-                    </label>
-                </th>
+                <!-- ACTION MULTI SELECT -->
+                <div class="col-lg-4">
+                    <label class="fw-bold mb-2">Action</label>
+                    <div class="checkbox-dropdown">
+                        <button type="button" class="form-control" id="actionDropdownBtn">
+                            Select Action
+                        </button>
+                        <div class="checkbox-list shadow-sm p-2" id="actionCheckboxMenu">
+                            <label><input type="checkbox" class="actionChk" value="List"> List</label>
+                            <label><input type="checkbox" class="actionChk" value="Create"> Create</label>
+                            <label><input type="checkbox" class="actionChk" value="View"> View</label>
+                            <label><input type="checkbox" class="actionChk" value="Edit"> Edit</label>
+                            <label><input type="checkbox" class="actionChk" value="Delete"> Delete</label>
+                        </div>
+                    </div>
+                </div>
 
-                <th>
-                    <label class="d-flex align-items-center gap-2">
-                        Delete
-                        <input type="checkbox" id="selectAllDelete">
-                    </label>
-                </th>
-            </tr>
-            </thead>
+            </div>
 
-            <tbody></tbody>
-        </table>
+            <!-- TABLE -->
+            <div class="table-responsive mt-4">
+                <table class="table table-bordered" id="permTable">
+                    <thead>
+                        <tr>
+                            <th>Module</th>
+                            <th width="50%">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+
+            <!-- SUBMIT -->
+            <div class="text-center mt-4">
+                <a href="{{ route('admin.user_permission_list') }}">
+                    <button type="button" class="cancel-btn">Cancel</button>
+                </a>
+                <button class="submit-btn sbmtBtn ms-4" id="submitPermission">Submit</button>
+            </div>
+
+        </div>
     </div>
-
-    <!-- SUBMIT -->
-    <button id="submitPermission" class="btn btn-primary mt-3">Submit</button>
-
 </div>
 
-{{-- DEFAULT DATA --}}
 @php
 $defaultData = [
     "role" => $users->role_id ?? null,
@@ -143,10 +152,11 @@ $defaultData = [
         return [
             "module" => $m->module,
             "permission" => [
-                "view" => (int)$m->is_view,
+                "list"   => (int)$m->is_list,
+                "view"   => (int)$m->is_view,
                 "create" => (int)$m->is_create,
-                "edit" => (int)$m->is_edit,
-                "delete" => (int)$m->is_delete
+                "edit"   => (int)$m->is_edit,
+                "delete" => (int)$m->is_delete,
             ]
         ];
     })->toArray() : []
@@ -155,188 +165,183 @@ $defaultData = [
 
 <script>
 let defaultData = @json($defaultData);
-</script>
 
-
-<script>
-
-// ---------------- TEMP STORAGE ----------------
-let tempPermissions = {};
-let isLoadingDefaults = false;
-
-
-// ---------------- UPDATE DROPDOWN BUTTON ----------------
-function updateModuleDropdownButton() {
-    let selected = [...document.querySelectorAll(".moduleChk:checked")].map(x => x.value);
-    document.getElementById("moduleDropdownBtn").innerText =
-        selected.length ? selected.join(", ") : "Select Modules";
-}
-
-
-// ---------------- SAVE PERMISSIONS ----------------
-function saveCurrentPermissions() {
-    if (isLoadingDefaults) return;
-
-    tempPermissions = {};
-
-    document.querySelectorAll("#permTable tbody tr").forEach(row => {
-        let module = row.dataset.page;
-
-        tempPermissions[module] = {
-            view: row.querySelector('input[value="View"]').checked ? 1 : 0,
-            create: row.querySelector('input[value="Create"]').checked ? 1 : 0,
-            edit: row.querySelector('input[value="Edit"]').checked ? 1 : 0,
-            delete: row.querySelector('input[value="Delete"]').checked ? 1 : 0
-        };
+// ---------- DROPDOWN ----------
+function setupDropdown(btnId, menuId) {
+    const btn  = document.getElementById(btnId);
+    const menu = document.getElementById(menuId);
+    btn.addEventListener("click", () => {
+        menu.style.display = menu.style.display === "block" ? "none" : "block";
     });
-}
-
-function formatModuleName(name) {
-    return name.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase());
-}
-
-
-// ---------------- BUILD TABLE ----------------
-function updateModulesInTable() {
-    saveCurrentPermissions();
-
-    let tbody = document.querySelector("#permTable tbody");
-    tbody.innerHTML = "";
-
-    let selected = [...document.querySelectorAll(".moduleChk:checked")].map(x => x.value);
-
-    selected.forEach(module => {
-        let row = document.createElement("tr");
-        row.dataset.page = module;
-
-        row.innerHTML = `
-            <td class="fw-bold text-capitalize">${formatModuleName(module)}</td>
-            <td><input type="checkbox" value="View"></td>
-            <td><input type="checkbox" value="Create"></td>
-            <td><input type="checkbox" value="Edit"></td>
-            <td><input type="checkbox" value="Delete"></td>
-        `;
-
-        tbody.appendChild(row);
-    });
-
-    restoreSavedPermissions();
-    syncTableToDropdown();
-}
-
-
-// ---------------- RESTORE PERMISSIONS ----------------
-function restoreSavedPermissions() {
-    document.querySelectorAll("#permTable tbody tr").forEach(row => {
-        let module = row.dataset.page;
-
-        if (tempPermissions[module]) {
-            row.querySelector('input[value="View"]').checked = tempPermissions[module].view == 1;
-            row.querySelector('input[value="Create"]').checked = tempPermissions[module].create == 1;
-            row.querySelector('input[value="Edit"]').checked = tempPermissions[module].edit == 1;
-            row.querySelector('input[value="Delete"]').checked = tempPermissions[module].delete == 1;
+    document.addEventListener("click", (e) => {
+        if (!btn.contains(e.target) && !menu.contains(e.target)) {
+            menu.style.display = "none";
         }
     });
 }
+setupDropdown("pageDropdownBtn",   "pageCheckboxMenu");
+setupDropdown("actionDropdownBtn", "actionCheckboxMenu");
 
+// ---------- VARIABLES ----------
+const tableBody  = document.querySelector("#permTable tbody");
+const permTable  = document.getElementById("permTable");
+let   pageChecks = document.querySelectorAll(".pageChk");
+let   actionChecks = document.querySelectorAll(".actionChk");
 
-// ---------------- TOGGLE TABLE ----------------
-function toggleTableVisibility() {
-    document.getElementById("tableSection").style.display =
-        document.querySelectorAll(".moduleChk:checked").length ? "block" : "none";
-}
-
-
-// ---------------- SYNC TABLE → DROPDOWN ----------------
-function syncTableToDropdown() {
-    ['View', 'Create', 'Edit', 'Delete'].forEach(action => {
-        let anyChecked = [...document.querySelectorAll(`#permTable tbody input[value="${action}"]`)]
-            .some(i => i.checked);
-
-        let dropdownChk = document.querySelector(`.actionChk[value="${action}"]`);
-        if (dropdownChk) dropdownChk.checked = anyChecked;
+// ---------- MODULE SEARCH ----------
+document.getElementById("moduleSearch").addEventListener("keyup", function() {
+    let filter = this.value.toLowerCase().trim();
+    document.querySelectorAll("#moduleList label").forEach(label => {
+        label.style.display = label.textContent.trim().toLowerCase().includes(filter) ? "flex" : "none";
     });
-}
+});
 
-
-// ---------------- MODULE CHECKBOX LISTENERS ----------------
-function setupModuleCheckboxListeners() {
-    document.querySelectorAll(".moduleChk").forEach(chk => {
+// ---------- PAGE SELECT ----------
+function refreshPageCheckboxListeners() {
+    pageChecks = document.querySelectorAll(".pageChk");
+    pageChecks.forEach(chk => {
         chk.addEventListener("change", () => {
-            updateModuleDropdownButton();
-            updateModulesInTable();
+            updatePagesInTable();
+            updatePageDropdownButton();
             toggleTableVisibility();
         });
     });
 }
+refreshPageCheckboxListeners();
 
-
-// ---------------- LOAD DEFAULT DATA (EDIT MODE) ----------------
-function loadDefaultData() {
-    if (!defaultData) return;
-
-    isLoadingDefaults = true;
-
-    document.getElementById("roleSelect").value = defaultData.role;
-
-    tempPermissions = {};
-    defaultData.moduleList.forEach(item => {
-        tempPermissions[item.module] = {
-            view: item.permission.view,
-            create: item.permission.create,
-            edit: item.permission.edit,
-            delete: item.permission.delete
-        };
-    });
-
-    defaultData.moduleList.forEach(item => {
-        let chk = document.querySelector(`.moduleChk[value="${item.module}"]`);
-        if (chk) chk.checked = true;
-    });
-
-    updateModuleDropdownButton();
-    updateModulesInTable();
-    toggleTableVisibility();
-
-    isLoadingDefaults = false;
+function toggleTableVisibility() {
+    let selectedPages = [...pageChecks].filter(c => c.checked);
+    permTable.style.display = selectedPages.length ? "table" : "none";
 }
 
+function updatePagesInTable() {
+    let selectedPages = [...pageChecks].filter(c => c.checked).map(c => c.value);
 
-// ---------------- SELECT COLUMN ----------------
-function setupColumnSelect() {
-
-    document.getElementById("selectAllView").addEventListener("change", e => {
-        document.querySelectorAll('#permTable tbody input[value="View"]').forEach(chk => chk.checked = e.target.checked);
-        syncTableToDropdown();
+    document.querySelectorAll("#permTable tbody tr").forEach(row => {
+        if (!selectedPages.includes(row.dataset.page)) row.remove();
     });
 
-    document.getElementById("selectAllCreate").addEventListener("change", e => {
-        document.querySelectorAll('#permTable tbody input[value="Create"]').forEach(chk => chk.checked = e.target.checked);
-        syncTableToDropdown();
-    });
-
-    document.getElementById("selectAllEdit").addEventListener("change", e => {
-        document.querySelectorAll('#permTable tbody input[value="Edit"]').forEach(chk => chk.checked = e.target.checked);
-        syncTableToDropdown();
-    });
-
-    document.getElementById("selectAllDelete").addEventListener("change", e => {
-        document.querySelectorAll('#permTable tbody input[value="Delete"]').forEach(chk => chk.checked = e.target.checked);
-        syncTableToDropdown();
+    selectedPages.forEach(page => {
+        if (!document.querySelector(`tr[data-page="${page}"]`)) {
+            createPageRow(page);
+        }
     });
 }
 
+function formatModuleName(name) {
+    return name.replace(/_/g, ' ').replace(/\b\w/g, char => char.toUpperCase());
+}
 
-// ---------------- MODULE SEARCH ----------------
-document.getElementById("moduleSearch").addEventListener("keyup", function() {
-    let filter = this.value.toLowerCase();
-    document.querySelectorAll("#moduleList label").forEach(li => {
-        li.style.display = li.innerText.toLowerCase().includes(filter) ? "block" : "none";
+function createPageRow(page, savedPerm) {
+    let row = document.createElement("tr");
+    row.setAttribute("data-page", page);
+
+    row.innerHTML = `
+        <td>${formatModuleName(page)}</td>
+        <td>
+            <label><input type="checkbox" class="tableAction" value="List"> List</label>
+            &nbsp;&nbsp;
+            <label><input type="checkbox" class="tableAction" value="Create"> Create</label>
+            &nbsp;&nbsp;
+            <label><input type="checkbox" class="tableAction" value="View"> View</label>
+            &nbsp;&nbsp;
+            <label><input type="checkbox" class="tableAction" value="Edit"> Edit</label>
+            &nbsp;&nbsp;
+            <label><input type="checkbox" class="tableAction" value="Delete"> Delete</label>
+        </td>
+    `;
+
+    tableBody.appendChild(row);
+
+    // restore saved permissions if provided
+    if (savedPerm) {
+        row.querySelector('input[value="List"]').checked   = savedPerm.list   == 1;
+        row.querySelector('input[value="Create"]').checked = savedPerm.create == 1;
+        row.querySelector('input[value="View"]').checked   = savedPerm.view   == 1;
+        row.querySelector('input[value="Edit"]').checked   = savedPerm.edit   == 1;
+        row.querySelector('input[value="Delete"]').checked = savedPerm.delete == 1;
+    } else {
+        syncDropdownToTable(row);
+    }
+
+    row.querySelectorAll(".tableAction").forEach(chk => {
+        chk.addEventListener("change", syncTableToDropdown);
+    });
+}
+
+// ---------- PAGE DROPDOWN TEXT ----------
+function updatePageDropdownButton() {
+    const selected = [...pageChecks].filter(c => c.checked).map(c => formatModuleName(c.value));
+    const btn = document.getElementById("pageDropdownBtn");
+    if (selected.length === 0)       btn.innerText = "Select Module";
+    else if (selected.length <= 4)   btn.innerText = selected.join(", ");
+    else                             btn.innerText = selected.length + " selected";
+}
+
+// ---------- ACTION SELECT ----------
+actionChecks.forEach(chk => {
+    chk.addEventListener("change", () => {
+        document.querySelectorAll(".tableAction").forEach(tChk => {
+            if (tChk.value === chk.value) tChk.checked = chk.checked;
+        });
+        updateActionDropdownButton();
     });
 });
 
+function updateActionDropdownButton() {
+    let selected = [...actionChecks].filter(c => c.checked).map(c => c.value);
+    document.getElementById("actionDropdownBtn").innerText =
+        selected.length ? selected.join(", ") : "Select Action";
+}
 
-// ---------------- SUBMIT ----------------
+// ---------- SYNC ----------
+function syncDropdownToTable(row) {
+    row.querySelectorAll(".tableAction").forEach(chk => {
+        let dropdownChk = [...actionChecks].find(a => a.value === chk.value);
+        if (dropdownChk) chk.checked = dropdownChk.checked;
+    });
+}
+
+function syncTableToDropdown() {
+    let allTableChecks = document.querySelectorAll(".tableAction");
+    actionChecks.forEach(aChk => {
+        let matching = [...allTableChecks].filter(t => t.value === aChk.value);
+        aChk.checked = matching.some(m => m.checked);
+    });
+    updateActionDropdownButton();
+}
+
+// ---------- LOAD DEFAULT DATA ----------
+function loadDefaultData() {
+    if (!defaultData || !defaultData.moduleList) return;
+
+    document.getElementById("roleSelect").value = defaultData.role;
+
+    // build a map for quick lookup
+    let permMap = {};
+    defaultData.moduleList.forEach(item => {
+        permMap[item.module] = item.permission;
+    });
+
+    // check the module checkboxes
+    defaultData.moduleList.forEach(item => {
+        let chk = document.querySelector(`.pageChk[value="${item.module}"]`);
+        if (chk) chk.checked = true;
+    });
+
+    updatePageDropdownButton();
+
+    // create rows with saved permissions
+    defaultData.moduleList.forEach(item => {
+        if (!document.querySelector(`tr[data-page="${item.module}"]`)) {
+            createPageRow(item.module, item.permission);
+        }
+    });
+
+    toggleTableVisibility();
+}
+
+// ---------- SUBMIT ----------
 document.getElementById("submitPermission").addEventListener("click", function(e) {
     e.preventDefault();
 
@@ -347,35 +352,34 @@ document.getElementById("submitPermission").addEventListener("click", function(e
         return;
     }
 
-    let rows = document.querySelectorAll("#permTable tbody tr");
-    if (rows.length === 0) {
+    let selectedRows = document.querySelectorAll("#permTable tbody tr");
+    if (selectedRows.length === 0) {
         Swal.fire({ icon: "warning", title: "Validation Error", text: "Please select at least one module." });
         return;
     }
 
-    let valid = true;
-    rows.forEach(row => {
-        if (![...row.querySelectorAll("input[type=checkbox]")].some(c => c.checked)) valid = false;
+    let validActions = true;
+    selectedRows.forEach(row => {
+        let anyChecked = [...row.querySelectorAll(".tableAction")].some(c => c.checked);
+        if (!anyChecked) validActions = false;
     });
 
-    if (!valid) {
-        Swal.fire({ icon: "warning", title: "Validation Error", text: "Select at least one action for each module." });
+    if (!validActions) {
+        Swal.fire({ icon: "warning", title: "Validation Error", text: "Please select at least one action for each module." });
         return;
     }
 
-    let finalData = {
-        role_name: role,
-        moduleList: []
-    };
+    let finalData = { role_name: role, moduleList: [] };
 
-    rows.forEach(row => {
+    selectedRows.forEach(row => {
         finalData.moduleList.push({
             module: row.dataset.page,
             permission: {
-                view: row.querySelector('input[value="View"]').checked ? 1 : 0,
+                list:   row.querySelector('input[value="List"]').checked   ? 1 : 0,
+                view:   row.querySelector('input[value="View"]').checked   ? 1 : 0,
                 create: row.querySelector('input[value="Create"]').checked ? 1 : 0,
-                edit: row.querySelector('input[value="Edit"]').checked ? 1 : 0,
-                delete: row.querySelector('input[value="Delete"]').checked ? 1 : 0
+                edit:   row.querySelector('input[value="Edit"]').checked   ? 1 : 0,
+                delete: row.querySelector('input[value="Delete"]').checked ? 1 : 0,
             }
         });
     });
@@ -391,31 +395,22 @@ document.getElementById("submitPermission").addEventListener("click", function(e
     })
     .then(async res => {
         const data = await res.json().catch(() => null);
-
         if (res.ok) return data;
-
-        let msg = "Request failed";
-        if (data && data.message) msg = data.message;
-        throw new Error(msg);
+        throw new Error((data && data.message) || "Request failed");
     })
     .then(data => {
         Swal.fire({ icon: "success", title: "Success", text: data.message || "Saved successfully" })
-            .then(() => window.location.reload());
+            .then(() => {
+                window.location.href = data.redirect_url || "{{ route('admin.user_permission_list') }}";
+            });
     })
     .catch(err => {
-        Swal.fire({ icon: "error", title: "Error", text: err.message });
+        Swal.fire({ icon: "error", title: "Error", text: err.message || "Something went wrong!" });
     });
-
 });
 
-
-// ---------------- INIT ----------------
-window.addEventListener("DOMContentLoaded", () => {
-    setupModuleCheckboxListeners();
-    setupColumnSelect();
-    loadDefaultData();
-});
-
+// ---------- INIT ----------
+window.addEventListener("DOMContentLoaded", loadDefaultData);
 </script>
 
 @endsection

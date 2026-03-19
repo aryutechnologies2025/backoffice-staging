@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@Section('content')
+@section('content')
 
 <style>
     a:hover {

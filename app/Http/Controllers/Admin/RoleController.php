@@ -45,7 +45,10 @@ class RoleController extends Controller
 
 
         $request->validate([
-    'role_name' => 'required|unique:roles,role_name'
+    'role_name' => [
+        'required',
+        \Illuminate\Validation\Rule::unique('roles', 'role_name')->where('is_deleted', '0'),
+    ]
 ],[
     'role_name.required' => 'Role name is required.',
     'role_name.unique' => 'This role name is already taken.'
@@ -87,7 +90,10 @@ class RoleController extends Controller
     {
 
         $request->validate([
-            'role_name' => 'required|unique:roles,role_name,' . $id
+            'role_name' => [
+                'required',
+                \Illuminate\Validation\Rule::unique('roles', 'role_name')->ignore($id)->where('is_deleted', '0'),
+            ]
         ],[
             'role_name.required' => 'Role name is required.',
             'role_name.unique' => 'This role name is already taken.'
